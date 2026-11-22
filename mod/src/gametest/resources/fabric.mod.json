@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "zorza-gametest",
+  "version": "1.0.0",
+  "name": "Zorza screenshots",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": ["pl.zorza.gametest.ZorzaScreenshots"]
+  },
+  "depends": { "zorza": "*" }
+}

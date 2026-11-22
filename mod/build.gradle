@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'fabric-loom' version '1.10-SNAPSHOT'
 }
 
 version = project.mod_version
@@ -31,4 +31,15 @@ tasks.withType(JavaCompile).configureEach {
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
+}
+
+// Testy z prawdziwym Minecraftem w CI – robią zrzuty ekranu menu Zorzy
+fabricApi {
+    configureTests {
+        createSourceSet = true
+        modId = "zorza-gametest"
+        enableGameTests = false
+        enableClientGameTests = true
+        eula = true
+    }
 }
