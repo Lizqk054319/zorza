@@ -25,6 +25,7 @@ import traceback
 import urllib.parse
 import uuid
 import webbrowser
+import zipfile
 import zlib
 from collections import deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -37,9 +38,32 @@ from pathlib import Path
 NAZWA_LAUNCHERA = "Zorza"          # nazwa wyświetlana w launcherze
 NAZWA_DISCORD = "Zorza Client"     # tak ma się nazywać aplikacja w Discord Developer Portal
 DOMYSLNA_WERSJA = "1.21.4"         # wersja pierwszego profilu
-NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
+NAJSTARSZA_WERSJA = "1.8.9"        # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
+DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
+WERSJA_CLIENTA = "0.3.0"
+
+# Co nowego – pokazuje się na ekranie startowym w karcie "Nowość"
+NOWOSCI = [
+    "Karty profili z czasem gry i ostatnim uruchomieniem",
+    "Strona profilu: mody, światy, paczki zasobów i shadery",
+    "Mody wbudowane: Sodium, Sodium Extra, Lithium i inne",
+    "Zakładka Skiny – wgraj swój skin i kliknij Zastosuj",
+    "Wersje gry od 1.8.9",
+    "Kolor i język launchera, automatyczne usuwanie logów",
+]
+
+# Mody wbudowane (slug z Modrinth, nazwa) – instalują się same w profilach z Fabric
+MODY_WBUDOWANE = [
+    ("fabric-api", "Fabric API"),
+    ("sodium", "Sodium"),
+    ("sodium-extra", "Sodium Extra"),
+    ("lithium", "Lithium"),
+    ("ferrite-core", "FerriteCore"),
+    ("entityculling", "Entity Culling"),
+    ("immediatelyfast", "ImmediatelyFast"),
+]
 
 # Logowanie Microsoft – NIE ZMIENIAJ (zatwierdzane przez Mojang dla tego ID)
 AZURE_CLIENT_ID = "6553e03b-b905-4f30-a877-535ed1c3a975"
@@ -67,12 +91,13 @@ DATA_DIR = APPDATA / "ZorzaLauncher"
 MC_DIR = DATA_DIR / "minecraft"          # wspólne pliki gry (wersje, biblioteki, Java)
 INST_DIR = DATA_DIR / "instances"        # osobny folder gry dla każdego profilu
 TRASH_DIR = DATA_DIR / "usuniete"        # usunięte profile trafiają tu, nie znikają od razu
-SKIN_DIR = DATA_DIR / "skiny"
+SKIN_DIR = DATA_DIR / "skiny"            # pamięć podręczna skinów kont
+MY_SKINS = DATA_DIR / "moje_skiny"        # biblioteka skinów z zakładki Skiny
 ACCOUNTS_FILE = DATA_DIR / "accounts.json"
 SETTINGS_FILE = DATA_DIR / "settings.json"
 PROFILES_FILE = DATA_DIR / "profiles.json"
 BG_EXTS = (".jpg", ".jpeg", ".png", ".webp", ".gif")
-for d in (DATA_DIR, MC_DIR, INST_DIR, SKIN_DIR):
+for d in (DATA_DIR, MC_DIR, INST_DIR, SKIN_DIR, MY_SKINS):
     d.mkdir(parents=True, exist_ok=True)
 
 KINDS = {  # rodzaj zawartości -> (folder w profilu, typ projektu na Modrinth)
@@ -80,7 +105,7 @@ KINDS = {  # rodzaj zawartości -> (folder w profilu, typ projektu na Modrinth)
     "resourcepacks": ("resourcepacks", "resourcepack"),
     "shaders": ("shaderpacks", "shader"),
 }
-UA = {"User-Agent": f"ZorzaLauncher/0.2 ({GITHUB_URL})"}
+UA = {"User-Agent": f"ZorzaLauncher/{WERSJA_CLIENTA} ({GITHUB_URL})"}
 MODRINTH = "https://api.modrinth.com/v2"
 
 lock = threading.RLock()
@@ -126,6 +151,11 @@ settings.setdefault("active_account", None)
 settings.setdefault("active_profile", None)
 settings.setdefault("discord", True)
 settings.pop("owner_token", None)
+settings.setdefault("lang", "pl")
+settings.setdefault("accent", "#1f6bff")
+settings.setdefault("log_days", 30)        # 0 = nie usuwaj
+settings.setdefault("skin", "startowy.png")
+settings.setdefault("skin_chosen", False)   # False = na starcie pokazuj skin konta
 
 # Konta: zapisywane tylko na tym komputerze (nick, UUID i token odświeżania).
 # Hasło i e-mail nigdy nie trafiają do launchera. Na Windowsie plik jest szyfrowany
@@ -231,7 +261,8 @@ def make_profile(name, version, loader="fabric", ram_mb=4096):
     name = (name or "").strip()[:40] or f"Minecraft {version}"
     p = {"id": new_profile_id(name), "name": name, "version": version,
          "loader": "vanilla" if loader == "vanilla" else "fabric",
-         "ram_mb": max(1024, min(32768, int(ram_mb))), "created": int(time.time())}
+         "ram_mb": max(1024, min(32768, int(ram_mb))), "created": int(time.time()),
+         "playtime": 0, "last_played": 0}
     profiles.append(p)
     profile_dir(p)
     settings["active_profile"] = p["id"]
@@ -659,6 +690,8 @@ def do_play(pid):
     if not acc:
         raise RuntimeError("Najpierw dodaj konto Microsoft.")
     launch_id = install_profile(p)
+    if launch_id.startswith("fabric-loader"):
+        ensure_builtins(p)
     task.update(status="Logowanie...", max=0)
     token = refresh_account(acc)
     ram = int(p["ram_mb"])
@@ -670,7 +703,7 @@ def do_play(pid):
         "gameDirectory": str(profile_dir(p)),
         "jvmArguments": jvm,
         "launcherName": NAZWA_LAUNCHERA,
-        "launcherVersion": "0.2",
+        "launcherVersion": WERSJA_CLIENTA,
     }
     cmd = mll.command.get_minecraft_command(launch_id, str(MC_DIR), options)
     task.update(status="Uruchamianie gry...")
@@ -680,6 +713,8 @@ def do_play(pid):
                             stderr=subprocess.STDOUT, text=True, encoding="utf-8",
                             errors="replace", creationflags=flags)
     game.update(proc=proc, profile=p["id"], where="", start=int(time.time()))
+    p["last_played"] = int(time.time())
+    save_profiles()
     discord.update()
 
     def reader(pr):
@@ -688,6 +723,12 @@ def do_play(pid):
             log(line)
             watch_log_line(line)
         log(f"Gra zamknięta (kod {pr.wait()}).")
+        try:
+            gp = get_profile(game["profile"])
+            gp["playtime"] = int(gp.get("playtime", 0)) + int(time.time()) - game["start"]
+            save_profiles()
+        except Exception:
+            pass
         game.update(proc=None, where="")
         discord.update()
     threading.Thread(target=reader, args=(proc,), daemon=True).start()
@@ -707,24 +748,79 @@ def do_repair(pid):
 #  Mody, paczki zasobów, shadery
 # ---------------------------------------------------------------------------
 
+_jar_cache = {}
+
+
+def jar_info(f):
+    """Nazwa, wersja, autorzy i ikona z fabric.mod.json w pliku .jar (z pamięcią podręczną)."""
+    key = (str(f), f.stat().st_mtime)
+    if key in _jar_cache:
+        return _jar_cache[key]
+    info = {}
+    try:
+        with zipfile.ZipFile(f) as z:
+            for name in ("fabric.mod.json", "quilt.mod.json"):
+                if name in z.namelist():
+                    j = json.loads(z.read(name).decode("utf-8", "replace"), strict=False)
+                    if name == "quilt.mod.json":
+                        j = j.get("quilt_loader", {}).get("metadata", {}) | {"version": j.get("quilt_loader", {}).get("version")}
+                    authors = j.get("authors") or j.get("contributors") or []
+                    if isinstance(authors, dict):
+                        authors = list(authors)
+                    info = {"title": j.get("name"), "version": j.get("version"),
+                            "author": ", ".join(a["name"] if isinstance(a, dict) else str(a) for a in authors[:3]),
+                            "icon": j.get("icon") if isinstance(j.get("icon"), str) else None}
+                    break
+    except Exception:
+        pass
+    _jar_cache[key] = info
+    return info
+
+
 def list_content(p, kind):
     folder = profile_dir(p) / KINDS[kind][0]
-    meta = load_json(meta_path(p), {}).get("modrinth", {})
-    by_file = {m["file"]: {"title": m.get("title"), "icon": m.get("icon")} for m in meta.values()}
+    meta = load_json(meta_path(p), {})
+    mr = meta.get("modrinth", {})
+    by_file = {m["file"]: m for m in mr.values()}
+    builtin = {m["file"]: slug for slug, m in meta.get("builtin", {}).items()}
     items = []
     for f in sorted(folder.iterdir(), key=lambda x: x.name.lower()):
         if f.name.startswith("."):
             continue
         enabled = not f.name.endswith(".disabled")
         base = f.name[:-9] if not enabled else f.name
-        info = by_file.get(base, {})
-        items.append({"file": f.name, "name": info.get("title") or base, "icon": info.get("icon"),
+        m = by_file.get(base, {})
+        ji = jar_info(f) if f.is_file() and base.endswith(".jar") else {}
+        items.append({"file": f.name, "name": ji.get("title") or m.get("title") or base,
+                      "author": ji.get("author") or "", "version": ji.get("version") or m.get("version") or "",
+                      "icon": m.get("icon") or (f"/api/modicon?profile={urllib.parse.quote(p['id'])}"
+                                                f"&file={urllib.parse.quote(f.name)}" if ji.get("icon") else None),
+                      "source": "builtin" if base in builtin else "modrinth" if m else "local",
                       "enabled": enabled, "size": f.stat().st_size if f.is_file() else 0})
+    if kind == "mods":   # wbudowane, których jeszcze nie pobrano
+        have = set(builtin.values())
+        for slug, title in MODY_WBUDOWANE:
+            if slug not in have and not any(m.get("slug") == slug for m in mr.values()):
+                items.append({"file": "", "name": title, "author": "", "version": "",
+                              "icon": None, "source": "builtin", "pending": True,
+                              "enabled": p["loader"] == "fabric", "size": 0})
     return items
 
 
+def list_worlds(p):
+    d = profile_dir(p) / "saves"
+    out = []
+    if d.is_dir():
+        for w in d.iterdir():
+            if w.is_dir():
+                lvl = w / "level.dat"
+                out.append({"folder": w.name, "name": w.name, "icon": (w / "icon.png").exists(),
+                            "modified": int((lvl if lvl.exists() else w).stat().st_mtime)})
+    return sorted(out, key=lambda x: -x["modified"])
+
+
 def counts(p):
-    out = {}
+    out = {"saves": len(list_worlds(p))}
     for kind, (folder, _) in KINDS.items():
         d = profile_dir(p) / folder
         out[kind] = sum(1 for f in d.iterdir() if not f.name.startswith("."))
@@ -778,12 +874,157 @@ def modrinth_install(project_id, kind, p, _seen=None):
     meta = load_json(meta_path(p), {})
     meta.setdefault("modrinth", {})[project_id] = {
         "file": f["filename"], "folder": folder_name, "title": proj.get("title"),
-        "icon": proj.get("icon_url")}
+        "icon": proj.get("icon_url"), "slug": proj.get("slug"), "version": v.get("version_number")}
     save_json(meta_path(p), meta)
     if kind == "mods":
         for dep in v.get("dependencies", []):
             if dep.get("dependency_type") == "required" and dep.get("project_id"):
                 modrinth_install(dep["project_id"], "mods", p, seen)
+
+
+def ensure_builtins(p):
+    """Pobiera brakujące mody wbudowane dla wersji profilu. Wyłączonych (.disabled) nie rusza."""
+    d = profile_dir(p) / "mods"
+    meta = load_json(meta_path(p), {})
+    bi = meta.setdefault("builtin", {})
+    user_slugs = {m.get("slug") for m in meta.get("modrinth", {}).values()}
+    for slug, m in list(bi.items()):          # zmieniono wersję profilu – usuń stare pliki
+        if m.get("game_version") != p["version"]:
+            for name in (m["file"], m["file"] + ".disabled"):
+                (d / name).unlink(missing_ok=True)
+            bi.pop(slug)
+    for i, (slug, title) in enumerate(MODY_WBUDOWANE):
+        if slug in user_slugs:
+            continue
+        m = bi.get(slug)
+        if m and ((d / m["file"]).exists() or (d / (m["file"] + ".disabled")).exists()):
+            continue
+        task.update(status=f"Mody wbudowane: {title}...", max=len(MODY_WBUDOWANE), progress=i)
+        try:
+            r = requests.get(f"{MODRINTH}/project/{slug}/version", headers=UA, timeout=15,
+                             params={"game_versions": json.dumps([p["version"]]),
+                                     "loaders": json.dumps(["fabric"])})
+            r.raise_for_status()
+            vs = r.json()
+            if not vs:
+                continue      # brak wersji tego moda dla tej wersji gry
+            v = vs[0]
+            f = next((x for x in v["files"] if x.get("primary")), v["files"][0])
+            dest = safe_child(d, f["filename"])
+            with requests.get(f["url"], headers=UA, stream=True, timeout=60) as resp:
+                resp.raise_for_status()
+                with open(dest, "wb") as out:
+                    shutil.copyfileobj(resp.raw, out)
+            bi[slug] = {"file": f["filename"], "title": title, "version": v.get("version_number"),
+                        "game_version": p["version"]}
+            save_json(meta_path(p), meta)
+            log(f"Mod wbudowany: {f['filename']}")
+        except Exception as e:
+            log(f"Nie udało się pobrać moda wbudowanego {title}: {e}")
+    save_json(meta_path(p), meta)
+
+
+# ---------------------------------------------------------------------------
+#  Logi – automatyczne usuwanie starych
+# ---------------------------------------------------------------------------
+
+def clean_logs():
+    days = int(settings.get("log_days") or 0)
+    if days <= 0:
+        return
+    limit = time.time() - days * 86400
+    n = 0
+    for pdir in INST_DIR.iterdir():
+        for sub in ("logs", "crash-reports"):
+            folder = pdir / sub
+            if not folder.is_dir():
+                continue
+            for f in folder.rglob("*"):
+                try:
+                    if f.is_file() and f.stat().st_mtime < limit:
+                        f.unlink()
+                        n += 1
+                except OSError:
+                    pass
+    if n:
+        log(f"Usunięto {n} starych plików logów (starszych niż {days} dni).")
+
+
+def log_cleaner():
+    while True:
+        try:
+            clean_logs()
+        except Exception as e:
+            log(f"Czyszczenie logów: {e}")
+        time.sleep(6 * 3600)
+
+
+# ---------------------------------------------------------------------------
+#  Biblioteka skinów (zakładka Skiny)
+# ---------------------------------------------------------------------------
+
+SKINS_META = MY_SKINS / "skiny.json"
+
+
+def png_size(data):
+    if data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
+        return None
+    return struct.unpack(">II", data[16:24])
+
+
+def skins_list():
+    meta = load_json(SKINS_META, {})
+    start = MY_SKINS / "startowy.png"
+    if not start.exists() and (UI_DIR / "assets" / "skins" / "startowy.png").exists():
+        shutil.copy2(UI_DIR / "assets" / "skins" / "startowy.png", start)
+        meta.setdefault("startowy.png", {"name": "Startowy", "model": "classic", "added": 0})
+        save_json(SKINS_META, meta)
+    out = []
+    for f in MY_SKINS.glob("*.png"):
+        m = meta.get(f.name, {})
+        out.append({"file": f.name, "name": m.get("name", f.stem), "model": m.get("model", "classic"),
+                    "added": m.get("added", int(f.stat().st_mtime)), "v": int(f.stat().st_mtime)})
+    return sorted(out, key=lambda x: x["added"])
+
+
+def skin_add(name, data, model):
+    size = png_size(data)
+    if size not in ((64, 64), (64, 32)):
+        raise ValueError("To nie jest skin Minecrafta – potrzebny plik PNG 64×64 (albo 64×32).")
+    stem = re.sub(r"[^A-Za-z0-9_-]+", "_", Path(name).stem)[:30] or "skin"
+    fname, n = f"{stem}.png", 2
+    while (MY_SKINS / fname).exists():
+        fname, n = f"{stem}_{n}.png", n + 1
+    (MY_SKINS / fname).write_bytes(data)
+    meta = load_json(SKINS_META, {})
+    meta[fname] = {"name": Path(name).stem[:30], "model": "slim" if model == "slim" else "classic",
+                   "added": int(time.time())}
+    save_json(SKINS_META, meta)
+    return fname
+
+
+def do_apply_skin(fname):
+    meta = load_json(SKINS_META, {}).get(fname, {})
+    data = safe_child(MY_SKINS, fname).read_bytes()
+    settings["skin"] = fname
+    settings["skin_chosen"] = True
+    save_settings()
+    acc = next((a for a in accounts if a["uuid"] == settings["active_account"]), None)
+    if not acc:
+        task["done"] = "Skin ustawiony w launcherze. W grze zmieni się po dodaniu konta Microsoft i ponownym kliknięciu Zastosuj."
+        return
+    task.update(status="Wysyłanie skina do Minecrafta...")
+    token = refresh_account(acc)
+    r = requests.post("https://api.minecraftservices.com/minecraft/profile/skins",
+                      headers={"Authorization": f"Bearer {token}", **UA},
+                      data={"variant": meta.get("model", "classic")},
+                      files={"file": (fname, data, "image/png")}, timeout=30)
+    if r.status_code >= 400:
+        raise RuntimeError(f"Minecraft nie przyjął skina (błąd {r.status_code}).")
+    for f in SKIN_DIR.glob(f"{acc['uuid'].replace('-', '')}.*"):
+        f.unlink(missing_ok=True)
+    task["done"] = "Gotowe! Twój skin w Minecrafcie został zmieniony."
+    log(f"Zmieniono skin konta {acc['name']} na {fname}")
 
 
 # ---------------------------------------------------------------------------
@@ -824,6 +1065,15 @@ def skin_for(uuid_):
 # ---------------------------------------------------------------------------
 #  Discord Rich Presence (bez dodatkowych bibliotek – przez potok IPC Discorda)
 # ---------------------------------------------------------------------------
+
+DISCORD_TXT = {   # gra na / świat jednoosobowy / w menu / w launcherze / profil / pobierz
+    "pl": ("Gra na", "Świat jednoosobowy", "W menu gry", "W launcherze", "Profil", "Pobierz"),
+    "en": ("Playing on", "Singleplayer", "In the main menu", "In the launcher", "Profile", "Get"),
+    "de": ("Spielt auf", "Einzelspieler", "Im Hauptmenü", "Im Launcher", "Profil", "Hol dir"),
+    "uk": ("Грає на", "Одиночна гра", "У меню гри", "У лаунчері", "Профіль", "Завантажити"),
+    "es": ("Jugando en", "Un jugador", "En el menú", "En el launcher", "Perfil", "Descarga"),
+}
+
 
 class DiscordRPC:
     def __init__(self):
@@ -867,19 +1117,21 @@ class DiscordRPC:
         return False
 
     def activity(self):
+        L = DISCORD_TXT.get(settings.get("lang"), DISCORD_TXT["pl"])
         if game_running():
             p = get_profile(game["profile"])
             loader = " · Fabric" if p["loader"] == "fabric" else ""
             where = game["where"]
-            details = f"Gra na: {where}" if where and where != "Świat jednoosobowy" else \
-                (where or "W menu gry")
+            details = f"{L[0]}: {where}" if where and where != "Świat jednoosobowy" else \
+                (L[1] if where else L[2])
             act = {"details": details, "state": f"Minecraft {p['version']}{loader}",
                    "timestamps": {"start": game["start"]}}
         else:
-            act = {"details": "W launcherze", "state": f"Profil: {get_profile()['name']}",
+            act = {"details": L[3], "state": f"{L[4]}: {get_profile()['name']}",
                    "timestamps": {"start": self.launcher_start}}
         act["assets"] = {"large_image": "logo", "large_text": NAZWA_DISCORD}
-        act["buttons"] = [{"label": f"Pobierz {NAZWA_DISCORD}", "url": GITHUB_URL}]
+        act["buttons"] = [{"label": f"{L[5]} {NAZWA_DISCORD}", "url": GITHUB_URL},
+                          {"label": "Discord", "url": DISCORD_INVITE}]
         return act
 
     def loop(self):
@@ -982,7 +1234,7 @@ def state_json():
         "versions": [{"group": k, "items": groups[k]} for k in order],
         "accounts": [{"uuid": a["uuid"], "name": a["name"]} for a in accounts],
         "active": settings["active_account"],
-        "settings": {k: settings[k] for k in ("jvm_args", "remember_accounts", "discord")},
+        "settings": {k: settings[k] for k in ("jvm_args", "remember_accounts", "discord", "lang", "accent", "log_days")},
         "task": dict(task),
         "game_running": game_running(),
         "ms_configured": bool(AZURE_CLIENT_ID),
@@ -991,6 +1243,15 @@ def state_json():
         "background": bg_version(),
         "data_dir": str(DATA_DIR),
         "discord_status": discord.status,
+        "client_version": WERSJA_CLIENTA,
+        "news": NOWOSCI,
+        "discord_invite": DISCORD_INVITE,
+        "builtin_names": [t for _, t in MODY_WBUDOWANE],
+        "lang": settings["lang"],
+        "accent": settings["accent"],
+        "log_days": settings["log_days"],
+        "skin": settings["skin"],
+        "skin_chosen": settings["skin_chosen"],
     }
 
 
@@ -1079,6 +1340,29 @@ class Handler(BaseHTTPRequestHandler):
                 return self.wfile.write(data)
             if u.path == "/api/skin_model":
                 return self.send(200, {"model": skin_for(q.get("uuid"))[1]})
+            if u.path == "/api/modicon":
+                f = safe_child(profile_dir(get_profile(q.get("profile"))) / "mods", q["file"])
+                icon = jar_info(f).get("icon")
+                with zipfile.ZipFile(f) as z:
+                    return self.send(200, z.read(icon.lstrip("/")), "image/png")
+            if u.path == "/api/worlds":
+                return self.send(200, list_worlds(get_profile(q.get("profile"))))
+            if u.path == "/api/worldicon":
+                w = safe_child(profile_dir(get_profile(q.get("profile"))) / "saves", q["folder"])
+                return self.send(200, (w / "icon.png").read_bytes(), "image/png")
+            if u.path == "/api/skins":
+                return self.send(200, {"skins": skins_list(), "selected": settings["skin"]})
+            if u.path == "/api/skins/file":
+                f = safe_child(MY_SKINS, q["file"])
+                data = f.read_bytes()
+                model = load_json(SKINS_META, {}).get(f.name, {}).get("model", "classic")
+                self.send_response(200)
+                self.send_header("Content-Type", "image/png")
+                self.send_header("X-Skin-Model", model)
+                self.send_header("Content-Length", str(len(data)))
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                return self.wfile.write(data)
             if u.path == "/api/import/scan":
                 return self.send(200, scan_launchers())
             if u.path == "/api/profiles/export":
@@ -1115,6 +1399,9 @@ class Handler(BaseHTTPRequestHandler):
                 dest.write_bytes(self.body())
                 log(f"Dodano plik {dest.name}")
                 return self.send(200, {"ok": True})
+            if u.path == "/api/skins/upload":
+                fname = skin_add(q.get("name", "skin.png"), self.body(), q.get("model"))
+                return self.send(200, {"ok": True, "file": fname})
             if u.path == "/api/background/upload":
                 ext = Path(q.get("name", "")).suffix.lower()
                 if ext not in BG_EXTS:
@@ -1232,7 +1519,50 @@ class Handler(BaseHTTPRequestHandler):
                 if "discord" in d:
                     settings["discord"] = bool(d["discord"])
                     discord.update()
+                if d.get("lang") in ("pl", "en", "de", "uk", "es"):
+                    settings["lang"] = d["lang"]
+                    discord.update()
+                if re.fullmatch(r"#[0-9a-fA-F]{6}", str(d.get("accent", ""))):
+                    settings["accent"] = d["accent"]
+                if "log_days" in d and int(d["log_days"]) in (0, 7, 14, 30, 90):
+                    settings["log_days"] = int(d["log_days"])
+                    threading.Thread(target=clean_logs, daemon=True).start()
                 save_settings()
+            elif path == "/api/open_url":
+                if d.get("url") not in (DISCORD_INVITE, GITHUB_URL):
+                    return self.send(400, {"error": "Ten adres nie jest dozwolony."})
+                webbrowser.open(d["url"])
+            elif path == "/api/worlds/delete":
+                p = get_profile(d.get("profile"))
+                w = safe_child(profile_dir(p) / "saves", d["folder"])
+                TRASH_DIR.mkdir(exist_ok=True)
+                shutil.move(str(w), str(TRASH_DIR / f"swiat-{w.name}-{int(time.time())}"))
+                log(f"Świat {w.name} przeniesiony do folderu 'usuniete'")
+            elif path == "/api/worlds/open":
+                p = get_profile(d.get("profile"))
+                target = profile_dir(p) / "saves"
+                target.mkdir(exist_ok=True)
+                if os.name == "nt":
+                    os.startfile(str(target))
+            elif path == "/api/skins/select":
+                safe_child(MY_SKINS, d["file"])
+                settings["skin"] = d["file"]
+                settings["skin_chosen"] = True
+                save_settings()
+            elif path == "/api/skins/apply":
+                safe_child(MY_SKINS, d["file"])
+                if not run_task(do_apply_skin, d["file"]):
+                    return self.send(400, busy)
+            elif path == "/api/skins/model":
+                meta = load_json(SKINS_META, {})
+                meta.setdefault(d["file"], {})["model"] = "slim" if d.get("model") == "slim" else "classic"
+                save_json(SKINS_META, meta)
+            elif path == "/api/skins/delete":
+                f = safe_child(MY_SKINS, d["file"])
+                f.unlink(missing_ok=True)
+                if settings["skin"] == d["file"]:
+                    settings["skin"] = "startowy.png"
+                    save_settings()
             elif path == "/api/clear_error":
                 task["error"] = ""
                 task["done"] = ""
@@ -1287,6 +1617,8 @@ def main():
     log(f"{NAZWA_LAUNCHERA} Launcher – dane w {DATA_DIR}")
     threading.Thread(target=get_versions, daemon=True).start()
     threading.Thread(target=watchdog, daemon=True).start()
+    threading.Thread(target=log_cleaner, daemon=True).start()
+    skins_list()
     discord.update()
     if "--no-window" not in sys.argv:
         open_window()

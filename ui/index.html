@@ -7,7 +7,7 @@
 <style>
 :root{
   --bg:#141416; --side:#0f0f11; --card:#1d1d21; --card2:#232328; --line:#2c2c33;
-  --text:#f2f2f4; --muted:#9a9aa3; --blue:#1f6bff; --blue2:#0b4fd6; --red:#ff4d4d; --green:#3ddc84;
+  --text:#f2f2f4; --muted:#9a9aa3; --blue:#1f6bff; --blue2:color-mix(in srgb,var(--blue) 75%,#000); --red:#ff4d4d; --green:#3ddc84;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:"Segoe UI Variable","Segoe UI",Inter,system-ui,sans-serif;overflow:hidden;user-select:none}
@@ -50,7 +50,7 @@ main{position:fixed;left:78px;top:0;right:0;bottom:0}
 #home .content{position:absolute;left:96px;bottom:72px}
 .logo{width:110px;height:110px;margin-bottom:26px;filter:drop-shadow(0 4px 20px #0008)}
 #home h1{font-size:62px;font-weight:700;letter-spacing:-1.5px;margin-bottom:34px;text-shadow:0 4px 24px #0009}
-.play{display:flex;width:520px;height:110px;border-radius:30px;background:linear-gradient(180deg,#2f7bff,#0f55e8);box-shadow:0 10px 40px #0b4fd655,inset 0 1px 0 #ffffff40;position:relative;overflow:hidden}
+.play{display:flex;width:520px;height:110px;border-radius:30px;background:linear-gradient(180deg,color-mix(in srgb,var(--blue) 88%,#fff),color-mix(in srgb,var(--blue) 80%,#000));box-shadow:0 10px 40px color-mix(in srgb,var(--blue) 35%,transparent),inset 0 1px 0 #ffffff40;position:relative;overflow:hidden}
 .play .go{flex:1;display:flex;align-items:center;gap:22px;padding-left:56px;font-size:34px;font-weight:600}
 .play .go svg{width:26px;height:26px;fill:#fff}
 .play .sep{width:1px;background:#ffffff40;margin:26px 0}
@@ -71,13 +71,13 @@ main{position:fixed;left:78px;top:0;right:0;bottom:0}
 #vmenu .g::after{content:"";flex:1;height:1px;background:var(--line)}
 #vmenu .v{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;padding:11px 14px;border-radius:10px;font-size:18px}
 #vmenu .v:hover{background:#2a2a30}
-#vmenu .v.sel{background:#1f6bff33}
+#vmenu .v.sel{background:color-mix(in srgb,var(--blue) 20%,transparent)}
 #vmenu .v small{color:var(--green);font-size:12px}
 #vmenu .repair{color:var(--red);border-top:1px solid var(--line);margin-top:8px;padding-top:14px;width:100%;text-align:left;padding-left:14px;font-size:17px}
 
 /* strony z treścią */
 .wrap{padding:56px 64px}
-.hero{background:linear-gradient(160deg,#1c4fb8 0%,#14306e 30%,#141416 70%)}
+.hero{background:linear-gradient(160deg,color-mix(in srgb,var(--blue) 70%,#000) 0%,color-mix(in srgb,var(--blue) 35%,#000) 30%,#141416 70%)}
 .head{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .head h2{font-size:52px;font-weight:700;letter-spacing:-1px}
 .sub{color:#b9c2da;font-size:18px;margin-top:10px}
@@ -85,7 +85,7 @@ main{position:fixed;left:78px;top:0;right:0;bottom:0}
 .btn{height:58px;padding:0 26px;border-radius:16px;background:#ffffff0d;border:1px solid #ffffff1a;display:inline-flex;align-items:center;gap:14px;font-size:18px;font-weight:500}
 .btn:hover{background:#ffffff1a}
 .btn.primary{background:var(--blue);border-color:transparent}
-.btn.primary:hover{background:#3a7dff}
+.btn.primary:hover{background:color-mix(in srgb,var(--blue) 85%,#fff)}
 .vsel{height:58px;padding:0 18px 0 24px;border-radius:16px;background:#ffffff0d;border:1px solid #ffffff1a;font-size:20px;display:inline-flex;align-items:center;gap:12px}
 .tabs{display:inline-flex;background:#ffffff0a;border:1px solid #ffffff14;border-radius:18px;padding:6px;gap:4px;margin-top:34px}
 .tabs button{padding:12px 22px;border-radius:12px;font-size:18px;color:#c8cbe0;font-weight:500}
@@ -134,7 +134,7 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
 .row .t span{font-size:16px;color:var(--muted);font-weight:400;margin-left:14px}
 .row .d{color:#d4d4da;font-size:17px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row .m{color:var(--muted);font-size:15px;margin-top:6px}
-.inst{min-width:180px;height:56px;border-radius:16px;background:#26262b;color:#5b9bff;font-weight:600;font-size:18px}
+.inst{min-width:180px;height:56px;border-radius:16px;background:#26262b;color:color-mix(in srgb,var(--blue) 60%,#fff);font-weight:600;font-size:18px}
 .inst:hover{background:#2f2f36}
 .inst.done{color:var(--green);cursor:default}
 .loadmore{display:block;margin:26px auto 0}
@@ -214,7 +214,7 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
 #pmenu .it{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:11px 14px;border-radius:10px;font-size:17px}
 #pmenu .it:hover{background:#2a2a30}
 #pmenu .it small{display:block;color:var(--muted);font-size:13px}
-#pmenu .it.sel{background:#1f6bff2e}
+#pmenu .it.sel{background:color-mix(in srgb,var(--blue) 18%,transparent)}
 #pmenu .it svg{flex:none}
 #pmenu .red{color:var(--red)}
 #pmenu hr{border:0;border-top:1px solid var(--line);margin:6px 0}
@@ -226,19 +226,19 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
 .mh .x,.mh .back{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#bbb}
 .mh .x:hover,.mh .back:hover{background:#ffffff12;color:#fff}
 .opt{display:flex;align-items:center;gap:20px;width:100%;text-align:left;background:#232328;border:1px solid #ffffff0d;border-radius:16px;padding:20px;margin-top:12px}
-.opt:hover{background:#2a2a31;border-color:#1f6bff66}
-.opt .oi{width:54px;height:54px;border-radius:14px;background:#1f6bff1f;color:#6aa0ff;display:grid;place-items:center;flex:none}
+.opt:hover{background:#2a2a31;border-color:color-mix(in srgb,var(--blue) 40%,transparent)}
+.opt .oi{width:54px;height:54px;border-radius:14px;background:color-mix(in srgb,var(--blue) 12%,transparent);color:color-mix(in srgb,var(--blue) 60%,#fff);display:grid;place-items:center;flex:none}
 .opt b{font-size:18px;display:block}
 .opt span{color:var(--muted);font-size:15px}
 .opt .arr{margin-left:auto;color:#8a8a93}
 .fld{margin-top:18px}
 .fld label{display:block;color:#c9c9d2;font-size:14px;margin-bottom:8px;font-weight:600}
 .inp,select.inp,textarea.inp{width:100%;background:#121215;border:1px solid #ffffff1a;border-radius:12px;padding:14px;outline:0;font-size:16px}
-.inp:focus{border-color:#1f6bff}
+.inp:focus{border-color:var(--blue)}
 textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:13px;user-select:text}
 .seg{display:flex;background:#121215;border:1px solid #ffffff1a;border-radius:12px;padding:4px;gap:4px}
 .seg button{flex:1;padding:10px;border-radius:9px;font-size:15px;color:#bbb}
-.seg button.on{background:#1f6bff;color:#fff}
+.seg button.on{background:var(--blue);color:#fff}
 .rng{display:flex;align-items:center;gap:16px}
 .rng input{flex:1;accent-color:var(--blue)}
 .rng b{min-width:90px;text-align:right}
@@ -252,6 +252,107 @@ textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:1
 .warn{background:#ffb02014;border:1px solid #ffb02044;color:#ffcf7a;border-radius:12px;padding:12px 14px;font-size:14px;margin-top:14px}
 .spin{width:28px;height:28px;border:3px solid #ffffff22;border-top-color:#fff;border-radius:50%;animation:sp 1s linear infinite;margin:30px auto}
 @keyframes sp{to{transform:rotate(360deg)}}
+
+/* ====== dodatki v0.3 ====== */
+.skin:hover .p3d .rarm{animation:idle 3.2s ease-in-out infinite}
+.skin:hover .p3d{transform:rotateY(-24deg) rotateX(-3deg)}
+.p3d.hi{transform:rotateY(0deg) rotateX(-2deg)!important}
+.p3d.hi .rarm{animation:raise .35s ease-out forwards,wave .45s ease-in-out .35s infinite alternate!important}
+.p3d.bye .rarm{animation:lower .55s cubic-bezier(.3,.7,.3,1) forwards!important}
+@keyframes lower{from{transform:rotateZ(var(--from,150deg))}to{transform:rotateZ(0deg)}}
+.topright{position:absolute;top:22px;right:26px;width:330px;display:flex;flex-direction:column;gap:10px;z-index:3}
+.news{background:#0009;border:1px solid #ffffff1f;border-radius:18px;padding:16px 18px;backdrop-filter:blur(10px)}
+.news .nh{display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:1.5px;color:color-mix(in srgb,var(--blue) 55%,#fff)}
+.news .nh b{background:var(--blue);color:#fff;border-radius:8px;padding:3px 8px;font-size:12px;letter-spacing:.5px}
+.news .nh span{margin-left:auto;color:var(--muted);letter-spacing:0;font-weight:500}
+.news ul{margin:10px 0 0 18px;color:#d7d7de;font-size:14px;line-height:1.55}
+.news li.more{list-style:none;margin-left:-18px;margin-top:6px}
+.news li.more button{color:color-mix(in srgb,var(--blue) 55%,#fff);font-size:13px;font-weight:600}
+.skin{bottom:7%!important}
+.trbtns{display:flex;gap:10px}
+.trbtns .bgbtn{position:static;flex:none}
+.dcbtn{flex:1;height:46px;border-radius:14px;background:#5865f2;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:600;font-size:16px;box-shadow:0 6px 20px #5865f255}
+.dcbtn:hover{background:#4752c4}
+#side .nav.dc{color:#fff;background:#5865f2}
+#side .nav.dc:hover{background:#4752c4}
+
+/* karty profili */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:18px;margin-top:30px}
+.pcard{background:var(--card);border:1px solid #ffffff0f;border-radius:20px;overflow:hidden;position:relative}
+.pcard.sel{border-color:color-mix(in srgb,var(--blue) 55%,transparent)}
+.pcard.sel::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue)}
+.pcard .top{display:flex;align-items:center;gap:16px;padding:20px 20px 14px}
+.picon{width:58px;height:58px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:24px;flex:none;background:color-mix(in srgb,var(--blue) 22%,#1d1d21);color:color-mix(in srgb,var(--blue) 55%,#fff)}
+.pcard .nm{font-size:20px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard .vv{color:var(--muted);font-size:14px;margin-top:2px}
+.badge{margin-left:auto;align-self:flex-start;background:#ffffff14;border-radius:8px;padding:4px 10px;font-size:13px;color:#ddd;white-space:nowrap}
+.pstats{padding:0 20px;font-size:15px}
+.pstats div{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid #ffffff0d;color:var(--muted)}
+.pstats b{color:var(--text)}
+.pact{display:flex;gap:10px;padding:14px 20px 20px}
+.pact .pplay{flex:1;height:50px;border-radius:14px;background:var(--blue);font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:.5px}
+.pact .pplay:hover{filter:brightness(1.12)}
+.pact .btn{height:50px;padding:0 18px}
+.pact .mini{width:50px;height:50px}
+.pnew{border:2px dashed #ffffff1f;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:250px;color:var(--muted);font-size:17px}
+.pnew:hover{border-color:var(--blue);color:#fff}
+
+/* strona profilu */
+.phead{display:flex;align-items:center;gap:16px;padding:26px 40px 0}
+.pswitch{display:flex;align-items:center;gap:14px;background:#ffffff0a;border:1px solid #ffffff14;border-radius:16px;padding:8px 16px 8px 8px}
+.pswitch .picon{width:44px;height:44px;font-size:19px;border-radius:11px}
+.pswitch b{display:block;font-size:19px;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
+.pswitch small{color:var(--muted);font-size:13px}
+.bigplay{height:56px;padding:0 34px;border-radius:16px;background:var(--blue);font-weight:800;font-size:18px;letter-spacing:1px;display:flex;align-items:center;gap:12px}
+.bigplay:hover{filter:brightness(1.12)}
+.ptabs{display:flex;gap:30px;padding:0 40px;margin-top:22px;border-bottom:1px solid #ffffff12}
+.ptabs button{padding:14px 0;font-size:17px;font-weight:600;color:#a9a9b3;border-bottom:3px solid transparent;display:flex;align-items:center;gap:8px}
+.ptabs button.on{color:#fff;border-color:var(--blue)}
+.pbody{display:flex;gap:24px;padding:24px 40px 40px;align-items:flex-start}
+.pmain{flex:1;min-width:0}
+.pside{width:300px;flex:none;display:flex;flex-direction:column;gap:10px}
+.pinfo{background:var(--card);border-radius:16px;padding:6px 18px}
+.pinfo div{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid #ffffff0d;color:var(--muted);font-size:14px}
+.pinfo div:first-child{border-top:0}
+.pinfo b{color:var(--text);text-align:right}
+.lhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lhead h3{font-size:24px;margin-right:auto;display:flex;align-items:center;gap:10px}
+.cnt{background:color-mix(in srgb,var(--blue) 25%,transparent);color:color-mix(in srgb,var(--blue) 50%,#fff);border-radius:8px;padding:2px 9px;font-size:14px}
+.lhead .btn{height:44px;padding:0 16px;font-size:15px;border-radius:12px}
+.dropz{margin-top:16px;border:2px dashed #ffffff1f;border-radius:14px;padding:16px;text-align:center;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:10px}
+.dropz.on{border-color:var(--blue);color:#fff;background:color-mix(in srgb,var(--blue) 10%,transparent)}
+.lsearch{margin-top:14px;display:flex;align-items:center;gap:12px;background:#121215;border:1px solid #ffffff14;border-radius:12px;padding:0 14px}
+.lsearch input{flex:1;background:none;border:0;outline:0;height:46px;font-size:15px}
+.lsec{margin:22px 0 8px;font-weight:700;font-size:15px;display:flex;align-items:center;gap:10px;color:#cfcfd6}
+.mrow{display:flex;align-items:center;gap:16px;background:var(--card);border-radius:12px;padding:12px 14px;margin-top:6px}
+.mrow.off{opacity:.5}
+.mrow .ic{width:44px;height:44px;border-radius:10px;background:#2b2b31;flex:none;overflow:hidden;display:grid;place-items:center;color:#888}
+.mrow .ic img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+.mrow .nm{font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .au{color:var(--muted);font-size:13px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .ver{width:200px;flex:none;color:#c9c9d1;font-size:13px;background:#121215;border:1px solid #ffffff12;border-radius:9px;padding:8px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .lockic{width:42px;height:42px;display:grid;place-items:center;color:#777}
+.form{max-width:640px}
+
+/* skiny */
+.skwrap{display:flex;gap:30px;padding:40px 56px;height:100%}
+.skprev{width:42%;min-width:380px;background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--blue) 25%,#16161a),#111114 70%);border-radius:24px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px}
+.skprev .scene{margin-bottom:20px}
+.sklist{flex:1;overflow:auto}
+.skgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:20px}
+.sk{background:var(--card);border:2px solid transparent;border-radius:16px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;position:relative}
+.sk:hover{background:var(--card2)}
+.sk.sel{border-color:var(--blue)}
+.sk canvas{width:72px;height:144px;image-rendering:pixelated}
+.sk .n{font-size:14px;font-weight:600;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sk .used{position:absolute;top:8px;left:8px;background:var(--blue);border-radius:6px;padding:2px 6px;font-size:11px;font-weight:700}
+.sknew{border:2px dashed #ffffff26;background:none;justify-content:center;color:var(--muted);min-height:210px}
+.sknew.on{border-color:var(--blue);color:#fff}
+.swatches{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.swatches button{width:38px;height:38px;border-radius:12px;border:2px solid transparent}
+.swatches button.on{border-color:#fff}
+.swatches input[type=color]{width:46px;height:40px;border:0;background:none;padding:0;cursor:pointer}
+select.sset{margin-top:14px;background:#141417;border:1px solid #ffffff14;border-radius:12px;padding:12px 14px;outline:0;font-size:16px;min-width:260px}
 </style>
 </head>
 <body>
@@ -279,11 +380,12 @@ textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:1
 
 <nav id="side">
   <button class="nav on" data-p="home" data-tip="Start"><svg class="i" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg></button>
-  <button class="nav" data-p="mods" data-tip="Mody"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></button>
+  <button class="nav" data-p="profiles" data-tip="Profile"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></button>
   <button class="nav" data-p="servers" data-tip="Serwery"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></button>
   <button class="nav" data-p="modrinth" data-tip="Modrinth"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>
   <button class="nav" data-p="skins" data-tip="Skiny"><svg class="i" viewBox="0 0 24 24"><path d="M12 7a2 2 0 1 0-2-2M12 7v2l9 7v2H3v-2l9-7"/></svg></button>
   <div class="spacer"></div>
+  <button class="nav dc" data-discord data-tip="Discord"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 5.3A16.5 16.5 0 0 0 15.5 4l-.5 1a15 15 0 0 0-6 0l-.5-1a16.5 16.5 0 0 0-4.1 1.3C1.8 9.2 1.1 13 1.5 16.8a16.6 16.6 0 0 0 5 2.5l1.1-1.7c-.6-.2-1.2-.5-1.7-.9l.4-.3a11.8 11.8 0 0 0 11.4 0l.4.3c-.5.4-1.1.7-1.7.9l1.1 1.7a16.5 16.5 0 0 0 5-2.5c.5-4.4-.8-8.2-2.9-11.5zM8.7 14.5c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2z"/></svg></button>
   <button class="nav" data-p="console" data-tip="Konsola"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9l3 3-3 3M12 15h5"/></svg></button>
   <button class="nav" data-p="settings" data-tip="Ustawienia"><svg class="i" viewBox="0 0 24 24"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/></svg></button>
   <button class="nav me" data-p="accounts" data-tip="Konta"><img id="meImg" alt=""></button>
@@ -294,7 +396,16 @@ textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:1
   <section class="page on" id="home">
     <div class="sky" id="sky1"></div>
     <div class="shade"></div>
-    <button class="bgbtn" id="bgBtn"><svg width="20" height="20"><use href="#i-img"/></svg>Zmień tło</button>
+    <div class="topright">
+      <div class="news" id="news">
+        <div class="nh"><b>NOWOŚĆ</b><span id="newsVer"></span></div>
+        <ul id="newsList"></ul>
+      </div>
+      <div class="trbtns">
+        <button class="dcbtn" data-discord><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 5.3A16.5 16.5 0 0 0 15.5 4l-.5 1a15 15 0 0 0-6 0l-.5-1a16.5 16.5 0 0 0-4.1 1.3C1.8 9.2 1.1 13 1.5 16.8a16.6 16.6 0 0 0 5 2.5l1.1-1.7c-.6-.2-1.2-.5-1.7-.9l.4-.3a11.8 11.8 0 0 0 11.4 0l.4.3c-.5.4-1.1.7-1.7.9l1.1 1.7a16.5 16.5 0 0 0 5-2.5c.5-4.4-.8-8.2-2.9-11.5zM8.7 14.5c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2z"/></svg>Discord</button>
+        <button class="bgbtn" id="bgBtn" title="Zmień tło"><svg width="20" height="20"><use href="#i-img"/></svg></button>
+      </div>
+    </div>
     <div class="skin" id="homeSkinBox"><div class="tag" id="homeName">Brak konta</div><div class="scene" id="homeScene"></div></div>
     <div class="content">
       <svg class="logo"><use href="#logo"/></svg>
@@ -311,30 +422,43 @@ textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:1
     <input type="file" id="bgIn" accept=".jpg,.jpeg,.png,.webp,.gif" hidden>
   </section>
 
-  <!-- ======== MODY ======== -->
-  <section class="page hero" id="mods">
+  <!-- ======== PROFILE ======== -->
+  <section class="page hero" id="profiles">
     <div class="wrap">
       <div class="head">
-        <h2>Mody</h2>
-        <button class="vsel ppick"><span class="plabel">Profil</span><svg width="22" height="22"><use href="#i-chev"/></svg></button>
+        <h2>Profile</h2>
         <div class="grow"></div>
-        <button class="btn" id="addDisk"><svg width="22" height="22"><use href="#i-plus"/></svg>Dodaj z dysku</button>
-        <button class="btn primary" id="goSearch"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Szukaj modów</button>
+        <button class="btn primary" id="newProf"><svg width="22" height="22"><use href="#i-plus"/></svg>Dodaj profil</button>
       </div>
-      <div class="sub">Każdy profil ma własne mody, paczki zasobów i shadery.</div>
-      <div class="head">
-        <div class="tabs" id="ctabs">
-          <button class="on" data-k="mods">Mody<b id="c_mods">0</b></button>
-          <button data-k="resourcepacks">Paczki zasobów<b id="c_resourcepacks">0</b></button>
-          <button data-k="shaders">Shadery<b id="c_shaders">0</b></button>
-        </div>
-        <div class="grow"></div>
-        <button class="btn" id="openFolder" style="margin-top:34px"><svg class="i" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Folder</button>
-      </div>
-      <div class="grid" id="clist"></div>
-      <div class="empty" id="cempty"><h3 id="cemptyT"></h3><p id="cemptyP"></p></div>
-      <input type="file" id="fileIn" multiple hidden>
+      <div class="sub">Każdy profil ma własną wersję gry, RAM, mody, światy i ustawienia.</div>
+      <div class="pgrid" id="pgrid"></div>
     </div>
+  </section>
+
+  <!-- ======== STRONA PROFILU ======== -->
+  <section class="page" id="profile">
+    <div class="phead">
+      <button class="mini" id="pBack" title="Wróć"><svg width="22" height="22"><use href="#i-back"/></svg></button>
+      <button class="pswitch" id="pSwitch"><div class="picon" id="pIcon"></div><div><b id="pName"></b><small id="pVer"></small></div><svg width="22" height="22"><use href="#i-chev"/></svg></button>
+      <div class="grow"></div>
+      <button class="bigplay" id="pPlay"><svg viewBox="0 0 24 24" width="20" height="20" fill="#fff"><path d="M6 4l14 8-14 8z"/></svg><span>GRAJ</span></button>
+    </div>
+    <div class="ptabs" id="ptabs">
+      <button data-t="general">Ogólne</button>
+      <button data-t="mods" class="on">Mody</button>
+      <button data-t="saves">Światy</button>
+      <button data-t="resourcepacks">Paczki zasobów</button>
+      <button data-t="shaders">Shadery</button>
+    </div>
+    <div class="pbody">
+      <div class="pmain" id="pmain"></div>
+      <div class="pside">
+        <div class="pinfo" id="pinfo"></div>
+        <button class="btn" id="pShare" style="justify-content:center">Udostępnij profil</button>
+        <button class="btn" id="pFolder" style="justify-content:center">Otwórz folder profilu</button>
+      </div>
+    </div>
+    <input type="file" id="fileIn" multiple hidden>
   </section>
 
   <!-- ======== MODRINTH ======== -->
@@ -411,6 +535,25 @@ textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:1
     <div class="wrap">
       <div class="head"><h2>Ustawienia</h2></div>
       <div class="set setrow">
+        <div class="grow"><h4>Język</h4><p>Język launchera i statusu na Discordzie.</p></div>
+        <select class="sset" id="lang">
+          <option value="pl">Polski</option><option value="en">English</option><option value="de">Deutsch</option>
+          <option value="uk">Українська</option><option value="es">Español</option>
+        </select>
+      </div>
+      <div class="set">
+        <h4>Kolor launchera</h4>
+        <p>Kolor przycisków i akcentów.</p>
+        <div class="swatches" id="swatches"></div>
+      </div>
+      <div class="set setrow">
+        <div class="grow"><h4>Usuwanie starych logów</h4><p>Automatycznie usuwa logi gry i raporty awarii starsze niż wybrany czas.</p></div>
+        <select class="sset" id="logDays">
+          <option value="7">Co 7 dni</option><option value="14">Co 14 dni</option><option value="30">Co 30 dni</option>
+          <option value="90">Co 90 dni</option><option value="0">Nigdy</option>
+        </select>
+      </div>
+      <div class="set setrow">
         <div class="grow"><h4>Status na Discordzie</h4><p>Pokazuje znajomym, że grasz w Zorza Client, na jakiej wersji i na jakim serwerze.<br><span id="dcStatus"></span></p></div>
         <button class="sw" id="discord"></button>
       </div>
@@ -431,7 +574,22 @@ textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:1
   </section>
 
   <section class="page hero" id="servers"><div class="wrap"><h2 style="font-size:52px">Serwery</h2><div class="sub">Ta zakładka będzie dostępna wkrótce.</div></div></section>
-  <section class="page hero" id="skins"><div class="wrap"><h2 style="font-size:52px">Skiny</h2><div class="sub">Ta zakładka będzie dostępna wkrótce.</div></div></section>
+  <section class="page" id="skins">
+    <div class="skwrap">
+      <div class="skprev">
+        <div class="scene" id="skScene"></div>
+        <div class="seg" id="skModel" style="width:280px"><button data-m="classic">Klasyczny</button><button data-m="slim">Smukły (Alex)</button></div>
+        <button class="btn primary" id="skApply" style="margin-top:16px;width:280px;justify-content:center">Zastosuj</button>
+        <div class="hint" id="skHint" style="text-align:center;max-width:320px"></div>
+      </div>
+      <div class="sklist">
+        <div class="head"><h2>Skiny</h2></div>
+        <div class="sub" style="color:var(--muted)">Wgraj plik skina (PNG 64×64), wybierz go i kliknij Zastosuj.</div>
+        <div class="skgrid" id="skGrid"></div>
+      </div>
+    </div>
+    <input type="file" id="skIn" accept=".png" hidden>
+  </section>
 </main>
 
 <div id="pmenu"></div>
@@ -455,8 +613,8 @@ async function api(path, body) {
   return j;
 }
 function toast(msg, err) {
-  const t = $("#toast"); t.textContent = msg; t.className = "on" + (err ? " err" : "");
-  clearTimeout(t._h); t._h = setTimeout(() => t.className = "", 4500);
+  const el = $("#toast"); el.textContent = t(msg); el.className = "on" + (err ? " err" : "");
+  clearTimeout(el._h); el._h = setTimeout(() => el.className = "", 4500);
 }
 function openModal(html) { $("#modalBox").innerHTML = html; $("#modal").className = "on"; }
 function closeModal() { $("#modal").className = ""; $("#modalBox").innerHTML = ""; }
@@ -464,6 +622,289 @@ $("#modal").addEventListener("mousedown", e => { if (e.target.id === "modal") cl
 document.addEventListener("keydown", e => { if (e.key === "Escape") { closeModal(); $("#pmenu").className = ""; } });
 const mhead = (title, back) => `<div class="mh">${back ? `<button class="back" data-back>${ic("i-back")}</button>` : ""}<h3>${esc(title)}</h3><button class="x" onclick="closeModal()">${ic("i-x")}</button></div>`;
 function confirmBtn(b, label) { if (b.dataset.sure) return true; b.dataset.sure = 1; const old = b.innerHTML; b.innerHTML = label; setTimeout(() => { delete b.dataset.sure; b.innerHTML = old; }, 3000); return false; }
+
+const I18N_RAW = `
+AKTYWNE KONTO|ACTIVE ACCOUNT|AKTIVES KONTO|АКТИВНИЙ АКАУНТ|CUENTA ACTIVA
+Automatycznie usuwa logi gry i raporty awarii starsze niż wybrany czas.|Automatically deletes game logs and crash reports older than the selected time.|Löscht automatisch Spielprotokolle und Absturzberichte, die älter als die gewählte Zeit sind.|Автоматично видаляє журнали гри та звіти про збої, старші за вибраний час.|Elimina automáticamente los registros del juego y los informes de fallos más antiguos que el tiempo elegido.
+Autor|Author|Autor|Автор|Autor
+Bez konta Microsoft skin zmieni się tylko w launcherze.|Without a Microsoft account the skin only changes in the launcher.|Ohne Microsoft-Konto ändert sich der Skin nur im Launcher.|Без акаунта Microsoft скін зміниться лише в лаунчері.|Sin una cuenta de Microsoft la skin solo cambia en el launcher.
+Biblioteka|Library|Bibliothek|Бібліотека|Biblioteca
+Brak konta|No account|Kein Konto|Немає акаунта|Sin cuenta
+Brak światów|No worlds|Keine Welten|Немає світів|No hay mundos
+Co 14 dni|Every 14 days|Alle 14 Tage|Кожні 14 днів|Cada 14 días
+Co 30 dni|Every 30 days|Alle 30 Tage|Кожні 30 днів|Cada 30 días
+Co 7 dni|Every 7 days|Alle 7 Tage|Кожні 7 днів|Cada 7 días
+Co 90 dni|Every 90 days|Alle 90 Tage|Кожні 90 днів|Cada 90 días
+Co przenieść|What to transfer|Was übertragen|Що перенести|Qué transferir
+Czas gry|Play time|Spielzeit|Час гри|Tiempo de juego
+Dane logowania są zapisane tylko na tym komputerze i zaszyfrowane przez Windows.|Sign-in data is stored only on this computer and encrypted by Windows.|Anmeldedaten werden nur auf diesem Computer gespeichert und von Windows verschlüsselt.|Дані входу зберігаються лише на цьому комп'ютері й шифруються Windows.|Los datos de inicio de sesión se guardan solo en este ordenador y Windows los cifra.
+Dekoracje|Decoration|Dekoration|Декорації|Decoración
+Discord nie jest uruchomiony|Discord is not running|Discord läuft nicht|Discord не запущено|Discord no está abierto
+Dla wszystkich profili. Zostaw puste, jeśli nie wiesz, do czego to służy. Pamięć RAM ustawiasz w profilu.|For all profiles. Leave empty if you don't know what this is for. RAM is set per profile.|Für alle Profile. Leer lassen, wenn du nicht weißt, wofür das ist. RAM stellst du im Profil ein.|Для всіх профілів. Залиш порожнім, якщо не знаєш, навіщо це. RAM налаштовується в профілі.|Para todos los perfiles. Déjalo vacío si no sabes para qué sirve. La RAM se ajusta en cada perfil.
+Dodaj gotowy profil|Add a shared profile|Fertiges Profil hinzufügen|Додати готовий профіль|Añadir perfil compartido
+Dodaj konto Microsoft|Add Microsoft account|Microsoft-Konto hinzufügen|Додати акаунт Microsoft|Añadir cuenta de Microsoft
+Dodaj paczki zasobów|Add resource packs|Ressourcenpakete hinzufügen|Додати пакети ресурсів|Añadir paquetes de recursos
+Dodaj profil|Add profile|Profil hinzufügen|Додати профіль|Añadir perfil
+Dodaj shadery|Add shaders|Shader hinzufügen|Додати шейдери|Añadir shaders
+Dodaj własne mody|Add your own mods|Eigene Mods hinzufügen|Додати власні моди|Añadir tus mods
+Dodaję profil i pobieram mody...|Adding profile and downloading mods...|Profil wird hinzugefügt, Mods werden geladen...|Додаю профіль і завантажую моди...|Añadiendo perfil y descargando mods...
+Dodane|Added|Hinzugefügt|Додані|Añadidos
+Dodane mody|Added mods|Hinzugefügte Mods|Додані моди|Mods añadidos
+Dodano plików: {0}|Files added: {0}|Dateien hinzugefügt: {0}|Додано файлів: {0}|Archivos añadidos: {0}
+Dodano skin. Kliknij Zastosuj, żeby go ustawić.|Skin added. Click Apply to use it.|Skin hinzugefügt. Klicke auf Anwenden, um ihn zu benutzen.|Скін додано. Натисни «Застосувати», щоб його встановити.|Skin añadida. Pulsa Aplicar para usarla.
+Dodatkowe argumenty Javy|Extra Java arguments|Zusätzliche Java-Argumente|Додаткові аргументи Java|Argumentos extra de Java
+Dzisiaj|Today|Heute|Сьогодні|Hoy
+Dziwne|Cursed|Verflucht|Дивні|Malditos
+Ekonomia|Economy|Wirtschaft|Економіка|Economía
+Folder|Folder|Ordner|Папка|Carpeta
+Folder launchera|Launcher folder|Launcher-Ordner|Папка лаунчера|Carpeta del launcher
+GRAJ|PLAY|SPIELEN|ГРАТИ|JUGAR
+Generowanie świata|World generation|Weltgenerierung|Генерація світу|Generación de mundo
+Gotowe! Twój skin w Minecrafcie został zmieniony.|Done! Your Minecraft skin has been changed.|Fertig! Dein Minecraft-Skin wurde geändert.|Готово! Твій скін у Minecraft змінено.|¡Listo! Tu skin de Minecraft se ha cambiado.
+Gra działa|Game running|Spiel läuft|Гра запущена|Juego en marcha
+Gra już działa.|The game is already running.|Das Spiel läuft bereits.|Гра вже запущена.|El juego ya está en marcha.
+Graj|Play|Spielen|Грати|Jugar
+Import istniejącej konfiguracji.|Import an existing setup.|Vorhandene Konfiguration importieren.|Імпорт наявної конфігурації.|Importar una configuración existente.
+Importuj|Import|Importieren|Імпортувати|Importar
+Importuj profil|Import profile|Profil importieren|Імпорт профілю|Importar perfil
+Importuję profil...|Importing profile...|Profil wird importiert...|Імпортую профіль...|Importando perfil...
+Jedzenie|Food|Essen|Їжа|Comida
+Język|Language|Sprache|Мова|Idioma
+Język launchera i statusu na Discordzie.|Language of the launcher and the Discord status.|Sprache des Launchers und des Discord-Status.|Мова лаунчера та статусу в Discord.|Idioma del launcher y del estado de Discord.
+Karty profili z czasem gry i ostatnim uruchomieniem|Profile cards with play time and last launch|Profilkarten mit Spielzeit und letztem Start|Картки профілів із часом гри та останнім запуском|Tarjetas de perfil con tiempo de juego y último inicio
+Każdy profil ma własną wersję gry, RAM, mody, światy i ustawienia.|Each profile has its own game version, RAM, mods, worlds and settings.|Jedes Profil hat eigene Spielversion, RAM, Mods, Welten und Einstellungen.|Кожен профіль має власну версію гри, RAM, моди, світи й налаштування.|Cada perfil tiene su propia versión, RAM, mods, mundos y ajustes.
+Klasyczny|Classic|Klassisch|Класичний|Clásico
+Kliknij jeszcze raz – świat trafi do folderu „usuniete”.|Click again – the world will go to the "usuniete" (deleted) folder.|Nochmal klicken – die Welt kommt in den Ordner „usuniete“ (gelöscht).|Натисни ще раз – світ потрапить у папку «usuniete» (видалені).|Pulsa otra vez: el mundo irá a la carpeta «usuniete» (eliminados).
+Kliknij jeszcze raz, aby usunąć konto.|Click again to remove the account.|Nochmal klicken, um das Konto zu entfernen.|Натисни ще раз, щоб видалити акаунт.|Pulsa otra vez para quitar la cuenta.
+Kliknij jeszcze raz, aby usunąć profil.|Click again to delete the profile.|Nochmal klicken, um das Profil zu löschen.|Натисни ще раз, щоб видалити профіль.|Pulsa otra vez para borrar el perfil.
+Kliknij jeszcze raz, aby usunąć.|Click again to delete.|Nochmal klicken zum Löschen.|Натисни ще раз, щоб видалити.|Pulsa otra vez para borrar.
+Kod dostajesz od kogoś, kto kliknął „Kopiuj kod profilu” w swoim launcherze. Mody, paczki zasobów i shadery z kodu pobiorą się same z Modrinth.|You get the code from someone who clicked "Copy profile code" in their launcher. Mods, resource packs and shaders from the code download automatically from Modrinth.|Den Code bekommst du von jemandem, der in seinem Launcher „Profilcode kopieren“ geklickt hat. Mods, Ressourcenpakete und Shader werden automatisch von Modrinth geladen.|Код ти отримуєш від того, хто натиснув «Копіювати код профілю» у своєму лаунчері. Моди, пакети ресурсів і шейдери завантажаться самі з Modrinth.|El código te lo da alguien que pulsó «Copiar código de perfil» en su launcher. Los mods, paquetes y shaders se descargan solos desde Modrinth.
+Kod jest uszkodzony – skopiuj go jeszcze raz w całości.|The code is damaged – copy the whole code again.|Der Code ist beschädigt – kopiere ihn noch einmal vollständig.|Код пошкоджено – скопіюй його ще раз повністю.|El código está dañado: cópialo otra vez entero.
+Kod profilu|Profile code|Profilcode|Код профілю|Código de perfil
+Kod profilu możesz wysłać znajomym – po wklejeniu w „Dodaj gotowy profil” dostaną tę samą wersję, RAM i mody z Modrinth.|You can send the profile code to friends – pasted into "Add a shared profile" it gives them the same version, RAM and Modrinth mods.|Den Profilcode kannst du Freunden schicken – in „Fertiges Profil hinzufügen“ eingefügt bekommen sie dieselbe Version, RAM und Mods.|Код профілю можна надіслати друзям – після вставлення в «Додати готовий профіль» вони отримають ту саму версію, RAM і моди.|Puedes enviar el código a tus amigos: al pegarlo en «Añadir perfil compartido» tendrán la misma versión, RAM y mods.
+Kod udostępnionego profilu.|Code of a shared profile.|Code eines geteilten Profils.|Код поширеного профілю.|Código de un perfil compartido.
+Kolor i język launchera, automatyczne usuwanie logów|Launcher colour and language, automatic log cleanup|Launcher-Farbe und -Sprache, automatisches Löschen von Logs|Колір і мова лаунчера, автоматичне видалення журналів|Color e idioma del launcher, limpieza automática de registros
+Kolor launchera|Launcher colour|Launcher-Farbe|Колір лаунчера|Color del launcher
+Kolor przycisków i akcentów.|Colour of buttons and accents.|Farbe von Schaltflächen und Akzenten.|Колір кнопок і акцентів.|Color de los botones y detalles.
+Konsola|Console|Konsole|Консоль|Consola
+Konta|Accounts|Konten|Акаунти|Cuentas
+Konta graczy|Player accounts|Spielerkonten|Акаунти гравців|Cuentas de jugador
+Kopiuj kod profilu|Copy profile code|Profilcode kopieren|Копіювати код профілю|Copiar código de perfil
+Lista serwerów|Server list|Serverliste|Список серверів|Lista de servidores
+Logujesz się na stronie Microsoftu – launcher nie widzi twojego e-maila ani hasła.|You sign in on Microsoft's page – the launcher never sees your e-mail or password.|Du meldest dich auf der Microsoft-Seite an – der Launcher sieht weder E-Mail noch Passwort.|Ти входиш на сторінці Microsoft – лаунчер не бачить твоєї пошти чи пароля.|Inicias sesión en la página de Microsoft: el launcher no ve tu correo ni tu contraseña.
+Magia|Magic|Magie|Магія|Magia
+Mechanika gry|Game mechanics|Spielmechanik|Механіка гри|Mecánicas
+Mod wbudowany|Built-in mod|Integrierter Mod|Вбудований мод|Mod integrado
+Mody|Mods|Mods|Моди|Mods
+Mody pod optymalizację – instalują się same w profilach z Fabric. Możesz je wyłączyć.|Performance mods – installed automatically in Fabric profiles. You can turn them off.|Performance-Mods – werden in Fabric-Profilen automatisch installiert. Du kannst sie ausschalten.|Моди для оптимізації – встановлюються самі в профілях із Fabric. Їх можна вимкнути.|Mods de optimización: se instalan solos en perfiles con Fabric. Puedes desactivarlos.
+Mody wbudowane|Built-in mods|Integrierte Mods|Вбудовані моди|Mods integrados
+Mody wbudowane: Sodium, Sodium Extra, Lithium i inne|Built-in mods: Sodium, Sodium Extra, Lithium and more|Integrierte Mods: Sodium, Sodium Extra, Lithium und mehr|Вбудовані моди: Sodium, Sodium Extra, Lithium та інші|Mods integrados: Sodium, Sodium Extra, Lithium y más
+NOWOŚĆ|NEW|NEU|НОВЕ|NUEVO
+Na pewno? Kliknij jeszcze raz|Sure? Click again|Sicher? Nochmal klicken|Точно? Натисни ще раз|¿Seguro? Pulsa otra vez
+Najczęściej pobierane|Most downloaded|Meiste Downloads|Найпопулярніші|Más descargados
+Najnowsze|Newest|Neueste|Найновіші|Más nuevos
+Najpierw dodaj konto Microsoft.|Add a Microsoft account first.|Füge zuerst ein Microsoft-Konto hinzu.|Спочатку додай акаунт Microsoft.|Primero añade una cuenta de Microsoft.
+Najtrafniejsze|Most relevant|Relevanteste|Найрелевантніші|Más relevantes
+Napraw instalację|Repair installation|Installation reparieren|Відновити встановлення|Reparar instalación
+Narzędzia|Utility|Werkzeuge|Інструменти|Utilidades
+Nazwa profilu|Profile name|Profilname|Назва профілю|Nombre del perfil
+Nic nie znaleziono|Nothing found|Nichts gefunden|Нічого не знайдено|No se encontró nada
+Nic tu jeszcze nie ma.|Nothing here yet.|Hier ist noch nichts.|Тут ще нічого немає.|Aquí aún no hay nada.
+Nie masz jeszcze własnych modów.|You don't have any of your own mods yet.|Du hast noch keine eigenen Mods.|У тебе ще немає власних модів.|Aún no tienes mods propios.
+Nie masz jeszcze żadnego konta. Dodaj konto Microsoft z kupionym Minecraftem.|You don't have an account yet. Add a Microsoft account that owns Minecraft.|Du hast noch kein Konto. Füge ein Microsoft-Konto mit gekauftem Minecraft hinzu.|У тебе ще немає акаунта. Додай акаунт Microsoft із купленим Minecraft.|Aún no tienes cuenta. Añade una cuenta de Microsoft con Minecraft comprado.
+Nie można usunąć ostatniego profilu.|You can't delete the last profile.|Das letzte Profil kann nicht gelöscht werden.|Не можна видалити останній профіль.|No puedes borrar el último perfil.
+Nie udało się dodać skina.|Couldn't add the skin.|Skin konnte nicht hinzugefügt werden.|Не вдалося додати скін.|No se pudo añadir la skin.
+Nie udało się dodać {0}|Couldn't add {0}|{0} konnte nicht hinzugefügt werden|Не вдалося додати {0}|No se pudo añadir {0}
+Nie udało się połączyć z Modrinth|Couldn't connect to Modrinth|Keine Verbindung zu Modrinth|Не вдалося підключитися до Modrinth|No se pudo conectar con Modrinth
+Nie udało się skopiować.|Couldn't copy.|Kopieren fehlgeschlagen.|Не вдалося скопіювати.|No se pudo copiar.
+Nie znalazłem innych launcherów|No other launchers found|Keine anderen Launcher gefunden|Інших лаунчерів не знайдено|No se encontraron otros launchers
+Nie znaleziono tego launchera.|This launcher wasn't found.|Dieser Launcher wurde nicht gefunden.|Цей лаунчер не знайдено.|No se encontró este launcher.
+Nie znaleziono tego profilu.|This profile wasn't found.|Dieses Profil wurde nicht gefunden.|Цей профіль не знайдено.|No se encontró este perfil.
+Nieprawidłowa lub przeterminowana próba logowania.|Invalid or expired sign-in attempt.|Ungültiger oder abgelaufener Anmeldeversuch.|Недійсна або прострочена спроба входу.|Intento de inicio de sesión no válido o caducado.
+Nieprawidłowa nazwa pliku|Invalid file name|Ungültiger Dateiname|Недійсна назва файлу|Nombre de archivo no válido
+Nigdy|Never|Nie|Ніколи|Nunca
+Obrazek jest za duży (max 25 MB).|The image is too big (max 25 MB).|Das Bild ist zu groß (max. 25 MB).|Зображення завелике (макс. 25 МБ).|La imagen es demasiado grande (máx. 25 MB).
+Odśwież|Refresh|Aktualisieren|Оновити|Actualizar
+Ogólne|General|Allgemein|Загальне|General
+Optymalizacja|Optimization|Optimierung|Оптимізація|Optimización
+Ostatnie uruchomienie|Last launched|Zuletzt gestartet|Останній запуск|Último inicio
+Ostatnio aktualizowane|Recently updated|Kürzlich aktualisiert|Нещодавно оновлені|Actualizados recientemente
+Ostatnio grane|Last played|Zuletzt gespielt|Остання гра|Jugado por última vez
+Otwórz|Open|Öffnen|Відкрити|Abrir
+Otwórz folder|Open folder|Ordner öffnen|Відкрити папку|Abrir carpeta
+Otwórz folder profilu|Open profile folder|Profilordner öffnen|Відкрити папку профілю|Abrir carpeta del perfil
+Otwórz folder ze światami|Open worlds folder|Weltenordner öffnen|Відкрити папку світів|Abrir carpeta de mundos
+PROFILE|PROFILES|PROFILE|ПРОФІЛІ|PERFILES
+Paczki zasobów|Resource packs|Ressourcenpakete|Пакети ресурсів|Paquetes de recursos
+Paczki zasobów i shadery|Resource packs and shaders|Ressourcenpakete und Shader|Пакети ресурсів і шейдери|Paquetes de recursos y shaders
+Pamięć RAM|Memory (RAM)|Arbeitsspeicher (RAM)|Пам'ять (RAM)|Memoria (RAM)
+Plik lokalny|Local file|Lokale Datei|Локальний файл|Archivo local
+Pobierze się przy uruchomieniu gry|Will download when you start the game|Wird beim Spielstart geladen|Завантажиться під час запуску гри|Se descargará al iniciar el juego
+Poczekaj, aż skończy się bieżące zadanie.|Wait for the current task to finish.|Warte, bis die aktuelle Aufgabe fertig ist.|Зачекай, поки завершиться поточне завдання.|Espera a que termine la tarea actual.
+Poczekaj, trwa inne pobieranie.|Wait, another download is running.|Warte, ein anderer Download läuft.|Зачекай, триває інше завантаження.|Espera, hay otra descarga en curso.
+Poczekaj, trwa inne zadanie albo gra już działa.|Wait, another task is running or the game is already on.|Warte, eine andere Aufgabe läuft oder das Spiel ist schon an.|Зачекай, триває інше завдання або гра вже запущена.|Espera, hay otra tarea en curso o el juego ya está abierto.
+Pokazuje znajomym, że grasz w Zorza Client, na jakiej wersji i na jakim serwerze.|Shows friends that you're playing Zorza Client, on which version and which server.|Zeigt Freunden, dass du Zorza Client spielst, auf welcher Version und welchem Server.|Показує друзям, що ти граєш у Zorza Client, на якій версії та сервері.|Muestra a tus amigos que juegas a Zorza Client, en qué versión y en qué servidor.
+Pokaż mniej|Show less|Weniger anzeigen|Показати менше|Mostrar menos
+Pokaż więcej|Show more|Mehr anzeigen|Показати більше|Mostrar más
+Pokaż wszystko ({0})|Show all ({0})|Alle anzeigen ({0})|Показати все ({0})|Mostrar todo ({0})
+Pracuję...|Working...|Arbeite...|Працюю...|Trabajando...
+Profil|Profile|Profil|Профіль|Perfil
+Profil utworzony. Kliknij Graj, żeby pobrać grę.|Profile created. Click Play to download the game.|Profil erstellt. Klicke auf Spielen, um das Spiel zu laden.|Профіль створено. Натисни «Грати», щоб завантажити гру.|Perfil creado. Pulsa Jugar para descargar el juego.
+Profile|Profiles|Profile|Профілі|Perfiles
+Przechowywanie|Storage|Lagerung|Зберігання|Almacenamiento
+Przeciągnij tutaj pliki .jar|Drag .jar files here|.jar-Dateien hierher ziehen|Перетягни сюди файли .jar|Arrastra aquí archivos .jar
+Przeciągnij tutaj pliki .zip|Drag .zip files here|.zip-Dateien hierher ziehen|Перетягни сюди файли .zip|Arrastra aquí archivos .zip
+Przejdź do gry|Go to game|Zum Spiel|До гри|Ir al juego
+Przenieś profil z innego launchera|Move a profile from another launcher|Profil aus anderem Launcher übernehmen|Перенести профіль з іншого лаунчера|Traer un perfil de otro launcher
+Przenieś z innego launchera|Move from another launcher|Aus anderem Launcher übernehmen|Перенести з іншого лаунчера|Traer de otro launcher
+Przygoda|Adventure|Abenteuer|Пригоди|Aventura
+Przywrócono domyślne tło.|Default background restored.|Standardhintergrund wiederhergestellt.|Відновлено типовий фон.|Fondo predeterminado restaurado.
+Przywróć domyślne tło|Restore default background|Standardhintergrund wiederherstellen|Відновити типовий фон|Restaurar fondo predeterminado
+Serwery|Servers|Server|Сервери|Servidores
+Sesja konta wygasła – usuń konto i zaloguj się ponownie.|The account session expired – remove the account and sign in again.|Die Kontositzung ist abgelaufen – entferne das Konto und melde dich neu an.|Сесія акаунта закінчилася – видали акаунт і увійди знову.|La sesión de la cuenta caducó: quita la cuenta e inicia sesión de nuevo.
+Shadery|Shaders|Shader|Шейдери|Shaders
+Skin ustawiony w launcherze. W grze zmieni się po dodaniu konta Microsoft i ponownym kliknięciu Zastosuj.|Skin set in the launcher. In game it will change after you add a Microsoft account and click Apply again.|Skin im Launcher gesetzt. Im Spiel ändert er sich, nachdem du ein Microsoft-Konto hinzufügst und erneut auf Anwenden klickst.|Скін встановлено в лаунчері. У грі він зміниться після додавання акаунта Microsoft і повторного натискання «Застосувати».|Skin puesta en el launcher. En el juego cambiará cuando añadas una cuenta de Microsoft y pulses Aplicar otra vez.
+Skiny|Skins|Skins|Скіни|Skins
+Skopiowano kod profilu – wklej go znajomemu.|Profile code copied – paste it to a friend.|Profilcode kopiert – schick ihn einem Freund.|Код профілю скопійовано – надішли його другу.|Código copiado: pégaselo a un amigo.
+Skopiowano logi.|Logs copied.|Logs kopiert.|Журнали скопійовано.|Registros copiados.
+Skopiuj logi|Copy logs|Logs kopieren|Копіювати журнали|Copiar registros
+Smukły (Alex)|Slim (Alex)|Schlank (Alex)|Тонкий (Alex)|Delgado (Alex)
+Społeczność|Social|Sozial|Спільнота|Social
+Sprawdzam i naprawiam pliki gry...|Checking and repairing game files...|Spieldateien werden geprüft und repariert...|Перевіряю та відновлюю файли гри...|Comprobando y reparando archivos del juego...
+Spróbuj innej nazwy albo innego profilu.|Try another name or another profile.|Versuche einen anderen Namen oder ein anderes Profil.|Спробуй іншу назву або інший профіль.|Prueba otro nombre u otro perfil.
+Stan|Status|Status|Стан|Estado
+Start|Home|Start|Головна|Inicio
+Status na Discordzie|Discord status|Discord-Status|Статус у Discord|Estado en Discord
+Strona profilu: mody, światy, paczki zasobów i shadery|Profile page: mods, worlds, resource packs and shaders|Profilseite: Mods, Welten, Ressourcenpakete und Shader|Сторінка профілю: моди, світи, пакети ресурсів і шейдери|Página de perfil: mods, mundos, paquetes y shaders
+Stwórz własny profil|Create your own profile|Eigenes Profil erstellen|Створити власний профіль|Crear tu perfil
+Szukaj|Search|Suchen|Пошук|Buscar
+Szukaj modów, np. minimapa albo Sodium|Search mods, e.g. minimap or Sodium|Mods suchen, z. B. Minimap oder Sodium|Шукай моди, напр. мінікарта або Sodium|Busca mods, p. ej. minimapa o Sodium
+Szukaj na Modrinth|Search on Modrinth|Auf Modrinth suchen|Шукати на Modrinth|Buscar en Modrinth
+Szukaj paczek zasobów, np. Faithful|Search resource packs, e.g. Faithful|Ressourcenpakete suchen, z. B. Faithful|Шукай пакети ресурсів, напр. Faithful|Busca paquetes, p. ej. Faithful
+Szukaj shaderów, np. Complementary|Search shaders, e.g. Complementary|Shader suchen, z. B. Complementary|Шукай шейдери, напр. Complementary|Busca shaders, p. ej. Complementary
+Szukam launcherów na tym komputerze…|Looking for launchers on this computer…|Suche nach Launchern auf diesem Computer…|Шукаю лаунчери на цьому комп'ютері…|Buscando launchers en este ordenador…
+Szukam: oficjalnego launchera Minecraft, Modrinth App, Prism Launcher / MultiMC i Lunar Client.|I look for: the official Minecraft Launcher, Modrinth App, Prism Launcher / MultiMC and Lunar Client.|Gesucht wird: offizieller Minecraft Launcher, Modrinth App, Prism Launcher / MultiMC und Lunar Client.|Шукаю: офіційний лаунчер Minecraft, Modrinth App, Prism Launcher / MultiMC і Lunar Client.|Busco: el launcher oficial de Minecraft, Modrinth App, Prism Launcher / MultiMC y Lunar Client.
+Ta zakładka będzie dostępna wkrótce.|This tab is coming soon.|Dieser Tab kommt bald.|Ця вкладка скоро з'явиться.|Esta pestaña llegará pronto.
+Technologia|Technology|Technik|Технології|Tecnología
+Ten adres nie jest dozwolony.|This address isn't allowed.|Diese Adresse ist nicht erlaubt.|Ця адреса не дозволена.|Esta dirección no está permitida.
+Ten profil jest bez modów (Vanilla). Zmień go na Fabric w edycji profilu.|This profile has no mods (Vanilla). Switch it to Fabric in the profile settings.|Dieses Profil hat keine Mods (Vanilla). Stelle es in den Profileinstellungen auf Fabric um.|Цей профіль без модів (Vanilla). Зміни його на Fabric у налаштуваннях профілю.|Este perfil no tiene mods (Vanilla). Cámbialo a Fabric en los ajustes del perfil.
+Ten profil jest bez modów (Vanilla). Zmień go na Fabric w zakładce Ogólne.|This profile has no mods (Vanilla). Switch it to Fabric in the General tab.|Dieses Profil hat keine Mods (Vanilla). Stelle es im Tab Allgemein auf Fabric um.|Цей профіль без модів (Vanilla). Зміни його на Fabric у вкладці «Загальне».|Este perfil no tiene mods (Vanilla). Cámbialo a Fabric en la pestaña General.
+To konto Microsoft nie ma kupionego Minecrafta.|This Microsoft account doesn't own Minecraft.|Dieses Microsoft-Konto besitzt Minecraft nicht.|На цьому акаунті Microsoft немає купленого Minecraft.|Esta cuenta de Microsoft no tiene Minecraft comprado.
+To nie jest kod profilu Zorzy (powinien zaczynać się od ZORZA-).|This isn't a Zorza profile code (it should start with ZORZA-).|Das ist kein Zorza-Profilcode (er sollte mit ZORZA- beginnen).|Це не код профілю Zorza (має починатися з ZORZA-).|Esto no es un código de perfil de Zorza (debe empezar por ZORZA-).
+To nie jest skin Minecrafta – potrzebny plik PNG 64×64 (albo 64×32).|This isn't a Minecraft skin – you need a 64×64 (or 64×32) PNG file.|Das ist kein Minecraft-Skin – du brauchst eine PNG-Datei mit 64×64 (oder 64×32).|Це не скін Minecraft – потрібен PNG 64×64 (або 64×32).|Esto no es una skin de Minecraft: necesitas un PNG de 64×64 (o 64×32).
+Transport|Transportation|Transport|Транспорт|Transporte
+Udostępnij profil|Share profile|Profil teilen|Поділитися профілем|Compartir perfil
+Ustawienia|Settings|Einstellungen|Налаштування|Ajustes
+Ustawienia Minecrafta|Minecraft settings|Minecraft-Einstellungen|Налаштування Minecraft|Ajustes de Minecraft
+Ustawienia profilu|Profile settings|Profileinstellungen|Налаштування профілю|Ajustes del perfil
+Ustawiono nowe tło.|New background set.|Neuer Hintergrund gesetzt.|Новий фон встановлено.|Nuevo fondo puesto.
+Usunięto profil. Jego pliki są w folderze „usuniete”.|Profile deleted. Its files are in the "usuniete" (deleted) folder.|Profil gelöscht. Seine Dateien liegen im Ordner „usuniete“ (gelöscht).|Профіль видалено. Його файли в папці «usuniete» (видалені).|Perfil borrado. Sus archivos están en la carpeta «usuniete» (eliminados).
+Usuwanie starych logów|Delete old logs|Alte Logs löschen|Видалення старих журналів|Borrar registros antiguos
+Usuń|Delete|Löschen|Видалити|Borrar
+Usuń konto|Remove account|Konto entfernen|Видалити акаунт|Quitar cuenta
+Usuń profil|Delete profile|Profil löschen|Видалити профіль|Borrar perfil
+Usuń świat|Delete world|Welt löschen|Видалити світ|Borrar mundo
+Utworzono|Created|Erstellt|Створено|Creado
+UŻYWANY|IN USE|AKTIV|ВИКОРИСТОВУЄТЬСЯ|EN USO
+W tym launcherze nie ma żadnych profili do przeniesienia.|This launcher has no profiles to move.|Dieser Launcher hat keine Profile zum Übernehmen.|У цьому лаунчері немає профілів для перенесення.|Este launcher no tiene perfiles que traer.
+Wczoraj|Yesterday|Gestern|Учора|Ayer
+Wersja|Version|Version|Версія|Versión
+Wersja gry|Game version|Spielversion|Версія гри|Versión del juego
+Wersje gry od 1.8.9|Game versions from 1.8.9|Spielversionen ab 1.8.9|Версії гри від 1.8.9|Versiones desde la 1.8.9
+Wgraj plik skina (PNG 64×64), wybierz go i kliknij Zastosuj.|Upload a skin file (PNG 64×64), select it and click Apply.|Lade eine Skin-Datei hoch (PNG 64×64), wähle sie aus und klicke auf Anwenden.|Завантаж файл скіна (PNG 64×64), вибери його й натисни «Застосувати».|Sube un archivo de skin (PNG 64×64), elígelo y pulsa Aplicar.
+Wgraj skin|Upload skin|Skin hochladen|Завантажити скін|Subir skin
+Wróć|Back|Zurück|Назад|Atrás
+Wszystkie|All|Alle|Усі|Todos
+Wybierz konto, na którym chcesz grać.|Choose the account you want to play on.|Wähle das Konto, mit dem du spielen willst.|Вибери акаунт, на якому хочеш грати.|Elige la cuenta con la que quieres jugar.
+Wybierz obrazek JPG, PNG, WEBP albo GIF.|Choose a JPG, PNG, WEBP or GIF image.|Wähle ein JPG-, PNG-, WEBP- oder GIF-Bild.|Вибери зображення JPG, PNG, WEBP або GIF.|Elige una imagen JPG, PNG, WEBP o GIF.
+Wybierz obrazek z dysku…|Choose an image from disk…|Bild von der Festplatte wählen…|Вибрати зображення з диска…|Elegir una imagen del disco…
+Wybierz wersję gry z listy.|Choose a game version from the list.|Wähle eine Spielversion aus der Liste.|Вибери версію гри зі списку.|Elige una versión de la lista.
+Wybierz wersję i pamięć RAM.|Choose the version and RAM.|Version und RAM wählen.|Вибери версію та пам'ять RAM.|Elige la versión y la RAM.
+Wybierz wersję z listy.|Choose a version from the list.|Wähle eine Version aus der Liste.|Вибери версію зі списку.|Elige una versión de la lista.
+Wybrany|Selected|Ausgewählt|Вибраний|Elegido
+Wyczyść|Clear|Leeren|Очистити|Limpiar
+Wyposażenie|Equipment|Ausrüstung|Спорядження|Equipamiento
+Wyłączone: po zamknięciu launchera trzeba logować się od nowa, nic nie jest zapisywane na dysku.|Off: you sign in again after closing the launcher, nothing is saved to disk.|Aus: Nach dem Schließen musst du dich neu anmelden, nichts wird gespeichert.|Вимкнено: після закриття лаунчера треба входити знову, нічого не зберігається.|Desactivado: al cerrar el launcher tendrás que iniciar sesión otra vez; no se guarda nada.
+Własny kolor|Custom colour|Eigene Farbe|Власний колір|Color propio
+Włącz / wyłącz|Turn on / off|Ein / aus|Увімкнути / вимкнути|Activar / desactivar
+ZAPISANE KONTA|SAVED ACCOUNTS|GESPEICHERTE KONTEN|ЗБЕРЕЖЕНІ АКАУНТИ|CUENTAS GUARDADAS
+Zainstalowane mody|Installed mods|Installierte Mods|Встановлені моди|Mods instalados
+Zainstaluj|Install|Installieren|Встановити|Instalar
+Zainstalowano|Installed|Installiert|Встановлено|Instalado
+Pobieranie...|Downloading...|Wird geladen...|Завантаження...|Descargando...
+Zakładka Skiny – wgraj swój skin i kliknij Zastosuj|Skins tab – upload your skin and click Apply|Skins-Tab – lade deinen Skin hoch und klicke auf Anwenden|Вкладка «Скіни» – завантаж свій скін і натисни «Застосувати»|Pestaña Skins: sube tu skin y pulsa Aplicar
+Zaloguj się w oknie przeglądarki, które się otworzyło.|Sign in in the browser window that just opened.|Melde dich im geöffneten Browserfenster an.|Увійди у вікні браузера, яке відкрилося.|Inicia sesión en la ventana del navegador que se abrió.
+Zapamiętuj konta|Remember accounts|Konten merken|Запам'ятовувати акаунти|Recordar cuentas
+Zapisano profil.|Profile saved.|Profil gespeichert.|Профіль збережено.|Perfil guardado.
+Zapisano. Stare logi zostaną usunięte.|Saved. Old logs will be deleted.|Gespeichert. Alte Logs werden gelöscht.|Збережено. Старі журнали буде видалено.|Guardado. Se borrarán los registros antiguos.
+Zapisz|Save|Speichern|Зберегти|Guardar
+Zarządzanie|Management|Verwaltung|Управління|Gestión
+Zastosuj|Apply|Anwenden|Застосувати|Aplicar
+Zastosuj zmieni skin w launcherze i na twoim koncie Minecraft.|Apply changes the skin in the launcher and on your Minecraft account.|Anwenden ändert den Skin im Launcher und in deinem Minecraft-Konto.|«Застосувати» змінить скін у лаунчері та на твоєму акаунті Minecraft.|Aplicar cambia la skin en el launcher y en tu cuenta de Minecraft.
+Zaznacz i skopiuj (Ctrl+C).|Select and copy (Ctrl+C).|Markieren und kopieren (Strg+C).|Виділи й скопіюй (Ctrl+C).|Selecciona y copia (Ctrl+C).
+Zmieniam skin...|Changing skin...|Skin wird geändert...|Змінюю скін...|Cambiando skin...
+Zmień tło|Change background|Hintergrund ändern|Змінити фон|Cambiar fondo
+Znalezione launchery:|Launchers found:|Gefundene Launcher:|Знайдені лаунчери:|Launchers encontrados:
+Zwykła gra: 4 GB. Dużo modów albo shadery: 6–8 GB. Nie dawaj więcej niż połowa RAM-u komputera.|Normal play: 4 GB. Lots of mods or shaders: 6–8 GB. Don't give more than half of your PC's RAM.|Normales Spielen: 4 GB. Viele Mods oder Shader: 6–8 GB. Nicht mehr als die Hälfte des PC-RAMs geben.|Звичайна гра: 4 ГБ. Багато модів або шейдери: 6–8 ГБ. Не давай більше половини RAM комп'ютера.|Juego normal: 4 GB. Muchos mods o shaders: 6–8 GB. No des más de la mitad de la RAM del PC.
+albo przeciągnij plik PNG|or drag a PNG file|oder PNG-Datei hierher ziehen|або перетягни файл PNG|o arrastra un archivo PNG
+brak Application ID|no Application ID|keine Application ID|немає Application ID|sin Application ID
+połączono|connected|verbunden|підключено|conectado
+rozłączono – ponawiam|disconnected – retrying|getrennt – neuer Versuch|від'єднано – пробую знову|desconectado, reintentando
+wyłączone|off|aus|вимкнено|desactivado
+wyłączone w ustawieniach|turned off in settings|in den Einstellungen aus|вимкнено в налаштуваннях|desactivado en ajustes
+łączenie...|connecting...|verbinde...|підключення...|conectando...
+np. -XX:+UseG1GC|e.g. -XX:+UseG1GC|z. B. -XX:+UseG1GC|напр. -XX:+UseG1GC|p. ej. -XX:+UseG1GC
+np. Mój serwer|e.g. My server|z. B. Mein Server|напр. Мій сервер|p. ej. Mi servidor
+{0} dni temu|{0} days ago|vor {0} Tagen|{0} днів тому|hace {0} días
+{0} godz. {1} min|{0} h {1} min|{0} Std. {1} Min.|{0} год {1} хв|{0} h {1} min
+{0} min|{0} min|{0} Min.|{0} хв|{0} min
+Światy|Worlds|Welten|Світи|Mundos
+Światy pojawią się tu, gdy zagrasz w trybie jednoosobowym albo zaimportujesz profil.|Worlds show up here when you play singleplayer or import a profile.|Welten erscheinen hier, wenn du Einzelspieler spielst oder ein Profil importierst.|Світи з'являться тут, коли ти зіграєш в одиночній грі або імпортуєш профіль.|Los mundos aparecerán aquí cuando juegues en un jugador o importes un perfil.
+Utwórz profil|Create profile|Profil erstellen|Створити профіль|Crear perfil
+Fabric (z modami)|Fabric (with mods)|Fabric (mit Mods)|Fabric (з модами)|Fabric (con mods)
+Vanilla (bez modów)|Vanilla (no mods)|Vanilla (ohne Mods)|Vanilla (без модів)|Vanilla (sin mods)
+Edytuj profil|Edit profile|Profil bearbeiten|Редагувати профіль|Editar perfil
+Dodaj konto|Add account|Konto hinzufügen|Додати акаунт|Añadir cuenta
+Minigry|Minigames|Minispiele|Мініігри|Minijuegos
+Moby|Mobs|Mobs|Моби|Criaturas
+(sterowanie, grafika, dźwięk, język)|(controls, graphics, sound, language)|(Steuerung, Grafik, Ton, Sprache)|(керування, графіка, звук, мова)|(controles, gráficos, sonido, idioma)
+`;
+/* ================= JĘZYKI ================= */
+const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
+const LI = {en:0, de:1, uk:2, es:3};
+let lang = "pl";
+const I18N = {};
+for (const line of I18N_RAW.trim().split("\n")) { const p = line.split("|"); if (p.length === 5 + 0 || p.length >= 5) I18N[p[0]] = p.slice(1, 5); }
+function t(key, ...a) {
+  const s = lang === "pl" ? key : (I18N[key]?.[LI[lang]] || key);
+  return String(s).replace(/\{(\d)\}/g, (_, i) => a[i] ?? "");
+}
+const ORIG = new WeakMap();
+function trNode(n) {
+  if (n.nodeType === 3) {
+    const raw = ORIG.has(n) ? ORIG.get(n) : n.nodeValue, k = raw.trim();
+    if (!k || !(k in I18N)) return;
+    ORIG.set(n, raw);
+    const v = raw.replace(k, t(k));
+    if (n.nodeValue !== v) n.nodeValue = v;
+  } else if (n.nodeType === 1) {
+    if (n.id === "log" || n.tagName === "SCRIPT" || n.tagName === "STYLE" || n.tagName === "TEXTAREA") return;
+    for (const at of ["placeholder", "title", "data-tip"]) {
+      if (!n.hasAttribute(at)) continue;
+      const o = n.dataset["o" + at.replace("-", "")] ??= n.getAttribute(at);
+      if (o in I18N && n.getAttribute(at) !== t(o)) n.setAttribute(at, t(o));
+    }
+    n.childNodes.forEach(trNode);
+  }
+}
+new MutationObserver(ms => { if (lang === "pl") return; for (const m of ms) m.addedNodes.forEach(trNode); })
+  .observe(document.body, {childList:true, subtree:true});
+function applyLang(l) {
+  if (l === lang) return;
+  lang = l; document.documentElement.lang = l;
+  trNode(document.body);
+  if (S) { renderAccounts(); renderNews(); if (page === "profiles") renderProfiles(); if (page === "profile") renderProfilePage(); if (page === "skins") renderSkinsPage(); }
+}
 
 /* ================= POSTAĆ 3D ================= */
 const Player = (() => {
@@ -524,9 +965,9 @@ const Player = (() => {
     fill("#3f4452", 0, 16, 16, 16); fill("#3f4452", 16, 48, 16, 16); fill("#7a8090", 32, 48, 16, 16);
     return c.toDataURL();
   }
-  async function load(uuid) {
+  async function load(uuid, src) {
     try {
-      const r = await fetch("/api/skin?uuid=" + encodeURIComponent(uuid || ""));
+      const r = await fetch(src || "/api/skin?uuid=" + encodeURIComponent(uuid || ""));
       if (!r.ok) throw 0;
       const model = r.headers.get("X-Skin-Model");
       const url = URL.createObjectURL(await r.blob());
@@ -547,11 +988,12 @@ const Player = (() => {
 
 const skinCache = {};
 async function skinOf(uuid) { return skinCache[uuid || "-"] ||= Player.load(uuid); }
+async function libSkin() { const k = "lib:" + S.skin; return skinCache[k] ||= Player.load(null, "/api/skins/file?file=" + encodeURIComponent(S.skin)); }
 let homeRoot = null;
 async function renderSkins() {
   const acc = S.accounts.find(a => a.uuid === S.active);
-  const sk = await skinOf(acc && acc.uuid);
-  const s = Math.max(6, Math.round(Math.min(innerHeight * 0.5, 520) / 32));
+  const sk = (!acc || S.skin_chosen) ? await libSkin() : await skinOf(acc.uuid);
+  const s = Math.max(6, Math.round(Math.min(innerHeight * 0.44, 480) / 32));
   homeRoot = Player.build($("#homeScene"), sk.url, sk.slim, sk.th, s);
   Player.build($("#accScene"), sk.url, sk.slim, sk.th, Math.max(5, Math.round(Math.min(innerHeight * 0.42, 440) / 32)));
   $("#meImg").src = Player.headIcon(sk) || "";
@@ -564,7 +1006,19 @@ $("#homeSkinBox").addEventListener("mousemove", e => {
   const mx = (e.clientX - r.left) / r.width - .5, my = (e.clientY - r.top) / r.height - .35;
   homeRoot.querySelector(".head").style.transform = `rotateY(${mx * 50}deg) rotateX(${-my * 30}deg)`;
 });
-$("#homeSkinBox").addEventListener("mouseleave", () => { if (homeRoot) homeRoot.querySelector(".head").style.transform = ""; });
+$("#homeSkinBox").addEventListener("mouseenter", () => {
+  if (!homeRoot) return;
+  clearTimeout(homeRoot._bye); homeRoot.classList.remove("bye"); homeRoot.classList.add("hi");
+});
+$("#homeSkinBox").addEventListener("mouseleave", () => {
+  if (!homeRoot) return;
+  homeRoot.querySelector(".head").style.transform = "";
+  // płynne opuszczenie ręki od miejsca, w którym akurat jest
+  const m = new DOMMatrix(getComputedStyle(homeRoot.querySelector(".rarm")).transform);
+  homeRoot.style.setProperty("--from", (Math.atan2(m.b, m.a) * 180 / Math.PI).toFixed(1) + "deg");
+  homeRoot.classList.remove("hi"); homeRoot.classList.add("bye");
+  const r = homeRoot; r._bye = setTimeout(() => r.classList.remove("bye"), 600);
+});
 
 /* ================= TŁO ================= */
 const TREES = (() => {
@@ -605,7 +1059,9 @@ function go(p) {
   $$(".nav").forEach(b => b.classList.toggle("on", b.dataset.p === p));
   $$(".page").forEach(s => s.classList.toggle("on", s.id === p));
   $("#pmenu").className = "";
-  if (p === "mods") loadContent();
+  if (p === "profiles") renderProfiles();
+  if (p === "profile") renderProfilePage();
+  if (p === "skins") renderSkinsPage();
   if (p === "modrinth" && !$("#results").innerHTML) search(true);
   if (p === "console") pollLog();
 }
@@ -616,6 +1072,11 @@ const loaderName = l => l === "fabric" ? "Fabric" : "Vanilla";
 let lastAcc = "", lastProf = "";
 async function refresh() {
   try { S = await api("/api/state"); } catch { return; }
+  document.documentElement.style.setProperty("--blue", S.accent);
+  if (!refresh._init) { refresh._init = 1; renderNews(); renderSwatches(); }
+  applyLang(S.lang);
+  if (document.activeElement !== $("#lang")) $("#lang").value = S.lang;
+  if (document.activeElement !== $("#logDays")) $("#logDays").value = String(S.log_days);
   const acc = S.accounts.find(a => a.uuid === S.active), P = S.profile;
   document.title = S.name + " Launcher";
   $("#brandName").textContent = S.name.toUpperCase();
@@ -623,9 +1084,13 @@ async function refresh() {
   const key = (acc ? acc.uuid : "-") + "|" + S.accounts.map(a => a.uuid).join();
   if (key !== lastAcc) {
     lastAcc = key;
-    $("#homeName").textContent = $("#accName").textContent = acc ? acc.name : "Brak konta";
+    $("#homeName").textContent = $("#accName").textContent = acc ? acc.name : t("Brak konta");
     renderSkins(); renderAccounts();
   }
+  const skey = S.skin + "|" + S.skin_chosen;
+  if (skey !== refresh._skin) { const first = !refresh._skin; refresh._skin = skey; if (!first) renderSkins(); }
+  const allkey = JSON.stringify(S.profiles) + S.profile.id;
+  if (allkey !== refresh._all) { refresh._all = allkey; if (page === "profiles") renderProfiles(); if (page === "profile") renderProfileHead(); }
   const pkey = JSON.stringify(P);
   if (pkey !== lastProf) {
     const changed = lastProf && JSON.parse(lastProf).id !== P.id || (lastProf && JSON.parse(lastProf).version !== P.version);
@@ -633,29 +1098,28 @@ async function refresh() {
     $("#homeTitle").textContent = "Minecraft " + P.version;
     $("#pname span").textContent = `${P.name} · ${loaderName(P.loader)} · ${(P.ram_mb/1024).toFixed(1).replace(".0","")} GB RAM`;
     $$(".plabel").forEach(e => e.textContent = `${P.name} · ${P.version}`);
-    if (changed) { if (page === "mods") loadContent(); if (page === "modrinth") search(true); }
+    if (changed) { if (page === "profile") renderProfilePage(); if (page === "modrinth") search(true); }
   }
-  for (const k in S.counts) $("#c_" + k).textContent = S.counts[k];
-  const t = S.task, play = $("#play");
-  play.classList.toggle("busy", t.running);
-  if (t.running) {
-    $("#goTxt").textContent = t.status || "Pracuję...";
-    $("#bar").style.width = t.max ? (100 * t.progress / t.max) + "%" : "0";
+  const tk = S.task, play = $("#play");
+  play.classList.toggle("busy", tk.running);
+  if (tk.running) {
+    $("#goTxt").textContent = tk.status ? t(tk.status) : t("Pracuję...");
+    $("#bar").style.width = tk.max ? (100 * tk.progress / tk.max) + "%" : "0";
   } else {
-    $("#goTxt").textContent = S.game_running ? "Gra działa" : "Graj";
+    $("#goTxt").textContent = S.game_running ? t("Gra działa") : t("Graj");
     $("#bar").style.width = "0";
   }
-  $("#status").textContent = t.running && t.max ? `${t.progress} / ${t.max}` : "";
-  if (t.error) { toast(t.error, true); api("/api/clear_error", {}); if (page === "modrinth") markInstalled(); }
-  else if (t.done && !t.running) { toast(t.done); api("/api/clear_error", {}); }
+  $("#status").textContent = tk.running && tk.max ? `${tk.progress} / ${tk.max}` : "";
+  if (tk.error) { toast(tk.error, true); api("/api/clear_error", {}); if (page === "modrinth") markInstalled(); }
+  else if (tk.done && !tk.running) { toast(tk.done); api("/api/clear_error", {}); }
   if (S.login_message.text) { toast(S.login_message.text, !S.login_message.ok); api("/api/clear_error", {}); }
   if (document.activeElement !== $("#jvm")) $("#jvm").value = S.settings.jvm_args;
   $("#remember").classList.toggle("on", S.settings.remember_accounts);
   $("#discord").classList.toggle("on", S.settings.discord);
-  $("#dcStatus").textContent = "Stan: " + S.discord_status;
+  $("#dcStatus").textContent = t("Stan") + ": " + t(S.discord_status);
   $("#dataDir").textContent = S.data_dir;
-  if (refresh._wasRunning && !t.running) { if (page === "mods") loadContent(); if (page === "modrinth") markInstalled(); }
-  refresh._wasRunning = t.running;
+  if (refresh._wasRunning && !tk.running) { if (page === "profile") renderProfilePage(); if (page === "modrinth") markInstalled(); if (page === "skins") renderSkinsPage(); }
+  refresh._wasRunning = tk.running;
 }
 setInterval(refresh, 1000); refresh();
 
@@ -828,46 +1292,248 @@ function editProfile(id) {
   };
 }
 
-/* ================= MODY ================= */
-const KNAME = {mods:["modów","Przeciągnij tu plik .jar (Fabric) albo znajdź mody na Modrinth."],
-  resourcepacks:["paczek zasobów","Przeciągnij tu plik .zip albo znajdź paczki na Modrinth."],
-  shaders:["shaderów","Przeciągnij tu plik .zip. Shadery wymagają moda Iris (znajdziesz go na Modrinth)."]};
-$$("#ctabs button").forEach(b => b.onclick = () => { cKind = b.dataset.k; $$("#ctabs button").forEach(x => x.classList.toggle("on", x === b)); loadContent(); });
-async function loadContent() {
+/* ================= PROFILE (karty) ================= */
+const gb = mb => (mb / 1024).toFixed(1).replace(".0", "") + " GB";
+function fmtTime(sec) {
+  sec = sec || 0; const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60);
+  return h ? t("{0} godz. {1} min", h, m) : t("{0} min", m);
+}
+function ago(ts) {
+  if (!ts) return t("Nigdy");
+  const d = Math.floor((Date.now() / 1000 - ts) / 86400);
+  return d <= 0 ? t("Dzisiaj") : d === 1 ? t("Wczoraj") : t("{0} dni temu", d);
+}
+const fmtDate = ts => ts ? new Date(ts * 1000).toLocaleString(LOCALES[lang] || "pl-PL", {day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit"}) : "—";
+const initial = n => esc((n || "?").trim()[0] || "?").toUpperCase();
+
+function renderProfiles() {
   if (!S) return;
-  const pid = S.profile.id;
-  const items = await api(`/api/content?profile=${encodeURIComponent(pid)}&kind=${cKind}`).catch(() => []);
-  $("#clist").innerHTML = items.map(it => `
-    <div class="card ${it.enabled?"":"off"}">
-      <div class="ic">${it.icon ? `<img src="${esc(it.icon)}">` : `<svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg>`}</div>
-      <div class="grow" style="min-width:0"><div class="t">${esc(it.name)}</div><div class="s">${it.enabled?"Włączony":"Wyłączony"} · ${(it.size/1048576).toFixed(1)} MB</div></div>
-      <button class="sw ${it.enabled?"on":""}" data-f="${esc(it.file)}" data-a="toggle" title="Włącz / wyłącz"></button>
-      <button class="mini" data-f="${esc(it.file)}" data-a="delete" title="Usuń">${ic("i-trash")}</button>
-    </div>`).join("");
-  $("#clist").querySelectorAll("[data-a]").forEach(b => b.onclick = async () => {
-    if (b.dataset.a === "delete" && !confirmBtn(b, `<span style="color:#ff4d4d">${ic("i-trash")}</span>`)) return toast("Kliknij jeszcze raz, aby usunąć.");
-    await api("/api/content/" + b.dataset.a, {profile:pid, kind:cKind, file:b.dataset.f}).catch(e => toast(e.message, true));
-    loadContent();
+  $("#pgrid").innerHTML = S.profiles.map(p => `
+    <div class="pcard ${p.id === S.profile.id ? "sel" : ""}">
+      <div class="top"><div class="picon">${initial(p.name)}</div>
+        <div style="min-width:0"><div class="nm">${esc(p.name)}</div><div class="vv">${loaderName(p.loader)} ${esc(p.version)}</div></div>
+        ${p.id === S.profile.id ? `<span class="badge">${t("Wybrany")}</span>` : ""}</div>
+      <div class="pstats">
+        <div><span>RAM</span><b>${gb(p.ram_mb)}</b></div>
+        <div><span>${t("Czas gry")}</span><b>${fmtTime(p.playtime)}</b></div>
+        <div><span>${t("Ostatnie uruchomienie")}</span><b>${ago(p.last_played)}</b></div>
+      </div>
+      <div class="pact">
+        <button class="pplay" data-play="${esc(p.id)}"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M6 4l14 8-14 8z"/></svg>${t("GRAJ")}</button>
+        <button class="btn" data-open="${esc(p.id)}"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>${t("Mody")}</button>
+        <button class="mini" data-edit="${esc(p.id)}" title="${t("Ustawienia profilu")}">${ic("i-pen")}</button>
+        <button class="mini" data-del="${esc(p.id)}" title="${t("Usuń profil")}">${ic("i-trash")}</button>
+      </div>
+    </div>`).join("") + `<button class="pnew" id="pNewCard">${ic("i-plus", 34)}${t("Dodaj profil")}</button>`;
+  $$("#pgrid [data-play]").forEach(b => b.onclick = () => playProfile(b.dataset.play));
+  $$("#pgrid [data-open]").forEach(b => b.onclick = () => openProfile(b.dataset.open, "mods"));
+  $$("#pgrid [data-edit]").forEach(b => b.onclick = () => openProfile(b.dataset.edit, "general"));
+  $$("#pgrid [data-del]").forEach(b => b.onclick = async () => {
+    if (!confirmBtn(b, `<span style="color:#ff4d4d">${ic("i-trash")}</span>`)) return toast(t("Kliknij jeszcze raz, aby usunąć profil."));
+    try { await api("/api/profiles/delete", {id:b.dataset.del}); toast(t("Usunięto profil. Jego pliki są w folderze „usuniete”.")); await refresh(); renderProfiles(); }
+    catch (e) { toast(e.message, true); }
   });
-  $("#cempty").style.display = items.length ? "none" : "block";
-  $("#cemptyT").textContent = `Brak ${KNAME[cKind][0]} w profilu ${S.profile.name}`;
-  $("#cemptyP").textContent = S.profile.loader === "vanilla" && cKind === "mods" ? "Ten profil jest bez modów (Vanilla). Zmień go na Fabric w edycji profilu." : KNAME[cKind][1];
+  $("#pNewCard").onclick = () => addProfile();
 }
-async function uploadFiles(files) {
-  for (const f of files) {
-    const r = await fetch(`/api/content/upload?profile=${encodeURIComponent(S.profile.id)}&kind=${cKind}&name=${encodeURIComponent(f.name)}`, {method:"POST", body:f});
-    if (!r.ok) toast("Nie udało się dodać " + f.name, true);
+$("#newProf").onclick = () => addProfile();
+
+async function playProfile(id) {
+  if (S.task.running || S.game_running) return toast(t("Poczekaj, trwa inne zadanie albo gra już działa."));
+  if (!S.accounts.length) { go("accounts"); return toast(t("Najpierw dodaj konto Microsoft."), true); }
+  try { await api("/api/profiles/select", {id}); await api("/api/play", {}); go("home"); refresh(); }
+  catch (e) { toast(e.message, true); }
+}
+
+/* ================= STRONA PROFILU ================= */
+let pTab = "mods", pFilter = "";
+async function openProfile(id, tab) {
+  if (id !== S.profile.id) { await api("/api/profiles/select", {id}); await refresh(); }
+  pTab = tab || pTab; pFilter = "";
+  go("profile");
+}
+function renderProfileHead() {
+  const P = S.profile;
+  $("#pIcon").innerHTML = initial(P.name);
+  $("#pName").textContent = P.name;
+  $("#pVer").textContent = `${loaderName(P.loader)} ${P.version}`;
+  $$("#ptabs button").forEach(b => b.classList.toggle("on", b.dataset.t === pTab));
+  $("#pinfo").innerHTML = `
+    <div><span>Zorza Client</span><b>${esc(S.client_version)}</b></div>
+    <div><span>${t("Czas gry")}</span><b>${fmtTime(P.playtime)}</b></div>
+    <div><span>${t("Utworzono")}</span><b>${fmtDate(P.created)}</b></div>
+    <div><span>${t("Ostatnie uruchomienie")}</span><b>${P.last_played ? fmtDate(P.last_played) : t("Nigdy")}</b></div>`;
+}
+$$("#ptabs button").forEach(b => b.onclick = () => { pTab = b.dataset.t; pFilter = ""; renderProfilePage(); });
+$("#pBack").onclick = () => go("profiles");
+$("#pSwitch").onclick = e => { e.stopPropagation(); profileMenu($("#pSwitch"), "down", false); };
+$("#pPlay").onclick = () => playProfile(S.profile.id);
+$("#pFolder").onclick = () => api("/api/open_folder", {profile:S.profile.id});
+$("#pShare").onclick = () => shareProfile(S.profile.id);
+async function shareProfile(id) {
+  try {
+    const {code} = await api("/api/profiles/export?id=" + encodeURIComponent(id));
+    try { await navigator.clipboard.writeText(code); toast(t("Skopiowano kod profilu – wklej go znajomemu.")); }
+    catch { openModal(mhead(t("Kod profilu")) + `<textarea class="inp" readonly>${esc(code)}</textarea><div class="hint">${t("Zaznacz i skopiuj (Ctrl+C).")}</div>`); }
+  } catch (e) { toast(e.message, true); }
+}
+
+const KDIR = {mods:"mods", resourcepacks:"resourcepacks", shaders:"shaderpacks"};
+async function renderProfilePage() {
+  if (!S || page !== "profile") return;
+  renderProfileHead();
+  const P = S.profile, el = $("#pmain");
+  if (pTab === "general") {
+    el.innerHTML = `<div class="form">${profileFields(P)}
+      <div class="mfoot"><button class="btn primary" id="fSave">${ic("i-check")}${t("Zapisz")}</button>
+      <button class="btn" id="fRepair">${t("Napraw instalację")}</button>
+      <button class="btn danger" id="fDel">${ic("i-trash")}${t("Usuń profil")}</button></div></div>`;
+    bindProfileFields();
+    $("#fSave").onclick = async () => { try { await api("/api/profiles/update", {id:P.id, ...readFields()}); await refresh(); toast(t("Zapisano profil.")); renderProfilePage(); } catch (e) { toast(e.message, true); } };
+    $("#fRepair").onclick = async () => { try { await api("/api/repair", {id:P.id}); toast(t("Sprawdzam i naprawiam pliki gry...")); } catch (e) { toast(e.message, true); } };
+    $("#fDel").onclick = async () => {
+      if (!confirmBtn($("#fDel"), t("Na pewno? Kliknij jeszcze raz"))) return;
+      try { await api("/api/profiles/delete", {id:P.id}); toast(t("Usunięto profil. Jego pliki są w folderze „usuniete”.")); await refresh(); go("profiles"); }
+      catch (e) { toast(e.message, true); }
+    };
+    return;
   }
-  toast(`Dodano ${files.length} plik(ów).`); loadContent();
+  if (pTab === "saves") {
+    const ws = await api("/api/worlds?profile=" + encodeURIComponent(P.id)).catch(() => []);
+    el.innerHTML = `<div class="lhead"><h3>${t("Światy")} <span class="cnt">${ws.length}</span></h3>
+      <button class="btn" id="wOpen">${t("Otwórz folder ze światami")}</button></div>` +
+      (ws.length ? ws.map(w => `<div class="mrow"><div class="ic">${w.icon ? `<img src="/api/worldicon?profile=${encodeURIComponent(P.id)}&folder=${encodeURIComponent(w.folder)}">` : ic("i-img")}</div>
+        <div class="grow" style="min-width:0"><div class="nm">${esc(w.name)}</div><div class="au">${t("Ostatnio grane")}: ${fmtDate(w.modified)}</div></div>
+        <button class="mini" data-w="${esc(w.folder)}" title="${t("Usuń świat")}">${ic("i-trash")}</button></div>`).join("")
+        : `<div class="empty"><h3>${t("Brak światów")}</h3><p>${t("Światy pojawią się tu, gdy zagrasz w trybie jednoosobowym albo zaimportujesz profil.")}</p></div>`);
+    $("#wOpen").onclick = () => api("/api/worlds/open", {profile:P.id});
+    $$("#pmain [data-w]").forEach(b => b.onclick = async () => {
+      if (!confirmBtn(b, `<span style="color:#ff4d4d">${ic("i-trash")}</span>`)) return toast(t("Kliknij jeszcze raz – świat trafi do folderu „usuniete”."));
+      await api("/api/worlds/delete", {profile:P.id, folder:b.dataset.w}).catch(e => toast(e.message, true)); renderProfilePage();
+    });
+    return;
+  }
+  const kind = pTab;
+  const items = await api(`/api/content?profile=${encodeURIComponent(P.id)}&kind=${kind}`).catch(() => []);
+  const own = items.filter(i => i.source !== "builtin"), bi = items.filter(i => i.source === "builtin");
+  const TITLE = {mods:"Zainstalowane mody", resourcepacks:"Paczki zasobów", shaders:"Shadery"}[kind];
+  const ADD = {mods:"Dodaj własne mody", resourcepacks:"Dodaj paczki zasobów", shaders:"Dodaj shadery"}[kind];
+  const DROP = {mods:"Przeciągnij tutaj pliki .jar", resourcepacks:"Przeciągnij tutaj pliki .zip", shaders:"Przeciągnij tutaj pliki .zip"}[kind];
+  const f = pFilter.toLowerCase(), match = i => !f || (i.name + " " + i.author).toLowerCase().includes(f);
+  const row = (it, locked) => `
+    <div class="mrow ${it.enabled ? "" : "off"}">
+      <div class="ic">${it.icon ? `<img src="${esc(it.icon)}">` : `<svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg>`}</div>
+      <div class="grow" style="min-width:0"><div class="nm">${esc(it.name)}</div>
+        <div class="au">${it.pending ? t("Pobierze się przy uruchomieniu gry") : it.author ? t("Autor") + ": " + esc(it.author) : it.source === "modrinth" ? "Modrinth" : t("Plik lokalny")}</div></div>
+      ${it.version ? `<div class="ver" title="${esc(it.version)}">${t("Wersja")}: ${esc(it.version)}</div>` : ""}
+      ${it.pending ? "" : `<button class="sw ${it.enabled ? "on" : ""}" data-tog="${esc(it.file)}" title="${t("Włącz / wyłącz")}"></button>`}
+      ${locked ? `<div class="lockic" title="${t("Mod wbudowany")}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>`
+        : `<button class="mini" data-rm="${esc(it.file)}" title="${t("Usuń")}">${ic("i-trash")}</button>`}
+    </div>`;
+  el.innerHTML = `
+    <div class="lhead"><h3>${t(TITLE)} <span class="cnt">${items.filter(i => !i.pending).length}</span></h3>
+      <button class="mini" id="cRef" title="${t("Odśwież")}"><svg class="i" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/></svg></button>
+      <button class="btn" id="cSearch">${t("Szukaj na Modrinth")}</button>
+      <button class="btn" id="cFolder">${t("Otwórz folder")}</button>
+      <button class="btn primary" id="cAdd">${ic("i-plus")}${t(ADD)}</button></div>
+    ${kind === "mods" && P.loader === "vanilla" ? `<div class="warn">${t("Ten profil jest bez modów (Vanilla). Zmień go na Fabric w zakładce Ogólne.")}</div>` : ""}
+    <div class="dropz" id="dropz">${ic("i-down")}${t(DROP)}</div>
+    <div class="lsearch">${`<svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>`}<input id="cFilter" placeholder="${t("Szukaj")}" value="${esc(pFilter)}"></div>
+    <div class="lsec">${t(kind === "mods" ? "Dodane mody" : "Dodane")} <span class="cnt">${own.length}</span></div>
+    ${own.filter(match).map(i => row(i, false)).join("") || `<div class="hint">${t(kind === "mods" ? "Nie masz jeszcze własnych modów." : "Nic tu jeszcze nie ma.")}</div>`}
+    ${bi.length ? `<div class="lsec">${t("Mody wbudowane")} <span class="cnt">${bi.length}</span></div>
+      <div class="hint" style="margin-top:0">${t("Mody pod optymalizację – instalują się same w profilach z Fabric. Możesz je wyłączyć.")}</div>
+      ${bi.filter(match).map(i => row(i, true)).join("")}` : ""}`;
+  $("#cFilter").oninput = e => { pFilter = e.target.value; const pos = e.target.selectionStart; renderProfilePage().then(() => { const i = $("#cFilter"); i.focus(); i.setSelectionRange(pos, pos); }); };
+  $("#cRef").onclick = () => renderProfilePage();
+  $("#cFolder").onclick = () => api("/api/open_folder", {profile:P.id, kind});
+  $("#cSearch").onclick = () => { setMKind(kind); go("modrinth"); };
+  $("#cAdd").onclick = () => { $("#fileIn").accept = kind === "mods" ? ".jar" : ".zip"; $("#fileIn").click(); };
+  $$("#pmain [data-tog]").forEach(b => b.onclick = async () => { await api("/api/content/toggle", {profile:P.id, kind, file:b.dataset.tog}).catch(e => toast(e.message, true)); renderProfilePage(); });
+  $$("#pmain [data-rm]").forEach(b => b.onclick = async () => {
+    if (!confirmBtn(b, `<span style="color:#ff4d4d">${ic("i-trash")}</span>`)) return toast(t("Kliknij jeszcze raz, aby usunąć."));
+    await api("/api/content/delete", {profile:P.id, kind, file:b.dataset.rm}).catch(e => toast(e.message, true)); renderProfilePage();
+  });
+  const dz = $("#dropz");
+  ["dragenter", "dragover"].forEach(ev => el.addEventListener(ev, e => { e.preventDefault(); dz.classList.add("on"); }));
+  el.addEventListener("dragleave", e => { if (!el.contains(e.relatedTarget)) dz.classList.remove("on"); });
+  el.ondrop = e => { e.preventDefault(); dz.classList.remove("on"); uploadFiles([...e.dataTransfer.files], kind); };
 }
-$("#addDisk").onclick = () => $("#fileIn").click();
-$("#fileIn").onchange = e => { uploadFiles([...e.target.files]); e.target.value = ""; };
-const drop = $("#mods");
-drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("drop"); });
-drop.addEventListener("dragleave", () => drop.classList.remove("drop"));
-drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("drop"); uploadFiles([...e.dataTransfer.files]); });
-$("#openFolder").onclick = () => api("/api/open_folder", {profile:S.profile.id, kind:cKind});
-$("#goSearch").onclick = () => { setMKind(cKind); go("modrinth"); };
+async function uploadFiles(files, kind) {
+  for (const f of files) {
+    const r = await fetch(`/api/content/upload?profile=${encodeURIComponent(S.profile.id)}&kind=${kind}&name=${encodeURIComponent(f.name)}`, {method:"POST", body:f});
+    if (!r.ok) toast(t("Nie udało się dodać {0}", f.name), true);
+  }
+  if (files.length) toast(t("Dodano plików: {0}", files.length));
+  renderProfilePage();
+}
+$("#fileIn").onchange = e => { uploadFiles([...e.target.files], pTab); e.target.value = ""; };
+
+/* ================= SKINY ================= */
+let skSel = null, skData = null;
+function skinFront(img, model) { // płaski podgląd skina (przód) do kafelka
+  const c = document.createElement("canvas"); c.width = 16; c.height = 32;
+  const g = c.getContext("2d"); g.imageSmoothingEnabled = false;
+  const a = model === "slim" ? 3 : 4, old = img.naturalHeight === 32;
+  const d = (sx, sy, w, h, dx, dy) => g.drawImage(img, sx, sy, w, h, dx, dy, w, h);
+  d(8, 8, 8, 8, 4, 0); d(20, 20, 8, 12, 4, 8); d(44, 20, a, 12, 4 - a, 8);
+  old ? d(44, 20, a, 12, 12, 8) : d(36, 52, a, 12, 12, 8);
+  d(4, 20, 4, 12, 4, 20); old ? d(4, 20, 4, 12, 8, 20) : d(20, 52, 4, 12, 8, 20);
+  d(40, 8, 8, 8, 4, 0);
+  if (!old) { d(20, 36, 8, 12, 4, 8); d(44, 36, a, 12, 4 - a, 8); d(52, 52, a, 12, 12, 8); d(4, 36, 4, 12, 4, 20); d(4, 52, 4, 12, 8, 20); }
+  return c;
+}
+async function loadImg(src) { const i = new Image(); i.src = src; await i.decode(); return i; }
+async function renderSkinsPage() {
+  if (page !== "skins") return;
+  skData = await api("/api/skins").catch(() => ({skins: [], selected: ""}));
+  if (!skSel || !skData.skins.some(s => s.file === skSel)) skSel = skData.selected || skData.skins[0]?.file;
+  const g = $("#skGrid"); g.innerHTML = "";
+  for (const s of skData.skins) {
+    const el = document.createElement("div"); el.className = "sk" + (s.file === skSel ? " sel" : "");
+    try { el.appendChild(skinFront(await loadImg(`/api/skins/file?file=${encodeURIComponent(s.file)}&v=${s.v}`), s.model)); } catch {}
+    el.insertAdjacentHTML("beforeend", `<div class="n">${esc(s.name)}</div>${s.file === skData.selected ? `<span class="used">${t("UŻYWANY")}</span>` : ""}` +
+      (s.file !== "startowy.png" ? `<button class="mini" data-skdel style="position:absolute;top:4px;right:4px;width:34px;height:34px">${ic("i-trash", 18)}</button>` : ""));
+    el.onclick = e => {
+      const del = e.target.closest("[data-skdel]");
+      if (del) { e.stopPropagation(); if (!confirmBtn(del, `<span style="color:#ff4d4d">${ic("i-trash", 18)}</span>`)) return; api("/api/skins/delete", {file:s.file}).then(renderSkinsPage); return; }
+      skSel = s.file; renderSkinsPage();
+    };
+    g.appendChild(el);
+  }
+  const add = document.createElement("div"); add.className = "sk sknew"; add.id = "skAdd";
+  add.innerHTML = `${ic("i-plus", 34)}<div class="n">${t("Wgraj skin")}</div><div class="hint" style="margin:0;text-align:center">${t("albo przeciągnij plik PNG")}</div>`;
+  add.onclick = () => $("#skIn").click();
+  g.appendChild(add);
+  const cur = skData.skins.find(s => s.file === skSel);
+  $$("#skModel button").forEach(b => b.classList.toggle("on", cur && b.dataset.m === cur.model));
+  $("#skHint").textContent = S.accounts.length ? t("Zastosuj zmieni skin w launcherze i na twoim koncie Minecraft.") : t("Bez konta Microsoft skin zmieni się tylko w launcherze.");
+  if (cur) {
+    const url = `/api/skins/file?file=${encodeURIComponent(cur.file)}&v=${cur.v}`;
+    const img = await loadImg(url).catch(() => null);
+    const pl = Player.build($("#skScene"), url, cur.model === "slim", img && img.naturalHeight === 32 ? 32 : 64, Math.max(6, Math.round(Math.min(innerHeight * 0.48, 480) / 32)));
+    pl.classList.add("hi");
+  }
+}
+$$("#skModel button").forEach(b => b.onclick = async () => { if (!skSel) return; await api("/api/skins/model", {file:skSel, model:b.dataset.m}); renderSkinsPage(); });
+$("#skApply").onclick = async () => {
+  if (!skSel) return;
+  try { await api("/api/skins/apply", {file:skSel}); toast(t("Zmieniam skin...")); setTimeout(() => { delete skinCache["lib"]; lastAcc = ""; refresh(); renderSkinsPage(); }, 1500); }
+  catch (e) { toast(e.message, true); }
+};
+async function uploadSkin(f) {
+  if (!f) return;
+  const r = await fetch(`/api/skins/upload?name=${encodeURIComponent(f.name)}`, {method:"POST", body:f});
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) return toast(j.error || t("Nie udało się dodać skina."), true);
+  skSel = j.file; toast(t("Dodano skin. Kliknij Zastosuj, żeby go ustawić.")); renderSkinsPage();
+}
+$("#skIn").onchange = e => { uploadSkin(e.target.files[0]); e.target.value = ""; };
+$("#skins").addEventListener("dragover", e => { e.preventDefault(); $("#skAdd")?.classList.add("on"); });
+$("#skins").addEventListener("dragleave", e => { if (!$("#skins").contains(e.relatedTarget)) $("#skAdd")?.classList.remove("on"); });
+$("#skins").addEventListener("drop", e => { e.preventDefault(); $("#skAdd")?.classList.remove("on"); uploadSkin(e.dataTransfer.files[0]); });
+
+/* ================= DISCORD ================= */
+$$("[data-discord]").forEach(b => b.onclick = () => api("/api/open_url", {url:S.discord_invite}).catch(e => toast(e.message, true)));
 
 /* ================= MODRINTH ================= */
 const fmt = n => n >= 1e6 ? (n/1e6).toFixed(1).replace(".", ",") + " mln" : n >= 1e3 ? (n/1e3).toFixed(1).replace(".", ",") + " tys." : n;
@@ -966,6 +1632,26 @@ $("#jvm").onchange = () => api("/api/settings", {jvm_args:$("#jvm").value});
 $("#remember").onclick = () => api("/api/settings", {remember_accounts:!S.settings.remember_accounts}).then(refresh);
 $("#discord").onclick = () => api("/api/settings", {discord:!S.settings.discord}).then(refresh);
 $("#openData").onclick = () => api("/api/open_folder", {});
+/* ================= USTAWIENIA: język, kolor, logi ================= */
+const ACCENTS = ["#1f6bff", "#7c4dff", "#d946ef", "#ff4d6d", "#ff7a1a", "#f5b400", "#22c55e", "#14b8a6", "#06b6d4"];
+function renderSwatches() {
+  $("#swatches").innerHTML = ACCENTS.map(c => `<button style="background:${c}" data-c="${c}" class="${c.toLowerCase() === S.accent.toLowerCase() ? "on" : ""}"></button>`).join("") +
+    `<input type="color" id="accCustom" value="${esc(S.accent)}" title="${t("Własny kolor")}">`;
+  $$("#swatches [data-c]").forEach(b => b.onclick = () => setAccent(b.dataset.c));
+  $("#accCustom").onchange = e => setAccent(e.target.value);
+}
+async function setAccent(c) { document.documentElement.style.setProperty("--blue", c); await api("/api/settings", {accent:c}); await refresh(); renderSwatches(); }
+$("#lang").onchange = async e => { await api("/api/settings", {lang:e.target.value}); await refresh(); };
+$("#logDays").onchange = async e => { await api("/api/settings", {log_days:+e.target.value}); toast(t("Zapisano. Stare logi zostaną usunięte.")); };
+function renderNews() {
+  if (!S) return;
+  $("#newsVer").textContent = "v" + S.client_version;
+  const all = renderNews.all, list = all ? S.news : S.news.slice(0, 3);
+  $("#newsList").innerHTML = list.map(n => `<li>${esc(t(n))}</li>`).join("") +
+    (S.news.length > 3 ? `<li class="more"><button id="newsMore">${all ? t("Pokaż mniej") : t("Pokaż wszystko ({0})", S.news.length)}</button></li>` : "");
+  const b = $("#newsMore"); if (b) b.onclick = () => { renderNews.all = !all; renderNews(); };
+}
+
 </script>
 </body>
 </html>

@@ -23,9 +23,24 @@ Strzałka obok "Graj" -> lista profili, "Dodaj profil", "Edytuj profil", "Napraw
   Pliki są kopiowane – w starym launcherze nic się nie zmienia.
 Usunięty profil trafia do folderu  usuniete  w folderze launchera (można go odzyskać).
 
-TŁO
----
-Na ekranie startowym kliknij "Zmień tło" w prawym górnym rogu i wybierz obrazek z dysku.
+PROFILE I MODY
+--------------
+Zakładka Profile (ikonka kostki): karty profili z RAM-em, czasem gry i ostatnim uruchomieniem.
+"Mody" na karcie otwiera stronę profilu: Ogólne, Mody, Światy, Paczki zasobów, Shadery.
+Na dole listy modów są "Mody wbudowane" (Fabric API, Sodium, Sodium Extra, Lithium, FerriteCore,
+Entity Culling, ImmediatelyFast) – pobierają się same przy uruchomieniu gry w profilach z Fabric.
+Listę możesz zmienić w launcher.py (MODY_WBUDOWANE). Wersje gry: od 1.8.9 (Fabric działa od 1.14).
+
+SKINY
+-----
+Zakładka Skiny: "Wgraj skin" (PNG 64x64), wybierz model (Klasyczny/Smukły) i kliknij Zastosuj.
+Z kontem Microsoft skin zmienia się też w grze. Bez konta – tylko w launcherze.
+
+TŁO, KOLOR, JĘZYK, LOGI
+-----------------------
+Tło: przycisk z obrazkiem w prawym górnym rogu ekranu startowego.
+Ustawienia: język (PL/EN/DE/UK/ES), kolor launchera, usuwanie starych logów (7/14/30/90 dni).
+Co nowego: lista NOWOSCI w launcher.py (pokazuje się w karcie "Nowość").
 
 NAZWA LAUNCHERA
 ---------------
