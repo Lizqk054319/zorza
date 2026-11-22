@@ -62,6 +62,16 @@ jobs:
         env:
           LIBGL_ALWAYS_SOFTWARE: "1"
         run: xvfb-run -a -s "-screen 0 1920x1080x24" gradle runClientGameTest --no-daemon --stacktrace
+      - name: Push screenshots to branch ci-screenshots
+        if: always()
+        run: |
+          mkdir -p /tmp/shots
+          cp -r mod/build/run/clientGameTest/screenshots/. /tmp/shots/ 2>/dev/null || true
+          cp -r mod/run/screenshots/. /tmp/shots/ 2>/dev/null || true
+          cp mod/build/run/clientGameTest/logs/latest.log /tmp/shots/ 2>/dev/null || cp mod/run/logs/latest.log /tmp/shots/ 2>/dev/null || true
+          cd /tmp/shots && git init -q -b ci-screenshots && git add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -q -m "screenshots ${GITHUB_SHA}" || exit 0
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" ci-screenshots
       - uses: actions/upload-artifact@v4
         if: always()
         with:
