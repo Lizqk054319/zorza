@@ -990,6 +990,12 @@ Nie|No|Nein|Ні|No
 Tak dla wszystkich|Yes to all|Ja für alle|Так для всіх|Sí a todo
 Import profili z launchera Ogulniega|Profile import from the Ogulniega launcher|Profilimport aus dem Ogulniega-Launcher|Імпорт профілів з лаунчера Ogulniega|Importar perfiles del launcher Ogulniega
 Aktualizacje modów: Zorza pyta, czy zaktualizować stare mody|Mod updates: Zorza asks whether to update old mods|Mod-Updates: Zorza fragt, ob alte Mods aktualisiert werden sollen|Оновлення модів: Zorza питає, чи оновити старі моди|Actualizaciones: Zorza pregunta si actualizar mods antiguos
+Pobieram brakujące mody...|Downloading missing mods...|Fehlende Mods werden geladen...|Завантажую відсутні моди...|Descargando mods que faltan...
+Pobrano wymagane mody: {0}|Required mods downloaded: {0}|Benötigte Mods geladen: {0}|Завантажено потрібних модів: {0}|Mods necesarios descargados: {0}
+Pobieranie wymaganego moda: {0}...|Downloading required mod: {0}...|Benötigter Mod wird geladen: {0}...|Завантаження потрібного мода: {0}...|Descargando mod necesario: {0}...
+Brakuje moda {0}, którego wymaga: {1}. Bez niego gra się nie uruchomi. Czy chcesz go pobrać?|Mod {0} is missing and is required by: {1}. The game won't start without it. Download it?|Mod {0} fehlt und wird benötigt von: {1}. Ohne ihn startet das Spiel nicht. Herunterladen?|Бракує мода {0}, який потрібен для: {1}. Без нього гра не запуститься. Завантажити?|Falta el mod {0}, que necesita: {1}. Sin él el juego no arranca. ¿Descargarlo?
+Brakuje moda {0}, którego wymaga: {1}, ale nie ma go na Modrinth. Dodaj go ręcznie albo wyłącz mody, które go wymagają.|Mod {0} is missing (required by: {1}) and isn't on Modrinth. Add it manually or turn off the mods that need it.|Mod {0} fehlt (benötigt von: {1}) und ist nicht auf Modrinth. Füge ihn manuell hinzu oder deaktiviere die Mods, die ihn brauchen.|Бракує мода {0} (потрібен для: {1}), і його немає на Modrinth. Додай вручну або вимкни моди, яким він потрібен.|Falta el mod {0} (lo necesita: {1}) y no está en Modrinth. Añádelo a mano o desactiva los mods que lo necesitan.
+Brakujące mody (np. Architectury, Cloth Config) dobierane automatycznie|Missing mods (e.g. Architectury, Cloth Config) added automatically|Fehlende Mods (z. B. Architectury, Cloth Config) werden automatisch ergänzt|Відсутні моди (напр. Architectury, Cloth Config) додаються автоматично|Los mods que faltan (p. ej. Architectury, Cloth Config) se añaden solos
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1638,21 +1644,33 @@ async function checkMods(pid, manual) {
   catch (e) { if (manual) toast(e.message, true); return; }
   const issues = res.issues || [];
   if (!issues.length) { if (manual) toast(t("Wszystkie mody są aktualne i pasują do tej wersji gry.")); return; }
-  const upd = [], off = [];
+  const upd = [], off = [], deps = [];
   let i = 0, all = false;
   const finish = async () => {
     closeModal();
     for (const f of off) await api("/api/content/toggle", {profile:pid, kind:"mods", file:f}).catch(() => {});
+    if (deps.length) {
+      try { await api("/api/mods/install_deps", {profile:pid, slugs:deps}); toast(t("Pobieram brakujące mody...")); } catch (e) { toast(e.message, true); }
+      if (upd.length) { await new Promise(r => setTimeout(r, 1500)); while (S.task.running) await new Promise(r => setTimeout(r, 700)); }
+    }
     if (upd.length) { try { await api("/api/mods/update", {profile:pid, items:upd}); toast(t("Aktualizuję mody...")); } catch (e) { toast(e.message, true); } }
     else if (off.length) toast(t("Wyłączono mody: {0}", off.length));
     if (page === "profile") renderProfilePage();
   };
-  const accept = it => { if (it.kind === "no_version") off.push(it.file); else upd.push({file:it.file, version_id:it.version_id}); };
+  const accept = it => {
+    if (it.kind === "missing") { if (it.slug) deps.push(it.slug); }
+    else if (it.kind === "no_version") off.push(it.file);
+    else upd.push({file:it.file, version_id:it.version_id});
+  };
   const show = () => {
     if (all) { for (; i < issues.length; i++) accept(issues[i]); }
     if (i >= issues.length) return finish();
     const it = issues[i];
-    const q = it.kind === "outdated"
+    const who = esc((it.required_by || []).join(", "));
+    const q = it.kind === "missing"
+      ? (it.slug ? t("Brakuje moda {0}, którego wymaga: {1}. Bez niego gra się nie uruchomi. Czy chcesz go pobrać?", "<b>" + esc(it.name) + "</b>", who)
+                 : t("Brakuje moda {0}, którego wymaga: {1}, ale nie ma go na Modrinth. Dodaj go ręcznie albo wyłącz mody, które go wymagają.", "<b>" + esc(it.dep) + "</b>", who))
+      : it.kind === "outdated"
       ? t("Mod jest nieaktualny ({0} → {1}). Czy chcesz go zaktualizować?", esc(it.current), esc(it.new))
       : it.kind === "wrong_version"
       ? t("Mod nie jest na wersję {0} (jest na: {1}). Czy chcesz zmienić go na wersję dla {0}?", esc(it.game), esc((it.current_games || []).join(", ")))

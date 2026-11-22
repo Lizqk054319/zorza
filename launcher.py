@@ -12,6 +12,7 @@ import base64
 import ctypes
 import hashlib
 import html
+import io
 import json
 import os
 import re
@@ -43,10 +44,11 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.4.2"
+WERSJA_CLIENTA = "0.4.3"
 
 # Co nowego – pokazuje się na ekranie startowym w karcie "Nowość"
 NOWOSCI = [
+    "Brakujące mody (np. Architectury, Cloth Config) dobierane automatycznie",
     "Aktualizacje modów: Zorza pyta, czy zaktualizować stare mody",
     "Import profili z launchera Ogulniega",
     "Mod Zorza Client w grze: prawy Shift otwiera menu (1.21.4)",
@@ -779,6 +781,7 @@ def do_play(pid):
     if launch_id.startswith("fabric-loader"):
         ensure_builtins(p)
         ensure_zorza_mod(p)
+        ensure_deps(p)
     task.update(status="Logowanie...", max=0)
     token = refresh_account(acc)
     ram = int(p["ram_mb"])
@@ -839,6 +842,7 @@ def do_play_official(pid):
     if launch_id.startswith("fabric-loader"):
         ensure_builtins(p)
         ensure_zorza_mod(p)
+        ensure_deps(p)
         src = MC_DIR / "versions" / launch_id / f"{launch_id}.json"
         dst = OFFICIAL_DIR / "versions" / launch_id / f"{launch_id}.json"
         dst.parent.mkdir(parents=True, exist_ok=True)
@@ -923,6 +927,137 @@ def jar_info(f):
         pass
     _jar_cache[key] = info
     return info
+
+
+_manifest_cache = {}
+# id-y, których nie trzeba instalować jako modów
+DEP_IGNORE = {"minecraft", "java", "fabricloader", "fabric-loader", "mixinextras", "quilt_loader"}
+# id moda -> slug na Modrinth (dla bibliotek, gdzie się różnią)
+DEP_SLUGS = {
+    "fabric": "fabric-api", "fabric-api": "fabric-api", "architectury": "architectury-api",
+    "cloth-config": "cloth-config", "cloth-config2": "cloth-config", "owo": "owo-lib",
+    "yet_another_config_lib_v3": "yacl", "yet-another-config-lib": "yacl", "modmenu": "modmenu",
+    "fabric-language-kotlin": "fabric-language-kotlin", "forgeconfigapiport": "forge-config-api-port",
+    "cardinal-components": "cardinal-components-api", "cardinal-components-base": "cardinal-components-api",
+    "placeholder-api": "placeholder-api", "resourcefullib": "resourceful-lib", "balm-fabric": "balm",
+    "balm": "balm", "collective": "collective", "puzzleslib": "puzzles-lib", "fzzy_config": "fzzy-config",
+    "geckolib": "geckolib", "trinkets": "trinkets", "midnightlib": "midnightlib", "ukulib": "ukulib",
+    "libjf": "libjf", "creativecore": "creativecore", "indium": "indium", "iris": "iris",
+    "sodium": "sodium", "lithium": "lithium", "ferritecore": "ferrite-core", "zoomify": "zoomify",
+    "entity_model_features": "entity-model-features", "entity_texture_features": "entitytexturefeatures",
+    "konkrete": "konkrete", "fancymenu": "fancymenu", "iceberg": "iceberg", "prism": "prism-lib",
+    "terrablender": "terrablender", "kotlinforforge": "kotlin-for-forge", "silk": "silk",
+    "libipn": "libipn", "malilib": "malilib", "yungsapi": "yungs-api", "moonlight": "moonlight",
+    "supermartijn642corelib": "supermartijn642s-core-lib", "searchables": "searchables",
+    "athena": "athena-ctm", "playeranimator": "playeranimator", "bookshelf": "bookshelf-lib",
+    "notenoughanimations": "not-enough-animations", "skinlayers3d": "3dskinlayers",
+}
+
+
+def _read_manifest(data, depth=0):
+    """Z bajtów .jar: (zbiór id, które mod dostarcza, słownik zależności, nazwa)."""
+    ids, deps, name = set(), {}, None
+    try:
+        with zipfile.ZipFile(io.BytesIO(data)) as z:
+            names = set(z.namelist())
+            if "fabric.mod.json" not in names:
+                return ids, deps, name
+            j = json.loads(z.read("fabric.mod.json").decode("utf-8", "replace"), strict=False)
+            if j.get("id"):
+                ids.add(j["id"])
+            for pr in j.get("provides") or []:
+                ids.add(pr if isinstance(pr, str) else pr.get("id", ""))
+            for k, v in (j.get("depends") or {}).items():
+                deps[k] = v
+            name = j.get("name") or j.get("id")
+            if depth < 3:
+                for nested in j.get("jars") or []:
+                    path = nested.get("file") if isinstance(nested, dict) else None
+                    if path in names:
+                        sub_ids, _, _ = _read_manifest(z.read(path), depth + 1)
+                        ids |= sub_ids
+    except Exception:
+        pass
+    return ids, deps, name
+
+
+def mod_manifest(f):
+    key = (str(f), f.stat().st_mtime)
+    if key not in _manifest_cache:
+        _manifest_cache[key] = _read_manifest(f.read_bytes())
+    return _manifest_cache[key]
+
+
+def missing_deps(p):
+    """Zależności wymagane przez włączone mody, których nie ma w folderze mods.
+    Zwraca {id: [nazwy modów, które go wymagają]}."""
+    d = profile_dir(p) / "mods"
+    provided, needs = set(DEP_IGNORE), {}
+    for f in d.iterdir():
+        if not (f.is_file() and f.suffix == ".jar"):
+            continue
+        ids, deps, name = mod_manifest(f)
+        provided |= ids
+        for dep in deps:
+            needs.setdefault(dep, []).append(name or f.name)
+    missing = {}
+    for dep, who in needs.items():
+        if dep in provided:
+            continue
+        if dep == "fabric" or (dep.startswith("fabric-") and "fabric-api" in provided):
+            if "fabric-api" in provided or any(x.startswith("fabric-api") for x in provided):
+                continue
+        missing[dep] = sorted(set(who))
+    return missing
+
+
+def resolve_dep(dep, version):
+    """Szuka moda o danym id na Modrinth (dla wersji gry i Fabric). Zwraca (slug, nazwa) albo None."""
+    slug = DEP_SLUGS.get(dep) or ("fabric-api" if dep.startswith("fabric-") else None)
+    params = {"game_versions": json.dumps([version]), "loaders": json.dumps(["fabric"])}
+    for cand in [c for c in (slug, dep, dep.replace("_", "-")) if c]:
+        try:
+            r = requests.get(f"{MODRINTH}/project/{cand}/version", params=params, headers=UA, timeout=15)
+            if r.status_code == 200 and r.json():
+                proj = requests.get(f"{MODRINTH}/project/{cand}", headers=UA, timeout=15).json()
+                return proj.get("slug", cand), proj.get("title", cand)
+        except Exception:
+            pass
+    try:   # ostatnia próba: wyszukiwarka
+        facets = json.dumps([["project_type:mod"], [f"versions:{version}"], ["categories:fabric"]])
+        r = requests.get(f"{MODRINTH}/search", params={"query": dep, "facets": facets, "limit": 5},
+                         headers=UA, timeout=15)
+        norm = re.sub(r"[^a-z0-9]", "", dep.lower())
+        for h in r.json().get("hits", []):
+            if norm in (re.sub(r"[^a-z0-9]", "", h["slug"].lower()), re.sub(r"[^a-z0-9]", "", h["title"].lower())):
+                return h["slug"], h["title"]
+    except Exception:
+        pass
+    return None
+
+
+def ensure_deps(p, quiet=True):
+    """Doinstalowuje brakujące wymagane mody (do 3 rund – nowe mody mogą mieć własne zależności)."""
+    unresolved = {}
+    for _ in range(3):
+        miss = missing_deps(p)
+        miss = {k: v for k, v in miss.items() if k not in unresolved}
+        if not miss:
+            break
+        for dep, who in miss.items():
+            found = resolve_dep(dep, p["version"])
+            if not found:
+                unresolved[dep] = who
+                log(f"Nie znaleziono na Modrinth wymaganego moda '{dep}' (potrzebny dla: {', '.join(who)})")
+                continue
+            task.update(status=f"Pobieranie wymaganego moda: {found[1]}...")
+            try:
+                modrinth_install(found[0], "mods", p)
+                log(f"Doinstalowano wymagany mod {found[1]} (dla: {', '.join(who)})")
+            except Exception as e:
+                unresolved[dep] = who
+                log(f"Nie udało się pobrać {found[1]}: {e}")
+    return unresolved
 
 
 def list_content(p, kind):
@@ -1097,6 +1232,12 @@ def ensure_zorza_mod(p):
 def check_mods(p):
     """Sprawdza mody gracza na Modrinth: nieaktualne, na inną wersję gry albo bez wersji na tę grę."""
     d = profile_dir(p) / "mods"
+    deps_out = []
+    for dep, who in missing_deps(p).items():
+        found = resolve_dep(dep, p["version"])
+        deps_out.append({"kind": "missing", "dep": dep, "name": found[1] if found else dep,
+                         "slug": found[0] if found else None, "required_by": who, "game": p["version"],
+                         "file": "", "icon": None})
     meta = load_json(meta_path(p), {})
     skip = {m["file"] for m in meta.get("builtin", {}).values()} | {"zorza-client.jar"}
     files = {}
@@ -1105,7 +1246,7 @@ def check_mods(p):
         if f.is_file() and base.endswith(".jar") and base not in skip:
             files[hashlib.sha1(f.read_bytes()).hexdigest()] = f
     if not files:
-        return []
+        return deps_out
     hashes = list(files)
     r = requests.post(f"{MODRINTH}/version_files", json={"hashes": hashes, "algorithm": "sha1"},
                       headers=UA, timeout=20)
@@ -1113,7 +1254,7 @@ def check_mods(p):
     current = r.json()
     known = [h for h in hashes if h in current]
     if not known:
-        return []
+        return deps_out
     r = requests.post(f"{MODRINTH}/version_files/update", headers=UA, timeout=20,
                       json={"hashes": known, "algorithm": "sha1", "loaders": ["fabric"],
                             "game_versions": [p["version"]]})
@@ -1144,7 +1285,7 @@ def check_mods(p):
         elif item["enabled"]:
             out.append({**item, "kind": "no_version"})
     order = {"outdated": 0, "wrong_version": 1, "no_version": 2}
-    return sorted(out, key=lambda x: (order[x["kind"]], x["name"].lower()))
+    return deps_out + sorted(out, key=lambda x: (order[x["kind"]], x["name"].lower()))
 
 
 def do_update_mods(p, items):
@@ -1735,6 +1876,18 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send(400, busy)
             elif path == "/api/mods/check":
                 return self.send(200, {"issues": check_mods(get_profile(d.get("profile")))})
+            elif path == "/api/mods/install_deps":
+                def _inst(pp, slugs):
+                    for i, sl in enumerate(slugs):
+                        task.update(max=len(slugs), progress=i)
+                        try:
+                            modrinth_install(sl, "mods", pp)
+                        except Exception as e:
+                            log(f"Nie udało się pobrać {sl}: {e}")
+                    ensure_deps(pp)
+                    task["done"] = f"Pobrano wymagane mody: {len(slugs)}"
+                if not run_task(_inst, get_profile(d.get("profile")), [x for x in d.get("slugs", []) if x]):
+                    return self.send(400, busy)
             elif path == "/api/mods/update":
                 if not run_task(do_update_mods, get_profile(d.get("profile")), list(d.get("items", []))):
                     return self.send(400, busy)
