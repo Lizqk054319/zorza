@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "zorza",
+  "version": "${version}",
+  "name": "Zorza Client",
+  "description": "HUD, PvP and quality-of-life modules for Zorza Client. Right Shift opens the menu.",
+  "authors": ["Zorza"],
+  "contact": { "sources": "https://github.com/Lizqk054319/zorza" },
+  "license": "MIT",
+  "icon": "assets/zorza/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["pl.zorza.client.ZorzaClient"]
+  },
+  "mixins": ["zorza.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
