@@ -392,6 +392,14 @@ body.boot .content>:not(.logo){transform:translateY(20px)}
 body.boot .topright{transform:translateY(-20px)}
 body.boot .skin{transform:translateX(30px)}
 body.boot #home .logo{visibility:hidden}
+
+.swatches button{transition:transform .15s,border-color .15s}
+.swatches button:hover{transform:scale(1.1)}
+.swatches .custom{position:relative;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:22px;font-weight:600;cursor:pointer;border:2px solid transparent;
+  background:conic-gradient(from 0deg,#ff4d6d,#ff7a1a,#f5b400,#22c55e,#06b6d4,#1f6bff,#7c4dff,#d946ef,#ff4d6d);color:#fff;text-shadow:0 1px 3px #000a}
+.swatches .custom.on{border-color:#fff;background:var(--c)}
+.swatches .custom input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+#side .nav.on{background:color-mix(in srgb,var(--blue) 22%,#17171b);color:color-mix(in srgb,var(--blue) 35%,#fff)}
 </style>
 </head>
 <body class="boot">
@@ -659,7 +667,7 @@ async function api(path, body) {
   return j;
 }
 function toast(msg, err) {
-  const el = $("#toast"); el.textContent = t(msg); el.className = "on" + (err ? " err" : "");
+  const el = $("#toast"); el.textContent = tr(msg); el.className = "on" + (err ? " err" : "");
   clearTimeout(el._h); el._h = setTimeout(() => el.className = "", 4500);
 }
 function openModal(html) { clearTimeout(closeModal._t); $("#modalBox").innerHTML = html; $("#modal").className = "on"; }
@@ -932,6 +940,41 @@ Płynne animacje i nowy ekran startowy|Smooth animations and a new splash screen
 Wersje gry od 1.20.1|Game versions from 1.20.1|Spielversionen ab 1.20.1|Версії гри від 1.20.1|Versiones desde la 1.20.1
 Nie udało się przeszukać launcherów|Couldn't search for launchers|Launcher konnten nicht gesucht werden|Не вдалося знайти лаунчери|No se pudieron buscar launchers
 Spróbuj ponownie|Try again|Erneut versuchen|Спробувати ще раз|Reintentar
+Profile: {0}|Profiles: {0}|Profile: {0}|Профілі: {0}|Perfiles: {0}
+wersja nieznana|unknown version|unbekannte Version|невідома версія|versión desconocida
+Mody: {0} · Światy: {1}|Mods: {0} · Worlds: {1}|Mods: {0} · Welten: {1}|Моди: {0} · Світи: {1}|Mods: {0} · Mundos: {1}
+Wersja {0} nie jest dostępna w launcherze (obsługujemy od {1} wzwyż).|Version {0} isn't available in the launcher (we support {1} and newer).|Version {0} ist im Launcher nicht verfügbar (unterstützt ab {1}).|Версія {0} недоступна в лаунчері (підтримуємо від {1}).|La versión {0} no está disponible en el launcher (admitimos desde la {1}).
+Nie udało się odczytać wersji.|Couldn't read the version.|Version konnte nicht gelesen werden.|Не вдалося прочитати версію.|No se pudo leer la versión.
+Wybierz wersję poniżej – mody mogą nie działać na innej wersji.|Pick a version below – mods may not work on a different version.|Wähle unten eine Version – Mods funktionieren evtl. nicht auf einer anderen Version.|Вибери версію нижче – моди можуть не працювати на іншій версії.|Elige una versión abajo: los mods pueden no funcionar en otra versión.
+({0}, mogą zajmować dużo miejsca)|({0}, can take a lot of space)|({0}, können viel Platz brauchen)|({0}, можуть займати багато місця)|({0}, pueden ocupar mucho espacio)
+Pliki są kopiowane – w {0} nic się nie zmieni.|Files are copied – nothing changes in {0}.|Dateien werden kopiert – in {0} ändert sich nichts.|Файли копіюються – у {0} нічого не зміниться.|Los archivos se copian: en {0} no cambia nada.
+Mody, paczki zasobów i shadery dla profilu {0} (Minecraft {1}). Instalujesz jednym kliknięciem.|Mods, resource packs and shaders for profile {0} (Minecraft {1}). Install with one click.|Mods, Ressourcenpakete und Shader für Profil {0} (Minecraft {1}). Installation mit einem Klick.|Моди, пакети ресурсів і шейдери для профілю {0} (Minecraft {1}). Встановлення одним кліком.|Mods, paquetes y shaders para el perfil {0} (Minecraft {1}). Se instalan con un clic.
+{0} pobrań|{0} downloads|{0} Downloads|{0} завантажень|{0} descargas
+Biblioteka|Library|Bibliothek|Бібліотека|Biblioteca
+Zaimportowano profil {0}|Profile {0} imported|Profil {0} importiert|Профіль {0} імпортовано|Perfil {0} importado
+Dodano profil {0}|Profile {0} added|Profil {0} hinzugefügt|Профіль {0} додано|Perfil {0} añadido
+Dodano profil {0} ({1} elementów pominięto)|Profile {0} added ({1} items skipped)|Profil {0} hinzugefügt ({1} Elemente übersprungen)|Профіль {0} додано (пропущено: {1})|Perfil {0} añadido ({1} elementos omitidos)
+Gra w profilu {0} jest gotowa.|The game in profile {0} is ready.|Das Spiel im Profil {0} ist bereit.|Гра в профілі {0} готова.|El juego del perfil {0} está listo.
+Otwieram oficjalny launcher – wybierz profil „{0}” i kliknij Graj.|Opening the official launcher – pick the profile "{0}" and click Play.|Der offizielle Launcher wird geöffnet – wähle das Profil „{0}“ und klicke auf Spielen.|Відкриваю офіційний лаунчер – вибери профіль «{0}» і натисни «Грати».|Abriendo el launcher oficial: elige el perfil «{0}» y pulsa Jugar.
+Gotowe! Otwórz oficjalny launcher Minecraft i wybierz profil „{0}”.|Done! Open the official Minecraft launcher and pick the profile "{0}".|Fertig! Öffne den offiziellen Minecraft Launcher und wähle das Profil „{0}“.|Готово! Відкрий офіційний лаунчер Minecraft і вибери профіль «{0}».|¡Listo! Abre el launcher oficial de Minecraft y elige el perfil «{0}».
+Zalogowano jako {0}|Signed in as {0}|Angemeldet als {0}|Вхід виконано як {0}|Sesión iniciada como {0}
+Logowanie nieudane|Sign-in failed|Anmeldung fehlgeschlagen|Не вдалося увійти|Error al iniciar sesión
+Mojang jeszcze nie zatwierdził launchera – logowanie zadziała po ich zgodzie.|Mojang hasn't approved the launcher yet – sign-in will work after approval.|Mojang hat den Launcher noch nicht freigegeben – die Anmeldung funktioniert nach der Freigabe.|Mojang ще не схвалив лаунчер – вхід запрацює після схвалення.|Mojang aún no ha aprobado el launcher: el inicio de sesión funcionará tras la aprobación.
+To konto Microsoft nie ma kupionego Minecraft: Java Edition.|This Microsoft account doesn't own Minecraft: Java Edition.|Dieses Microsoft-Konto besitzt Minecraft: Java Edition nicht.|На цьому акаунті Microsoft немає Minecraft: Java Edition.|Esta cuenta de Microsoft no tiene Minecraft: Java Edition.
+Brak wersji tego projektu dla Minecraft {0}.|This project has no version for Minecraft {0}.|Dieses Projekt hat keine Version für Minecraft {0}.|Цей проєкт не має версії для Minecraft {0}.|Este proyecto no tiene versión para Minecraft {0}.
+Przygotowanie...|Preparing...|Vorbereitung...|Підготовка...|Preparando...
+Pobieranie Minecraft {0}...|Downloading Minecraft {0}...|Minecraft {0} wird geladen...|Завантаження Minecraft {0}...|Descargando Minecraft {0}...
+Instalowanie Fabric...|Installing Fabric...|Fabric wird installiert...|Встановлення Fabric...|Instalando Fabric...
+Logowanie...|Signing in...|Anmeldung...|Вхід...|Iniciando sesión...
+Uruchamianie gry...|Starting the game...|Spiel wird gestartet...|Запуск гри...|Iniciando el juego...
+Pobieranie {0}...|Downloading {0}...|{0} wird geladen...|Завантаження {0}...|Descargando {0}...
+Mody wbudowane: {0}...|Built-in mods: {0}...|Integrierte Mods: {0}...|Вбудовані моди: {0}...|Mods integrados: {0}...
+Kopiowanie z: {0}...|Copying from: {0}...|Kopiere aus: {0}...|Копіювання з: {0}...|Copiando desde: {0}...
+Wysyłanie skina do Minecrafta...|Uploading the skin to Minecraft...|Skin wird zu Minecraft hochgeladen...|Надсилаю скін у Minecraft...|Subiendo la skin a Minecraft...
+Minecraft nie przyjął skina (błąd {0}).|Minecraft didn't accept the skin (error {0}).|Minecraft hat den Skin nicht angenommen (Fehler {0}).|Minecraft не прийняв скін (помилка {0}).|Minecraft no aceptó la skin (error {0}).
+Ten profil jest na wersji {0}, której launcher nie obsługuje.|This profile uses version {0}, which the launcher doesn't support.|Dieses Profil nutzt Version {0}, die der Launcher nicht unterstützt.|Цей профіль на версії {0}, яку лаунчер не підтримує.|Este perfil usa la versión {0}, que el launcher no admite.
+Za dużo prób. Spróbuj za {0} s.|Too many attempts. Try again in {0} s.|Zu viele Versuche. Versuche es in {0} s erneut.|Забагато спроб. Спробуй через {0} с.|Demasiados intentos. Inténtalo en {0} s.
+Główny|Main|Haupt|Головний|Principal
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -939,6 +982,18 @@ const LI = {en:0, de:1, uk:2, es:3};
 let lang = "pl";
 const I18N = {};
 for (const line of I18N_RAW.trim().split("\n")) { const p = line.split("|"); if (p.length === 5 + 0 || p.length >= 5) I18N[p[0]] = p.slice(1, 5); }
+let DYN = null;
+/** Tłumaczy też komunikaty z wartościami, np. "Dodano profil X" -> wzorzec "Dodano profil {0}". */
+function tr(msg) {
+  msg = String(msg ?? "");
+  if (lang === "pl" || !msg) return msg;
+  if (I18N[msg]) return t(msg);
+  if (!DYN) DYN = Object.keys(I18N).filter(k => k.includes("{0}")).map(k => [new RegExp("^" + k.replace(/[.*+?^$()|[\]\\]/g, "\\$&").replace(/\{(\d)\}/g, "(.+?)") + "$"), k]);
+  for (const [re, k] of DYN) { const m = msg.match(re); if (m) return t(k, ...m.slice(1)); }
+  const i = msg.indexOf(": ");
+  if (i > 0 && I18N[msg.slice(0, i)]) return t(msg.slice(0, i)) + ": " + tr(msg.slice(i + 2));
+  return msg;
+}
 function t(key, ...a) {
   const s = lang === "pl" ? key : (I18N[key]?.[LI[lang]] || key);
   return String(s).replace(/\{(\d)\}/g, (_, i) => a[i] ?? "");
@@ -1136,7 +1191,7 @@ const loaderName = l => l === "fabric" ? "Fabric" : "Vanilla";
 let lastAcc = "", lastProf = "";
 async function refresh() {
   try { S = await api("/api/state"); } catch { return; }
-  document.documentElement.style.setProperty("--blue", S.accent);
+  if (Date.now() - accentLock > 1500) document.documentElement.style.setProperty("--blue", S.accent);
   if (!refresh._init) { refresh._init = 1; renderNews(); renderSwatches(); }
   applyLang(S.lang);
   if (document.activeElement !== $("#lang")) $("#lang").value = S.lang;
@@ -1167,7 +1222,7 @@ async function refresh() {
   const tk = S.task, play = $("#play");
   play.classList.toggle("busy", tk.running);
   if (tk.running) {
-    $("#goTxt").textContent = tk.status ? t(tk.status) : t("Pracuję...");
+    $("#goTxt").textContent = tk.status ? tr(tk.status) : t("Pracuję...");
     $("#bar").style.width = tk.max ? (100 * tk.progress / tk.max) + "%" : "0";
   } else {
     $("#goTxt").textContent = S.game_running ? t("Gra działa") : t("Graj");
@@ -1180,7 +1235,7 @@ async function refresh() {
   if (document.activeElement !== $("#jvm")) $("#jvm").value = S.settings.jvm_args;
   $("#remember").classList.toggle("on", S.settings.remember_accounts);
   $("#discord").classList.toggle("on", S.settings.discord);
-  $("#dcStatus").textContent = t("Stan") + ": " + t(S.discord_status);
+  $("#dcStatus").textContent = t("Stan") + ": " + tr(S.discord_status);
   $("#dataDir").textContent = S.data_dir;
   $("#msSoon").style.display = S.microsoft_soon ? "" : "none";
   if (refresh._wasRunning && !tk.running) { if (page === "profile") renderProfilePage(); if (page === "modrinth") markInstalled(); if (page === "skins") renderSkinsPage(); }
@@ -1310,7 +1365,7 @@ async function importProfile() {
     return bindBack(addProfile);
   }
   let h = mhead("Przenieś z innego launchera", true) + `<div class="sub" style="color:var(--muted)">Znalezione launchery:</div>`;
-  found.forEach((l, i) => h += `<button class="opt" data-i="${i}"><div class="oi">${ic("i-move", 26)}</div><div><b>${esc(l.name)}</b><span>${l.profiles.length} ${l.profiles.length === 1 ? "profil" : "profile/-ów"} · ${esc(l.path)}</span></div><div class="arr">${ic("i-arrow")}</div></button>`);
+  found.forEach((l, i) => h += `<button class="opt" data-i="${i}"><div class="oi">${ic("i-move", 26)}</div><div><b>${esc(l.name)}</b><span>${t("Profile: {0}", l.profiles.length)} · ${esc(l.path)}</span></div><div class="arr">${ic("i-arrow")}</div></button>`);
   openModal(h); bindBack(addProfile);
   $$("[data-i]").forEach(b => b.onclick = () => pickImportProfile(found, found[+b.dataset.i]));
 }
@@ -1319,7 +1374,7 @@ function pickImportProfile(found, l) {
   if (!l.profiles.length) h += `<div class="empty"><h3>Brak profili</h3><p>W tym launcherze nie ma żadnych profili do przeniesienia.</p></div>`;
   l.profiles.forEach((p, i) => {
     const c = p.counts || {};
-    h += `<button class="opt" data-pi="${i}"><div class="oi">${ic("i-down", 26)}</div><div><b>${esc(p.name)}</b><span>${p.version ? "Minecraft " + esc(p.version) : "wersja nieznana"} · ${loaderName(p.loader)} · ${c.mods || 0} modów · ${c.saves || 0} światów</span></div><div class="arr">${ic("i-arrow")}</div></button>`;
+    h += `<button class="opt" data-pi="${i}"><div class="oi">${ic("i-down", 26)}</div><div><b>${esc(p.name)}</b><span>${p.version ? "Minecraft " + esc(p.version) : t("wersja nieznana")} · ${loaderName(p.loader)} · ${t("Mody: {0} · Światy: {1}", c.mods || 0, c.saves || 0)}</span></div><div class="arr">${ic("i-arrow")}</div></button>`;
   });
   openModal(h);
   bindBack(() => { openModal(""); importProfile(); });
@@ -1329,16 +1384,16 @@ function confirmImport(found, l, p) {
   const c = p.counts || {};
   const ok = inList(p.version);
   openModal(mhead("Importuj profil", true) +
-    (ok ? "" : `<div class="warn">${p.version ? `Wersja ${esc(p.version)} nie jest dostępna w launcherze (obsługujemy od ${esc(S.versions.at(-1).items.at(-1).id)} wzwyż).` : "Nie udało się odczytać wersji."} Wybierz wersję poniżej – mody mogą nie działać na innej wersji.</div>`) +
+    (ok ? "" : `<div class="warn">${p.version ? t("Wersja {0} nie jest dostępna w launcherze (obsługujemy od {1} wzwyż).", esc(p.version), esc(S.versions.at(-1).items.at(-1).id)) : t("Nie udało się odczytać wersji.")} ${t("Wybierz wersję poniżej – mody mogą nie działać na innej wersji.")}</div>`) +
     profileFields({name:p.name, version:p.version, loader:p.loader, ram_mb:p.ram_mb}) + `
     <div class="fld"><label>Co przenieść</label>
       <label class="chk"><input type="checkbox" id="cMods" ${c.mods ? "checked" : ""}>Mody <small>(${c.mods || 0})</small></label>
       <label class="chk"><input type="checkbox" id="cSet" ${p.options ? "checked" : ""}>Ustawienia Minecrafta <small>(sterowanie, grafika, dźwięk, język)</small></label>
       <label class="chk"><input type="checkbox" id="cPacks" checked>Paczki zasobów i shadery <small>(${(c.resourcepacks || 0) + (c.shaders || 0)})</small></label>
       <label class="chk"><input type="checkbox" id="cServ" checked>Lista serwerów</label>
-      <label class="chk"><input type="checkbox" id="cSaves">Światy <small>(${c.saves || 0}, mogą zajmować dużo miejsca)</small></label>
+      <label class="chk"><input type="checkbox" id="cSaves">Światy <small>${t("({0}, mogą zajmować dużo miejsca)", c.saves || 0)}</small></label>
     </div>
-    <div class="hint">Pliki są kopiowane – w ${esc(l.name)} nic się nie zmieni.</div>
+    <div class="hint">${t("Pliki są kopiowane – w {0} nic się nie zmieni.", esc(l.name))}</div>
     <div class="mfoot"><button class="btn primary" id="fSave">${ic("i-move")}Importuj</button></div>`);
   bindBack(() => pickImportProfile(found, l)); bindProfileFields();
   $("#fSave").onclick = async () => {
@@ -1622,7 +1677,7 @@ $("#skins").addEventListener("drop", e => { e.preventDefault(); $("#skAdd")?.cla
 $$("[data-discord]").forEach(b => b.onclick = () => api("/api/open_url", {url:S.discord_invite}).catch(e => toast(e.message, true)));
 
 /* ================= MODRINTH ================= */
-const fmt = n => n >= 1e6 ? (n/1e6).toFixed(1).replace(".", ",") + " mln" : n >= 1e3 ? (n/1e3).toFixed(1).replace(".", ",") + " tys." : n;
+const fmt = n => new Intl.NumberFormat(LOCALES[lang] || "pl-PL", {notation: "compact", maximumFractionDigits: 1}).format(n);
 const CATPL = {optimization:"Optymalizacja",utility:"Narzędzia",adventure:"Przygoda",decoration:"Dekoracje",library:"Biblioteka",
   technology:"Technologia",magic:"Magia",storage:"Przechowywanie",equipment:"Wyposażenie",worldgen:"Generowanie świata",
   "game-mechanics":"Mechanika gry",mobs:"Moby",food:"Jedzenie",social:"Społeczność",transportation:"Transport",cursed:"Dziwne",
@@ -1644,7 +1699,7 @@ async function search(reset) {
   if (!S) return;
   if (reset) { mOffset = 0; lastHits = []; }
   const P = S.profile;
-  $("#mSub").textContent = `Mody, paczki zasobów i shadery dla profilu ${P.name} (Minecraft ${P.version}). Instalujesz jednym kliknięciem.`;
+  $("#mSub").textContent = t("Mody, paczki zasobów i shadery dla profilu {0} (Minecraft {1}). Instalujesz jednym kliknięciem.", P.name, P.version);
   const qs = new URLSearchParams({q:$("#q").value, kind:mKind, cat:mCat, sort:$("#sort").value, profile:P.id, offset:mOffset});
   let data;
   try { data = await api("/api/modrinth/search?" + qs); } catch (e) { $("#results").innerHTML = `<div class="empty"><h3>Nie udało się połączyć z Modrinth</h3><p>${esc(e.message)}</p></div>`; return; }
@@ -1656,7 +1711,7 @@ async function search(reset) {
       <div class="mid">
         <div class="t">${esc(h.title)}<span>${esc(h.author)}</span></div>
         <div class="d">${esc(h.description)}</div>
-        <div class="m">${esc(CATPL[h.display_categories?.[0]] || h.display_categories?.[0] || "")} · ${fmt(h.downloads)} pobrań</div>
+        <div class="m">${esc(t(CATPL[h.display_categories?.[0]] || h.display_categories?.[0] || ""))} · ${t("{0} pobrań", fmt(h.downloads))}</div>
       </div>
       <button class="inst ${h.installed?"done":""}" data-id="${esc(h.project_id)}">${h.installed?"Zainstalowano":"Zainstaluj"}</button>
     </div>`).join("") : `<div class="empty"><h3>Nic nie znaleziono</h3><p>Spróbuj innej nazwy albo innego profilu.</p></div>`;
@@ -1739,11 +1794,19 @@ $("#openData").onclick = () => api("/api/open_folder", {});
 const ACCENTS = ["#1f6bff", "#7c4dff", "#d946ef", "#ff4d6d", "#ff7a1a", "#f5b400", "#22c55e", "#14b8a6", "#06b6d4"];
 function renderSwatches() {
   $("#swatches").innerHTML = ACCENTS.map(c => `<button style="background:${c}" data-c="${c}" class="${c.toLowerCase() === S.accent.toLowerCase() ? "on" : ""}"></button>`).join("") +
-    `<input type="color" id="accCustom" value="${esc(S.accent)}" title="${t("Własny kolor")}">`;
+    `<label class="custom ${ACCENTS.includes(S.accent.toLowerCase()) ? "" : "on"}" title="${t("Własny kolor")}" style="--c:${esc(S.accent)}">+<input type="color" id="accCustom" value="${esc(S.accent)}"></label>`;
   $$("#swatches [data-c]").forEach(b => b.onclick = () => setAccent(b.dataset.c));
+  $("#accCustom").oninput = e => { accentLock = Date.now(); document.documentElement.style.setProperty("--blue", e.target.value); };
   $("#accCustom").onchange = e => setAccent(e.target.value);
 }
-async function setAccent(c) { document.documentElement.style.setProperty("--blue", c); await api("/api/settings", {accent:c}); await refresh(); renderSwatches(); }
+let accentLock = 0;
+async function setAccent(c) {
+  accentLock = Date.now();
+  document.documentElement.style.setProperty("--blue", c);
+  $$("#swatches [data-c]").forEach(b => b.classList.toggle("on", b.dataset.c === c.toLowerCase()));
+  try { await api("/api/settings", {accent:c}); } catch (e) { toast(e.message, true); }
+  await refresh(); renderSwatches();
+}
 $("#lang").onchange = async e => { await api("/api/settings", {lang:e.target.value}); await refresh(); };
 $("#logDays").onchange = async e => { await api("/api/settings", {log_days:+e.target.value}); toast(t("Zapisano. Stare logi zostaną usunięte.")); };
 function renderNews() {
