@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Zorza Launcher
+Zorza Visuals
 
 Uruchom:  uruchom.bat   (albo:  python launcher.py)
 
@@ -37,17 +37,21 @@ from pathlib import Path
 #  USTAWIENIA – tu możesz zmieniać
 # ---------------------------------------------------------------------------
 
-NAZWA_LAUNCHERA = "Zorza"          # nazwa wyświetlana w launcherze
-NAZWA_DISCORD = "Zorza Client"     # tak ma się nazywać aplikacja w Discord Developer Portal
+NAZWA_LAUNCHERA = "Zorza Visuals"  # nazwa wyświetlana w launcherze
+NAZWA_DISCORD = "Zorza Visuals"    # tak ma się nazywać aplikacja w Discord Developer Portal
 DOMYSLNA_WERSJA = "1.21.4"         # wersja pierwszego profilu
 NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.4.3"
+WERSJA_CLIENTA = "0.5.0"
 
 # Co nowego – pokazuje się na ekranie startowym w karcie "Nowość"
 NOWOSCI = [
+    "Nowa nazwa: Zorza Visuals",
+    "Konta: postać śledzi kursor i macha, własne tło",
+    "Własne tło zakładki Modrinth",
+    "Płynniejsze przewijanie i poprawiony ekran startowy",
     "Brakujące mody (np. Architectury, Cloth Config) dobierane automatycznie",
     "Aktualizacje modów: Zorza pyta, czy zaktualizować stare mody",
     "Import profili z launchera Ogulniega",
@@ -1649,17 +1653,23 @@ def ms_login_finish(full_url):
 #  Serwer HTTP (komunikacja z oknem launchera)
 # ---------------------------------------------------------------------------
 
-def bg_file():
+BG_SLOTS = {"home": "tlo", "accounts": "tlo_konta", "modrinth": "tlo_modrinth"}
+
+
+def bg_file(slot="home"):
+    stem = BG_SLOTS.get(slot, "tlo")
     for e in BG_EXTS:
-        f = DATA_DIR / f"tlo{e}"
+        f = DATA_DIR / f"{stem}{e}"
         if f.exists():
             return f
-    f = UI_DIR / "assets" / "background.jpg"
-    return f if f.exists() else None
+    if slot == "home":
+        f = UI_DIR / "assets" / "background.jpg"
+        return f if f.exists() else None
+    return None
 
 
-def bg_version():
-    f = bg_file()
+def bg_version(slot="home"):
+    f = bg_file(slot)
     return int(f.stat().st_mtime) if f else 0
 
 
@@ -1687,6 +1697,7 @@ def state_json():
         "counts": counts(p),
         "login_message": login_message,
         "background": bg_version(),
+        "backgrounds": {k: bg_version(k) for k in BG_SLOTS},
         "data_dir": str(DATA_DIR),
         "discord_status": discord.status,
         "client_version": WERSJA_CLIENTA,
@@ -1753,7 +1764,7 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send(200, p.read_bytes(), ctype)
                 return self.send(404, {"error": "brak pliku"})
             if u.path == "/api/background":
-                f = bg_file()
+                f = bg_file(q.get("slot", "home"))
                 if not f:
                     return self.send(404, {"error": "brak tła"})
                 ctype = {".png": "image/png", ".webp": "image/webp", ".gif": "image/gif"}.get(
@@ -1856,15 +1867,17 @@ class Handler(BaseHTTPRequestHandler):
                 data = self.body()
                 if len(data) > 25 * 1048576:
                     return self.send(400, {"error": "Obrazek jest za duży (max 25 MB)."})
+                stem = BG_SLOTS.get(q.get("slot", "home"), "tlo")
                 for e in BG_EXTS:
-                    (DATA_DIR / f"tlo{e}").unlink(missing_ok=True)
-                (DATA_DIR / f"tlo{'.jpg' if ext == '.jpeg' else ext}").write_bytes(data)
+                    (DATA_DIR / f"{stem}{e}").unlink(missing_ok=True)
+                (DATA_DIR / f"{stem}{'.jpg' if ext == '.jpeg' else ext}").write_bytes(data)
                 return self.send(200, {"ok": True})
             d = self.json_body()
             path = u.path
             if path == "/api/background/reset":
+                stem = BG_SLOTS.get(d.get("slot", "home"), "tlo")
                 for e in BG_EXTS:
-                    (DATA_DIR / f"tlo{e}").unlink(missing_ok=True)
+                    (DATA_DIR / f"{stem}{e}").unlink(missing_ok=True)
                 return self.send(200, {"ok": True})
             # --- gra
             if path == "/api/play":
@@ -2106,7 +2119,7 @@ def main():
             print("Jeśli to stara wersja: zamknij wszystkie czarne okna launchera i uruchom ponownie.")
             open_window()
             return
-    log(f"{NAZWA_LAUNCHERA} Launcher – dane w {DATA_DIR}")
+    log(f"{NAZWA_LAUNCHERA} – dane w {DATA_DIR}")
     threading.Thread(target=get_versions, daemon=True).start()
     threading.Thread(target=watchdog, daemon=True).start()
     threading.Thread(target=log_cleaner, daemon=True).start()

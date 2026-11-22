@@ -1,20 +1,20 @@
-; Instalator Zorza Launcher (Inno Setup) – budowany automatycznie na GitHubie
+; Instalator Zorza Visuals (Inno Setup) – budowany automatycznie na GitHubie
 #define AppVer GetEnv("ZORZA_VERSION")
 
 [Setup]
 AppId={{6A1F2C77-6C3B-4E0E-9B7E-5F3A2B9C0D11}
-AppName=Zorza Launcher
+AppName=Zorza Visuals
 AppVersion={#AppVer}
 AppPublisher=Zorza
 AppPublisherURL=https://github.com/Lizqk054319/zorza
-DefaultDirName={localappdata}\Programs\Zorza Launcher
-DefaultGroupName=Zorza Launcher
+DefaultDirName={localappdata}\Programs\Zorza Visuals
+DefaultGroupName=Zorza Visuals
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 OutputDir=..\dist-installer
 OutputBaseFilename=ZorzaSetup
 SetupIconFile=zorza.ico
-UninstallDisplayIcon={app}\Zorza Launcher.exe
+UninstallDisplayIcon={app}\Zorza Visuals.exe
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -28,11 +28,17 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "..\dist\Zorza Launcher\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\Zorza Visuals\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+[InstallDelete]
+; stara nazwa programu (Zorza Launcher)
+Type: files; Name: "{app}\Zorza Launcher.exe"
+Type: files; Name: "{group}\Zorza Launcher.lnk"
+Type: files; Name: "{autodesktop}\Zorza Launcher.lnk"
 
 [Icons]
-Name: "{group}\Zorza Launcher"; Filename: "{app}\Zorza Launcher.exe"
-Name: "{autodesktop}\Zorza Launcher"; Filename: "{app}\Zorza Launcher.exe"; Tasks: desktopicon
+Name: "{group}\Zorza Visuals"; Filename: "{app}\Zorza Visuals.exe"
+Name: "{autodesktop}\Zorza Visuals"; Filename: "{app}\Zorza Visuals.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\Zorza Launcher.exe"; Description: "{cm:LaunchProgram,Zorza Launcher}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Zorza Visuals.exe"; Description: "{cm:LaunchProgram,Zorza Visuals}"; Flags: nowait postinstall skipifsilent

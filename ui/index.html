@@ -2,8 +2,8 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<title>Zorza Launcher</title>
-<link rel="icon" href="data:,">
+<title>Zorza Visuals</title>
+<link rel="icon" type="image/png" href="/assets/logo-128.png">
 <style>
 :root{
   --bg:#141416; --side:#0f0f11; --card:#1d1d21; --card2:#232328; --line:#2c2c33;
@@ -391,7 +391,7 @@ body.boot #side{transform:translateX(-30px)}
 body.boot .content>:not(.logo){transform:translateY(20px)}
 body.boot .topright{transform:translateY(-20px)}
 body.boot .skin{transform:translateX(30px)}
-body.boot #home .logo{visibility:hidden}
+body.boot #home .logo,body.logohide #home .logo{visibility:hidden}
 
 .swatches button{transition:transform .15s,border-color .15s}
 .swatches button:hover{transform:scale(1.1)}
@@ -400,9 +400,12 @@ body.boot #home .logo{visibility:hidden}
 .swatches .custom.on{border-color:#fff;background:var(--c)}
 .swatches .custom input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 #side .nav.on{background:color-mix(in srgb,var(--blue) 22%,#17171b);color:color-mix(in srgb,var(--blue) 35%,#fff)}
+
+.mrprev{width:120px;height:68px;border-radius:12px;flex:none;background:radial-gradient(ellipse at 70% 0%,#1d5a2c 0%,#173a2a 40%,#141416 90%) center/cover;border:1px solid #ffffff1a}
+.acl .bgbtn{z-index:4}
 </style>
 </head>
-<body class="boot">
+<body class="boot logohide">
 <div id="splash"><div class="bg"></div>
   <svg viewBox="0 0 64 64"><defs><linearGradient id="slg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7dffb4"/><stop offset="1" stop-color="#4aa8ff"/></linearGradient></defs>
     <path class="w1" d="M8 40c8-14 16-18 24-12s16 2 24-12" fill="none" stroke="url(#slg)" stroke-width="5" stroke-linecap="round"/>
@@ -557,7 +560,8 @@ body.boot #home .logo{visibility:hidden}
     <div class="acl">
       <div class="sky" id="sky2"></div>
       <div class="shade"></div>
-      <div class="in"><div class="brand"><svg><use href="#logo"/></svg><span id="brandName">ZORZA</span></div></div>
+      <div class="in"><div class="brand"><svg><use href="#logo"/></svg><span id="brandName">ZORZA VISUALS</span></div></div>
+      <button class="bgbtn" id="accBgBtn" title="Zmień tło" style="top:28px;right:28px"><svg width="20" height="20"><use href="#i-img"/></svg></button>
       <div class="scene" id="accScene"></div>
       <div class="bottom">
         <div class="cap">AKTYWNE KONTO</div>
@@ -606,6 +610,12 @@ body.boot #home .logo{visibility:hidden}
           <option value="7">Co 7 dni</option><option value="14">Co 14 dni</option><option value="30">Co 30 dni</option>
           <option value="90">Co 90 dni</option><option value="0">Nigdy</option>
         </select>
+      </div>
+      <div class="set setrow">
+        <div class="mrprev" id="mrPreview"></div>
+        <div class="grow"><h4>Tło zakładki Modrinth</h4><p>Obrazek na górze zakładki Modrinth (np. twój ulubiony screen).</p></div>
+        <button class="btn" id="mrBgPick">Wybierz obrazek</button>
+        <button class="btn" id="mrBgReset">Domyślne</button>
       </div>
       <div class="set setrow">
         <div class="grow"><h4>Status na Discordzie</h4><p>Pokazuje znajomym, że grasz w Zorza Client, na jakiej wersji i na jakim serwerze.<br><span id="dcStatus"></span></p></div>
@@ -996,6 +1006,14 @@ Pobieranie wymaganego moda: {0}...|Downloading required mod: {0}...|Benötigter 
 Brakuje moda {0}, którego wymaga: {1}. Bez niego gra się nie uruchomi. Czy chcesz go pobrać?|Mod {0} is missing and is required by: {1}. The game won't start without it. Download it?|Mod {0} fehlt und wird benötigt von: {1}. Ohne ihn startet das Spiel nicht. Herunterladen?|Бракує мода {0}, який потрібен для: {1}. Без нього гра не запуститься. Завантажити?|Falta el mod {0}, que necesita: {1}. Sin él el juego no arranca. ¿Descargarlo?
 Brakuje moda {0}, którego wymaga: {1}, ale nie ma go na Modrinth. Dodaj go ręcznie albo wyłącz mody, które go wymagają.|Mod {0} is missing (required by: {1}) and isn't on Modrinth. Add it manually or turn off the mods that need it.|Mod {0} fehlt (benötigt von: {1}) und ist nicht auf Modrinth. Füge ihn manuell hinzu oder deaktiviere die Mods, die ihn brauchen.|Бракує мода {0} (потрібен для: {1}), і його немає на Modrinth. Додай вручну або вимкни моди, яким він потрібен.|Falta el mod {0} (lo necesita: {1}) y no está en Modrinth. Añádelo a mano o desactiva los mods que lo necesitan.
 Brakujące mody (np. Architectury, Cloth Config) dobierane automatycznie|Missing mods (e.g. Architectury, Cloth Config) added automatically|Fehlende Mods (z. B. Architectury, Cloth Config) werden automatisch ergänzt|Відсутні моди (напр. Architectury, Cloth Config) додаються автоматично|Los mods que faltan (p. ej. Architectury, Cloth Config) se añaden solos
+Tło zakładki Modrinth|Modrinth tab background|Hintergrund des Modrinth-Tabs|Фон вкладки Modrinth|Fondo de la pestaña Modrinth
+Obrazek na górze zakładki Modrinth (np. twój ulubiony screen).|Image at the top of the Modrinth tab (e.g. your favourite screenshot).|Bild oben im Modrinth-Tab (z. B. dein Lieblingsscreenshot).|Зображення вгорі вкладки Modrinth (напр. твій улюблений скриншот).|Imagen en la parte superior de la pestaña Modrinth (p. ej. tu captura favorita).
+Wybierz obrazek|Choose image|Bild wählen|Вибрати зображення|Elegir imagen
+Domyślne|Default|Standard|Типове|Predeterminado
+Nowa nazwa: Zorza Visuals|New name: Zorza Visuals|Neuer Name: Zorza Visuals|Нова назва: Zorza Visuals|Nuevo nombre: Zorza Visuals
+Konta: postać śledzi kursor i macha, własne tło|Accounts: the character follows your cursor and waves, custom background|Konten: Figur folgt dem Cursor und winkt, eigener Hintergrund|Акаунти: персонаж стежить за курсором і махає, власний фон|Cuentas: el personaje sigue el cursor y saluda, fondo propio
+Własne tło zakładki Modrinth|Custom Modrinth tab background|Eigener Hintergrund für den Modrinth-Tab|Власний фон вкладки Modrinth|Fondo propio para la pestaña Modrinth
+Płynniejsze przewijanie i poprawiony ekran startowy|Smoother scrolling and a fixed splash screen|Flüssigeres Scrollen und verbesserter Startbildschirm|Плавніше прокручування та виправлений стартовий екран|Desplazamiento más suave y pantalla de inicio corregida
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1129,13 +1147,14 @@ const Player = (() => {
 const skinCache = {};
 async function skinOf(uuid) { return skinCache[uuid || "-"] ||= Player.load(uuid); }
 async function libSkin() { const k = "lib:" + S.skin; return skinCache[k] ||= Player.load(null, "/api/skins/file?file=" + encodeURIComponent(S.skin)); }
-let homeRoot = null;
+let homeRoot = null, accRoot = null;
 async function renderSkins() {
   const acc = S.accounts.find(a => a.uuid === S.active);
   const sk = (!acc || S.skin_chosen) ? await libSkin() : await skinOf(acc.uuid);
   const s = Math.max(6, Math.round(Math.min(innerHeight * 0.44, 480) / 32));
   homeRoot = Player.build($("#homeScene"), sk.url, sk.slim, sk.th, s);
-  Player.build($("#accScene"), sk.url, sk.slim, sk.th, Math.max(5, Math.round(Math.min(innerHeight * 0.42, 440) / 32)));
+  const ask = acc ? await skinOf(acc.uuid) : sk;
+  accRoot = Player.build($("#accScene"), ask.url, ask.slim, ask.th, Math.max(5, Math.round(Math.min(innerHeight * 0.42, 440) / 32)));
   $("#meImg").src = Player.headIcon(sk) || "";
 }
 let rsT; addEventListener("resize", () => { clearTimeout(rsT); rsT = setTimeout(() => S && renderSkins(), 200); });
@@ -1169,25 +1188,40 @@ const TREES = (() => {
     <path d="M0 250 L200 170 L380 230 L560 120 L760 220 L980 150 L1200 230 L1400 170 L1600 220 L1600 400 L0 400Z" fill="#1d1830"/>
     <path d="${p} L1600 400 Z" fill="#0b0f19"/><rect y="330" width="1600" height="70" fill="#0d1422"/></svg>`;
 })();
-let bgShown = null;
+const bgShown = {};
+function setSky(el, slot, v) {
+  if (v) { el.className = "sky photo"; el.innerHTML = ""; el.style.backgroundImage = `url(/api/background?slot=${slot}&v=${v})`; }
+  else { el.className = "sky"; el.style.backgroundImage = ""; el.innerHTML = '<div class="stars"></div><div class="aurora"></div>' + TREES; }
+}
 function paintSky() {
-  if (bgShown === S.background) return; bgShown = S.background;
-  for (const el of [$("#sky1"), $("#sky2")]) {
-    if (S.background) { el.className = "sky photo"; el.innerHTML = ""; el.style.backgroundImage = `url(/api/background?v=${S.background})`; }
-    else { el.className = "sky"; el.style.backgroundImage = ""; el.innerHTML = '<div class="stars"></div><div class="aurora"></div>' + TREES; }
+  const B = S.backgrounds || {home: S.background};
+  const acc = B.accounts ? ["accounts", B.accounts] : ["home", B.home];
+  const key1 = "h" + B.home, key2 = acc.join(":"), key3 = "m" + B.modrinth;
+  if (bgShown.home !== key1) { bgShown.home = key1; setSky($("#sky1"), "home", B.home); }
+  if (bgShown.acc !== key2) { bgShown.acc = key2; setSky($("#sky2"), acc[0], acc[1]); }
+  if (bgShown.mr !== key3) {
+    bgShown.mr = key3;
+    $("#modrinth .mhero").style.background = B.modrinth
+      ? `linear-gradient(180deg, rgba(10,10,14,.15) 0%, rgba(20,20,22,.55) 55%, #141416 100%), url(/api/background?slot=modrinth&v=${B.modrinth}) center/cover`
+      : "";
+    const pv = $("#mrPreview");
+    if (pv) pv.style.backgroundImage = B.modrinth ? `url(/api/background?slot=modrinth&v=${B.modrinth})` : "";
   }
 }
-$("#bgBtn").onclick = e => {
-  e.stopPropagation();
-  menu($("#bgBtn"), `<button class="it" data-a="pick">${ic("i-img", 20)}Wybierz obrazek z dysku…</button>` +
-    (S.background ? `<button class="it" data-a="reset">${ic("i-back", 20)}Przywróć domyślne tło</button>` : ""), {
-      pick: () => $("#bgIn").click(),
-      reset: async () => { await api("/api/background/reset", {}); refresh(); toast("Przywrócono domyślne tło."); }
+let bgSlot = "home";
+function bgMenu(btn, slot) {
+  const B = S.backgrounds || {};
+  menu(btn, `<button class="it" data-a="pick">${ic("i-img", 20)}Wybierz obrazek z dysku…</button>` +
+    (B[slot] ? `<button class="it" data-a="reset">${ic("i-back", 20)}Przywróć domyślne tło</button>` : ""), {
+      pick: () => { bgSlot = slot; $("#bgIn").click(); },
+      reset: async () => { await api("/api/background/reset", {slot}); refresh(); toast("Przywrócono domyślne tło."); }
     }, "down-right");
-};
+}
+$("#bgBtn").onclick = e => { e.stopPropagation(); bgMenu($("#bgBtn"), "home"); };
+$("#accBgBtn").onclick = e => { e.stopPropagation(); bgMenu($("#accBgBtn"), "accounts"); };
 $("#bgIn").onchange = async e => {
   const f = e.target.files[0]; e.target.value = ""; if (!f) return;
-  const r = await fetch("/api/background/upload?name=" + encodeURIComponent(f.name), {method:"POST", body:f});
+  const r = await fetch(`/api/background/upload?slot=${bgSlot}&name=` + encodeURIComponent(f.name), {method:"POST", body:f});
   const j = await r.json().catch(() => ({}));
   if (!r.ok) return toast(j.error || "Nie udało się ustawić tła.", true);
   toast("Ustawiono nowe tło."); refresh();
@@ -1218,7 +1252,7 @@ async function refresh() {
   if (document.activeElement !== $("#lang")) $("#lang").value = S.lang;
   if (document.activeElement !== $("#logDays")) $("#logDays").value = String(S.log_days);
   const acc = S.accounts.find(a => a.uuid === S.active), P = S.profile;
-  document.title = S.name + " Launcher";
+  document.title = S.name;
   $("#brandName").textContent = S.name.toUpperCase();
   paintSky();
   const key = (acc ? acc.uuid : "-") + "|" + S.accounts.map(a => a.uuid).join();
@@ -1858,6 +1892,64 @@ $("#jvm").onchange = () => api("/api/settings", {jvm_args:$("#jvm").value});
 $("#remember").onclick = () => api("/api/settings", {remember_accounts:!S.settings.remember_accounts}).then(refresh);
 $("#discord").onclick = () => api("/api/settings", {discord:!S.settings.discord}).then(refresh);
 $("#openData").onclick = () => api("/api/open_folder", {});
+$("#mrBgPick").onclick = () => { bgSlot = "modrinth"; $("#bgIn").click(); };
+$("#mrBgReset").onclick = async () => { await api("/api/background/reset", {slot:"modrinth"}); refresh(); toast("Przywrócono domyślne tło."); };
+
+
+/* ================= KONTA: postać śledzi kursor i macha ================= */
+function waveOn(root) { if (!root) return; clearTimeout(root._bye); root.classList.remove("bye"); root.classList.add("hi"); }
+function waveOff(root) {
+  if (!root || !root.classList.contains("hi")) return;
+  const m = new DOMMatrix(getComputedStyle(root.querySelector(".rarm")).transform);
+  root.style.setProperty("--from", (Math.atan2(m.b, m.a) * 180 / Math.PI).toFixed(1) + "deg");
+  root.classList.remove("hi"); root.classList.add("bye");
+  root._bye = setTimeout(() => root.classList.remove("bye"), 600);
+}
+$("#accounts").addEventListener("mousemove", e => {
+  if (!accRoot) return;
+  const r = $("#accScene").getBoundingClientRect();
+  const cx = r.left + r.width / 2, cy = r.top + r.height * 0.18;
+  const dx = Math.max(-1, Math.min(1, (e.clientX - cx) / (innerWidth * 0.45)));
+  const dy = Math.max(-1, Math.min(1, (e.clientY - cy) / (innerHeight * 0.6)));
+  accRoot.style.transition = "transform .25s ease-out";
+  accRoot.style.transform = `rotateY(${dx * 32}deg) rotateX(-2deg)`;
+  accRoot.querySelector(".head").style.transform = `rotateY(${dx * 28}deg) rotateX(${-dy * 28}deg)`;
+  const over = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+  over ? waveOn(accRoot) : waveOff(accRoot);
+});
+$("#accounts").addEventListener("mouseleave", () => {
+  if (!accRoot) return;
+  accRoot.style.transform = ""; accRoot.querySelector(".head").style.transform = ""; waveOff(accRoot);
+});
+
+/* ================= PŁYNNE PRZEWIJANIE ================= */
+const smoothState = new WeakMap();
+addEventListener("wheel", e => {
+  if (e.ctrlKey) return;
+  const el = e.target.closest(".page, #modalBox, #log, #pmenu, .sklist");
+  if (!el || el.scrollHeight <= el.clientHeight + 1) return;
+  if (e.target.closest("select")) return;
+  e.preventDefault();
+  let st = smoothState.get(el);
+  if (!st) { st = {target: el.scrollTop, raf: 0}; smoothState.set(el, st); }
+  if (!st.raf) st.target = el.scrollTop;
+  const delta = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaMode === 2 ? e.deltaY * el.clientHeight : e.deltaY;
+  st.target = Math.max(0, Math.min(el.scrollHeight - el.clientHeight, st.target + delta * 1.1));
+  if (!st.raf) {
+    const step = () => {
+      const d = st.target - el.scrollTop;
+      if (Math.abs(d) < 0.6) { el.scrollTop = st.target; st.raf = 0; return; }
+      el.scrollTop += Math.sign(d) * Math.max(0.6, Math.abs(d) * 0.16);
+      st.raf = requestAnimationFrame(step);
+    };
+    st.raf = requestAnimationFrame(step);
+  }
+}, {passive: false});
+
+/* ================= BEZ MENU PRAWEGO PRZYCISKU ================= */
+addEventListener("contextmenu", e => {
+  if (!e.target.closest("input, textarea, [contenteditable], #log")) e.preventDefault();
+});
 
 /* ================= EKRAN STARTOWY ================= */
 (async function splash() {
@@ -1871,7 +1963,9 @@ $("#openData").onclick = () => api("/api/open_folder", {});
   svg.style.transform = `translate(${target.left - from.left}px, ${target.top - from.top}px) scale(${k})`;
   sp.querySelector(".bg").style.opacity = 0;
   document.body.classList.remove("boot");
-  await wait(850);
+  await wait(820);
+  document.body.classList.remove("logohide");
+  await wait(40);
   sp.remove();
 })();
 
