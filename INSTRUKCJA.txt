@@ -1,0 +1,45 @@
+ZORZA LAUNCHER – wersja próbna
+==============================
+
+URUCHAMIANIE
+------------
+1. Rozpakuj cały folder ZorzaLauncher (np. na Pulpit).
+2. Kliknij dwa razy plik  uruchom.bat
+   - za pierwszym razem doinstaluje biblioteki (kilkanaście sekund),
+   - otworzy się okno launchera.
+3. Czarnego okienka konsoli nie zamykaj, dopóki używasz launchera.
+
+Dane launchera (gra, mody, ustawienia) są w:  %APPDATA%\ZorzaLauncher
+Każda wersja gry ma własny folder w  instances\<wersja>  (mody, paczki zasobów, shadery, światy).
+
+WŁASNE TŁO
+----------
+Wrzuć obrazek jako  ui\assets\background.jpg  – launcher sam go użyje zamiast rysowanego tła.
+
+NAZWA LAUNCHERA
+---------------
+W pliku launcher.py zmień linijkę:  NAZWA_LAUNCHERA = "Zorza"
+
+
+LOGOWANIE MICROSOFT – JEDNORAZOWA KONFIGURACJA
+----------------------------------------------
+Każdy launcher musi mieć własny identyfikator aplikacji Microsoft (to darmowe).
+
+1. Wejdź na  https://portal.azure.com  i zaloguj się kontem Microsoft.
+2. Wyszukaj "App registrations" (Rejestracje aplikacji) -> "New registration".
+3. Wypełnij:
+   - Name: np. Zorza Launcher
+   - Supported account types: "Personal Microsoft accounts only"
+     (albo opcję z kontami organizacji ORAZ osobistymi)
+   - Redirect URI: wybierz "Public client/native (mobile & desktop)"
+     i wpisz dokładnie:   http://localhost:47615/callback
+4. Kliknij Register. Skopiuj "Application (client) ID".
+5. W pliku launcher.py wklej go tutaj:
+       AZURE_CLIENT_ID = "tu-wklej-id"
+6. Nowe aplikacje muszą dostać zgodę Mojanga na dostęp do Minecrafta.
+   Wypełnij formularz:  https://aka.ms/mce-reviewappid
+   (podajesz tam swój Client ID). Zatwierdzenie może potrwać kilka dni.
+   Dopóki nie przyjdzie zgoda, logowanie zakończy się błędem.
+
+Launcher nigdy nie widzi e-maila ani hasła – logujesz się na stronie Microsoftu.
+Na komputerze zapisuje tylko nick, UUID i token logowania (można wyłączyć w Ustawieniach).

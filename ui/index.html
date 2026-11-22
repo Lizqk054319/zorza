@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Zorza Launcher</title>
+<style>
+:root{
+  --bg:#141416; --side:#0f0f11; --card:#1d1d21; --card2:#232328; --line:#2c2c33;
+  --text:#f2f2f4; --muted:#9a9aa3; --blue:#1f6bff; --blue2:#0b4fd6; --red:#ff4d4d; --green:#3ddc84;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:"Segoe UI Variable","Segoe UI",Inter,system-ui,sans-serif;overflow:hidden;user-select:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,select{font:inherit;color:inherit}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- pasek boczny ---------- */
+#side{position:fixed;left:0;top:0;bottom:0;width:78px;background:var(--side);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px;z-index:10}
+#side .nav{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:#d6d6dc;transition:.15s}
+#side .nav:hover{background:#1c1c20;color:#fff}
+#side .nav.on{background:#232327;color:#fff}
+#side .spacer{flex:1}
+#side .me{width:52px;height:52px;border-radius:14px;overflow:hidden;display:grid;place-items:center}
+#side .me img{width:36px;height:36px;image-rendering:pixelated;border-radius:6px}
+#side .nav[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:72px;background:#26262b;padding:6px 10px;border-radius:8px;font-size:13px;white-space:nowrap;pointer-events:none}
+
+/* ---------- główny obszar ---------- */
+main{position:fixed;left:78px;top:0;right:0;bottom:0}
+.page{position:absolute;inset:0;display:none;overflow:auto}
+.page.on{display:block}
+
+/* tło nocne */
+.sky{position:absolute;inset:0;overflow:hidden;background:linear-gradient(180deg,#0b0d1f 0%,#1a1736 38%,#4a2340 58%,#8a3a3a 66%,#241a2e 70%,#0e1220 100%)}
+.sky.photo{background:#000 center/cover no-repeat}
+.stars{position:absolute;inset:0 0 40% 0;background-image:
+  radial-gradient(1px 1px at 10% 20%,#fff9,transparent),radial-gradient(1px 1px at 30% 8%,#fff8,transparent),
+  radial-gradient(1px 1px at 55% 25%,#fffa,transparent),radial-gradient(1px 1px at 72% 12%,#fff7,transparent),
+  radial-gradient(1px 1px at 88% 30%,#fff9,transparent),radial-gradient(1.5px 1.5px at 42% 15%,#fff,transparent),
+  radial-gradient(1px 1px at 20% 35%,#fff6,transparent),radial-gradient(1px 1px at 93% 6%,#fff8,transparent),
+  radial-gradient(1px 1px at 63% 5%,#fff9,transparent),radial-gradient(1px 1px at 5% 5%,#fff7,transparent)}
+.aurora{position:absolute;left:30%;top:2%;width:65%;height:32%;filter:blur(28px);opacity:.75;
+  background:radial-gradient(ellipse 30% 40% at 30% 60%,#1fe07a,transparent 70%),radial-gradient(ellipse 35% 30% at 60% 45%,#18c46b,transparent 70%),radial-gradient(ellipse 25% 35% at 85% 30%,#13a85c,transparent 70%);
+  animation:aur 14s ease-in-out infinite alternate}
+@keyframes aur{to{transform:translateX(-4%) skewX(-8deg);opacity:.55}}
+.trees{position:absolute;left:0;right:0;bottom:0;width:100%;height:55%}
+.shade{position:absolute;inset:0;background:linear-gradient(90deg,#0009 0%,#0003 45%,transparent 70%),linear-gradient(0deg,#000a 0%,transparent 40%)}
+
+/* strona główna */
+#home .content{position:absolute;left:96px;bottom:72px}
+.logo{width:110px;height:110px;margin-bottom:26px;filter:drop-shadow(0 4px 20px #0008)}
+#home h1{font-size:62px;font-weight:700;letter-spacing:-1.5px;margin-bottom:34px;text-shadow:0 4px 24px #0009}
+.play{display:flex;width:520px;height:110px;border-radius:30px;background:linear-gradient(180deg,#2f7bff,#0f55e8);box-shadow:0 10px 40px #0b4fd655,inset 0 1px 0 #ffffff40;position:relative;overflow:hidden}
+.play .go{flex:1;display:flex;align-items:center;gap:22px;padding-left:56px;font-size:34px;font-weight:600}
+.play .go svg{width:26px;height:26px;fill:#fff}
+.play .sep{width:1px;background:#ffffff40;margin:26px 0}
+.play .more{width:110px;display:grid;place-items:center}
+.play:hover{filter:brightness(1.08)}
+.play.busy .go{font-size:20px}
+.play .bar{position:absolute;left:0;bottom:0;height:5px;background:#fff;opacity:.85;transition:width .3s}
+.status{margin-top:14px;color:#cfd3e0;font-size:15px;min-height:20px;text-shadow:0 2px 8px #000}
+
+.skin{position:absolute;right:9%;bottom:16%;display:flex;flex-direction:column;align-items:center;gap:16px}
+.skin img{height:52vh;max-height:560px;image-rendering:pixelated;filter:drop-shadow(0 20px 30px #000a)}
+.tag{background:#000a;padding:8px 18px;border-radius:10px;font-size:22px;font-weight:500}
+
+/* menu wersji */
+#vmenu{position:fixed;width:300px;max-height:60vh;overflow:auto;background:#1e1e22;border:1px solid var(--line);border-radius:16px;padding:8px;display:none;z-index:50;box-shadow:0 20px 60px #000c}
+#vmenu.on{display:block}
+#vmenu .g{display:flex;align-items:center;gap:12px;color:#6f6f78;font-size:14px;padding:14px 14px 6px}
+#vmenu .g::after{content:"";flex:1;height:1px;background:var(--line)}
+#vmenu .v{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;padding:11px 14px;border-radius:10px;font-size:18px}
+#vmenu .v:hover{background:#2a2a30}
+#vmenu .v.sel{background:#1f6bff33}
+#vmenu .v small{color:var(--green);font-size:12px}
+#vmenu .repair{color:var(--red);border-top:1px solid var(--line);margin-top:8px;padding-top:14px;width:100%;text-align:left;padding-left:14px;font-size:17px}
+
+/* strony z treścią */
+.wrap{padding:56px 64px}
+.hero{background:linear-gradient(160deg,#1c4fb8 0%,#14306e 30%,#141416 70%)}
+.head{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.head h2{font-size:52px;font-weight:700;letter-spacing:-1px}
+.sub{color:#b9c2da;font-size:18px;margin-top:10px}
+.grow{flex:1}
+.btn{height:58px;padding:0 26px;border-radius:16px;background:#ffffff0d;border:1px solid #ffffff1a;display:inline-flex;align-items:center;gap:14px;font-size:18px;font-weight:500}
+.btn:hover{background:#ffffff1a}
+.btn.primary{background:var(--blue);border-color:transparent}
+.btn.primary:hover{background:#3a7dff}
+.vsel{height:58px;padding:0 18px 0 24px;border-radius:16px;background:#ffffff0d;border:1px solid #ffffff1a;font-size:20px;display:inline-flex;align-items:center;gap:12px}
+.tabs{display:inline-flex;background:#ffffff0a;border:1px solid #ffffff14;border-radius:18px;padding:6px;gap:4px;margin-top:34px}
+.tabs button{padding:12px 22px;border-radius:12px;font-size:18px;color:#c8cbe0;font-weight:500}
+.tabs button.on{background:#ffffff1f;color:#fff}
+.tabs button b{color:#7d8096;font-weight:400;margin-left:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:18px;margin-top:30px}
+.card{background:var(--card);border:1px solid #ffffff0f;border-radius:20px;padding:22px;display:flex;gap:18px;align-items:center}
+.card .ic{width:64px;height:64px;border-radius:14px;background:#2b2b31;flex:none;display:grid;place-items:center;overflow:hidden}
+.card .ic img{width:100%;height:100%;object-fit:cover}
+.card .t{font-size:19px;font-weight:600;word-break:break-all}
+.card .s{color:var(--muted);font-size:14px;margin-top:4px}
+.card.off{opacity:.5}
+.mini{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:#c9c9d1}
+.mini:hover{background:#ffffff14;color:#fff}
+.empty{margin-top:44px}
+.empty h3{font-size:26px}
+.empty p{color:var(--muted);font-size:17px;margin-top:10px}
+.drop{outline:2px dashed var(--blue);outline-offset:-12px}
+
+/* switch */
+.sw{width:46px;height:26px;border-radius:13px;background:#3a3a42;position:relative;flex:none;transition:.15s}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.15s}
+.sw.on{background:var(--blue)}
+.sw.on::after{left:23px}
+
+/* modrinth */
+.mhero{position:relative;padding:56px 64px 0;background:radial-gradient(ellipse at 70% 0%,#1d5a2c 0%,#173a2a 30%,#141416 75%)}
+.search{margin-top:34px;display:flex;align-items:center;height:72px;background:#0e0e10d9;border:1px solid #ffffff1a;border-radius:24px;padding:0 10px 0 26px;gap:16px}
+.search input{flex:1;background:none;border:0;outline:0;font-size:20px}
+.search input::placeholder{color:#7b7b84}
+.search .vs{border-left:1px solid #ffffff1f;padding:0 16px 0 22px;height:40px;display:flex;align-items:center;gap:10px;font-size:19px}
+.ul{display:flex;gap:40px;margin-top:36px;border-bottom:1px solid #ffffff12}
+.ul button{padding:14px 0;font-size:21px;font-weight:600;color:#b9c4e8;border-bottom:3px solid transparent}
+.ul button.on{color:#fff;border-color:#fff}
+.filters{display:flex;align-items:center;margin-top:26px;gap:16px}
+.chips{display:inline-flex;background:#ffffff08;border:1px solid #ffffff12;border-radius:18px;padding:6px;gap:4px}
+.chips button{padding:12px 22px;border-radius:12px;font-size:17px;color:#c8c8d0}
+.chips button.on{background:#ffffff1c;color:#fff;font-weight:600}
+select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #ffffff14;padding:0 20px;font-size:17px;min-width:240px;outline:0}
+.res{padding:10px 64px 40px}
+.row{display:flex;gap:26px;align-items:center;padding:24px 0;border-bottom:1px solid #ffffff0d}
+.row .ic{width:96px;height:96px;border-radius:20px;background:#26262b;flex:none;overflow:hidden}
+.row .ic img{width:100%;height:100%;object-fit:cover}
+.row .mid{flex:1;min-width:0}
+.row .t{font-size:22px;font-weight:700}
+.row .t span{font-size:16px;color:var(--muted);font-weight:400;margin-left:14px}
+.row .d{color:#d4d4da;font-size:17px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .m{color:var(--muted);font-size:15px;margin-top:6px}
+.inst{min-width:180px;height:56px;border-radius:16px;background:#26262b;color:#5b9bff;font-weight:600;font-size:18px}
+.inst:hover{background:#2f2f36}
+.inst.done{color:var(--green);cursor:default}
+.loadmore{display:block;margin:26px auto 0}
+
+/* konta */
+#accounts{display:none}
+#accounts.on{display:flex}
+.acl{position:relative;width:44%;min-width:420px;overflow:hidden}
+.acl .in{position:absolute;inset:0;padding:56px 56px}
+.brand{display:flex;align-items:center;gap:14px;font-weight:700;letter-spacing:3px;font-size:18px}
+.brand svg{width:44px;height:44px}
+.acl .skin2{position:absolute;left:50%;top:16%;transform:translateX(-50%);height:48%;image-rendering:pixelated;filter:drop-shadow(0 20px 30px #000a)}
+.acl .bottom{position:absolute;left:56px;bottom:56px}
+.cap{font-size:14px;letter-spacing:2px;font-weight:700;color:#d8d8de}
+.acl h3{font-size:54px;letter-spacing:-1px;margin:10px 0 30px}
+.acr{flex:1;padding:70px 56px 40px;display:flex;flex-direction:column;overflow:auto}
+.acr h2{font-size:48px;letter-spacing:-1px}
+.list{margin-top:34px;display:flex;flex-direction:column;gap:12px}
+.acc{display:flex;align-items:center;gap:20px;background:var(--card);border-radius:18px;padding:16px 20px;cursor:pointer}
+.acc:hover{background:var(--card2)}
+.acc img{width:72px;height:72px;border-radius:12px;image-rendering:pixelated;background:#2b2b31}
+.acc .t{font-size:22px;font-weight:600}
+.acc .s{color:var(--muted);font-size:15px;margin-top:2px}
+.note{color:var(--muted);font-size:15px;margin-top:auto;padding-top:22px;border-top:1px solid #ffffff12}
+
+/* konsola */
+#log{margin-top:24px;background:#0c0c0e;border:1px solid #ffffff12;border-radius:16px;padding:18px;height:calc(100vh - 230px);overflow:auto;font:13px/1.55 Consolas,"Cascadia Mono",monospace;color:#c9d1d9;white-space:pre-wrap;user-select:text}
+
+/* ustawienia */
+.set{background:var(--card);border-radius:20px;padding:26px;margin-top:20px;max-width:820px}
+.set h4{font-size:20px}
+.set p{color:var(--muted);margin-top:6px}
+.set input[type=range]{width:100%;margin-top:18px;accent-color:var(--blue)}
+.set input[type=text]{width:100%;margin-top:14px;background:#141417;border:1px solid #ffffff14;border-radius:12px;padding:14px;outline:0}
+.setrow{display:flex;align-items:center;gap:20px}
+
+/* okienka */
+#toast{position:fixed;right:24px;bottom:24px;max-width:460px;background:#26262b;border:1px solid #ffffff1a;padding:16px 20px;border-radius:14px;font-size:15px;transform:translateY(20px);opacity:0;visibility:hidden;transition:.25s;z-index:100}
+#toast.on{transform:none;opacity:1;visibility:visible}
+#toast.err{border-color:#ff4d4d88}
+#modal{position:fixed;inset:0;background:#000a;display:none;place-items:center;z-index:90}
+#modal.on{display:grid}
+#modal .box{background:#1d1d21;border:1px solid #ffffff1a;border-radius:20px;padding:30px;max-width:620px;font-size:16px;line-height:1.55}
+#modal h3{font-size:24px;margin-bottom:12px}
+#modal ol{margin:12px 0 0 22px}
+#modal code{background:#0e0e10;padding:2px 6px;border-radius:6px;user-select:text}
+#modal .btn{margin-top:22px}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-thumb{background:#ffffff22;border-radius:5px}
+</style>
+</head>
+<body>
+
+<!-- ======== ikony ======== -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="logo" viewBox="0 0 64 64">
+    <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7dffb4"/><stop offset="1" stop-color="#4aa8ff"/></linearGradient></defs>
+    <path d="M8 40c8-14 16-18 24-12s16 2 24-12" fill="none" stroke="url(#lg)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M8 50c8-10 16-13 24-8s16 1 24-10" fill="none" stroke="url(#lg)" stroke-width="4" stroke-linecap="round" opacity=".6"/>
+    <path d="M44 8l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff"/>
+  </symbol>
+</svg>
+
+<nav id="side">
+  <button class="nav on" data-p="home" data-tip="Start"><svg class="i" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg></button>
+  <button class="nav" data-p="mods" data-tip="Mody"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></button>
+  <button class="nav" data-p="servers" data-tip="Serwery"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></button>
+  <button class="nav" data-p="modrinth" data-tip="Modrinth"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>
+  <button class="nav" data-p="skins" data-tip="Skiny"><svg class="i" viewBox="0 0 24 24"><path d="M12 7a2 2 0 1 0-2-2M12 7v2l9 7v2H3v-2l9-7"/></svg></button>
+  <div class="spacer"></div>
+  <button class="nav" data-p="console" data-tip="Konsola"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9l3 3-3 3M12 15h5"/></svg></button>
+  <button class="nav" data-p="settings" data-tip="Ustawienia"><svg class="i" viewBox="0 0 24 24"><path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/></svg></button>
+  <button class="nav me" data-p="accounts" data-tip="Konta"><img id="meImg" alt=""></button>
+</nav>
+
+<main>
+  <!-- ======== START ======== -->
+  <section class="page on" id="home">
+    <div class="sky" id="sky1"></div>
+    <div class="shade"></div>
+    <div class="skin"><div class="tag" id="homeName">Brak konta</div><img id="homeSkin" alt=""></div>
+    <div class="content">
+      <svg class="logo"><use href="#logo"/></svg>
+      <h1 id="homeTitle">Minecraft 1.21.4</h1>
+      <div class="play" id="play">
+        <button class="go" id="goBtn"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg><span id="goTxt">Graj</span></button>
+        <div class="sep"></div>
+        <button class="more" id="moreBtn"><svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="bar" id="bar" style="width:0"></div>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+  </section>
+
+  <!-- ======== MODY ======== -->
+  <section class="page hero" id="mods">
+    <div class="wrap" id="modsDrop">
+      <div class="head">
+        <h2>Mody</h2>
+        <button class="vsel vpick"><span class="vlabel">Minecraft 1.21.4</span><svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="grow"></div>
+        <button class="btn" id="addDisk"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Dodaj z dysku</button>
+        <button class="btn primary" id="goSearch"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Szukaj modów</button>
+      </div>
+      <div class="sub">Każda wersja gry ma własne mody, paczki zasobów i shadery.</div>
+      <div class="head">
+        <div class="tabs" id="ctabs">
+          <button class="on" data-k="mods">Mody<b id="c_mods">0</b></button>
+          <button data-k="resourcepacks">Paczki zasobów<b id="c_resourcepacks">0</b></button>
+          <button data-k="shaders">Shadery<b id="c_shaders">0</b></button>
+        </div>
+        <div class="grow"></div>
+        <button class="btn" id="openFolder" style="margin-top:34px"><svg class="i" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Folder</button>
+      </div>
+      <div class="grid" id="clist"></div>
+      <div class="empty" id="cempty">
+        <h3 id="cemptyT">Brak modów</h3>
+        <p id="cemptyP">Przeciągnij tu plik .jar (Fabric) albo znajdź mody na Modrinth.</p>
+      </div>
+      <input type="file" id="fileIn" multiple hidden>
+    </div>
+  </section>
+
+  <!-- ======== MODRINTH ======== -->
+  <section class="page" id="modrinth">
+    <div class="mhero">
+      <div class="head">
+        <h2>Modrinth</h2>
+      </div>
+      <div class="sub" id="mSub">Mody, paczki zasobów i shadery. Instalujesz jednym kliknięciem.</div>
+      <div class="search">
+        <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        <input id="q" placeholder="Szukaj modów, np. minimapa albo Sodium">
+        <button class="vs vpick"><span class="vlabel">Minecraft 1.21.4</span><svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+      </div>
+      <div class="ul" id="mtabs">
+        <button class="on" data-k="mods">Mody</button>
+        <button data-k="resourcepacks">Paczki zasobów</button>
+        <button data-k="shaders">Shadery</button>
+      </div>
+    </div>
+    <div class="res">
+      <div class="filters">
+        <div class="chips" id="cats">
+          <button class="on" data-c="">Wszystkie</button>
+          <button data-c="optimization">Optymalizacja</button>
+          <button data-c="utility">Narzędzia</button>
+          <button data-c="adventure">Przygoda</button>
+          <button data-c="decoration">Dekoracje</button>
+        </div>
+        <div class="grow"></div>
+        <select class="sort" id="sort">
+          <option value="relevance">Najtrafniejsze</option>
+          <option value="downloads">Najczęściej pobierane</option>
+          <option value="newest">Najnowsze</option>
+          <option value="updated">Ostatnio aktualizowane</option>
+        </select>
+      </div>
+      <div id="results"></div>
+      <button class="btn loadmore" id="loadMore" style="display:none">Pokaż więcej</button>
+    </div>
+  </section>
+
+  <!-- ======== KONTA ======== -->
+  <section class="page" id="accounts">
+    <div class="acl">
+      <div class="sky" id="sky2"></div>
+      <div class="shade"></div>
+      <div class="in">
+        <div class="brand"><svg><use href="#logo"/></svg><span id="brandName">ZORZA</span></div>
+      </div>
+      <img class="skin2" id="accSkin" alt="">
+      <div class="bottom">
+        <div class="cap">AKTYWNE KONTO</div>
+        <h3 id="accName">Brak konta</h3>
+        <button class="btn primary" id="toGame"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M6 4l14 8-14 8z"/></svg>Przejdź do gry</button>
+      </div>
+    </div>
+    <div class="acr">
+      <h2>Konta graczy</h2>
+      <div class="sub" style="color:var(--muted)">Wybierz konto, na którym chcesz grać.</div>
+      <div class="cap" style="margin-top:40px;color:var(--muted)">ZAPISANE KONTA <span id="accCount" style="margin-left:8px">0</span></div>
+      <div class="list" id="accList"></div>
+      <button class="btn" id="addAcc" style="margin-top:22px;align-self:flex-start;background:none;border:0;padding-left:20px"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Dodaj konto Microsoft</button>
+      <div class="note">Logujesz się na stronie Microsoftu – launcher nie widzi twojego e-maila ani hasła.<br>Na tym komputerze zapisywany jest tylko nick, UUID i token logowania (można to wyłączyć w Ustawieniach).</div>
+    </div>
+  </section>
+
+  <!-- ======== KONSOLA ======== -->
+  <section class="page" id="console">
+    <div class="wrap">
+      <div class="head"><h2>Konsola</h2><div class="grow"></div><button class="btn" id="clearLog">Wyczyść</button></div>
+      <div id="log"></div>
+    </div>
+  </section>
+
+  <!-- ======== USTAWIENIA ======== -->
+  <section class="page" id="settings">
+    <div class="wrap">
+      <div class="head"><h2>Ustawienia</h2></div>
+      <div class="set">
+        <h4>Pamięć RAM dla gry: <span id="ramV">4096</span> MB</h4>
+        <p>Dla zwykłej gry wystarczy 4 GB. Z dużą ilością modów i shaderami daj 6–8 GB.</p>
+        <input type="range" id="ram" min="1024" max="16384" step="512">
+      </div>
+      <div class="set">
+        <h4>Dodatkowe argumenty Javy</h4>
+        <p>Zostaw puste, jeśli nie wiesz, do czego to służy.</p>
+        <input type="text" id="jvm" placeholder="np. -XX:+UseG1GC">
+      </div>
+      <div class="set setrow">
+        <div class="grow"><h4>Zapamiętuj konta</h4><p>Wyłączone: po zamknięciu launchera trzeba logować się od nowa, nic nie jest zapisywane na dysku.</p></div>
+        <button class="sw" id="remember"></button>
+      </div>
+      <div class="set setrow">
+        <div class="grow"><h4>Folder launchera</h4><p id="dataDir"></p></div>
+        <button class="btn" id="openData">Otwórz</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== WKRÓTCE ======== -->
+  <section class="page hero" id="servers"><div class="wrap"><h2 style="font-size:52px">Serwery</h2><div class="sub">Ta zakładka będzie dostępna wkrótce.</div></div></section>
+  <section class="page hero" id="skins"><div class="wrap"><h2 style="font-size:52px">Skiny</h2><div class="sub">Ta zakładka będzie dostępna wkrótce.</div></div></section>
+</main>
+
+<div id="vmenu"></div>
+<div id="toast"></div>
+<div id="modal"><div class="box" id="modalBox"></div></div>
+
+<script>
+document.addEventListener('error', e => { if (e.target.tagName === 'IMG') e.target.style.visibility = 'hidden'; }, true);
+document.addEventListener('load', e => { if (e.target.tagName === 'IMG') e.target.style.visibility = ''; }, true);
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+let S = null, cKind = "mods", mKind = "mods", mCat = "", mOffset = 0, logNext = 0, page = "home";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+async function api(path, body) {
+  const opt = body === undefined ? {} : {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)};
+  const r = await fetch(path, opt);
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || ("Błąd " + r.status));
+  return j;
+}
+function toast(msg, err) {
+  const t = $("#toast"); t.textContent = msg; t.className = "on" + (err ? " err" : "");
+  clearTimeout(t._h); t._h = setTimeout(() => t.className = "", 4500);
+}
+function modal(html) { $("#modalBox").innerHTML = html + '<br><button class="btn primary" onclick="$(\'#modal\').className=\'\'">OK</button>'; $("#modal").className = "on"; }
+
+/* ---------- tło ---------- */
+const TREES = (() => {
+  let p = "M0 400 ", x = 0;
+  while (x < 1600) { const h = 140 + Math.random()*130, w = 26 + Math.random()*26;
+    p += `L${x} ${400-h*0.35} L${x+w/2} ${400-h} L${x+w} ${400-h*0.35} `; x += w*0.8; }
+  return `<svg class="trees" viewBox="0 0 1600 400" preserveAspectRatio="none">
+    <path d="M0 250 L200 170 L380 230 L560 120 L760 220 L980 150 L1200 230 L1400 170 L1600 220 L1600 400 L0 400Z" fill="#1d1830"/>
+    <path d="${p} L1600 400 Z" fill="#0b0f19"/>
+    <rect y="330" width="1600" height="70" fill="#0d1422"/></svg>`;
+})();
+function paintSky(el) {
+  if (S && S.has_background) { el.className = "sky photo"; el.style.backgroundImage = "url(/assets/background.jpg)"; el.innerHTML = ""; }
+  else if (!el.innerHTML) el.innerHTML = '<div class="stars"></div><div class="aurora"></div>' + TREES;
+}
+
+/* ---------- nawigacja ---------- */
+function go(p) {
+  page = p;
+  $$(".nav").forEach(b => b.classList.toggle("on", b.dataset.p === p));
+  $$(".page").forEach(s => s.classList.toggle("on", s.id === p));
+  $("#vmenu").className = "";
+  if (p === "mods") loadContent();
+  if (p === "modrinth" && !$("#results").innerHTML) search(true);
+  if (p === "console") pollLog();
+}
+$$(".nav").forEach(b => b.onclick = () => go(b.dataset.p));
+
+/* ---------- stan ---------- */
+const skinUrl = (a, kind) => a ? `https://mc-heads.net/${kind}/${a.uuid}${kind==="body"?"/right":""}` : `https://mc-heads.net/${kind}/MHF_Steve${kind==="body"?"/right":""}`;
+let lastAcc = "", lastVer = "", lastLogin = "";
+async function refresh() {
+  try { S = await api("/api/state"); } catch { return; }
+  const acc = S.accounts.find(a => a.uuid === S.active);
+  document.title = S.name + " Launcher";
+  $("#brandName").textContent = S.name.toUpperCase();
+  paintSky($("#sky1")); paintSky($("#sky2"));
+  const key = (acc ? acc.uuid : "-") + S.accounts.length;
+  if (key !== lastAcc) {
+    lastAcc = key;
+    $("#meImg").src = skinUrl(acc, "avatar");
+    $("#homeSkin").src = $("#accSkin").src = skinUrl(acc, "body");
+    $("#homeName").textContent = $("#accName").textContent = acc ? acc.name : "Brak konta";
+    renderAccounts();
+  }
+  if (S.version !== lastVer) { lastVer = S.version; $$(".vlabel").forEach(e => e.textContent = "Minecraft " + S.version);
+    $("#homeTitle").textContent = "Minecraft " + S.version; if (page === "mods") loadContent(); if (page === "modrinth") search(true); }
+  for (const k in S.counts) $("#c_" + k).textContent = S.counts[k];
+  // przycisk Graj
+  const t = S.task, play = $("#play");
+  play.classList.toggle("busy", t.running);
+  if (t.running) {
+    $("#goTxt").textContent = t.status || "Pracuję...";
+    $("#bar").style.width = t.max ? (100 * t.progress / t.max) + "%" : "0";
+  } else {
+    $("#goTxt").textContent = S.game_running ? "Gra działa" : "Graj";
+    $("#bar").style.width = "0";
+  }
+  $("#status").textContent = t.running && t.max ? `${t.progress} / ${t.max}` : "";
+  if (t.error) { toast(t.error, true); api("/api/clear_error", {}); if (page === "modrinth") search(true); }
+  if (S.login_message.text && S.login_message.text !== lastLogin) { lastLogin = S.login_message.text; toast(lastLogin, !S.login_message.ok); }
+  if (!S.login_message.text) lastLogin = "";
+  // ustawienia
+  if (document.activeElement !== $("#ram")) { $("#ram").value = S.settings.ram_mb; $("#ramV").textContent = S.settings.ram_mb; }
+  if (document.activeElement !== $("#jvm")) $("#jvm").value = S.settings.jvm_args;
+  $("#remember").classList.toggle("on", S.settings.remember_accounts);
+  $("#dataDir").textContent = S.data_dir;
+  // po zakończonym zadaniu odśwież listy
+  if (refresh._wasRunning && !t.running) { if (page === "mods") loadContent(); if (page === "modrinth") markInstalled(); }
+  refresh._wasRunning = t.running;
+}
+setInterval(refresh, 1000); refresh();
+
+/* ---------- Graj + menu wersji ---------- */
+$("#goBtn").onclick = async () => {
+  if (S.task.running || S.game_running) return;
+  if (!S.accounts.length) { go("accounts"); toast("Najpierw dodaj konto Microsoft.", true); return; }
+  try { await api("/api/play", {}); refresh(); } catch (e) { toast(e.message, true); }
+};
+function openVmenu(anchor, up) {
+  const m = $("#vmenu");
+  if (m.className === "on") { m.className = ""; return; }
+  let h = "";
+  S.versions.forEach((g, gi) => {
+    if (gi > 0 || S.versions.length === 1) h += `<div class="g">${esc(g.group)}</div>`;
+    g.items.forEach(v => h += `<button class="v ${v.id===S.version?"sel":""}" data-v="${esc(v.id)}">${esc(v.id)}${v.installed?"<small>pobrana</small>":""}</button>`);
+  });
+  h += `<button class="repair" id="repair">Napraw instalację</button>`;
+  m.innerHTML = h; m.className = "on";
+  const r = anchor.getBoundingClientRect();
+  m.style.left = Math.min(r.left, innerWidth - 320) + "px";
+  if (up) { m.style.top = ""; m.style.bottom = (innerHeight - r.top + 10) + "px"; }
+  else { m.style.bottom = ""; m.style.top = (r.bottom + 10) + "px"; }
+  const sel = m.querySelector(".sel"); if (sel) sel.scrollIntoView({block:"center"});
+  m.querySelectorAll(".v").forEach(b => b.onclick = async () => { m.className = ""; await api("/api/select_version", {version:b.dataset.v}); refresh(); });
+  $("#repair").onclick = async () => { m.className = ""; try { await api("/api/repair", {version:S.version}); go("home"); toast("Sprawdzam i naprawiam pliki gry..."); } catch (e) { toast(e.message, true); } };
+}
+$("#moreBtn").onclick = e => { e.stopPropagation(); openVmenu($("#play"), true); };
+$$(".vpick").forEach(b => b.onclick = e => { e.stopPropagation(); openVmenu(b, false); });
+document.addEventListener("click", e => { if (!$("#vmenu").contains(e.target)) $("#vmenu").className = ""; });
+
+/* ---------- Mody (zainstalowane) ---------- */
+const KNAME = {mods:["modów","Przeciągnij tu plik .jar (Fabric) albo znajdź mody na Modrinth."],
+  resourcepacks:["paczek zasobów","Przeciągnij tu plik .zip albo znajdź paczki na Modrinth."],
+  shaders:["shaderów","Przeciągnij tu plik .zip. Shadery wymagają moda Iris (znajdziesz go na Modrinth)."]};
+$$("#ctabs button").forEach(b => b.onclick = () => { cKind = b.dataset.k; $$("#ctabs button").forEach(x => x.classList.toggle("on", x === b)); loadContent(); });
+async function loadContent() {
+  if (!S) return;
+  const items = await api(`/api/content?version=${encodeURIComponent(S.version)}&kind=${cKind}`).catch(() => []);
+  $("#clist").innerHTML = items.map(it => `
+    <div class="card ${it.enabled?"":"off"}">
+      <div class="ic">${it.icon ? `<img src="${esc(it.icon)}">` : `<svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg>`}</div>
+      <div class="grow" style="min-width:0"><div class="t">${esc(it.name)}</div><div class="s">${it.enabled?"Włączony":"Wyłączony"} · ${(it.size/1048576).toFixed(1)} MB</div></div>
+      <button class="sw ${it.enabled?"on":""}" data-f="${esc(it.file)}" data-a="toggle" title="Włącz / wyłącz"></button>
+      <button class="mini" data-f="${esc(it.file)}" data-a="delete" title="Usuń"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
+    </div>`).join("");
+  $("#clist").querySelectorAll("[data-a]").forEach(b => b.onclick = async () => {
+    if (b.dataset.a === "delete" && !confirmDel(b)) return;
+    await api("/api/content/" + b.dataset.a, {version:S.version, kind:cKind, file:b.dataset.f}).catch(e => toast(e.message, true));
+    loadContent();
+  });
+  $("#cempty").style.display = items.length ? "none" : "block";
+  $("#cemptyT").textContent = `Brak twoich ${KNAME[cKind][0]} dla Minecraft ${S.version}`;
+  $("#cemptyP").textContent = KNAME[cKind][1];
+}
+function confirmDel(b) { if (b.dataset.sure) return true; b.dataset.sure = 1; b.style.color = "#ff4d4d"; toast("Kliknij jeszcze raz, aby usunąć."); setTimeout(() => { delete b.dataset.sure; b.style.color = ""; }, 3000); return false; }
+async function uploadFiles(files) {
+  for (const f of files) {
+    const r = await fetch(`/api/content/upload?version=${encodeURIComponent(S.version)}&kind=${cKind}&name=${encodeURIComponent(f.name)}`, {method:"POST", body:f});
+    if (!r.ok) toast("Nie udało się dodać " + f.name, true);
+  }
+  toast(`Dodano ${files.length} plik(ów).`); loadContent();
+}
+$("#addDisk").onclick = () => $("#fileIn").click();
+$("#fileIn").onchange = e => { uploadFiles([...e.target.files]); e.target.value = ""; };
+const drop = $("#mods");
+drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("drop"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("drop"));
+drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("drop"); uploadFiles([...e.dataTransfer.files]); });
+$("#openFolder").onclick = () => api("/api/open_folder", {version:S.version, kind:cKind});
+$("#goSearch").onclick = () => { setMKind(cKind); go("modrinth"); };
+
+/* ---------- Modrinth ---------- */
+const fmt = n => n >= 1e6 ? (n/1e6).toFixed(1).replace(".", ",") + " mln" : n >= 1e3 ? (n/1e3).toFixed(1).replace(".", ",") + " tys." : n;
+const CATPL = {optimization:"Optymalizacja",utility:"Narzędzia",adventure:"Przygoda",decoration:"Dekoracje",library:"Biblioteka",
+  technology:"Technologia",magic:"Magia",storage:"Przechowywanie",equipment:"Wyposażenie",worldgen:"Generowanie świata",
+  "game-mechanics":"Mechanika gry",mobs:"Moby",food:"Jedzenie",social:"Społeczność",transportation:"Transport",cursed:"Dziwne",
+  economy:"Ekonomia",minigame:"Minigry",management:"Zarządzanie"};
+const PH = {mods:"Szukaj modów, np. minimapa albo Sodium", resourcepacks:"Szukaj paczek zasobów, np. Faithful", shaders:"Szukaj shaderów, np. Complementary"};
+function setMKind(k) {
+  mKind = k; $$("#mtabs button").forEach(x => x.classList.toggle("on", x.dataset.k === k));
+  $("#q").placeholder = PH[k]; $("#cats").style.display = k === "mods" ? "" : "none";
+  if (k !== "mods") mCat = "";
+  $("#results").innerHTML = "";
+}
+$$("#mtabs button").forEach(b => b.onclick = () => { setMKind(b.dataset.k); search(true); });
+$$("#cats button").forEach(b => b.onclick = () => { mCat = b.dataset.c; $$("#cats button").forEach(x => x.classList.toggle("on", x === b)); search(true); });
+$("#sort").onchange = () => search(true);
+let qT; $("#q").oninput = () => { clearTimeout(qT); qT = setTimeout(() => search(true), 350); };
+$("#loadMore").onclick = () => search(false);
+let lastHits = [];
+async function search(reset) {
+  if (!S) return;
+  if (reset) { mOffset = 0; lastHits = []; }
+  $("#mSub").textContent = `Mody, paczki zasobów i shadery dla Minecraft ${S.version}. Instalujesz jednym kliknięciem.`;
+  const qs = new URLSearchParams({q:$("#q").value, kind:mKind, cat:mCat, sort:$("#sort").value, version:S.version, offset:mOffset});
+  let data;
+  try { data = await api("/api/modrinth/search?" + qs); } catch (e) { $("#results").innerHTML = `<div class="empty"><h3>Nie udało się połączyć z Modrinth</h3><p>${esc(e.message)}</p></div>`; return; }
+  lastHits = reset ? data.hits : lastHits.concat(data.hits);
+  mOffset = lastHits.length;
+  $("#results").innerHTML = lastHits.length ? lastHits.map(h => `
+    <div class="row">
+      <div class="ic">${h.icon_url ? `<img src="${esc(h.icon_url)}" loading="lazy">` : ""}</div>
+      <div class="mid">
+        <div class="t">${esc(h.title)}<span>${esc(h.author)}</span></div>
+        <div class="d">${esc(h.description)}</div>
+        <div class="m">${esc(CATPL[h.display_categories?.[0]] || h.display_categories?.[0] || "")} · ${fmt(h.downloads)} pobrań</div>
+      </div>
+      <button class="inst ${h.installed?"done":""}" data-id="${esc(h.project_id)}">${h.installed?"Zainstalowano":"Zainstaluj"}</button>
+    </div>`).join("") : `<div class="empty"><h3>Nic nie znaleziono</h3><p>Spróbuj innej nazwy albo innej wersji gry.</p></div>`;
+  $("#loadMore").style.display = data.total_hits > mOffset ? "block" : "none";
+  $$("#results .inst").forEach(b => b.onclick = async () => {
+    if (b.classList.contains("done") || S.task.running) { if (S.task.running) toast("Poczekaj, trwa inne pobieranie."); return; }
+    b.textContent = "Pobieranie...";
+    try { await api("/api/modrinth/install", {project_id:b.dataset.id, kind:mKind, version:S.version}); }
+    catch (e) { b.textContent = "Zainstaluj"; toast(e.message, true); }
+  });
+}
+async function markInstalled() { if ($("#results").innerHTML) { const y = $("#modrinth").scrollTop; await search(true); $("#modrinth").scrollTop = y; } }
+
+/* ---------- Konta ---------- */
+function renderAccounts() {
+  $("#accCount").textContent = S.accounts.length;
+  $("#accList").innerHTML = S.accounts.length ? S.accounts.map(a => `
+    <div class="acc" data-u="${esc(a.uuid)}">
+      <img src="${skinUrl(a, "avatar")}">
+      <div class="grow"><div class="t">${esc(a.name)}</div><div class="s">Microsoft · Premium</div></div>
+      ${a.uuid === S.active ? '<svg class="i" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>' : ""}
+      <button class="mini" data-del="${esc(a.uuid)}" title="Usuń konto"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
+    </div>`).join("") : `<div class="sub" style="color:var(--muted)">Nie masz jeszcze żadnego konta. Dodaj konto Microsoft z kupionym Minecraftem.</div>`;
+  $$("#accList .acc").forEach(el => el.onclick = async e => {
+    const del = e.target.closest("[data-del]");
+    if (del) { if (!confirmDel(del)) return; await api("/api/accounts/delete", {uuid:del.dataset.del}); }
+    else await api("/api/accounts/select", {uuid:el.dataset.u});
+    lastAcc = ""; refresh();
+  });
+}
+$("#addAcc").onclick = async () => {
+  try { await api("/api/accounts/ms_start", {}); toast("Zaloguj się w oknie przeglądarki, które się otworzyło."); }
+  catch (e) {
+    if (e.message === "not_configured") modal(`<h3>Logowanie Microsoft nie jest jeszcze skonfigurowane</h3>
+      Żeby logowanie działało, launcher potrzebuje własnego identyfikatora aplikacji z Azure:
+      <ol><li>Zarejestruj aplikację na <code>portal.azure.com</code> (instrukcja w pliku <code>INSTRUKCJA.txt</code>).</li>
+      <li>Wklej jej <b>Application (client) ID</b> do pliku <code>launcher.py</code> w linijce <code>AZURE_CLIENT_ID = ""</code>.</li>
+      <li>Uruchom launcher ponownie.</li></ol>`);
+    else toast(e.message, true);
+  }
+};
+$("#toGame").onclick = () => go("home");
+
+/* ---------- Konsola ---------- */
+async function pollLog() {
+  if (page !== "console") return;
+  try {
+    const d = await api("/api/log?since=" + logNext);
+    if (d.lines.length) { const el = $("#log"), atEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 30;
+      el.textContent += d.lines.join("\n") + "\n"; if (el.textContent.length > 400000) el.textContent = el.textContent.slice(-300000);
+      if (atEnd) el.scrollTop = el.scrollHeight; }
+    logNext = d.next;
+  } catch {}
+  setTimeout(pollLog, 800);
+}
+$("#clearLog").onclick = () => $("#log").textContent = "";
+
+/* ---------- Ustawienia ---------- */
+$("#ram").oninput = () => $("#ramV").textContent = $("#ram").value;
+$("#ram").onchange = () => api("/api/settings", {ram_mb:+$("#ram").value});
+$("#jvm").onchange = () => api("/api/settings", {jvm_args:$("#jvm").value});
+$("#remember").onclick = () => api("/api/settings", {remember_accounts:!S.settings.remember_accounts}).then(refresh);
+$("#openData").onclick = () => api("/api/open_folder", {});
+</script>
+</body>
+</html>
