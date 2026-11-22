@@ -71,16 +71,16 @@ Launcher nigdy nie widzi e-maila ani hasła – logujesz się na stronie Microso
 Na komputerze zapisuje tylko nick, UUID i token logowania (można wyłączyć w Ustawieniach).
 
 
-STATUS NA DISCORDZIE ("Zorza Client")
+STATUS NA DISCORDZIE ("Zora Client")
 -------------------------------------
 1. Wejdź na  https://discord.com/developers/applications  i kliknij "New Application".
-2. Nazwa:  Zorza Client   (ta nazwa pokazuje się na Discordzie jako "Gra").
+2. Nazwa:  Zora Client   (ta nazwa pokazuje się na Discordzie jako "Gra").
 3. Na stronie aplikacji skopiuj "Application ID".
 4. Wejdź w "Rich Presence" -> "Art Assets" -> "Add Image(s)" i wgraj plik
    ui\assets\zorza-logo.png  – nazwij go dokładnie:  logo
 5. W launcher.py wklej ID tutaj:   DISCORD_APP_ID = "tu-wklej-id"
 6. Uruchom Discorda na komputerze, potem launcher. Status widać w Ustawieniach.
-Przycisk "Pobierz Zorza Client" widzą inni – ty sam na swoim profilu go nie zobaczysz.
+Przycisk "Pobierz Zora Client" widzą inni – ty sam na swoim profilu go nie zobaczysz.
 
 
 MOD ZORZA CLIENT (W GRZE)
@@ -90,7 +90,7 @@ Instaluje się sam w profilach Fabric 1.21.4 (razem z modami wbudowanymi).
 - Mod Menu: kategorie (HUD, Combat, Utility, Client), wyszukiwarka, ulubione (serduszko),
   ⚙ przy module = ustawienia, przycisk Enabled/Disabled = włącz/wyłącz.
 - Edytor HUD: przeciągnij element, kółko myszy zmienia rozmiar, prawy przycisk resetuje.
-- Zoom: przytrzymaj C. Klawisze zmienisz w grze: Opcje -> Sterowanie -> Zorza Client.
+- Zoom: przytrzymaj C. Klawisze zmienisz w grze: Opcje -> Sterowanie -> Zora Client.
 Kod moda jest w folderze mod/. Po każdej zmianie GitHub sam go kompiluje i wystawia
 w wydaniu "mod-latest" – launcher pobiera nową wersję raz dziennie.
 

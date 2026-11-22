@@ -1,4 +1,4 @@
-name: Build Zorza Client mod
+name: Build Zora Client mod
 
 on:
   push:
@@ -41,8 +41,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete mod-latest --yes --cleanup-tag || true
-          gh release create mod-latest "$JAR" --title "Zorza Client mod (najnowszy)" \
-            --notes "Automatycznie zbudowany mod Zorza Client. Launcher pobiera go sam." --target "$GITHUB_SHA"
+          gh release create mod-latest "$JAR" --title "Zora Client mod (najnowszy)" \
+            --notes "Automatycznie zbudowany mod Zora Client. Launcher pobiera go sam." --target "$GITHUB_SHA"
 
   screenshots:
     runs-on: ubuntu-latest

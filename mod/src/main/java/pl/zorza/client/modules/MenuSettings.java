@@ -13,7 +13,7 @@ public class MenuSettings extends Module {
     public final Setting.Bool animations = add(new Setting.Bool("animations", "Menu animations", true));
 
     public MenuSettings() {
-        super("menu", "Zorza Menu", "Accent color and animations of this menu.", Category.CLIENT, true);
+        super("menu", "Zora Menu", "Accent color and animations of this menu.", Category.CLIENT, true);
         INSTANCE = this;
     }
 

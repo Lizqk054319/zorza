@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Zorza Visuals
+Zora Client
 
 Uruchom:  uruchom.bat   (albo:  python launcher.py)
 
@@ -37,25 +37,25 @@ from pathlib import Path
 #  USTAWIENIA – tu możesz zmieniać
 # ---------------------------------------------------------------------------
 
-NAZWA_LAUNCHERA = "Zorza Visuals"  # nazwa wyświetlana w launcherze
-NAZWA_DISCORD = "Zorza Visuals"    # tak ma się nazywać aplikacja w Discord Developer Portal
+NAZWA_LAUNCHERA = "Zora Client"  # nazwa wyświetlana w launcherze
+NAZWA_DISCORD = "Zora Client"    # tak ma się nazywać aplikacja w Discord Developer Portal
 DOMYSLNA_WERSJA = "1.21.4"         # wersja pierwszego profilu
 NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.5.0"
+WERSJA_CLIENTA = "0.5.1"
 
 # Co nowego – pokazuje się na ekranie startowym w karcie "Nowość"
 NOWOSCI = [
-    "Nowa nazwa: Zorza Visuals",
+    "Nowa nazwa: Zora Client",
     "Konta: postać śledzi kursor i macha, własne tło",
     "Własne tło zakładki Modrinth",
     "Płynniejsze przewijanie i poprawiony ekran startowy",
     "Brakujące mody (np. Architectury, Cloth Config) dobierane automatycznie",
     "Aktualizacje modów: Zorza pyta, czy zaktualizować stare mody",
     "Import profili z launchera Ogulniega",
-    "Mod Zorza Client w grze: prawy Shift otwiera menu (1.21.4)",
+    "Mod Zora Client w grze: prawy Shift otwiera menu (1.21.4)",
     "Mod Menu z modułami: Armor Status, Keystrokes, CPS, Zoom i inne",
     "Edytor HUD: przeciągnij, przewiń, prawy przycisk resetuje",
     "Graj przez oficjalny launcher – z modami i ustawieniami Zorzy",
@@ -69,7 +69,7 @@ MOD_ID = {"ferrite-core": "ferritecore"}
 # Napis "Logowanie Microsoft będzie dostępne wkrótce" – zmień na False po zgodzie Mojanga
 MICROSOFT_WKROTCE = True
 
-# Mod Zorza Client (budowany automatycznie na GitHubie) – wersja gry -> adres pliku
+# Mod Zora Client (budowany automatycznie na GitHubie) – wersja gry -> adres pliku
 ZORZA_MOD = {
     "1.21.4": "https://github.com/Lizqk054319/zorza/releases/download/mod-latest/zorza-client-1.21.4.jar",
 }
@@ -1082,7 +1082,7 @@ def list_content(p, kind):
         if base in builtin and not m:
             m = {"icon": builtin_icons.get(builtin[base])}
         if base == "zorza-client.jar":
-            m = {"icon": "/assets/zorza-logo.png", "title": "Zorza Client"}
+            m = {"icon": "/assets/zorza-logo.png", "title": "Zora Client"}
         items.append({"file": f.name, "name": ji.get("title") or m.get("title") or base,
                       "author": ji.get("author") or "", "version": ji.get("version") or m.get("version") or "",
                       "icon": m.get("icon") or (f"/api/modicon?profile={urllib.parse.quote(p['id'])}"
@@ -1105,7 +1105,7 @@ def list_content(p, kind):
                               "enabled": p["loader"] == "fabric", "size": 0})
         has_z = (folder / "zorza-client.jar").exists() or (folder / "zorza-client.jar.disabled").exists()
         if not has_z and p["version"] in ZORZA_MOD:
-            items.insert(0, {"file": "", "name": "Zorza Client", "author": "Zorza", "version": "",
+            items.insert(0, {"file": "", "name": "Zora Client", "author": "Zorza", "version": "",
                              "icon": "/assets/zorza-logo.png", "source": "builtin", "pending": True,
                              "enabled": p["loader"] == "fabric", "size": 0})
     return items
@@ -1208,7 +1208,7 @@ def fetch_builtin_icons():
 
 
 def ensure_zorza_mod(p):
-    """Mod Zorza Client dla obsługiwanych wersji – pobierany z GitHuba, odświeżany raz dziennie."""
+    """Mod Zora Client dla obsługiwanych wersji – pobierany z GitHuba, odświeżany raz dziennie."""
     url = ZORZA_MOD.get(p["version"])
     d = profile_dir(p) / "mods"
     dest, off = d / "zorza-client.jar", d / "zorza-client.jar.disabled"
@@ -1221,7 +1221,7 @@ def ensure_zorza_mod(p):
         return
     if dest.exists() and time.time() - dest.stat().st_mtime < 86400:
         return
-    task.update(status="Pobieranie moda Zorza Client...", max=0)
+    task.update(status="Pobieranie moda Zora Client...", max=0)
     try:
         with requests.get(url, headers=UA, stream=True, timeout=60) as resp:
             resp.raise_for_status()
@@ -1229,9 +1229,9 @@ def ensure_zorza_mod(p):
             with open(tmp, "wb") as out:
                 shutil.copyfileobj(resp.raw, out)
             tmp.replace(dest)
-        log("Pobrano mod Zorza Client.")
+        log("Pobrano mod Zora Client.")
     except Exception as e:
-        log(f"Nie udało się pobrać moda Zorza Client: {e}")
+        log(f"Nie udało się pobrać moda Zora Client: {e}")
 
 
 def check_mods(p):

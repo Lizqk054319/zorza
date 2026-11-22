@@ -23,7 +23,7 @@ public class HudEditorScreen extends ZScreen {
     private static final String[] TIPS = {"Config folder", "Mods", "Theme", "Game settings"};
 
     public HudEditorScreen(boolean showMenu) {
-        super("Zorza");
+        super("Zora");
         this.showMenu = showMenu;
     }
 

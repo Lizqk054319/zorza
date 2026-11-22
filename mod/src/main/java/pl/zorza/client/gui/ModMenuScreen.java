@@ -35,7 +35,7 @@ public class ModMenuScreen extends ZScreen {
     private static final String[] SIDE_TABS = {"gear", "list", "sparkles"};
 
     public ModMenuScreen(Module openSettings) {
-        super("Zorza Mod Menu");
+        super("Zora Mod Menu");
         if (openSettings != null) openSettings(openSettings);
     }
 
@@ -253,7 +253,7 @@ public class ModMenuScreen extends ZScreen {
 
     // ------------------------------------------------------------------ pasek stylu na dole
 
-    private static final String[] STYLES = {"Zorza", "Compact"};
+    private static final String[] STYLES = {"Zora", "Compact"};
 
     private int[] styleRect(int i) {
         int w = 150, total = STYLES.length * w + 12;

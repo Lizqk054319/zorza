@@ -71,7 +71,7 @@ public class ZorzaClient implements ClientModInitializer {
             }
             return ActionResult.PASS;
         });
-        LOG.info("Zorza Client gotowy – prawy Shift otwiera menu.");
+        LOG.info("Zora Client gotowy – prawy Shift otwiera menu.");
     }
 
     private static void tick(MinecraftClient mc) {
