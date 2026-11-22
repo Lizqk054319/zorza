@@ -975,6 +975,21 @@ Minecraft nie przyjął skina (błąd {0}).|Minecraft didn't accept the skin (er
 Ten profil jest na wersji {0}, której launcher nie obsługuje.|This profile uses version {0}, which the launcher doesn't support.|Dieses Profil nutzt Version {0}, die der Launcher nicht unterstützt.|Цей профіль на версії {0}, яку лаунчер не підтримує.|Este perfil usa la versión {0}, que el launcher no admite.
 Za dużo prób. Spróbuj za {0} s.|Too many attempts. Try again in {0} s.|Zu viele Versuche. Versuche es in {0} s erneut.|Забагато спроб. Спробуй через {0} с.|Demasiados intentos. Inténtalo en {0} s.
 Główny|Main|Haupt|Головний|Principal
+Sprawdź aktualizacje|Check for updates|Nach Updates suchen|Перевірити оновлення|Buscar actualizaciones
+Sprawdzam mody na Modrinth...|Checking mods on Modrinth...|Mods werden auf Modrinth geprüft...|Перевіряю моди на Modrinth...|Comprobando mods en Modrinth...
+Wszystkie mody są aktualne i pasują do tej wersji gry.|All mods are up to date and match this game version.|Alle Mods sind aktuell und passen zu dieser Spielversion.|Усі моди актуальні й підходять до цієї версії гри.|Todos los mods están al día y son para esta versión.
+Aktualizuję mody...|Updating mods...|Mods werden aktualisiert...|Оновлюю моди...|Actualizando mods...
+Wyłączono mody: {0}|Mods turned off: {0}|Mods deaktiviert: {0}|Вимкнено модів: {0}|Mods desactivados: {0}
+Zaktualizowano mody: {0}|Mods updated: {0}|Mods aktualisiert: {0}|Оновлено модів: {0}|Mods actualizados: {0}
+Mod|Mod|Mod|Мод|Mod
+Mod jest nieaktualny ({0} → {1}). Czy chcesz go zaktualizować?|This mod is outdated ({0} → {1}). Do you want to update it?|Dieser Mod ist veraltet ({0} → {1}). Möchtest du ihn aktualisieren?|Мод застарів ({0} → {1}). Оновити його?|Este mod está desactualizado ({0} → {1}). ¿Quieres actualizarlo?
+Mod nie jest na wersję {0} (jest na: {1}). Czy chcesz zmienić go na wersję dla {0}?|This mod isn't for version {0} (it's for: {1}). Switch it to the {0} version?|Dieser Mod ist nicht für Version {0} (sondern für: {1}). Auf die Version für {0} wechseln?|Мод не для версії {0} (він для: {1}). Змінити на версію для {0}?|Este mod no es para la versión {0} (es para: {1}). ¿Cambiarlo a la versión para {0}?
+Mod nie ma wersji na {0} i może wywalać grę. Czy chcesz go wyłączyć?|This mod has no version for {0} and may crash the game. Turn it off?|Dieser Mod hat keine Version für {0} und kann das Spiel abstürzen lassen. Deaktivieren?|Мод не має версії для {0} і може крашити гру. Вимкнути його?|Este mod no tiene versión para {0} y puede cerrar el juego. ¿Desactivarlo?
+Tak|Yes|Ja|Так|Sí
+Nie|No|Nein|Ні|No
+Tak dla wszystkich|Yes to all|Ja für alle|Так для всіх|Sí a todo
+Import profili z launchera Ogulniega|Profile import from the Ogulniega launcher|Profilimport aus dem Ogulniega-Launcher|Імпорт профілів з лаунчера Ogulniega|Importar perfiles del launcher Ogulniega
+Aktualizacje modów: Zorza pyta, czy zaktualizować stare mody|Mod updates: Zorza asks whether to update old mods|Mod-Updates: Zorza fragt, ob alte Mods aktualisiert werden sollen|Оновлення модів: Zorza питає, чи оновити старі моди|Actualizaciones: Zorza pregunta si actualizar mods antiguos
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1230,7 +1245,10 @@ async function refresh() {
   }
   $("#status").textContent = tk.running && tk.max ? `${tk.progress} / ${tk.max}` : "";
   if (tk.error) { toast(tk.error, true); api("/api/clear_error", {}); if (page === "modrinth") markInstalled(); }
-  else if (tk.done && !tk.running) { toast(tk.done); api("/api/clear_error", {}); }
+  else if (tk.done && !tk.running) {
+    toast(tk.done); api("/api/clear_error", {});
+    if (tk.after === "check_mods") setTimeout(() => checkMods(S.profile.id, false), 600);
+  }
   if (S.login_message.text) { toast(S.login_message.text, !S.login_message.ok); api("/api/clear_error", {}); }
   if (document.activeElement !== $("#jvm")) $("#jvm").value = S.settings.jvm_args;
   $("#remember").classList.toggle("on", S.settings.remember_accounts);
@@ -1573,6 +1591,7 @@ async function renderProfilePage() {
   el.innerHTML = `
     <div class="lhead"><h3>${t(TITLE)} <span class="cnt">${items.filter(i => !i.pending).length}</span></h3>
       <button class="mini" id="cRef" title="${t("Odśwież")}"><svg class="i" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/></svg></button>
+      ${kind === "mods" ? `<button class="btn" id="cUpd">${t("Sprawdź aktualizacje")}</button>` : ""}
       <button class="btn" id="cSearch">${t("Szukaj na Modrinth")}</button>
       <button class="btn" id="cFolder">${t("Otwórz folder")}</button>
       <button class="btn primary" id="cAdd">${ic("i-plus")}${t(ADD)}</button></div>
@@ -1588,6 +1607,7 @@ async function renderProfilePage() {
   $("#cRef").onclick = () => renderProfilePage();
   $("#cFolder").onclick = () => api("/api/open_folder", {profile:P.id, kind});
   $("#cSearch").onclick = () => { setMKind(kind); go("modrinth"); };
+  if ($("#cUpd")) $("#cUpd").onclick = () => checkMods(P.id, true);
   $("#cAdd").onclick = () => { $("#fileIn").accept = kind === "mods" ? ".jar" : ".zip"; $("#fileIn").click(); };
   $$("#pmain [data-tog]").forEach(b => b.onclick = async () => { await api("/api/content/toggle", {profile:P.id, kind, file:b.dataset.tog}).catch(e => toast(e.message, true)); renderProfilePage(); });
   $$("#pmain [data-rm]").forEach(b => b.onclick = async () => {
@@ -1608,6 +1628,53 @@ async function uploadFiles(files, kind) {
   renderProfilePage();
 }
 $("#fileIn").onchange = e => { uploadFiles([...e.target.files], pTab); e.target.value = ""; };
+
+
+/* ================= AKTUALIZACJE MODÓW ================= */
+async function checkMods(pid, manual) {
+  if (manual) toast(t("Sprawdzam mody na Modrinth..."));
+  let res;
+  try { res = await api("/api/mods/check", {profile:pid}); }
+  catch (e) { if (manual) toast(e.message, true); return; }
+  const issues = res.issues || [];
+  if (!issues.length) { if (manual) toast(t("Wszystkie mody są aktualne i pasują do tej wersji gry.")); return; }
+  const upd = [], off = [];
+  let i = 0, all = false;
+  const finish = async () => {
+    closeModal();
+    for (const f of off) await api("/api/content/toggle", {profile:pid, kind:"mods", file:f}).catch(() => {});
+    if (upd.length) { try { await api("/api/mods/update", {profile:pid, items:upd}); toast(t("Aktualizuję mody...")); } catch (e) { toast(e.message, true); } }
+    else if (off.length) toast(t("Wyłączono mody: {0}", off.length));
+    if (page === "profile") renderProfilePage();
+  };
+  const accept = it => { if (it.kind === "no_version") off.push(it.file); else upd.push({file:it.file, version_id:it.version_id}); };
+  const show = () => {
+    if (all) { for (; i < issues.length; i++) accept(issues[i]); }
+    if (i >= issues.length) return finish();
+    const it = issues[i];
+    const q = it.kind === "outdated"
+      ? t("Mod jest nieaktualny ({0} → {1}). Czy chcesz go zaktualizować?", esc(it.current), esc(it.new))
+      : it.kind === "wrong_version"
+      ? t("Mod nie jest na wersję {0} (jest na: {1}). Czy chcesz zmienić go na wersję dla {0}?", esc(it.game), esc((it.current_games || []).join(", ")))
+      : t("Mod nie ma wersji na {0} i może wywalać grę. Czy chcesz go wyłączyć?", esc(it.game));
+    openModal(`<div class="mh"><h3>${t("Mod")}</h3><span class="cnt">${i + 1} / ${issues.length}</span><button class="x" id="mdX">${ic("i-x")}</button></div>
+      <div style="display:flex;gap:18px;align-items:center">
+        <div class="ic" style="width:64px;height:64px;border-radius:14px;overflow:hidden;background:#26262b;flex:none">${it.icon ? `<img src="${esc(it.icon)}" style="width:100%;height:100%">` : ""}</div>
+        <div><div style="font-size:22px;font-weight:700">${esc(it.name)}</div><div class="hint" style="margin-top:4px">${esc(it.file)}</div></div>
+      </div>
+      <div style="font-size:17px;margin-top:20px;line-height:1.5">${q}</div>
+      <div class="mfoot">
+        <button class="btn primary" id="mdYes">${t("Tak")}</button>
+        <button class="btn" id="mdNo">${t("Nie")}</button>
+        ${issues.length - i > 1 ? `<button class="btn" id="mdAll" style="margin-left:auto">${t("Tak dla wszystkich")}</button>` : ""}
+      </div>`);
+    $("#mdYes").onclick = () => { accept(it); i++; show(); };
+    $("#mdNo").onclick = () => { i++; show(); };
+    $("#mdX").onclick = () => finish();
+    if ($("#mdAll")) $("#mdAll").onclick = () => { all = true; show(); };
+  };
+  show();
+}
 
 /* ================= SKINY ================= */
 let skSel = null, skData = null;

@@ -10,6 +10,7 @@ HTML otwierana w Microsoft Edge w trybie aplikacji (bez pasków przeglądarki).
 
 import base64
 import ctypes
+import hashlib
 import html
 import json
 import os
@@ -42,10 +43,11 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.4.1"
+WERSJA_CLIENTA = "0.4.2"
 
 # Co nowego – pokazuje się na ekranie startowym w karcie "Nowość"
 NOWOSCI = [
+    "Aktualizacje modów: Zorza pyta, czy zaktualizować stare mody",
     "Import profili z launchera Ogulniega",
     "Mod Zorza Client w grze: prawy Shift otwiera menu (1.21.4)",
     "Mod Menu z modułami: Armor Status, Keystrokes, CPS, Zoom i inne",
@@ -123,7 +125,7 @@ MODRINTH = "https://api.modrinth.com/v2"
 lock = threading.RLock()
 log_lines = deque(maxlen=3000)
 log_counter = 0
-task = {"running": False, "status": "", "progress": 0, "max": 0, "error": "", "done": ""}
+task = {"running": False, "status": "", "progress": 0, "max": 0, "error": "", "done": "", "after": ""}
 game = {"proc": None, "profile": None, "where": "", "start": 0}
 last_ping = time.time()
 pending_logins = {}   # state -> code_verifier
@@ -373,6 +375,7 @@ def do_import_code(data):
             failed.append(pid)
             log(f"Nie udało się zainstalować {pid}: {e}")
     task["done"] = f"Dodano profil {p['name']}" + (f" ({len(failed)} elementów pominięto)" if failed else "")
+    task["after"] = "check_mods"
 
 
 # ---------------------------------------------------------------------------
@@ -661,6 +664,7 @@ def do_import_launcher(d):
     if c.get("saves"):
         copy_tree(gd / "saves", dst / "saves")
     task["done"] = f"Zaimportowano profil {p['name']}"
+    task["after"] = "check_mods"
     log(f"Import z {launcher['name']} ({src['name']}) zakończony")
 
 
@@ -726,7 +730,7 @@ def refresh_account(acc):
 def run_task(fn, *args):
     if task["running"]:
         return False
-    task.update(running=True, status="Przygotowanie...", progress=0, max=0, error="", done="")
+    task.update(running=True, status="Przygotowanie...", progress=0, max=0, error="", done="", after="")
 
     def worker():
         try:
@@ -1088,6 +1092,91 @@ def ensure_zorza_mod(p):
         log("Pobrano mod Zorza Client.")
     except Exception as e:
         log(f"Nie udało się pobrać moda Zorza Client: {e}")
+
+
+def check_mods(p):
+    """Sprawdza mody gracza na Modrinth: nieaktualne, na inną wersję gry albo bez wersji na tę grę."""
+    d = profile_dir(p) / "mods"
+    meta = load_json(meta_path(p), {})
+    skip = {m["file"] for m in meta.get("builtin", {}).values()} | {"zorza-client.jar"}
+    files = {}
+    for f in d.iterdir():
+        base = f.name[:-9] if f.name.endswith(".disabled") else f.name
+        if f.is_file() and base.endswith(".jar") and base not in skip:
+            files[hashlib.sha1(f.read_bytes()).hexdigest()] = f
+    if not files:
+        return []
+    hashes = list(files)
+    r = requests.post(f"{MODRINTH}/version_files", json={"hashes": hashes, "algorithm": "sha1"},
+                      headers=UA, timeout=20)
+    r.raise_for_status()
+    current = r.json()
+    known = [h for h in hashes if h in current]
+    if not known:
+        return []
+    r = requests.post(f"{MODRINTH}/version_files/update", headers=UA, timeout=20,
+                      json={"hashes": known, "algorithm": "sha1", "loaders": ["fabric"],
+                            "game_versions": [p["version"]]})
+    r.raise_for_status()
+    updates = r.json()
+    ids = list({current[h]["project_id"] for h in known})
+    titles = {}
+    try:
+        pr = requests.get(f"{MODRINTH}/projects", params={"ids": json.dumps(ids)}, headers=UA, timeout=20)
+        for x in pr.json():
+            titles[x["id"]] = {"title": x.get("title"), "icon": x.get("icon_url")}
+    except Exception:
+        pass
+    out = []
+    for h in known:
+        cur, upd, f = current[h], updates.get(h), files[h]
+        info = titles.get(cur["project_id"], {})
+        item = {"file": f.name, "name": info.get("title") or jar_info(f).get("title") or f.name,
+                "icon": info.get("icon"), "current": cur.get("version_number"),
+                "current_games": cur.get("game_versions", [])[-3:], "game": p["version"],
+                "enabled": not f.name.endswith(".disabled")}
+        fits = p["version"] in cur.get("game_versions", [])
+        if fits:
+            if upd and upd["id"] != cur["id"]:
+                out.append({**item, "kind": "outdated", "new": upd.get("version_number"), "version_id": upd["id"]})
+        elif upd:
+            out.append({**item, "kind": "wrong_version", "new": upd.get("version_number"), "version_id": upd["id"]})
+        elif item["enabled"]:
+            out.append({**item, "kind": "no_version"})
+    order = {"outdated": 0, "wrong_version": 1, "no_version": 2}
+    return sorted(out, key=lambda x: (order[x["kind"]], x["name"].lower()))
+
+
+def do_update_mods(p, items):
+    d = profile_dir(p) / "mods"
+    meta = load_json(meta_path(p), {})
+    done = 0
+    for i, it in enumerate(items):
+        old = safe_child(d, it["file"])
+        task.update(max=len(items), progress=i)
+        try:
+            v = requests.get(f"{MODRINTH}/version/{it['version_id']}", headers=UA, timeout=20).json()
+            f = next((x for x in v["files"] if x.get("primary")), v["files"][0])
+            disabled = old.name.endswith(".disabled")
+            dest = safe_child(d, f["filename"] + (".disabled" if disabled else ""))
+            task.update(status=f"Pobieranie {f['filename']}...")
+            with requests.get(f["url"], headers=UA, stream=True, timeout=60) as resp:
+                resp.raise_for_status()
+                tmp = d / (f["filename"] + ".pobieranie")
+                with open(tmp, "wb") as out:
+                    shutil.copyfileobj(resp.raw, out)
+            if old.exists() and old != dest:
+                old.unlink()
+            tmp.replace(dest)
+            for pid, m in meta.get("modrinth", {}).items():
+                if m.get("file") == (old.name[:-9] if disabled else old.name):
+                    m["file"], m["version"] = f["filename"], v.get("version_number")
+            done += 1
+            log(f"Zaktualizowano {old.name} -> {dest.name}")
+        except Exception as e:
+            log(f"Nie udało się zaktualizować {it.get('file')}: {e}")
+    save_json(meta_path(p), meta)
+    task["done"] = f"Zaktualizowano mody: {done}"
 
 
 def ensure_builtins(p):
@@ -1644,6 +1733,11 @@ class Handler(BaseHTTPRequestHandler):
             elif path == "/api/play_official":
                 if not run_task(do_play_official, d.get("id") or settings["active_profile"]):
                     return self.send(400, busy)
+            elif path == "/api/mods/check":
+                return self.send(200, {"issues": check_mods(get_profile(d.get("profile")))})
+            elif path == "/api/mods/update":
+                if not run_task(do_update_mods, get_profile(d.get("profile")), list(d.get("items", []))):
+                    return self.send(400, busy)
             elif path == "/api/repair":
                 if not run_task(do_repair, d.get("id") or settings["active_profile"]):
                     return self.send(400, busy)
@@ -1792,6 +1886,7 @@ class Handler(BaseHTTPRequestHandler):
             elif path == "/api/clear_error":
                 task["error"] = ""
                 task["done"] = ""
+                task["after"] = ""
                 login_message.update(text="")
             else:
                 return self.send(404, {"error": "nie znaleziono"})
