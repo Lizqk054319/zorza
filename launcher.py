@@ -99,7 +99,8 @@ except ImportError:
     input("Naciśnij Enter, aby zamknąć...")
     sys.exit(1)
 
-APP_DIR = Path(__file__).resolve().parent
+# W wersji .exe (PyInstaller) pliki ui są w folderze _MEIPASS
+APP_DIR = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
 UI_DIR = APP_DIR / "ui"
 APPDATA = Path(os.environ.get("APPDATA", Path.home()))
 HOME = Path.home()
