@@ -409,7 +409,15 @@ def ram_from_args(args):
 
 def scan_official():
     root = APPDATA / ".minecraft"
-    lp = load_json(root / "launcher_profiles.json", None)
+    lp = None
+    for name in ("launcher_profiles.json", "launcher_profiles_microsoft_store.json"):
+        data = load_json(root / name, None)
+        if isinstance(data, dict):
+            if lp is None:
+                lp = {"profiles": {}}
+            for key, pr in (data.get("profiles") or {}).items():
+                if not key.startswith("zorza-"):        # pomiń profile dodane przez Zorzę
+                    lp["profiles"].setdefault(key, pr)
     if lp is None:
         return None
     latest = None
@@ -504,11 +512,26 @@ def scan_lunar():
     mc = APPDATA / ".minecraft"
     out = []
     pdir = lroot / "profiles"
-    if pdir.is_dir():
-        for mods in pdir.glob("**/mods"):
+    candidates = []
+    if pdir.is_dir():          # tylko 3 poziomy w głąb – pełne przeszukiwanie Lunara trwa wieki
+        try:
+            for a in os.scandir(pdir):
+                if not a.is_dir():
+                    continue
+                if os.path.isdir(os.path.join(a.path, "mods")):
+                    candidates.append(Path(a.path) / "mods")
+                for b in os.scandir(a.path):
+                    if b.is_dir() and b.name != "mods":
+                        if os.path.isdir(os.path.join(b.path, "mods")):
+                            candidates.append(Path(b.path) / "mods")
+                        for c in os.scandir(b.path):
+                            if c.is_dir() and c.name != "mods" and os.path.isdir(os.path.join(c.path, "mods")):
+                                candidates.append(Path(c.path) / "mods")
+        except OSError:
+            pass
+    if candidates:
+        for mods in candidates:
             rel = mods.relative_to(pdir).parts
-            if len(rel) > 5:
-                continue
             ver = next((x for x in reversed(rel) if re.fullmatch(r"\d+\.\d+(\.\d+)?", x)), "")
             if not ver:
                 m = re.search(r"(\d+\.\d+(?:\.\d+)?)", "/".join(rel))
@@ -530,15 +553,25 @@ def scan_lunar():
 
 
 def scan_launchers():
-    found = []
-    for fn in (scan_official, scan_modrinth, scan_prism, scan_lunar):
+    """Każdy launcher sprawdzany osobno i równolegle – jeden wolny lub zepsuty nie blokuje reszty."""
+    fns = (scan_official, scan_modrinth, scan_prism, scan_lunar)
+    results = [None] * len(fns)
+
+    def run(i, fn):
         try:
-            r = fn()
-            if r:
-                found.append(r)
+            results[i] = fn()
         except Exception as e:
             log(f"Błąd skanowania ({fn.__name__}): {e}")
-    return found
+
+    threads = [threading.Thread(target=run, args=(i, fn), daemon=True) for i, fn in enumerate(fns)]
+    for t in threads:
+        t.start()
+    deadline = time.time() + 8
+    for t, fn in zip(threads, fns):
+        t.join(max(0.0, deadline - time.time()))
+        if t.is_alive():
+            log(f"Skanowanie ({fn.__name__}) trwa za długo – pomijam.")
+    return [r for r in results if r]
 
 
 def copy_tree(src, dst):
@@ -973,8 +1006,9 @@ def fetch_builtin_icons():
     try:
         r = requests.get(f"{MODRINTH}/projects", params={"ids": json.dumps(missing)}, headers=UA, timeout=15)
         r.raise_for_status()
-        for proj in r.json():
-            if proj.get("icon_url"):
+        data = r.json()
+        for proj in data if isinstance(data, list) else []:
+            if isinstance(proj, dict) and proj.get("icon_url"):
                 builtin_icons[proj["slug"]] = proj["icon_url"]
         save_json(ICONS_FILE, builtin_icons)
     except Exception as e:

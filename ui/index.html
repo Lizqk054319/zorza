@@ -930,6 +930,8 @@ Edytor HUD: przeciągnij, przewiń, prawy przycisk resetuje|HUD editor: drag, sc
 Graj przez oficjalny launcher – z modami i ustawieniami Zorzy|Play via the official launcher – with Zorza's mods and settings|Über den offiziellen Launcher spielen – mit Zorzas Mods und Einstellungen|Гра через офіційний лаунчер – з модами й налаштуваннями Zorza|Juega con el launcher oficial, con los mods y ajustes de Zorza
 Płynne animacje i nowy ekran startowy|Smooth animations and a new splash screen|Flüssige Animationen und neuer Startbildschirm|Плавні анімації та новий стартовий екран|Animaciones suaves y nueva pantalla de inicio
 Wersje gry od 1.20.1|Game versions from 1.20.1|Spielversionen ab 1.20.1|Версії гри від 1.20.1|Versiones desde la 1.20.1
+Nie udało się przeszukać launcherów|Couldn't search for launchers|Launcher konnten nicht gesucht werden|Не вдалося знайти лаунчери|No se pudieron buscar launchers
+Spróbuj ponownie|Try again|Erneut versuchen|Спробувати ще раз|Reintentar
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1296,7 +1298,12 @@ async function importProfile() {
   openModal(mhead("Przenieś z innego launchera", true) + `<div class="sub" style="color:var(--muted)">Szukam launcherów na tym komputerze…</div><div class="spin"></div>`);
   bindBack(addProfile);
   let found;
-  try { found = await api("/api/import/scan"); } catch (e) { toast(e.message, true); return; }
+  try { found = await api("/api/import/scan"); }
+  catch (e) {
+    openModal(mhead("Przenieś z innego launchera", true) + `<div class="empty" style="margin-top:10px"><h3>Nie udało się przeszukać launcherów</h3><p>${esc(e.message)}</p></div>
+      <div class="mfoot"><button class="btn primary" id="scanAgain">Spróbuj ponownie</button></div>`);
+    bindBack(addProfile); $("#scanAgain").onclick = importProfile; return;
+  }
   if (!found.length) {
     openModal(mhead("Przenieś z innego launchera", true) + `<div class="empty" style="margin-top:10px"><h3>Nie znalazłem innych launcherów</h3>
       <p>Szukam: oficjalnego launchera Minecraft, Modrinth App, Prism Launcher / MultiMC i Lunar Client.</p></div>`);
