@@ -14,9 +14,13 @@ import net.minecraft.util.Identifier;
  */
 public final class R {
     public static final Identifier LOGO = Identifier.of("zorza", "textures/gui/logo.png");
+    /** Grubość czcionki – właściwy plik (z odpowiednią rozdzielczością) wybiera R.font(). */
     public static final Identifier MEDIUM = Identifier.of("zorza", "inter_medium");
     public static final Identifier SEMI = Identifier.of("zorza", "inter_semibold");
     public static final Identifier BOLD = Identifier.of("zorza", "inter_bold");
+    private static final int[] OVERSAMPLE = {1, 2, 3, 4, 6, 8};
+    /** Ile prawdziwych pikseli przypada na jednostkę, w której teraz rysujemy (ustawia ekran / HUD). */
+    public static float pxPerUnit = 2f;
     private static final Identifier TL = Identifier.of("zorza", "textures/gui/corner_tl.png");
     private static final Identifier TR = Identifier.of("zorza", "textures/gui/corner_tr.png");
     private static final Identifier BL = Identifier.of("zorza", "textures/gui/corner_bl.png");
@@ -76,6 +80,19 @@ public final class R {
         return Text.literal(s).setStyle(Style.EMPTY.withFont(font));
     }
 
+    /** Wybiera wariant czcionki rasteryzowany mniej więcej w docelowym rozmiarze – bez "zjadania" liter. */
+    private static Identifier font(Identifier weight, float size) {
+        float need = size * pxPerUnit / 11f;
+        int pick = OVERSAMPLE[OVERSAMPLE.length - 1];
+        for (int o : OVERSAMPLE) {
+            if (o >= need * 0.85f) {
+                pick = o;
+                break;
+            }
+        }
+        return Identifier.of("zorza", weight.getPath() + "_" + pick);
+    }
+
     /** Tekst o wysokości ~size jednostek; (x, y) to lewy górny róg. */
     public static void text(DrawContext c, String s, float x, float y, float size, int color, Identifier font) {
         if ((color >>> 24) < 5) return;
@@ -84,7 +101,7 @@ public final class R {
         m.translate(x, y, 0);
         float k = size / 11f;
         m.scale(k, k, 1f);
-        c.drawText(MinecraftClient.getInstance().textRenderer, styled(s, font), 0, 0, color, false);
+        c.drawText(MinecraftClient.getInstance().textRenderer, styled(s, font(font, size)), 0, 0, color, false);
         m.pop();
     }
 
@@ -98,7 +115,7 @@ public final class R {
     }
 
     public static float width(String s, float size, Identifier font) {
-        return MinecraftClient.getInstance().textRenderer.getWidth(styled(s, font)) * size / 11f;
+        return MinecraftClient.getInstance().textRenderer.getWidth(styled(s, Identifier.of("zorza", font.getPath() + "_4"))) * size / 11f;
     }
 
     public static float width(String s, float size) {

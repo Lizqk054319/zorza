@@ -39,7 +39,16 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             context.runOnClient(client -> {
                 Config.compact = false;
                 client.setScreen(null);
+                org.lwjgl.glfw.GLFW.glfwSetWindowSize(client.getWindow().getHandle(), 1600, 900);
             });
+            context.waitTicks(40);
+            context.runOnClient(client -> client.setScreen(new HudEditorScreen(true)));
+            context.waitTicks(30);
+            context.takeScreenshot("06-right-shift-big");
+            context.runOnClient(client -> client.setScreen(new ModMenuScreen(null)));
+            context.waitTicks(30);
+            context.takeScreenshot("07-mod-menu-big");
+            context.runOnClient(client -> client.setScreen(null));
         }
     }
 }

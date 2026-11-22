@@ -57,7 +57,7 @@ public class ModMenuScreen extends ZScreen {
         gh = bottom - gy - 18;
         cols = Config.compact ? (gw >= 1100 ? 5 : 4) : (gw >= 1100 ? 4 : 3);
         cw = (gw - (cols - 1) * GAP) / cols;
-        ch = Config.compact ? 168 : 216;
+        ch = Config.compact ? 184 : 216;
     }
 
     private List<Module> visible() {
@@ -226,8 +226,8 @@ public class ModMenuScreen extends ZScreen {
             R.icon(ctx, m.favorite ? "heart_fill" : "heart", hr[0] + 10, hr[1] + 10, 20,
                     R.alpha(m.favorite ? 0xFFFF4D6D : 0xFFC4C4CC, ap));
             int iconCol = R.alpha(m.enabled ? 0xFFFFFFFF : 0xFF7E7E88, ap);
-            int is = Config.compact ? 46 : 62;
-            int iy = c[1] + (Config.compact ? 58 : 74);
+            int is = Config.compact ? 40 : 62;
+            int iy = c[1] + (Config.compact ? 62 : 74);
             if (m.icon().startsWith("m_")) R.icon(ctx, m.icon(), c[0] + c[2] / 2 - is / 2, iy, is, iconCol);
             else R.centered(ctx, m.icon(), c[0] + c[2] / 2f, iy + is * 0.15f, is * 0.7f, iconCol, R.BOLD);
             int[] g = gearRect(c);

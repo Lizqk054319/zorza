@@ -10,7 +10,7 @@ public class CpsHud extends TextHud {
     private final Setting.Bool right = add(new Setting.Bool("right", "Show right click", false));
 
     public CpsHud() {
-        super("cps", "CPS", "Clicks per second.", Category.HUD, true, 0.01, 0.055);
+        super("cps", "CPS", "Clicks per second.", Category.HUD, true, 0.01, 0.1);
     }
 
     public String icon() { return "m_cps"; }

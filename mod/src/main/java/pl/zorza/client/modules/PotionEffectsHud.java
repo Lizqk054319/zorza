@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PotionEffectsHud extends HudModule {
     public PotionEffectsHud() {
-        super("potion_effects", "Potion Effects", "Active effects with time left.", Category.HUD, false, 0.01, 0.30);
+        super("potion_effects", "Potion Effects", "Active effects with time left.", Category.HUD, false, 0.8, 0.4);
     }
 
     public String icon() { return "m_potion"; }

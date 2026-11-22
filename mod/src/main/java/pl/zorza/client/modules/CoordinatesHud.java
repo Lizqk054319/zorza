@@ -11,7 +11,7 @@ public class CoordinatesHud extends HudModule {
     private final Setting.Bool biome = add(new Setting.Bool("biome", "Show biome", false));
 
     public CoordinatesHud() {
-        super("coordinates", "Coordinates", "Your X / Y / Z position.", Category.HUD, true, 0.01, 0.10);
+        super("coordinates", "Coordinates", "Your X / Y / Z position.", Category.HUD, true, 0.01, 0.18);
     }
 
     public String icon() { return "m_coords"; }

@@ -45,7 +45,7 @@ public class ArmorStatusHud extends HudModule {
 
     public int width(MinecraftClient mc) {
         int n = Math.max(1, items(mc, true).size());
-        return vertical.value ? (percent.value ? 52 : 24) : n * 24 + 8;
+        return vertical.value ? (percent.value ? 56 : 24) : n * 28 + 8;
     }
 
     public int height(MinecraftClient mc) {
@@ -57,14 +57,14 @@ public class ArmorStatusHud extends HudModule {
         List<ItemStack> list = items(mc, editor || mc.player == null);
         int i = 0;
         for (ItemStack s : list) {
-            int x = vertical.value ? 4 : 8 + i * 24, y = vertical.value ? 4 + i * 20 : 4;
+            int x = vertical.value ? 4 : 10 + i * 28, y = vertical.value ? 4 + i * 20 : 4;
             ctx.drawItem(s, x, y);
             if (percent.value && s.isDamageable()) {
                 int pct = (int) Math.round(100.0 * (s.getMaxDamage() - s.getDamage()) / s.getMaxDamage());
                 int col = pct > 60 ? 0xFF7CF0C8 : pct > 30 ? 0xFFF5D36B : 0xFFFF6B6B;
                 String t = pct + "%";
                 if (vertical.value) R.text(ctx, t, x + 20, y + 4, 9, col);
-                else R.text(ctx, t, x + 8 - (int) R.width(t, 9) / 2, y + 19, 9, col);
+                else R.text(ctx, t, x + 8 - R.width(t, 8, R.SEMI) / 2, y + 19, 8, col, R.SEMI);
             }
             i++;
         }

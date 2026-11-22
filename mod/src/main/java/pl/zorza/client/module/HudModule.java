@@ -43,6 +43,7 @@ public abstract class HudModule extends Module {
         ctx.getMatrices().push();
         ctx.getMatrices().translate(r[0], r[1], 0);
         ctx.getMatrices().scale((float) scale, (float) scale, 1f);
+        pl.zorza.client.gui.R.pxPerUnit = (float) (mc.getWindow().getScaleFactor() * scale);
         if (background.value) R.bordered(ctx, 0, 0, width(mc), height(mc), 5, 1, 0xC40E0E12, 0x26FFFFFF);
         draw(ctx, mc, editor);
         ctx.getMatrices().pop();

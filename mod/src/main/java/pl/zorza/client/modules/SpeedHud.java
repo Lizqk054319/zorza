@@ -8,7 +8,7 @@ public class SpeedHud extends TextHud {
     private double lastX, lastZ, speed;
 
     public SpeedHud() {
-        super("speed", "Speedometer", "Horizontal speed in blocks per second.", Category.HUD, false, 0.01, 0.30);
+        super("speed", "Speedometer", "Horizontal speed in blocks per second.", Category.HUD, false, 0.01, 0.52);
     }
 
     public String icon() { return "m_speed"; }

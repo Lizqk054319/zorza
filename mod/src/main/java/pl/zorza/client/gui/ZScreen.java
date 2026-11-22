@@ -45,7 +45,9 @@ public abstract class ZScreen extends Screen {
     public final void render(DrawContext ctx, int mx, int my, float delta) {
         super.render(ctx, mx, my, delta);
         updateScale();
+        R.pxPerUnit = gs;
         renderGui(ctx, mx, my, delta);
+        R.pxPerUnit = k;
         ctx.getMatrices().push();
         float s = k / gs;
         ctx.getMatrices().scale(s, s, 1f);
