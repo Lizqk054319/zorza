@@ -46,7 +46,7 @@ AZURE_CLIENT_ID = "6553e03b-b905-4f30-a877-535ed1c3a975"
 REDIRECT_URI = f"http://localhost:{PORT}/callback"
 
 # Discord Rich Presence – wklej tu "Application ID" z discord.com/developers (instrukcja w INSTRUKCJA.txt)
-DISCORD_APP_ID = ""
+DISCORD_APP_ID = "1574093349517004952"
 
 # ---------------------------------------------------------------------------
 
