@@ -353,9 +353,53 @@ textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:1
 .swatches button.on{border-color:#fff}
 .swatches input[type=color]{width:46px;height:40px;border:0;background:none;padding:0;cursor:pointer}
 select.sset{margin-top:14px;background:#141417;border:1px solid #ffffff14;border-radius:12px;padding:12px 14px;outline:0;font-size:16px;min-width:260px}
+
+/* ====== v0.4: animacje i ekran startowy ====== */
+.page.on{animation:pageIn .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes pageIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.page.on .set,.page.on .pcard,.page.on .pnew,.page.on .mrow,.page.on .row,.page.on .acc,.page.on .sk{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+.page.on .set:nth-child(2),.page.on .pcard:nth-child(2),.page.on .mrow:nth-child(2),.page.on .acc:nth-child(2),.page.on .sk:nth-child(2){animation-delay:.04s}
+.page.on .set:nth-child(3),.page.on .pcard:nth-child(3),.page.on .mrow:nth-child(3),.page.on .acc:nth-child(3),.page.on .sk:nth-child(3){animation-delay:.08s}
+.page.on .set:nth-child(4),.page.on .pcard:nth-child(4),.page.on .mrow:nth-child(4),.page.on .acc:nth-child(4),.page.on .sk:nth-child(4){animation-delay:.12s}
+.page.on .set:nth-child(5),.page.on .pcard:nth-child(5),.page.on .mrow:nth-child(5),.page.on .acc:nth-child(5),.page.on .sk:nth-child(5){animation-delay:.16s}
+.page.on .set:nth-child(n+6),.page.on .pcard:nth-child(n+6),.page.on .mrow:nth-child(n+6),.page.on .acc:nth-child(n+6),.page.on .sk:nth-child(n+6){animation-delay:.2s}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+#modal{display:grid!important;opacity:0;pointer-events:none;transition:opacity .22s}
+#modal.on{opacity:1;pointer-events:auto}
+#modal .box{transform:translateY(16px) scale(.96);transition:transform .32s cubic-bezier(.2,.9,.25,1.15)}
+#modal.on .box{transform:none}
+#pmenu{display:block!important;opacity:0;pointer-events:none;transform:translateY(-6px) scale(.97);transform-origin:top left;transition:opacity .16s,transform .2s cubic-bezier(.2,.8,.2,1)}
+#pmenu.on{opacity:1;pointer-events:auto;transform:none}
+.nav{transition:background .2s,color .2s,transform .15s}
+.nav:active{transform:scale(.92)}
+.btn,.pplay,.bigplay,.dcbtn,.opt,.inst,.mini{transition:background .18s,filter .18s,transform .12s,border-color .18s}
+.btn:active,.pplay:active,.bigplay:active,.dcbtn:active,.opt:active{transform:scale(.97)}
+.play{transition:filter .2s,transform .15s}
+.play:active{transform:scale(.985)}
+.soon{margin-top:18px;background:color-mix(in srgb,var(--blue) 12%,transparent);border:1px solid color-mix(in srgb,var(--blue) 35%,transparent);color:color-mix(in srgb,var(--blue) 45%,#fff);border-radius:12px;padding:12px 16px;font-size:15px}
+#splash{position:fixed;inset:0;z-index:1000;pointer-events:none}
+#splash .bg{position:absolute;inset:0;background:#0b0b0e;transition:opacity .7s ease}
+#splash svg{position:absolute;left:50%;top:50%;width:220px;height:220px;margin:-110px 0 0 -110px;transform-origin:0 0;transition:transform .8s cubic-bezier(.65,0,.25,1);overflow:visible}
+#splash .w1,#splash .w2{stroke-dasharray:70;stroke-dashoffset:70;animation:draw 1s cubic-bezier(.6,0,.2,1) forwards}
+#splash .w2{animation-delay:.18s}
+#splash .st{opacity:0;transform-origin:44px 15px;transform:scale(0) rotate(-90deg);animation:star .55s cubic-bezier(.2,1.4,.4,1) .75s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes star{to{opacity:1;transform:none}}
+body.boot #side,body.boot main>.page.on .content>:not(.logo),body.boot .topright,body.boot .skin{opacity:0}
+#side,.content>*,.topright,.skin{transition:opacity .7s ease .1s,transform .7s cubic-bezier(.2,.8,.2,1) .1s}
+body.boot #side{transform:translateX(-30px)}
+body.boot .content>:not(.logo){transform:translateY(20px)}
+body.boot .topright{transform:translateY(-20px)}
+body.boot .skin{transform:translateX(30px)}
+body.boot #home .logo{visibility:hidden}
 </style>
 </head>
-<body>
+<body class="boot">
+<div id="splash"><div class="bg"></div>
+  <svg viewBox="0 0 64 64"><defs><linearGradient id="slg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7dffb4"/><stop offset="1" stop-color="#4aa8ff"/></linearGradient></defs>
+    <path class="w1" d="M8 40c8-14 16-18 24-12s16 2 24-12" fill="none" stroke="url(#slg)" stroke-width="5" stroke-linecap="round"/>
+    <path class="w2" d="M8 50c8-10 16-13 24-8s16 1 24-10" fill="none" stroke="url(#slg)" stroke-width="4" stroke-linecap="round" opacity=".6"/>
+    <path class="st" d="M44 8l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff"/></svg></div>
 
 <svg width="0" height="0" style="position:absolute">
   <symbol id="logo" viewBox="0 0 64 64">
@@ -441,6 +485,7 @@ select.sset{margin-top:14px;background:#141417;border:1px solid #ffffff14;border
       <button class="mini" id="pBack" title="Wróć"><svg width="22" height="22"><use href="#i-back"/></svg></button>
       <button class="pswitch" id="pSwitch"><div class="picon" id="pIcon"></div><div><b id="pName"></b><small id="pVer"></small></div><svg width="22" height="22"><use href="#i-chev"/></svg></button>
       <div class="grow"></div>
+      <button class="btn" id="pOfficial" title="Graj przez oficjalny launcher"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Oficjalny launcher</button>
       <button class="bigplay" id="pPlay"><svg viewBox="0 0 24 24" width="20" height="20" fill="#fff"><path d="M6 4l14 8-14 8z"/></svg><span>GRAJ</span></button>
     </div>
     <div class="ptabs" id="ptabs">
@@ -518,6 +563,7 @@ select.sset{margin-top:14px;background:#141417;border:1px solid #ffffff14;border
       <div class="cap" style="margin-top:40px;color:var(--muted)">ZAPISANE KONTA <span id="accCount" style="margin-left:8px">0</span></div>
       <div class="list" id="accList"></div>
       <button class="btn" id="addAcc" style="margin-top:22px;align-self:flex-start;background:none;border:0;padding-left:20px"><svg width="22" height="22"><use href="#i-plus"/></svg>Dodaj konto Microsoft</button>
+      <div class="soon" id="msSoon">Logowanie przez Microsoft będzie dostępne wkrótce.</div>
       <div class="note">Logujesz się na stronie Microsoftu – launcher nie widzi twojego e-maila ani hasła.<br>Dane logowania są zapisane tylko na tym komputerze i zaszyfrowane przez Windows.</div>
     </div>
   </section>
@@ -616,8 +662,8 @@ function toast(msg, err) {
   const el = $("#toast"); el.textContent = t(msg); el.className = "on" + (err ? " err" : "");
   clearTimeout(el._h); el._h = setTimeout(() => el.className = "", 4500);
 }
-function openModal(html) { $("#modalBox").innerHTML = html; $("#modal").className = "on"; }
-function closeModal() { $("#modal").className = ""; $("#modalBox").innerHTML = ""; }
+function openModal(html) { clearTimeout(closeModal._t); $("#modalBox").innerHTML = html; $("#modal").className = "on"; }
+function closeModal() { $("#modal").className = ""; clearTimeout(closeModal._t); closeModal._t = setTimeout(() => { if (!$("#modal").className) $("#modalBox").innerHTML = ""; }, 250); }
 $("#modal").addEventListener("mousedown", e => { if (e.target.id === "modal") closeModal(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape") { closeModal(); $("#pmenu").className = ""; } });
 const mhead = (title, back) => `<div class="mh">${back ? `<button class="back" data-back>${ic("i-back")}</button>` : ""}<h3>${esc(title)}</h3><button class="x" onclick="closeModal()">${ic("i-x")}</button></div>`;
@@ -868,6 +914,22 @@ Dodaj konto|Add account|Konto hinzufügen|Додати акаунт|Añadir cuen
 Minigry|Minigames|Minispiele|Мініігри|Minijuegos
 Moby|Mobs|Mobs|Моби|Criaturas
 (sterowanie, grafika, dźwięk, język)|(controls, graphics, sound, language)|(Steuerung, Grafik, Ton, Sprache)|(керування, графіка, звук, мова)|(controles, gráficos, sonido, idioma)
+Graj przez oficjalny launcher|Play via official launcher|Über den offiziellen Launcher spielen|Грати через офіційний лаунчер|Jugar con el launcher oficial
+Jak chcesz zagrać?|How do you want to play?|Wie möchtest du spielen?|Як хочеш грати?|¿Cómo quieres jugar?
+W Zorzy nie ma jeszcze konta. Logowanie Microsoft zacznie działać po zatwierdzeniu launchera przez Mojang.|There's no account in Zorza yet. Microsoft sign-in will work once Mojang approves the launcher.|In Zorza gibt es noch kein Konto. Die Microsoft-Anmeldung funktioniert, sobald Mojang den Launcher freigibt.|У Zorza ще немає акаунта. Вхід Microsoft запрацює після схвалення лаунчера Mojang.|Zorza aún no tiene cuenta. El inicio de sesión de Microsoft funcionará cuando Mojang apruebe el launcher.
+Twoje konto, mody i ustawienia Zorzy. Klikasz Graj w oficjalnym launcherze.|Your account with Zorza's mods and settings. You click Play in the official launcher.|Dein Konto mit Zorzas Mods und Einstellungen. Du klickst im offiziellen Launcher auf Spielen.|Твій акаунт із модами й налаштуваннями Zorza. Натискаєш «Грати» в офіційному лаунчері.|Tu cuenta con los mods y ajustes de Zorza. Pulsas Jugar en el launcher oficial.
+Granie prosto z Zorzy.|Play straight from Zorza.|Direkt aus Zorza spielen.|Грати прямо із Zorza.|Juega directamente desde Zorza.
+Oficjalny launcher|Official launcher|Offizieller Launcher|Офіційний лаунчер|Launcher oficial
+Logowanie przez Microsoft będzie dostępne wkrótce.|Microsoft sign-in will be available soon.|Die Microsoft-Anmeldung ist bald verfügbar.|Вхід через Microsoft скоро буде доступний.|El inicio de sesión con Microsoft estará disponible pronto.
+Przygotowuję profil dla oficjalnego launchera...|Preparing the profile for the official launcher...|Profil für den offiziellen Launcher wird vorbereitet...|Готую профіль для офіційного лаунчера...|Preparando el perfil para el launcher oficial...
+Pobieranie moda Zorza Client...|Downloading the Zorza Client mod...|Zorza-Client-Mod wird geladen...|Завантаження мода Zorza Client...|Descargando el mod Zorza Client...
+Dodawanie profilu do oficjalnego launchera...|Adding the profile to the official launcher...|Profil wird zum offiziellen Launcher hinzugefügt...|Додаю профіль до офіційного лаунчера...|Añadiendo el perfil al launcher oficial...
+Mod Zorza Client w grze: prawy Shift otwiera menu (1.21.4)|Zorza Client mod in game: Right Shift opens the menu (1.21.4)|Zorza-Client-Mod im Spiel: Rechte Umschalttaste öffnet das Menü (1.21.4)|Мод Zorza Client у грі: правий Shift відкриває меню (1.21.4)|Mod Zorza Client en el juego: Shift derecho abre el menú (1.21.4)
+Mod Menu z modułami: Armor Status, Keystrokes, CPS, Zoom i inne|Mod Menu with modules: Armor Status, Keystrokes, CPS, Zoom and more|Mod-Menü mit Modulen: Armor Status, Keystrokes, CPS, Zoom und mehr|Mod Menu з модулями: Armor Status, Keystrokes, CPS, Zoom та інші|Mod Menu con módulos: Armor Status, Keystrokes, CPS, Zoom y más
+Edytor HUD: przeciągnij, przewiń, prawy przycisk resetuje|HUD editor: drag, scroll, right-click resets|HUD-Editor: ziehen, scrollen, Rechtsklick setzt zurück|Редактор HUD: перетягни, прокрути, правий клік скидає|Editor de HUD: arrastra, desplaza, clic derecho restablece
+Graj przez oficjalny launcher – z modami i ustawieniami Zorzy|Play via the official launcher – with Zorza's mods and settings|Über den offiziellen Launcher spielen – mit Zorzas Mods und Einstellungen|Гра через офіційний лаунчер – з модами й налаштуваннями Zorza|Juega con el launcher oficial, con los mods y ajustes de Zorza
+Płynne animacje i nowy ekran startowy|Smooth animations and a new splash screen|Flüssige Animationen und neuer Startbildschirm|Плавні анімації та новий стартовий екран|Animaciones suaves y nueva pantalla de inicio
+Wersje gry od 1.20.1|Game versions from 1.20.1|Spielversionen ab 1.20.1|Версії гри від 1.20.1|Versiones desde la 1.20.1
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1118,6 +1180,7 @@ async function refresh() {
   $("#discord").classList.toggle("on", S.settings.discord);
   $("#dcStatus").textContent = t("Stan") + ": " + t(S.discord_status);
   $("#dataDir").textContent = S.data_dir;
+  $("#msSoon").style.display = S.microsoft_soon ? "" : "none";
   if (refresh._wasRunning && !tk.running) { if (page === "profile") renderProfilePage(); if (page === "modrinth") markInstalled(); if (page === "skins") renderSkinsPage(); }
   refresh._wasRunning = tk.running;
 }
@@ -1142,19 +1205,34 @@ function profileMenu(anchor, pos, withRepair) {
     h += `<button class="it ${p.id === S.profile.id ? "sel" : ""}" data-a="sel" data-v="${esc(p.id)}"><span class="grow">${esc(p.name)}<small>Minecraft ${esc(p.version)} · ${loaderName(p.loader)}</small></span>${p.id === S.profile.id ? ic("i-check", 20) : ""}</button>`;
   h += `<hr><button class="it" data-a="add">${ic("i-plus", 20)}Dodaj profil</button>`;
   h += `<button class="it" data-a="edit">${ic("i-pen", 20)}Edytuj profil</button>`;
-  if (withRepair) h += `<hr><button class="it red" data-a="repair">Napraw instalację</button>`;
+  h += `<hr><button class="it" data-a="official"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Graj przez oficjalny launcher</button>`;
+  if (withRepair) h += `<button class="it red" data-a="repair">Napraw instalację</button>`;
   menu(anchor, h, {
     sel: async id => { await api("/api/profiles/select", {id}); refresh(); },
-    add: () => addProfile(), edit: () => editProfile(S.profile.id),
+    add: () => addProfile(), edit: () => editProfile(S.profile.id), official: () => playOfficial(S.profile.id),
     repair: async () => { try { await api("/api/repair", {id:S.profile.id}); go("home"); toast("Sprawdzam i naprawiam pliki gry..."); } catch (e) { toast(e.message, true); } },
   }, pos);
 }
 $("#moreBtn").onclick = e => { e.stopPropagation(); profileMenu($("#play"), "up", true); };
 $$(".ppick").forEach(b => b.onclick = e => { e.stopPropagation(); profileMenu(b, "down", false); });
 
+async function playOfficial(id) {
+  closeModal();
+  if (S.task.running) return toast("Poczekaj, aż skończy się bieżące zadanie.");
+  try { await api("/api/play_official", {id}); go("home"); toast("Przygotowuję profil dla oficjalnego launchera..."); }
+  catch (e) { toast(e.message, true); }
+}
+function noAccountModal(id) {
+  openModal(mhead("Jak chcesz zagrać?") + `
+    <div class="hint" style="margin-top:0">W Zorzy nie ma jeszcze konta. Logowanie Microsoft zacznie działać po zatwierdzeniu launchera przez Mojang.</div>
+    <button class="opt" id="naOff"><div class="oi"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M26 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></div><div><b>Graj przez oficjalny launcher</b><span>Twoje konto, mody i ustawienia Zorzy. Klikasz Graj w oficjalnym launcherze.</span></div><div class="arr">${ic("i-arrow")}</div></button>
+    <button class="opt" id="naAcc"><div class="oi">${ic("i-plus", 26)}</div><div><b>Dodaj konto Microsoft</b><span>Granie prosto z Zorzy.</span></div><div class="arr">${ic("i-arrow")}</div></button>`);
+  $("#naOff").onclick = () => playOfficial(id);
+  $("#naAcc").onclick = () => { closeModal(); go("accounts"); };
+}
 $("#goBtn").onclick = async () => {
   if (S.task.running || S.game_running) return;
-  if (!S.accounts.length) { go("accounts"); toast("Najpierw dodaj konto Microsoft.", true); return; }
+  if (!S.accounts.length) return noAccountModal(S.profile.id);
   try { await api("/api/play", {}); refresh(); } catch (e) { toast(e.message, true); }
 };
 
@@ -1339,7 +1417,7 @@ $("#newProf").onclick = () => addProfile();
 
 async function playProfile(id) {
   if (S.task.running || S.game_running) return toast(t("Poczekaj, trwa inne zadanie albo gra już działa."));
-  if (!S.accounts.length) { go("accounts"); return toast(t("Najpierw dodaj konto Microsoft."), true); }
+  if (!S.accounts.length) return noAccountModal(id);
   try { await api("/api/profiles/select", {id}); await api("/api/play", {}); go("home"); refresh(); }
   catch (e) { toast(e.message, true); }
 }
@@ -1367,6 +1445,7 @@ $$("#ptabs button").forEach(b => b.onclick = () => { pTab = b.dataset.t; pFilter
 $("#pBack").onclick = () => go("profiles");
 $("#pSwitch").onclick = e => { e.stopPropagation(); profileMenu($("#pSwitch"), "down", false); };
 $("#pPlay").onclick = () => playProfile(S.profile.id);
+$("#pOfficial").onclick = () => playOfficial(S.profile.id);
 $("#pFolder").onclick = () => api("/api/open_folder", {profile:S.profile.id});
 $("#pShare").onclick = () => shareProfile(S.profile.id);
 async function shareProfile(id) {
@@ -1632,6 +1711,23 @@ $("#jvm").onchange = () => api("/api/settings", {jvm_args:$("#jvm").value});
 $("#remember").onclick = () => api("/api/settings", {remember_accounts:!S.settings.remember_accounts}).then(refresh);
 $("#discord").onclick = () => api("/api/settings", {discord:!S.settings.discord}).then(refresh);
 $("#openData").onclick = () => api("/api/open_folder", {});
+
+/* ================= EKRAN STARTOWY ================= */
+(async function splash() {
+  const sp = $("#splash"), svg = sp.querySelector("svg");
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const t0 = Date.now();
+  while (!S && Date.now() - t0 < 4000) await wait(50);
+  await wait(Math.max(0, 1500 - (Date.now() - t0)));
+  const target = $("#home .logo").getBoundingClientRect(), from = svg.getBoundingClientRect();
+  const k = target.width / from.width;
+  svg.style.transform = `translate(${target.left - from.left}px, ${target.top - from.top}px) scale(${k})`;
+  sp.querySelector(".bg").style.opacity = 0;
+  document.body.classList.remove("boot");
+  await wait(850);
+  sp.remove();
+})();
+
 /* ================= USTAWIENIA: język, kolor, logi ================= */
 const ACCENTS = ["#1f6bff", "#7c4dff", "#d946ef", "#ff4d6d", "#ff7a1a", "#f5b400", "#22c55e", "#14b8a6", "#06b6d4"];
 function renderSwatches() {

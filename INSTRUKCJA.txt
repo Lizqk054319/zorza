@@ -81,3 +81,22 @@ STATUS NA DISCORDZIE ("Zorza Client")
 5. W launcher.py wklej ID tutaj:   DISCORD_APP_ID = "tu-wklej-id"
 6. Uruchom Discorda na komputerze, potem launcher. Status widać w Ustawieniach.
 Przycisk "Pobierz Zorza Client" widzą inni – ty sam na swoim profilu go nie zobaczysz.
+
+
+MOD ZORZA CLIENT (W GRZE)
+-------------------------
+Instaluje się sam w profilach Fabric 1.21.4 (razem z modami wbudowanymi).
+- Prawy Shift: menu z logo -> "Zorza Settings" (Mod Menu), edytor HUD, motyw, ustawienia gry.
+- Mod Menu: kategorie (HUD, Combat, Utility, Client), wyszukiwarka, ulubione (serduszko),
+  ⚙ przy module = ustawienia, przycisk Enabled/Disabled = włącz/wyłącz.
+- Edytor HUD: przeciągnij element, kółko myszy zmienia rozmiar, prawy przycisk resetuje.
+- Zoom: przytrzymaj C. Klawisze zmienisz w grze: Opcje -> Sterowanie -> Zorza Client.
+Kod moda jest w folderze mod/. Po każdej zmianie GitHub sam go kompiluje i wystawia
+w wydaniu "mod-latest" – launcher pobiera nową wersję raz dziennie.
+
+GRAJ PRZEZ OFICJALNY LAUNCHER
+-----------------------------
+Strzałka obok "Graj" -> "Graj przez oficjalny launcher" (albo przycisk na stronie profilu).
+Zorza dodaje do oficjalnego launchera profil "Zorza – <nazwa>" z Fabricem, modami i folderem
+profilu Zorzy, i otwiera launcher. Wybierz ten profil i kliknij Graj (potrzebne kupione Minecraft).
+Kopia poprzedniego pliku profili: .minecraft\launcher_profiles.json.zorza-kopia

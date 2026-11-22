@@ -38,21 +38,29 @@ from pathlib import Path
 NAZWA_LAUNCHERA = "Zorza"          # nazwa wyświetlana w launcherze
 NAZWA_DISCORD = "Zorza Client"     # tak ma się nazywać aplikacja w Discord Developer Portal
 DOMYSLNA_WERSJA = "1.21.4"         # wersja pierwszego profilu
-NAJSTARSZA_WERSJA = "1.8.9"        # starszych wersji launcher nie pokazuje
+NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.3.0"
+WERSJA_CLIENTA = "0.4.0"
 
 # Co nowego – pokazuje się na ekranie startowym w karcie "Nowość"
 NOWOSCI = [
-    "Karty profili z czasem gry i ostatnim uruchomieniem",
-    "Strona profilu: mody, światy, paczki zasobów i shadery",
-    "Mody wbudowane: Sodium, Sodium Extra, Lithium i inne",
-    "Zakładka Skiny – wgraj swój skin i kliknij Zastosuj",
-    "Wersje gry od 1.8.9",
-    "Kolor i język launchera, automatyczne usuwanie logów",
+    "Mod Zorza Client w grze: prawy Shift otwiera menu (1.21.4)",
+    "Mod Menu z modułami: Armor Status, Keystrokes, CPS, Zoom i inne",
+    "Edytor HUD: przeciągnij, przewiń, prawy przycisk resetuje",
+    "Graj przez oficjalny launcher – z modami i ustawieniami Zorzy",
+    "Płynne animacje i nowy ekran startowy",
+    "Wersje gry od 1.20.1",
 ]
+
+# Napis "Logowanie Microsoft będzie dostępne wkrótce" – zmień na False po zgodzie Mojanga
+MICROSOFT_WKROTCE = True
+
+# Mod Zorza Client (budowany automatycznie na GitHubie) – wersja gry -> adres pliku
+ZORZA_MOD = {
+    "1.21.4": "https://github.com/Lizqk054319/zorza/releases/download/mod-latest/zorza-client-1.21.4.jar",
+}
 
 # Mody wbudowane (slug z Modrinth, nazwa) – instalują się same w profilach z Fabric
 MODY_WBUDOWANE = [
@@ -692,6 +700,7 @@ def do_play(pid):
     launch_id = install_profile(p)
     if launch_id.startswith("fabric-loader"):
         ensure_builtins(p)
+        ensure_zorza_mod(p)
     task.update(status="Logowanie...", max=0)
     token = refresh_account(acc)
     ram = int(p["ram_mb"])
@@ -732,6 +741,67 @@ def do_play(pid):
         game.update(proc=None, where="")
         discord.update()
     threading.Thread(target=reader, args=(proc,), daemon=True).start()
+
+
+OFFICIAL_DIR = APPDATA / ".minecraft"
+
+
+def official_launcher_paths():
+    pf86 = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
+    pf = os.environ.get("ProgramFiles", r"C:\Program Files")
+    return [Path(pf86) / "Minecraft Launcher" / "MinecraftLauncher.exe",
+            Path(pf) / "Minecraft Launcher" / "MinecraftLauncher.exe",
+            Path(r"C:\XboxGames\Minecraft Launcher\Content\Minecraft.exe")]
+
+
+def do_play_official(pid):
+    """Przygotowuje profil w oficjalnym launcherze (Fabric, mody, folder Zorzy) i go otwiera."""
+    p = get_profile(pid)
+    launch_id = install_profile(p)
+    if launch_id.startswith("fabric-loader"):
+        ensure_builtins(p)
+        ensure_zorza_mod(p)
+        src = MC_DIR / "versions" / launch_id / f"{launch_id}.json"
+        dst = OFFICIAL_DIR / "versions" / launch_id / f"{launch_id}.json"
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dst)
+    task.update(status="Dodawanie profilu do oficjalnego launchera...", max=0)
+    now = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
+    icon = ""
+    try:
+        icon = "data:image/png;base64," + base64.b64encode((UI_DIR / "assets" / "logo-128.png").read_bytes()).decode()
+    except OSError:
+        pass
+    entry = {"name": f"Zorza – {p['name']}", "type": "custom", "lastVersionId": launch_id,
+             "gameDir": str(profile_dir(p)), "javaArgs": f"-Xmx{p['ram_mb']}M -Xms{min(p['ram_mb'], 1024)}M",
+             "created": now, "lastUsed": now}
+    if icon:
+        entry["icon"] = icon
+    files = [f for f in (OFFICIAL_DIR / "launcher_profiles.json",
+                         OFFICIAL_DIR / "launcher_profiles_microsoft_store.json") if f.exists()]
+    if not files:
+        files = [OFFICIAL_DIR / "launcher_profiles.json"]
+    for f in files:
+        data = load_json(f, {"profiles": {}, "version": 3})
+        if f.exists():
+            shutil.copy2(f, f.with_name(f.name + ".zorza-kopia"))
+        data.setdefault("profiles", {})[f"zorza-{p['id']}"] = entry
+        save_json(f, data)
+    log(f"Dodano profil 'Zorza – {p['name']}' do oficjalnego launchera.")
+    opened = False
+    for exe in official_launcher_paths():
+        if exe.exists():
+            subprocess.Popen([str(exe)])
+            opened = True
+            break
+    if not opened and os.name == "nt":
+        try:
+            subprocess.Popen(["explorer.exe", r"shell:AppsFolder\Microsoft.4297127D64EC6_8wekyb3d8bbwe!Minecraft"])
+            opened = True
+        except OSError:
+            pass
+    task["done"] = (f"Otwieram oficjalny launcher – wybierz profil „Zorza – {p['name']}” i kliknij Graj."
+                    if opened else f"Gotowe! Otwórz oficjalny launcher Minecraft i wybierz profil „Zorza – {p['name']}”.")
 
 
 def game_running():
@@ -791,19 +861,28 @@ def list_content(p, kind):
         base = f.name[:-9] if not enabled else f.name
         m = by_file.get(base, {})
         ji = jar_info(f) if f.is_file() and base.endswith(".jar") else {}
+        if base in builtin and not m:
+            m = {"icon": builtin_icons.get(builtin[base])}
+        if base == "zorza-client.jar":
+            m = {"icon": "/assets/zorza-logo.png", "title": "Zorza Client"}
         items.append({"file": f.name, "name": ji.get("title") or m.get("title") or base,
                       "author": ji.get("author") or "", "version": ji.get("version") or m.get("version") or "",
                       "icon": m.get("icon") or (f"/api/modicon?profile={urllib.parse.quote(p['id'])}"
                                                 f"&file={urllib.parse.quote(f.name)}" if ji.get("icon") else None),
-                      "source": "builtin" if base in builtin else "modrinth" if m else "local",
+                      "source": "builtin" if base in builtin or base == "zorza-client.jar" else "modrinth" if m else "local",
                       "enabled": enabled, "size": f.stat().st_size if f.is_file() else 0})
     if kind == "mods":   # wbudowane, których jeszcze nie pobrano
         have = set(builtin.values())
         for slug, title in MODY_WBUDOWANE:
             if slug not in have and not any(m.get("slug") == slug for m in mr.values()):
                 items.append({"file": "", "name": title, "author": "", "version": "",
-                              "icon": None, "source": "builtin", "pending": True,
+                              "icon": builtin_icons.get(slug), "source": "builtin", "pending": True,
                               "enabled": p["loader"] == "fabric", "size": 0})
+        has_z = (folder / "zorza-client.jar").exists() or (folder / "zorza-client.jar.disabled").exists()
+        if not has_z and p["version"] in ZORZA_MOD:
+            items.insert(0, {"file": "", "name": "Zorza Client", "author": "Zorza", "version": "",
+                             "icon": "/assets/zorza-logo.png", "source": "builtin", "pending": True,
+                             "enabled": p["loader"] == "fabric", "size": 0})
     return items
 
 
@@ -880,6 +959,53 @@ def modrinth_install(project_id, kind, p, _seen=None):
         for dep in v.get("dependencies", []):
             if dep.get("dependency_type") == "required" and dep.get("project_id"):
                 modrinth_install(dep["project_id"], "mods", p, seen)
+
+
+ICONS_FILE = DATA_DIR / "ikony_modow.json"
+builtin_icons = load_json(ICONS_FILE, {})
+
+
+def fetch_builtin_icons():
+    """Ikonki modów wbudowanych z Modrinth (raz, potem z pamięci)."""
+    missing = [slug for slug, _ in MODY_WBUDOWANE if slug not in builtin_icons]
+    if not missing:
+        return
+    try:
+        r = requests.get(f"{MODRINTH}/projects", params={"ids": json.dumps(missing)}, headers=UA, timeout=15)
+        r.raise_for_status()
+        for proj in r.json():
+            if proj.get("icon_url"):
+                builtin_icons[proj["slug"]] = proj["icon_url"]
+        save_json(ICONS_FILE, builtin_icons)
+    except Exception as e:
+        log(f"Nie udało się pobrać ikonek modów: {e}")
+
+
+def ensure_zorza_mod(p):
+    """Mod Zorza Client dla obsługiwanych wersji – pobierany z GitHuba, odświeżany raz dziennie."""
+    url = ZORZA_MOD.get(p["version"])
+    d = profile_dir(p) / "mods"
+    dest, off = d / "zorza-client.jar", d / "zorza-client.jar.disabled"
+    for f in d.glob("zorza-client-*.jar"):
+        f.unlink(missing_ok=True)
+    if not url:
+        dest.unlink(missing_ok=True)
+        return
+    if off.exists():
+        return
+    if dest.exists() and time.time() - dest.stat().st_mtime < 86400:
+        return
+    task.update(status="Pobieranie moda Zorza Client...", max=0)
+    try:
+        with requests.get(url, headers=UA, stream=True, timeout=60) as resp:
+            resp.raise_for_status()
+            tmp = dest.with_suffix(".tmp")
+            with open(tmp, "wb") as out:
+                shutil.copyfileobj(resp.raw, out)
+            tmp.replace(dest)
+        log("Pobrano mod Zorza Client.")
+    except Exception as e:
+        log(f"Nie udało się pobrać moda Zorza Client: {e}")
 
 
 def ensure_builtins(p):
@@ -1247,6 +1373,7 @@ def state_json():
         "news": NOWOSCI,
         "discord_invite": DISCORD_INVITE,
         "builtin_names": [t for _, t in MODY_WBUDOWANE],
+        "microsoft_soon": MICROSOFT_WKROTCE,
         "lang": settings["lang"],
         "accent": settings["accent"],
         "log_days": settings["log_days"],
@@ -1424,6 +1551,9 @@ class Handler(BaseHTTPRequestHandler):
                 if game_running():
                     return self.send(400, {"error": "Gra już działa."})
                 if not run_task(do_play, settings["active_profile"]):
+                    return self.send(400, busy)
+            elif path == "/api/play_official":
+                if not run_task(do_play_official, d.get("id") or settings["active_profile"]):
                     return self.send(400, busy)
             elif path == "/api/repair":
                 if not run_task(do_repair, d.get("id") or settings["active_profile"]):
@@ -1618,6 +1748,7 @@ def main():
     threading.Thread(target=get_versions, daemon=True).start()
     threading.Thread(target=watchdog, daemon=True).start()
     threading.Thread(target=log_cleaner, daemon=True).start()
+    threading.Thread(target=fetch_builtin_icons, daemon=True).start()
     skins_list()
     discord.update()
     if "--no-window" not in sys.argv:
