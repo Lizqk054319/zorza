@@ -6,7 +6,7 @@ import pl.zorza.client.module.TextHud;
 
 public class MemoryHud extends TextHud {
     public MemoryHud() {
-        super("memory", "Memory Usage", "RAM used by the game.", Category.HUD, false, 0.01, 0.68);
+        super("memory", "Memory Usage", "RAM used by the game.", Category.HUD, false, 0.3, 0.1);
     }
 
     public String icon() { return "m_memory"; }

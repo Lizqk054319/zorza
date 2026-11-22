@@ -6,7 +6,7 @@ import pl.zorza.client.module.TextHud;
 
 public class ServerAddressHud extends TextHud {
     public ServerAddressHud() {
-        super("server_address", "Server Address", "The server you are playing on.", Category.HUD, false, 0.01, 0.6);
+        super("server_address", "Server Address", "The server you are playing on.", Category.HUD, false, 0.3, 0.02);
     }
 
     public String icon() { return "m_server"; }

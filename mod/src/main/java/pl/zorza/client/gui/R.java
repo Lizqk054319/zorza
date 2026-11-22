@@ -18,7 +18,7 @@ public final class R {
     public static final Identifier MEDIUM = Identifier.of("zorza", "inter_medium");
     public static final Identifier SEMI = Identifier.of("zorza", "inter_semibold");
     public static final Identifier BOLD = Identifier.of("zorza", "inter_bold");
-    private static final int[] OVERSAMPLE = {1, 2, 3, 4, 6, 8};
+    private static final int[] OVERSAMPLE = {2, 3, 4, 6, 8};
     /** Ile prawdziwych pikseli przypada na jednostkę, w której teraz rysujemy (ustawia ekran / HUD). */
     public static float pxPerUnit = 2f;
     private static final Identifier TL = Identifier.of("zorza", "textures/gui/corner_tl.png");
