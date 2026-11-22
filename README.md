@@ -8,12 +8,14 @@ A small, free and non-commercial launcher for **Minecraft: Java Edition**, made 
 - Game ownership check through the official Minecraft Services API. Offline/non-premium accounts are **not** supported.
 - Downloads official game files and the Java runtime from Mojang, with Fabric loader support.
 - Built-in **Modrinth** browser: install mods, resource packs and shaders in one click (required dependencies are installed automatically).
-- Separate game folder per Minecraft version (own mods, resource packs, shaders and worlds).
-- Version picker, "repair installation", RAM and JVM settings, live game console.
+- Profiles (Minecraft 1.20.1 and newer): own version, Fabric/Vanilla, RAM and a separate game folder per profile.
+- Shareable profile codes and import from other launchers (official launcher, Modrinth App, Prism/MultiMC, Lunar Client).
+- 3D player model of your skin on the home screen, custom background, Discord Rich Presence.
+- "Repair installation", JVM settings, live game console.
 
 ## Privacy
 
-Only the Minecraft username, UUID and refresh token are stored, locally on the player's PC (this can be turned off in settings). No data is sent anywhere other than Microsoft, Mojang and Modrinth.
+Only the Minecraft username, UUID and refresh token are stored, locally on the player's PC, encrypted with Windows DPAPI (this can be turned off in settings). No data is sent anywhere other than Microsoft, Mojang and Modrinth.
 
 ## Running (Windows)
 

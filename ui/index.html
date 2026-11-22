@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Zorza Launcher</title>
+<link rel="icon" href="data:,">
 <style>
 :root{
   --bg:#141416; --side:#0f0f11; --card:#1d1d21; --card2:#232328; --line:#2c2c33;
@@ -183,11 +184,78 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
 #modal .btn{margin-top:22px}
 ::-webkit-scrollbar{width:10px}
 ::-webkit-scrollbar-thumb{background:#ffffff22;border-radius:5px}
+
+/* ====== dodatki v0.2 ====== */
+.skin{position:absolute;right:7%;bottom:12%;display:flex;flex-direction:column;align-items:center;gap:18px;cursor:default}
+.scene{perspective:1400px;filter:drop-shadow(0 24px 30px #000b)}
+.p3d{position:relative;transform-style:preserve-3d;transform:rotateY(-24deg) rotateX(-3deg);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.p3d .part,.p3d .bx{position:absolute;transform-style:preserve-3d}
+.p3d .bx{inset:0}
+.p3d .face{position:absolute;backface-visibility:hidden;background-repeat:no-repeat;image-rendering:pixelated}
+.p3d .head{transition:transform .25s ease-out}
+.p3d .rarm,.p3d .larm{animation:idle 3.2s ease-in-out infinite}
+.p3d .larm{animation-delay:-1.6s}
+@keyframes idle{0%,100%{transform:rotateX(4deg) rotateZ(1deg)}50%{transform:rotateX(-4deg) rotateZ(2deg)}}
+.skin:hover .p3d,.p3d.hi{transform:rotateY(0deg) rotateX(-2deg)}
+.skin:hover .p3d .rarm,.p3d.hi .rarm{animation:raise .35s ease-out forwards,wave .45s ease-in-out .35s infinite alternate}
+@keyframes raise{from{transform:rotateZ(0)}to{transform:rotateZ(150deg)}}
+@keyframes wave{from{transform:rotateZ(150deg)}to{transform:rotateZ(118deg)}}
+.acl .scene{position:absolute;left:50%;top:13%;transform:translateX(-50%)}
+.bgbtn{position:absolute;top:22px;right:26px;height:46px;padding:0 18px;border-radius:14px;background:#0008;border:1px solid #ffffff22;display:flex;align-items:center;gap:10px;font-size:15px;backdrop-filter:blur(8px);z-index:3}
+.bgbtn:hover{background:#000b}
+.pname{display:inline-flex;align-items:center;gap:10px;background:#0007;border:1px solid #ffffff1f;padding:8px 16px;border-radius:12px;font-size:16px;margin-bottom:16px;backdrop-filter:blur(6px)}
+.pname i{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+
+/* menu profili */
+#pmenu{position:fixed;width:340px;max-height:70vh;overflow:auto;background:#1e1e22;border:1px solid var(--line);border-radius:16px;padding:8px;display:none;z-index:50;box-shadow:0 20px 60px #000c}
+#pmenu.on{display:block}
+#pmenu .g{display:flex;align-items:center;gap:12px;color:#6f6f78;font-size:13px;padding:12px 14px 6px;letter-spacing:1px}
+#pmenu .g::after{content:"";flex:1;height:1px;background:var(--line)}
+#pmenu .it{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:11px 14px;border-radius:10px;font-size:17px}
+#pmenu .it:hover{background:#2a2a30}
+#pmenu .it small{display:block;color:var(--muted);font-size:13px}
+#pmenu .it.sel{background:#1f6bff2e}
+#pmenu .it svg{flex:none}
+#pmenu .red{color:var(--red)}
+#pmenu hr{border:0;border-top:1px solid var(--line);margin:6px 0}
+
+/* okna (modal) */
+#modal .box{width:min(640px,92vw);max-width:none;max-height:88vh;overflow:auto;padding:30px 30px 26px;background:#1b1b1f;border-radius:22px}
+.mh{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.mh h3{font-size:28px!important;margin:0!important;flex:1;letter-spacing:-.5px}
+.mh .x,.mh .back{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#bbb}
+.mh .x:hover,.mh .back:hover{background:#ffffff12;color:#fff}
+.opt{display:flex;align-items:center;gap:20px;width:100%;text-align:left;background:#232328;border:1px solid #ffffff0d;border-radius:16px;padding:20px;margin-top:12px}
+.opt:hover{background:#2a2a31;border-color:#1f6bff66}
+.opt .oi{width:54px;height:54px;border-radius:14px;background:#1f6bff1f;color:#6aa0ff;display:grid;place-items:center;flex:none}
+.opt b{font-size:18px;display:block}
+.opt span{color:var(--muted);font-size:15px}
+.opt .arr{margin-left:auto;color:#8a8a93}
+.fld{margin-top:18px}
+.fld label{display:block;color:#c9c9d2;font-size:14px;margin-bottom:8px;font-weight:600}
+.inp,select.inp,textarea.inp{width:100%;background:#121215;border:1px solid #ffffff1a;border-radius:12px;padding:14px;outline:0;font-size:16px}
+.inp:focus{border-color:#1f6bff}
+textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:13px;user-select:text}
+.seg{display:flex;background:#121215;border:1px solid #ffffff1a;border-radius:12px;padding:4px;gap:4px}
+.seg button{flex:1;padding:10px;border-radius:9px;font-size:15px;color:#bbb}
+.seg button.on{background:#1f6bff;color:#fff}
+.rng{display:flex;align-items:center;gap:16px}
+.rng input{flex:1;accent-color:var(--blue)}
+.rng b{min-width:90px;text-align:right}
+.chk{display:flex;align-items:center;gap:12px;padding:10px 0;cursor:pointer;font-size:16px}
+.chk input{width:20px;height:20px;accent-color:var(--blue)}
+.chk small{color:var(--muted)}
+.mfoot{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+.mfoot .btn{margin-top:0!important}
+.btn.danger{color:var(--red)}
+.hint{color:var(--muted);font-size:14px;margin-top:10px;line-height:1.5}
+.warn{background:#ffb02014;border:1px solid #ffb02044;color:#ffcf7a;border-radius:12px;padding:12px 14px;font-size:14px;margin-top:14px}
+.spin{width:28px;height:28px;border:3px solid #ffffff22;border-top-color:#fff;border-radius:50%;animation:sp 1s linear infinite;margin:30px auto}
+@keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- ======== ikony ======== -->
 <svg width="0" height="0" style="position:absolute">
   <symbol id="logo" viewBox="0 0 64 64">
     <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7dffb4"/><stop offset="1" stop-color="#4aa8ff"/></linearGradient></defs>
@@ -195,7 +263,19 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
     <path d="M8 50c8-10 16-13 24-8s16 1 24-10" fill="none" stroke="url(#lg)" stroke-width="4" stroke-linecap="round" opacity=".6"/>
     <path d="M44 8l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff"/>
   </symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-move" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 13h7M13 10l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-img" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M21 16l-5-5-9 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </svg>
+<svg width="0" height="0" style="position:absolute"><defs></defs></svg>
 
 <nav id="side">
   <button class="nav on" data-p="home" data-tip="Start"><svg class="i" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg></button>
@@ -214,10 +294,12 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
   <section class="page on" id="home">
     <div class="sky" id="sky1"></div>
     <div class="shade"></div>
-    <div class="skin"><div class="tag" id="homeName">Brak konta</div><img id="homeSkin" alt=""></div>
+    <button class="bgbtn" id="bgBtn"><svg width="20" height="20"><use href="#i-img"/></svg>Zmień tło</button>
+    <div class="skin" id="homeSkinBox"><div class="tag" id="homeName">Brak konta</div><div class="scene" id="homeScene"></div></div>
     <div class="content">
       <svg class="logo"><use href="#logo"/></svg>
-      <h1 id="homeTitle">Minecraft 1.21.4</h1>
+      <div><span class="pname" id="pname"><i></i><span></span></span></div>
+      <h1 id="homeTitle">Minecraft</h1>
       <div class="play" id="play">
         <button class="go" id="goBtn"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg><span id="goTxt">Graj</span></button>
         <div class="sep"></div>
@@ -226,19 +308,20 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
       </div>
       <div class="status" id="status"></div>
     </div>
+    <input type="file" id="bgIn" accept=".jpg,.jpeg,.png,.webp,.gif" hidden>
   </section>
 
   <!-- ======== MODY ======== -->
   <section class="page hero" id="mods">
-    <div class="wrap" id="modsDrop">
+    <div class="wrap">
       <div class="head">
         <h2>Mody</h2>
-        <button class="vsel vpick"><span class="vlabel">Minecraft 1.21.4</span><svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+        <button class="vsel ppick"><span class="plabel">Profil</span><svg width="22" height="22"><use href="#i-chev"/></svg></button>
         <div class="grow"></div>
-        <button class="btn" id="addDisk"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Dodaj z dysku</button>
+        <button class="btn" id="addDisk"><svg width="22" height="22"><use href="#i-plus"/></svg>Dodaj z dysku</button>
         <button class="btn primary" id="goSearch"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Szukaj modów</button>
       </div>
-      <div class="sub">Każda wersja gry ma własne mody, paczki zasobów i shadery.</div>
+      <div class="sub">Każdy profil ma własne mody, paczki zasobów i shadery.</div>
       <div class="head">
         <div class="tabs" id="ctabs">
           <button class="on" data-k="mods">Mody<b id="c_mods">0</b></button>
@@ -249,10 +332,7 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
         <button class="btn" id="openFolder" style="margin-top:34px"><svg class="i" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Folder</button>
       </div>
       <div class="grid" id="clist"></div>
-      <div class="empty" id="cempty">
-        <h3 id="cemptyT">Brak modów</h3>
-        <p id="cemptyP">Przeciągnij tu plik .jar (Fabric) albo znajdź mody na Modrinth.</p>
-      </div>
+      <div class="empty" id="cempty"><h3 id="cemptyT"></h3><p id="cemptyP"></p></div>
       <input type="file" id="fileIn" multiple hidden>
     </div>
   </section>
@@ -260,14 +340,12 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
   <!-- ======== MODRINTH ======== -->
   <section class="page" id="modrinth">
     <div class="mhero">
-      <div class="head">
-        <h2>Modrinth</h2>
-      </div>
-      <div class="sub" id="mSub">Mody, paczki zasobów i shadery. Instalujesz jednym kliknięciem.</div>
+      <div class="head"><h2>Modrinth</h2></div>
+      <div class="sub" id="mSub"></div>
       <div class="search">
         <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
         <input id="q" placeholder="Szukaj modów, np. minimapa albo Sodium">
-        <button class="vs vpick"><span class="vlabel">Minecraft 1.21.4</span><svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+        <button class="vs ppick"><span class="plabel">Profil</span><svg width="22" height="22"><use href="#i-chev"/></svg></button>
       </div>
       <div class="ul" id="mtabs">
         <button class="on" data-k="mods">Mody</button>
@@ -302,10 +380,8 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
     <div class="acl">
       <div class="sky" id="sky2"></div>
       <div class="shade"></div>
-      <div class="in">
-        <div class="brand"><svg><use href="#logo"/></svg><span id="brandName">ZORZA</span></div>
-      </div>
-      <img class="skin2" id="accSkin" alt="">
+      <div class="in"><div class="brand"><svg><use href="#logo"/></svg><span id="brandName">ZORZA</span></div></div>
+      <div class="scene" id="accScene"></div>
       <div class="bottom">
         <div class="cap">AKTYWNE KONTO</div>
         <h3 id="accName">Brak konta</h3>
@@ -317,15 +393,15 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
       <div class="sub" style="color:var(--muted)">Wybierz konto, na którym chcesz grać.</div>
       <div class="cap" style="margin-top:40px;color:var(--muted)">ZAPISANE KONTA <span id="accCount" style="margin-left:8px">0</span></div>
       <div class="list" id="accList"></div>
-      <button class="btn" id="addAcc" style="margin-top:22px;align-self:flex-start;background:none;border:0;padding-left:20px"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Dodaj konto Microsoft</button>
-      <div class="note">Logujesz się na stronie Microsoftu – launcher nie widzi twojego e-maila ani hasła.<br>Na tym komputerze zapisywany jest tylko nick, UUID i token logowania (można to wyłączyć w Ustawieniach).</div>
+      <button class="btn" id="addAcc" style="margin-top:22px;align-self:flex-start;background:none;border:0;padding-left:20px"><svg width="22" height="22"><use href="#i-plus"/></svg>Dodaj konto Microsoft</button>
+      <div class="note">Logujesz się na stronie Microsoftu – launcher nie widzi twojego e-maila ani hasła.<br>Dane logowania są zapisane tylko na tym komputerze i zaszyfrowane przez Windows.</div>
     </div>
   </section>
 
   <!-- ======== KONSOLA ======== -->
   <section class="page" id="console">
     <div class="wrap">
-      <div class="head"><h2>Konsola</h2><div class="grow"></div><button class="btn" id="clearLog">Wyczyść</button></div>
+      <div class="head"><h2>Konsola</h2><div class="grow"></div><button class="btn" id="copyLog">Skopiuj logi</button><button class="btn" id="clearLog">Wyczyść</button></div>
       <div id="log"></div>
     </div>
   </section>
@@ -334,19 +410,18 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
   <section class="page" id="settings">
     <div class="wrap">
       <div class="head"><h2>Ustawienia</h2></div>
-      <div class="set">
-        <h4>Pamięć RAM dla gry: <span id="ramV">4096</span> MB</h4>
-        <p>Dla zwykłej gry wystarczy 4 GB. Z dużą ilością modów i shaderami daj 6–8 GB.</p>
-        <input type="range" id="ram" min="1024" max="16384" step="512">
-      </div>
-      <div class="set">
-        <h4>Dodatkowe argumenty Javy</h4>
-        <p>Zostaw puste, jeśli nie wiesz, do czego to służy.</p>
-        <input type="text" id="jvm" placeholder="np. -XX:+UseG1GC">
+      <div class="set setrow">
+        <div class="grow"><h4>Status na Discordzie</h4><p>Pokazuje znajomym, że grasz w Zorza Client, na jakiej wersji i na jakim serwerze.<br><span id="dcStatus"></span></p></div>
+        <button class="sw" id="discord"></button>
       </div>
       <div class="set setrow">
         <div class="grow"><h4>Zapamiętuj konta</h4><p>Wyłączone: po zamknięciu launchera trzeba logować się od nowa, nic nie jest zapisywane na dysku.</p></div>
         <button class="sw" id="remember"></button>
+      </div>
+      <div class="set">
+        <h4>Dodatkowe argumenty Javy</h4>
+        <p>Dla wszystkich profili. Zostaw puste, jeśli nie wiesz, do czego to służy. Pamięć RAM ustawiasz w profilu.</p>
+        <input type="text" id="jvm" placeholder="np. -XX:+UseG1GC">
       </div>
       <div class="set setrow">
         <div class="grow"><h4>Folder launchera</h4><p id="dataDir"></p></div>
@@ -355,12 +430,11 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
     </div>
   </section>
 
-  <!-- ======== WKRÓTCE ======== -->
   <section class="page hero" id="servers"><div class="wrap"><h2 style="font-size:52px">Serwery</h2><div class="sub">Ta zakładka będzie dostępna wkrótce.</div></div></section>
   <section class="page hero" id="skins"><div class="wrap"><h2 style="font-size:52px">Skiny</h2><div class="sub">Ta zakładka będzie dostępna wkrótce.</div></div></section>
 </main>
 
-<div id="vmenu"></div>
+<div id="pmenu"></div>
 <div id="toast"></div>
 <div id="modal"><div class="box" id="modalBox"></div></div>
 
@@ -371,6 +445,7 @@ const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 let S = null, cKind = "mods", mKind = "mods", mCat = "", mOffset = 0, logNext = 0, page = "home";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ic = (id, s = 22) => `<svg width="${s}" height="${s}"><use href="#${id}"/></svg>`;
 
 async function api(path, body) {
   const opt = body === undefined ? {} : {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)};
@@ -383,56 +458,184 @@ function toast(msg, err) {
   const t = $("#toast"); t.textContent = msg; t.className = "on" + (err ? " err" : "");
   clearTimeout(t._h); t._h = setTimeout(() => t.className = "", 4500);
 }
-function modal(html) { $("#modalBox").innerHTML = html + '<br><button class="btn primary" onclick="$(\'#modal\').className=\'\'">OK</button>'; $("#modal").className = "on"; }
+function openModal(html) { $("#modalBox").innerHTML = html; $("#modal").className = "on"; }
+function closeModal() { $("#modal").className = ""; $("#modalBox").innerHTML = ""; }
+$("#modal").addEventListener("mousedown", e => { if (e.target.id === "modal") closeModal(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { closeModal(); $("#pmenu").className = ""; } });
+const mhead = (title, back) => `<div class="mh">${back ? `<button class="back" data-back>${ic("i-back")}</button>` : ""}<h3>${esc(title)}</h3><button class="x" onclick="closeModal()">${ic("i-x")}</button></div>`;
+function confirmBtn(b, label) { if (b.dataset.sure) return true; b.dataset.sure = 1; const old = b.innerHTML; b.innerHTML = label; setTimeout(() => { delete b.dataset.sure; b.innerHTML = old; }, 3000); return false; }
 
-/* ---------- tło ---------- */
+/* ================= POSTAĆ 3D ================= */
+const Player = (() => {
+  // [klasa, x, y, w, h, d, u, v, u2, v2, nakładka]  – układ jak w Minecraft (skin 64x64)
+  const parts = slim => {
+    const a = slim ? 3 : 4;
+    return [
+      ["head", 4, 0, 8, 8, 8, 0, 0, 32, 0, .5],
+      ["body", 4, 8, 8, 12, 4, 16, 16, 16, 32, .25],
+      ["rarm", 4 - a, 8, a, 12, 4, 40, 16, 40, 32, .25],
+      ["larm", 12, 8, a, 12, 4, 32, 48, 48, 48, .25],
+      ["rleg", 4, 20, 4, 12, 4, 0, 16, 0, 32, .25],
+      ["lleg", 8, 20, 4, 12, 4, 16, 48, 0, 48, .25],
+    ];
+  };
+  function box(s, w, h, d, u, v, tex, th) {
+    const b = document.createElement("div"); b.className = "bx";
+    const F = [ // u, v, szer., wys., transform
+      [u + d, v + d, w, h, `translateZ(${d/2*s}px)`],
+      [u + 2*d + w, v + d, w, h, `rotateY(180deg) translateZ(${d/2*s}px)`],
+      [u, v + d, d, h, `rotateY(-90deg) translateZ(${w/2*s}px)`],
+      [u + d + w, v + d, d, h, `rotateY(90deg) translateZ(${w/2*s}px)`],
+      [u + d, v, w, d, `rotateX(90deg) translateZ(${h/2*s}px)`],
+      [u + d + w, v, w, d, `rotateX(-90deg) translateZ(${h/2*s}px)`],
+    ];
+    for (const [fu, fv, fw, fh, tr] of F) {
+      const f = document.createElement("div"); f.className = "face";
+      f.style.cssText = `width:${fw*s}px;height:${fh*s}px;left:${(w-fw)/2*s}px;top:${(h-fh)/2*s}px;` +
+        `background-image:url(${tex});background-size:${64*s}px ${th*s}px;background-position:${-fu*s}px ${-fv*s}px;transform:${tr}`;
+      b.appendChild(f);
+    }
+    return b;
+  }
+  function build(el, tex, slim, th, s) {
+    const root = document.createElement("div"); root.className = "p3d";
+    root.style.cssText = `width:${16*s}px;height:${32*s}px`;
+    for (let [cls, x, y, w, h, d, u, v, u2, v2, inf] of parts(slim)) {
+      if (th === 32) { if (cls === "larm") { u = 40; v = 16; } if (cls === "lleg") { u = 0; v = 16; } }
+      const p = document.createElement("div"); p.className = "part " + cls;
+      p.style.cssText = `left:${x*s}px;top:${y*s}px;width:${w*s}px;height:${h*s}px;` +
+        `transform-origin:${cls === "head" ? "50% 100%" : cls.endsWith("arm") ? `50% ${2*s}px` : "50% 0"}`;
+      p.appendChild(box(s, w, h, d, u, v, tex, th));
+      if (th === 64 || cls === "head") {
+        const o = box(s, w, h, d, u2, v2, tex, th);
+        o.style.transform = `scale3d(${(w+2*inf)/w},${(h+2*inf)/h},${(d+2*inf)/d})`;
+        p.appendChild(o);
+      }
+      root.appendChild(p);
+    }
+    el.innerHTML = ""; el.appendChild(root);
+    return root;
+  }
+  function mannequin() { // zastępczy wygląd, gdy nie da się pobrać skina
+    const c = document.createElement("canvas"); c.width = c.height = 64;
+    const g = c.getContext("2d");
+    const fill = (col, ...r) => { g.fillStyle = col; g.fillRect(...r); };
+    fill("#8a8f9c", 0, 0, 32, 16); fill("#5d6372", 16, 16, 24, 16); fill("#7a8090", 40, 16, 16, 16);
+    fill("#3f4452", 0, 16, 16, 16); fill("#3f4452", 16, 48, 16, 16); fill("#7a8090", 32, 48, 16, 16);
+    return c.toDataURL();
+  }
+  async function load(uuid) {
+    try {
+      const r = await fetch("/api/skin?uuid=" + encodeURIComponent(uuid || ""));
+      if (!r.ok) throw 0;
+      const model = r.headers.get("X-Skin-Model");
+      const url = URL.createObjectURL(await r.blob());
+      const img = new Image(); img.src = url; await img.decode();
+      return {url, slim: model === "slim", th: img.naturalHeight === 32 ? 32 : 64, img};
+    } catch { return {url: mannequin(), slim: false, th: 64, img: null}; }
+  }
+  function headIcon(sk) { // ikonka głowy ze skina (twarz + czapka)
+    if (!sk.img) return "";
+    const c = document.createElement("canvas"); c.width = c.height = 64;
+    const g = c.getContext("2d"); g.imageSmoothingEnabled = false;
+    g.drawImage(sk.img, 8, 8, 8, 8, 0, 0, 64, 64);
+    g.drawImage(sk.img, 40, 8, 8, 8, 0, 0, 64, 64);
+    return c.toDataURL();
+  }
+  return {build, load, headIcon};
+})();
+
+const skinCache = {};
+async function skinOf(uuid) { return skinCache[uuid || "-"] ||= Player.load(uuid); }
+let homeRoot = null;
+async function renderSkins() {
+  const acc = S.accounts.find(a => a.uuid === S.active);
+  const sk = await skinOf(acc && acc.uuid);
+  const s = Math.max(6, Math.round(Math.min(innerHeight * 0.5, 520) / 32));
+  homeRoot = Player.build($("#homeScene"), sk.url, sk.slim, sk.th, s);
+  Player.build($("#accScene"), sk.url, sk.slim, sk.th, Math.max(5, Math.round(Math.min(innerHeight * 0.42, 440) / 32)));
+  $("#meImg").src = Player.headIcon(sk) || "";
+}
+let rsT; addEventListener("resize", () => { clearTimeout(rsT); rsT = setTimeout(() => S && renderSkins(), 200); });
+// głowa śledzi kursor, gdy najedziesz na postać
+$("#homeSkinBox").addEventListener("mousemove", e => {
+  if (!homeRoot) return;
+  const r = $("#homeSkinBox").getBoundingClientRect();
+  const mx = (e.clientX - r.left) / r.width - .5, my = (e.clientY - r.top) / r.height - .35;
+  homeRoot.querySelector(".head").style.transform = `rotateY(${mx * 50}deg) rotateX(${-my * 30}deg)`;
+});
+$("#homeSkinBox").addEventListener("mouseleave", () => { if (homeRoot) homeRoot.querySelector(".head").style.transform = ""; });
+
+/* ================= TŁO ================= */
 const TREES = (() => {
   let p = "M0 400 ", x = 0;
   while (x < 1600) { const h = 140 + Math.random()*130, w = 26 + Math.random()*26;
     p += `L${x} ${400-h*0.35} L${x+w/2} ${400-h} L${x+w} ${400-h*0.35} `; x += w*0.8; }
   return `<svg class="trees" viewBox="0 0 1600 400" preserveAspectRatio="none">
     <path d="M0 250 L200 170 L380 230 L560 120 L760 220 L980 150 L1200 230 L1400 170 L1600 220 L1600 400 L0 400Z" fill="#1d1830"/>
-    <path d="${p} L1600 400 Z" fill="#0b0f19"/>
-    <rect y="330" width="1600" height="70" fill="#0d1422"/></svg>`;
+    <path d="${p} L1600 400 Z" fill="#0b0f19"/><rect y="330" width="1600" height="70" fill="#0d1422"/></svg>`;
 })();
-function paintSky(el) {
-  if (S && S.has_background) { el.className = "sky photo"; el.style.backgroundImage = "url(/assets/background.jpg)"; el.innerHTML = ""; }
-  else if (!el.innerHTML) el.innerHTML = '<div class="stars"></div><div class="aurora"></div>' + TREES;
+let bgShown = null;
+function paintSky() {
+  if (bgShown === S.background) return; bgShown = S.background;
+  for (const el of [$("#sky1"), $("#sky2")]) {
+    if (S.background) { el.className = "sky photo"; el.innerHTML = ""; el.style.backgroundImage = `url(/api/background?v=${S.background})`; }
+    else { el.className = "sky"; el.style.backgroundImage = ""; el.innerHTML = '<div class="stars"></div><div class="aurora"></div>' + TREES; }
+  }
 }
+$("#bgBtn").onclick = e => {
+  e.stopPropagation();
+  menu($("#bgBtn"), `<button class="it" data-a="pick">${ic("i-img", 20)}Wybierz obrazek z dysku…</button>` +
+    (S.background ? `<button class="it" data-a="reset">${ic("i-back", 20)}Przywróć domyślne tło</button>` : ""), {
+      pick: () => $("#bgIn").click(),
+      reset: async () => { await api("/api/background/reset", {}); refresh(); toast("Przywrócono domyślne tło."); }
+    }, "down-right");
+};
+$("#bgIn").onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  const r = await fetch("/api/background/upload?name=" + encodeURIComponent(f.name), {method:"POST", body:f});
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) return toast(j.error || "Nie udało się ustawić tła.", true);
+  toast("Ustawiono nowe tło."); refresh();
+};
 
-/* ---------- nawigacja ---------- */
+/* ================= NAWIGACJA ================= */
 function go(p) {
   page = p;
   $$(".nav").forEach(b => b.classList.toggle("on", b.dataset.p === p));
   $$(".page").forEach(s => s.classList.toggle("on", s.id === p));
-  $("#vmenu").className = "";
+  $("#pmenu").className = "";
   if (p === "mods") loadContent();
   if (p === "modrinth" && !$("#results").innerHTML) search(true);
   if (p === "console") pollLog();
 }
 $$(".nav").forEach(b => b.onclick = () => go(b.dataset.p));
 
-/* ---------- stan ---------- */
-const skinUrl = (a, kind) => a ? `https://mc-heads.net/${kind}/${a.uuid}${kind==="body"?"/right":""}` : `https://mc-heads.net/${kind}/MHF_Steve${kind==="body"?"/right":""}`;
-let lastAcc = "", lastVer = "", lastLogin = "";
+/* ================= STAN ================= */
+const loaderName = l => l === "fabric" ? "Fabric" : "Vanilla";
+let lastAcc = "", lastProf = "";
 async function refresh() {
   try { S = await api("/api/state"); } catch { return; }
-  const acc = S.accounts.find(a => a.uuid === S.active);
+  const acc = S.accounts.find(a => a.uuid === S.active), P = S.profile;
   document.title = S.name + " Launcher";
   $("#brandName").textContent = S.name.toUpperCase();
-  paintSky($("#sky1")); paintSky($("#sky2"));
-  const key = (acc ? acc.uuid : "-") + S.accounts.length;
+  paintSky();
+  const key = (acc ? acc.uuid : "-") + "|" + S.accounts.map(a => a.uuid).join();
   if (key !== lastAcc) {
     lastAcc = key;
-    $("#meImg").src = skinUrl(acc, "avatar");
-    $("#homeSkin").src = $("#accSkin").src = skinUrl(acc, "body");
     $("#homeName").textContent = $("#accName").textContent = acc ? acc.name : "Brak konta";
-    renderAccounts();
+    renderSkins(); renderAccounts();
   }
-  if (S.version !== lastVer) { lastVer = S.version; $$(".vlabel").forEach(e => e.textContent = "Minecraft " + S.version);
-    $("#homeTitle").textContent = "Minecraft " + S.version; if (page === "mods") loadContent(); if (page === "modrinth") search(true); }
+  const pkey = JSON.stringify(P);
+  if (pkey !== lastProf) {
+    const changed = lastProf && JSON.parse(lastProf).id !== P.id || (lastProf && JSON.parse(lastProf).version !== P.version);
+    lastProf = pkey;
+    $("#homeTitle").textContent = "Minecraft " + P.version;
+    $("#pname span").textContent = `${P.name} · ${loaderName(P.loader)} · ${(P.ram_mb/1024).toFixed(1).replace(".0","")} GB RAM`;
+    $$(".plabel").forEach(e => e.textContent = `${P.name} · ${P.version}`);
+    if (changed) { if (page === "mods") loadContent(); if (page === "modrinth") search(true); }
+  }
   for (const k in S.counts) $("#c_" + k).textContent = S.counts[k];
-  // przycisk Graj
   const t = S.task, play = $("#play");
   play.classList.toggle("busy", t.running);
   if (t.running) {
@@ -443,76 +646,216 @@ async function refresh() {
     $("#bar").style.width = "0";
   }
   $("#status").textContent = t.running && t.max ? `${t.progress} / ${t.max}` : "";
-  if (t.error) { toast(t.error, true); api("/api/clear_error", {}); if (page === "modrinth") search(true); }
-  if (S.login_message.text && S.login_message.text !== lastLogin) { lastLogin = S.login_message.text; toast(lastLogin, !S.login_message.ok); }
-  if (!S.login_message.text) lastLogin = "";
-  // ustawienia
-  if (document.activeElement !== $("#ram")) { $("#ram").value = S.settings.ram_mb; $("#ramV").textContent = S.settings.ram_mb; }
+  if (t.error) { toast(t.error, true); api("/api/clear_error", {}); if (page === "modrinth") markInstalled(); }
+  else if (t.done && !t.running) { toast(t.done); api("/api/clear_error", {}); }
+  if (S.login_message.text) { toast(S.login_message.text, !S.login_message.ok); api("/api/clear_error", {}); }
   if (document.activeElement !== $("#jvm")) $("#jvm").value = S.settings.jvm_args;
   $("#remember").classList.toggle("on", S.settings.remember_accounts);
+  $("#discord").classList.toggle("on", S.settings.discord);
+  $("#dcStatus").textContent = "Stan: " + S.discord_status;
   $("#dataDir").textContent = S.data_dir;
-  // po zakończonym zadaniu odśwież listy
   if (refresh._wasRunning && !t.running) { if (page === "mods") loadContent(); if (page === "modrinth") markInstalled(); }
   refresh._wasRunning = t.running;
 }
 setInterval(refresh, 1000); refresh();
 
-/* ---------- Graj + menu wersji ---------- */
+/* ================= MENU (profile, tło) ================= */
+function menu(anchor, html, actions, pos) {
+  const m = $("#pmenu");
+  if (m.className === "on" && m._anchor === anchor) { m.className = ""; return; }
+  m.innerHTML = html; m.className = "on"; m._anchor = anchor;
+  const r = anchor.getBoundingClientRect();
+  m.style.left = m.style.right = m.style.top = m.style.bottom = "";
+  if (pos === "up") { m.style.left = Math.min(r.left, innerWidth - 360) + "px"; m.style.bottom = (innerHeight - r.top + 10) + "px"; }
+  else if (pos === "down-right") { m.style.right = (innerWidth - r.right) + "px"; m.style.top = (r.bottom + 8) + "px"; }
+  else { m.style.left = Math.min(r.left, innerWidth - 360) + "px"; m.style.top = (r.bottom + 10) + "px"; }
+  m.querySelectorAll("[data-a]").forEach(b => b.onclick = () => { m.className = ""; actions[b.dataset.a](b.dataset.v); });
+}
+document.addEventListener("click", e => { const m = $("#pmenu"); if (!m.contains(e.target)) m.className = ""; });
+function profileMenu(anchor, pos, withRepair) {
+  let h = `<div class="g">PROFILE</div>`;
+  for (const p of S.profiles)
+    h += `<button class="it ${p.id === S.profile.id ? "sel" : ""}" data-a="sel" data-v="${esc(p.id)}"><span class="grow">${esc(p.name)}<small>Minecraft ${esc(p.version)} · ${loaderName(p.loader)}</small></span>${p.id === S.profile.id ? ic("i-check", 20) : ""}</button>`;
+  h += `<hr><button class="it" data-a="add">${ic("i-plus", 20)}Dodaj profil</button>`;
+  h += `<button class="it" data-a="edit">${ic("i-pen", 20)}Edytuj profil</button>`;
+  if (withRepair) h += `<hr><button class="it red" data-a="repair">Napraw instalację</button>`;
+  menu(anchor, h, {
+    sel: async id => { await api("/api/profiles/select", {id}); refresh(); },
+    add: () => addProfile(), edit: () => editProfile(S.profile.id),
+    repair: async () => { try { await api("/api/repair", {id:S.profile.id}); go("home"); toast("Sprawdzam i naprawiam pliki gry..."); } catch (e) { toast(e.message, true); } },
+  }, pos);
+}
+$("#moreBtn").onclick = e => { e.stopPropagation(); profileMenu($("#play"), "up", true); };
+$$(".ppick").forEach(b => b.onclick = e => { e.stopPropagation(); profileMenu(b, "down", false); });
+
 $("#goBtn").onclick = async () => {
   if (S.task.running || S.game_running) return;
   if (!S.accounts.length) { go("accounts"); toast("Najpierw dodaj konto Microsoft.", true); return; }
   try { await api("/api/play", {}); refresh(); } catch (e) { toast(e.message, true); }
 };
-function openVmenu(anchor, up) {
-  const m = $("#vmenu");
-  if (m.className === "on") { m.className = ""; return; }
-  let h = "";
-  S.versions.forEach((g, gi) => {
-    if (gi > 0 || S.versions.length === 1) h += `<div class="g">${esc(g.group)}</div>`;
-    g.items.forEach(v => h += `<button class="v ${v.id===S.version?"sel":""}" data-v="${esc(v.id)}">${esc(v.id)}${v.installed?"<small>pobrana</small>":""}</button>`);
-  });
-  h += `<button class="repair" id="repair">Napraw instalację</button>`;
-  m.innerHTML = h; m.className = "on";
-  const r = anchor.getBoundingClientRect();
-  m.style.left = Math.min(r.left, innerWidth - 320) + "px";
-  if (up) { m.style.top = ""; m.style.bottom = (innerHeight - r.top + 10) + "px"; }
-  else { m.style.bottom = ""; m.style.top = (r.bottom + 10) + "px"; }
-  const sel = m.querySelector(".sel"); if (sel) sel.scrollIntoView({block:"center"});
-  m.querySelectorAll(".v").forEach(b => b.onclick = async () => { m.className = ""; await api("/api/select_version", {version:b.dataset.v}); refresh(); });
-  $("#repair").onclick = async () => { m.className = ""; try { await api("/api/repair", {version:S.version}); go("home"); toast("Sprawdzam i naprawiam pliki gry..."); } catch (e) { toast(e.message, true); } };
-}
-$("#moreBtn").onclick = e => { e.stopPropagation(); openVmenu($("#play"), true); };
-$$(".vpick").forEach(b => b.onclick = e => { e.stopPropagation(); openVmenu(b, false); });
-document.addEventListener("click", e => { if (!$("#vmenu").contains(e.target)) $("#vmenu").className = ""; });
 
-/* ---------- Mody (zainstalowane) ---------- */
+/* ================= DODAJ PROFIL ================= */
+function versionSelect(id, sel) {
+  let h = `<select class="inp" id="${id}">`;
+  for (const g of S.versions) {
+    h += `<optgroup label="${esc(g.group)}">`;
+    for (const v of g.items) h += `<option value="${esc(v.id)}" ${v.id === sel ? "selected" : ""}>${esc(v.id)}${v.installed ? "  (pobrana)" : ""}</option>`;
+    h += `</optgroup>`;
+  }
+  return h + `</select>`;
+}
+const inList = v => S.versions.some(g => g.items.some(i => i.id === v));
+function profileFields(p) {
+  return `
+    <div class="fld"><label>Nazwa profilu</label><input class="inp" id="fName" maxlength="40" value="${esc(p.name || "")}" placeholder="np. Mój serwer"></div>
+    <div class="fld"><label>Wersja gry</label>${versionSelect("fVer", inList(p.version) ? p.version : S.versions[0]?.items[0]?.id)}</div>
+    <div class="fld"><label>Mody</label><div class="seg" id="fLoader">
+      <button data-l="fabric" class="${p.loader !== "vanilla" ? "on" : ""}">Fabric (z modami)</button>
+      <button data-l="vanilla" class="${p.loader === "vanilla" ? "on" : ""}">Vanilla (bez modów)</button></div></div>
+    <div class="fld"><label>Pamięć RAM</label><div class="rng"><input type="range" id="fRam" min="1024" max="16384" step="512" value="${p.ram_mb || 4096}"><b id="fRamV"></b></div>
+      <div class="hint">Zwykła gra: 4 GB. Dużo modów albo shadery: 6–8 GB. Nie dawaj więcej niż połowa RAM-u komputera.</div></div>`;
+}
+function bindProfileFields() {
+  const upd = () => $("#fRamV").textContent = ($("#fRam").value / 1024).toFixed(1).replace(".0", "") + " GB";
+  $("#fRam").oninput = upd; upd();
+  $$("#fLoader button").forEach(b => b.onclick = () => $$("#fLoader button").forEach(x => x.classList.toggle("on", x === b)));
+}
+const readFields = () => ({name:$("#fName").value, version:$("#fVer").value, loader:$("#fLoader .on").dataset.l, ram_mb:+$("#fRam").value});
+function bindBack(fn) { const b = $("[data-back]"); if (b) b.onclick = fn; }
+
+function addProfile() {
+  openModal(mhead("Dodaj profil") + `
+    <button class="opt" data-o="new"><div class="oi">${ic("i-pen", 26)}</div><div><b>Stwórz własny profil</b><span>Wybierz wersję i pamięć RAM.</span></div><div class="arr">${ic("i-arrow")}</div></button>
+    <button class="opt" data-o="code"><div class="oi">${ic("i-down", 26)}</div><div><b>Dodaj gotowy profil</b><span>Kod udostępnionego profilu.</span></div><div class="arr">${ic("i-arrow")}</div></button>
+    <button class="opt" data-o="import"><div class="oi">${ic("i-move", 26)}</div><div><b>Przenieś profil z innego launchera</b><span>Import istniejącej konfiguracji.</span></div><div class="arr">${ic("i-arrow")}</div></button>`);
+  $$("[data-o]").forEach(b => b.onclick = () => ({new:newProfile, code:codeProfile, import:importProfile})[b.dataset.o]());
+}
+function newProfile() {
+  openModal(mhead("Stwórz własny profil", true) + profileFields({}) +
+    `<div class="mfoot"><button class="btn primary" id="fSave">${ic("i-plus")}Utwórz profil</button></div>`);
+  bindBack(addProfile); bindProfileFields();
+  $("#fSave").onclick = async () => {
+    try { await api("/api/profiles/create", readFields()); closeModal(); refresh(); go("home"); toast("Profil utworzony. Kliknij Graj, żeby pobrać grę."); }
+    catch (e) { toast(e.message, true); }
+  };
+}
+function codeProfile() {
+  openModal(mhead("Dodaj gotowy profil", true) + `
+    <div class="fld"><label>Kod profilu</label><textarea class="inp" id="fCode" placeholder="ZORZA-..."></textarea></div>
+    <div class="hint">Kod dostajesz od kogoś, kto kliknął „Kopiuj kod profilu” w swoim launcherze. Mody, paczki zasobów i shadery z kodu pobiorą się same z Modrinth.</div>
+    <div class="mfoot"><button class="btn primary" id="fSave">${ic("i-down")}Dodaj profil</button></div>`);
+  bindBack(addProfile);
+  $("#fSave").onclick = async () => {
+    try { await api("/api/profiles/import_code", {code:$("#fCode").value}); closeModal(); go("home"); toast("Dodaję profil i pobieram mody..."); }
+    catch (e) { toast(e.message, true); }
+  };
+}
+async function importProfile() {
+  openModal(mhead("Przenieś z innego launchera", true) + `<div class="sub" style="color:var(--muted)">Szukam launcherów na tym komputerze…</div><div class="spin"></div>`);
+  bindBack(addProfile);
+  let found;
+  try { found = await api("/api/import/scan"); } catch (e) { toast(e.message, true); return; }
+  if (!found.length) {
+    openModal(mhead("Przenieś z innego launchera", true) + `<div class="empty" style="margin-top:10px"><h3>Nie znalazłem innych launcherów</h3>
+      <p>Szukam: oficjalnego launchera Minecraft, Modrinth App, Prism Launcher / MultiMC i Lunar Client.</p></div>`);
+    return bindBack(addProfile);
+  }
+  let h = mhead("Przenieś z innego launchera", true) + `<div class="sub" style="color:var(--muted)">Znalezione launchery:</div>`;
+  found.forEach((l, i) => h += `<button class="opt" data-i="${i}"><div class="oi">${ic("i-move", 26)}</div><div><b>${esc(l.name)}</b><span>${l.profiles.length} ${l.profiles.length === 1 ? "profil" : "profile/-ów"} · ${esc(l.path)}</span></div><div class="arr">${ic("i-arrow")}</div></button>`);
+  openModal(h); bindBack(addProfile);
+  $$("[data-i]").forEach(b => b.onclick = () => pickImportProfile(found, found[+b.dataset.i]));
+}
+function pickImportProfile(found, l) {
+  let h = mhead(l.name, true);
+  if (!l.profiles.length) h += `<div class="empty"><h3>Brak profili</h3><p>W tym launcherze nie ma żadnych profili do przeniesienia.</p></div>`;
+  l.profiles.forEach((p, i) => {
+    const c = p.counts || {};
+    h += `<button class="opt" data-pi="${i}"><div class="oi">${ic("i-down", 26)}</div><div><b>${esc(p.name)}</b><span>${p.version ? "Minecraft " + esc(p.version) : "wersja nieznana"} · ${loaderName(p.loader)} · ${c.mods || 0} modów · ${c.saves || 0} światów</span></div><div class="arr">${ic("i-arrow")}</div></button>`;
+  });
+  openModal(h);
+  bindBack(() => { openModal(""); importProfile(); });
+  $$("[data-pi]").forEach(b => b.onclick = () => confirmImport(found, l, l.profiles[+b.dataset.pi]));
+}
+function confirmImport(found, l, p) {
+  const c = p.counts || {};
+  const ok = inList(p.version);
+  openModal(mhead("Importuj profil", true) +
+    (ok ? "" : `<div class="warn">${p.version ? `Wersja ${esc(p.version)} nie jest dostępna w launcherze (obsługujemy od ${esc(S.versions.at(-1).items.at(-1).id)} wzwyż).` : "Nie udało się odczytać wersji."} Wybierz wersję poniżej – mody mogą nie działać na innej wersji.</div>`) +
+    profileFields({name:p.name, version:p.version, loader:p.loader, ram_mb:p.ram_mb}) + `
+    <div class="fld"><label>Co przenieść</label>
+      <label class="chk"><input type="checkbox" id="cMods" ${c.mods ? "checked" : ""}>Mody <small>(${c.mods || 0})</small></label>
+      <label class="chk"><input type="checkbox" id="cSet" ${p.options ? "checked" : ""}>Ustawienia Minecrafta <small>(sterowanie, grafika, dźwięk, język)</small></label>
+      <label class="chk"><input type="checkbox" id="cPacks" checked>Paczki zasobów i shadery <small>(${(c.resourcepacks || 0) + (c.shaders || 0)})</small></label>
+      <label class="chk"><input type="checkbox" id="cServ" checked>Lista serwerów</label>
+      <label class="chk"><input type="checkbox" id="cSaves">Światy <small>(${c.saves || 0}, mogą zajmować dużo miejsca)</small></label>
+    </div>
+    <div class="hint">Pliki są kopiowane – w ${esc(l.name)} nic się nie zmieni.</div>
+    <div class="mfoot"><button class="btn primary" id="fSave">${ic("i-move")}Importuj</button></div>`);
+  bindBack(() => pickImportProfile(found, l)); bindProfileFields();
+  $("#fSave").onclick = async () => {
+    const d = {...readFields(), launcher:l.id, key:p.key,
+      copy:{mods:$("#cMods").checked, settings:$("#cSet").checked, packs:$("#cPacks").checked, servers:$("#cServ").checked, saves:$("#cSaves").checked}};
+    try { await api("/api/import/run", d); closeModal(); go("home"); toast("Importuję profil..."); }
+    catch (e) { toast(e.message, true); }
+  };
+}
+
+/* ================= EDYCJA PROFILU ================= */
+function editProfile(id) {
+  const p = S.profiles.find(x => x.id === id);
+  openModal(mhead("Edytuj profil") + profileFields(p) + `
+    <div class="mfoot">
+      <button class="btn primary" id="fSave">${ic("i-check")}Zapisz</button>
+      <button class="btn" id="fCode">Kopiuj kod profilu</button>
+      <button class="btn" id="fFolder">Folder</button>
+      <button class="btn danger" id="fDel">${ic("i-trash")}Usuń</button>
+    </div>
+    <div class="hint">Kod profilu możesz wysłać znajomym – po wklejeniu w „Dodaj gotowy profil” dostaną tę samą wersję, RAM i mody z Modrinth.</div>`);
+  bindProfileFields();
+  $("#fSave").onclick = async () => { try { await api("/api/profiles/update", {id, ...readFields()}); closeModal(); refresh(); toast("Zapisano profil."); } catch (e) { toast(e.message, true); } };
+  $("#fFolder").onclick = () => api("/api/open_folder", {profile:id});
+  $("#fCode").onclick = async () => {
+    try {
+      const {code} = await api("/api/profiles/export?id=" + encodeURIComponent(id));
+      try { await navigator.clipboard.writeText(code); toast("Skopiowano kod profilu – wklej go znajomemu."); }
+      catch { openModal(mhead("Kod profilu") + `<textarea class="inp" readonly>${esc(code)}</textarea><div class="hint">Zaznacz i skopiuj (Ctrl+C).</div>`); }
+    } catch (e) { toast(e.message, true); }
+  };
+  $("#fDel").onclick = async () => {
+    if (!confirmBtn($("#fDel"), "Na pewno? Kliknij jeszcze raz")) return;
+    try { await api("/api/profiles/delete", {id}); closeModal(); refresh(); toast("Usunięto profil. Jego pliki są w folderze „usuniete”."); }
+    catch (e) { toast(e.message, true); }
+  };
+}
+
+/* ================= MODY ================= */
 const KNAME = {mods:["modów","Przeciągnij tu plik .jar (Fabric) albo znajdź mody na Modrinth."],
   resourcepacks:["paczek zasobów","Przeciągnij tu plik .zip albo znajdź paczki na Modrinth."],
   shaders:["shaderów","Przeciągnij tu plik .zip. Shadery wymagają moda Iris (znajdziesz go na Modrinth)."]};
 $$("#ctabs button").forEach(b => b.onclick = () => { cKind = b.dataset.k; $$("#ctabs button").forEach(x => x.classList.toggle("on", x === b)); loadContent(); });
 async function loadContent() {
   if (!S) return;
-  const items = await api(`/api/content?version=${encodeURIComponent(S.version)}&kind=${cKind}`).catch(() => []);
+  const pid = S.profile.id;
+  const items = await api(`/api/content?profile=${encodeURIComponent(pid)}&kind=${cKind}`).catch(() => []);
   $("#clist").innerHTML = items.map(it => `
     <div class="card ${it.enabled?"":"off"}">
       <div class="ic">${it.icon ? `<img src="${esc(it.icon)}">` : `<svg class="i" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg>`}</div>
       <div class="grow" style="min-width:0"><div class="t">${esc(it.name)}</div><div class="s">${it.enabled?"Włączony":"Wyłączony"} · ${(it.size/1048576).toFixed(1)} MB</div></div>
       <button class="sw ${it.enabled?"on":""}" data-f="${esc(it.file)}" data-a="toggle" title="Włącz / wyłącz"></button>
-      <button class="mini" data-f="${esc(it.file)}" data-a="delete" title="Usuń"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
+      <button class="mini" data-f="${esc(it.file)}" data-a="delete" title="Usuń">${ic("i-trash")}</button>
     </div>`).join("");
   $("#clist").querySelectorAll("[data-a]").forEach(b => b.onclick = async () => {
-    if (b.dataset.a === "delete" && !confirmDel(b)) return;
-    await api("/api/content/" + b.dataset.a, {version:S.version, kind:cKind, file:b.dataset.f}).catch(e => toast(e.message, true));
+    if (b.dataset.a === "delete" && !confirmBtn(b, `<span style="color:#ff4d4d">${ic("i-trash")}</span>`)) return toast("Kliknij jeszcze raz, aby usunąć.");
+    await api("/api/content/" + b.dataset.a, {profile:pid, kind:cKind, file:b.dataset.f}).catch(e => toast(e.message, true));
     loadContent();
   });
   $("#cempty").style.display = items.length ? "none" : "block";
-  $("#cemptyT").textContent = `Brak twoich ${KNAME[cKind][0]} dla Minecraft ${S.version}`;
-  $("#cemptyP").textContent = KNAME[cKind][1];
+  $("#cemptyT").textContent = `Brak ${KNAME[cKind][0]} w profilu ${S.profile.name}`;
+  $("#cemptyP").textContent = S.profile.loader === "vanilla" && cKind === "mods" ? "Ten profil jest bez modów (Vanilla). Zmień go na Fabric w edycji profilu." : KNAME[cKind][1];
 }
-function confirmDel(b) { if (b.dataset.sure) return true; b.dataset.sure = 1; b.style.color = "#ff4d4d"; toast("Kliknij jeszcze raz, aby usunąć."); setTimeout(() => { delete b.dataset.sure; b.style.color = ""; }, 3000); return false; }
 async function uploadFiles(files) {
   for (const f of files) {
-    const r = await fetch(`/api/content/upload?version=${encodeURIComponent(S.version)}&kind=${cKind}&name=${encodeURIComponent(f.name)}`, {method:"POST", body:f});
+    const r = await fetch(`/api/content/upload?profile=${encodeURIComponent(S.profile.id)}&kind=${cKind}&name=${encodeURIComponent(f.name)}`, {method:"POST", body:f});
     if (!r.ok) toast("Nie udało się dodać " + f.name, true);
   }
   toast(`Dodano ${files.length} plik(ów).`); loadContent();
@@ -523,10 +866,10 @@ const drop = $("#mods");
 drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("drop"); });
 drop.addEventListener("dragleave", () => drop.classList.remove("drop"));
 drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("drop"); uploadFiles([...e.dataTransfer.files]); });
-$("#openFolder").onclick = () => api("/api/open_folder", {version:S.version, kind:cKind});
+$("#openFolder").onclick = () => api("/api/open_folder", {profile:S.profile.id, kind:cKind});
 $("#goSearch").onclick = () => { setMKind(cKind); go("modrinth"); };
 
-/* ---------- Modrinth ---------- */
+/* ================= MODRINTH ================= */
 const fmt = n => n >= 1e6 ? (n/1e6).toFixed(1).replace(".", ",") + " mln" : n >= 1e3 ? (n/1e3).toFixed(1).replace(".", ",") + " tys." : n;
 const CATPL = {optimization:"Optymalizacja",utility:"Narzędzia",adventure:"Przygoda",decoration:"Dekoracje",library:"Biblioteka",
   technology:"Technologia",magic:"Magia",storage:"Przechowywanie",equipment:"Wyposażenie",worldgen:"Generowanie świata",
@@ -548,8 +891,9 @@ let lastHits = [];
 async function search(reset) {
   if (!S) return;
   if (reset) { mOffset = 0; lastHits = []; }
-  $("#mSub").textContent = `Mody, paczki zasobów i shadery dla Minecraft ${S.version}. Instalujesz jednym kliknięciem.`;
-  const qs = new URLSearchParams({q:$("#q").value, kind:mKind, cat:mCat, sort:$("#sort").value, version:S.version, offset:mOffset});
+  const P = S.profile;
+  $("#mSub").textContent = `Mody, paczki zasobów i shadery dla profilu ${P.name} (Minecraft ${P.version}). Instalujesz jednym kliknięciem.`;
+  const qs = new URLSearchParams({q:$("#q").value, kind:mKind, cat:mCat, sort:$("#sort").value, profile:P.id, offset:mOffset});
   let data;
   try { data = await api("/api/modrinth/search?" + qs); } catch (e) { $("#results").innerHTML = `<div class="empty"><h3>Nie udało się połączyć z Modrinth</h3><p>${esc(e.message)}</p></div>`; return; }
   lastHits = reset ? data.hits : lastHits.concat(data.hits);
@@ -563,50 +907,47 @@ async function search(reset) {
         <div class="m">${esc(CATPL[h.display_categories?.[0]] || h.display_categories?.[0] || "")} · ${fmt(h.downloads)} pobrań</div>
       </div>
       <button class="inst ${h.installed?"done":""}" data-id="${esc(h.project_id)}">${h.installed?"Zainstalowano":"Zainstaluj"}</button>
-    </div>`).join("") : `<div class="empty"><h3>Nic nie znaleziono</h3><p>Spróbuj innej nazwy albo innej wersji gry.</p></div>`;
+    </div>`).join("") : `<div class="empty"><h3>Nic nie znaleziono</h3><p>Spróbuj innej nazwy albo innego profilu.</p></div>`;
   $("#loadMore").style.display = data.total_hits > mOffset ? "block" : "none";
   $$("#results .inst").forEach(b => b.onclick = async () => {
-    if (b.classList.contains("done") || S.task.running) { if (S.task.running) toast("Poczekaj, trwa inne pobieranie."); return; }
+    if (b.classList.contains("done")) return;
+    if (S.task.running) return toast("Poczekaj, trwa inne pobieranie.");
+    if (mKind === "mods" && S.profile.loader === "vanilla") return toast("Ten profil jest bez modów (Vanilla). Zmień go na Fabric w edycji profilu.", true);
     b.textContent = "Pobieranie...";
-    try { await api("/api/modrinth/install", {project_id:b.dataset.id, kind:mKind, version:S.version}); }
+    try { await api("/api/modrinth/install", {project_id:b.dataset.id, kind:mKind, profile:S.profile.id}); }
     catch (e) { b.textContent = "Zainstaluj"; toast(e.message, true); }
   });
 }
 async function markInstalled() { if ($("#results").innerHTML) { const y = $("#modrinth").scrollTop; await search(true); $("#modrinth").scrollTop = y; } }
 
-/* ---------- Konta ---------- */
-function renderAccounts() {
+/* ================= KONTA ================= */
+async function renderAccounts() {
   $("#accCount").textContent = S.accounts.length;
   $("#accList").innerHTML = S.accounts.length ? S.accounts.map(a => `
     <div class="acc" data-u="${esc(a.uuid)}">
-      <img src="${skinUrl(a, "avatar")}">
+      <img data-head="${esc(a.uuid)}">
       <div class="grow"><div class="t">${esc(a.name)}</div><div class="s">Microsoft · Premium</div></div>
-      ${a.uuid === S.active ? '<svg class="i" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>' : ""}
-      <button class="mini" data-del="${esc(a.uuid)}" title="Usuń konto"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
+      ${a.uuid === S.active ? ic("i-check", 24) : ""}
+      <button class="mini" data-del="${esc(a.uuid)}" title="Usuń konto">${ic("i-trash")}</button>
     </div>`).join("") : `<div class="sub" style="color:var(--muted)">Nie masz jeszcze żadnego konta. Dodaj konto Microsoft z kupionym Minecraftem.</div>`;
   $$("#accList .acc").forEach(el => el.onclick = async e => {
     const del = e.target.closest("[data-del]");
-    if (del) { if (!confirmDel(del)) return; await api("/api/accounts/delete", {uuid:del.dataset.del}); }
+    if (del) { if (!confirmBtn(del, `<span style="color:#ff4d4d">${ic("i-trash")}</span>`)) return toast("Kliknij jeszcze raz, aby usunąć konto."); await api("/api/accounts/delete", {uuid:del.dataset.del}); }
     else await api("/api/accounts/select", {uuid:el.dataset.u});
     lastAcc = ""; refresh();
   });
+  for (const img of $$("#accList [data-head]")) img.src = Player.headIcon(await skinOf(img.dataset.head)) || "";
 }
 $("#addAcc").onclick = async () => {
   try { await api("/api/accounts/ms_start", {}); toast("Zaloguj się w oknie przeglądarki, które się otworzyło."); }
-  catch (e) {
-    if (e.message === "not_configured") modal(`<h3>Logowanie Microsoft nie jest jeszcze skonfigurowane</h3>
-      Żeby logowanie działało, launcher potrzebuje własnego identyfikatora aplikacji z Azure:
-      <ol><li>Zarejestruj aplikację na <code>portal.azure.com</code> (instrukcja w pliku <code>INSTRUKCJA.txt</code>).</li>
-      <li>Wklej jej <b>Application (client) ID</b> do pliku <code>launcher.py</code> w linijce <code>AZURE_CLIENT_ID = ""</code>.</li>
-      <li>Uruchom launcher ponownie.</li></ol>`);
-    else toast(e.message, true);
-  }
+  catch (e) { toast(e.message, true); }
 };
 $("#toGame").onclick = () => go("home");
 
-/* ---------- Konsola ---------- */
+/* ================= KONSOLA ================= */
 async function pollLog() {
-  if (page !== "console") return;
+  if (page !== "console" || pollLog.on) return;
+  pollLog.on = true;
   try {
     const d = await api("/api/log?since=" + logNext);
     if (d.lines.length) { const el = $("#log"), atEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 30;
@@ -614,15 +955,16 @@ async function pollLog() {
       if (atEnd) el.scrollTop = el.scrollHeight; }
     logNext = d.next;
   } catch {}
+  pollLog.on = false;
   setTimeout(pollLog, 800);
 }
 $("#clearLog").onclick = () => $("#log").textContent = "";
+$("#copyLog").onclick = async () => { try { await navigator.clipboard.writeText($("#log").textContent); toast("Skopiowano logi."); } catch { toast("Nie udało się skopiować.", true); } };
 
-/* ---------- Ustawienia ---------- */
-$("#ram").oninput = () => $("#ramV").textContent = $("#ram").value;
-$("#ram").onchange = () => api("/api/settings", {ram_mb:+$("#ram").value});
+/* ================= USTAWIENIA ================= */
 $("#jvm").onchange = () => api("/api/settings", {jvm_args:$("#jvm").value});
 $("#remember").onclick = () => api("/api/settings", {remember_accounts:!S.settings.remember_accounts}).then(refresh);
+$("#discord").onclick = () => api("/api/settings", {discord:!S.settings.discord}).then(refresh);
 $("#openData").onclick = () => api("/api/open_folder", {});
 </script>
 </body>

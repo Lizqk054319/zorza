@@ -9,12 +9,23 @@ URUCHAMIANIE
    - otworzy się okno launchera.
 3. Czarnego okienka konsoli nie zamykaj, dopóki używasz launchera.
 
-Dane launchera (gra, mody, ustawienia) są w:  %APPDATA%\ZorzaLauncher
-Każda wersja gry ma własny folder w  instances\<wersja>  (mody, paczki zasobów, shadery, światy).
+Dane launchera (gra, profile, ustawienia) są w:  %APPDATA%\ZorzaLauncher
+Każdy profil ma własny folder w  instances\<profil>  (mody, paczki zasobów, shadery, światy).
+Dane logowania (accounts.json) są zaszyfrowane przez Windows – da się je odczytać tylko
+na tym komputerze i tym koncie Windows. Hasła ani e-maila launcher w ogóle nie zna.
 
-WŁASNE TŁO
-----------
-Wrzuć obrazek jako  ui\assets\background.jpg  – launcher sam go użyje zamiast rysowanego tła.
+PROFILE
+-------
+Strzałka obok "Graj" -> lista profili, "Dodaj profil", "Edytuj profil", "Napraw instalację".
+- Stwórz własny profil: nazwa, wersja (od 1.20.1 wzwyż), Fabric albo Vanilla, RAM.
+- Dodaj gotowy profil: wklejasz kod ZORZA-... od znajomego (w edycji profilu: "Kopiuj kod profilu").
+- Przenieś z innego launchera: oficjalny launcher, Modrinth App, Prism/MultiMC, Lunar Client.
+  Pliki są kopiowane – w starym launcherze nic się nie zmienia.
+Usunięty profil trafia do folderu  usuniete  w folderze launchera (można go odzyskać).
+
+TŁO
+---
+Na ekranie startowym kliknij "Zmień tło" w prawym górnym rogu i wybierz obrazek z dysku.
 
 NAZWA LAUNCHERA
 ---------------
@@ -43,3 +54,15 @@ Każdy launcher musi mieć własny identyfikator aplikacji Microsoft (to darmowe
 
 Launcher nigdy nie widzi e-maila ani hasła – logujesz się na stronie Microsoftu.
 Na komputerze zapisuje tylko nick, UUID i token logowania (można wyłączyć w Ustawieniach).
+
+
+STATUS NA DISCORDZIE ("Zorza Client")
+-------------------------------------
+1. Wejdź na  https://discord.com/developers/applications  i kliknij "New Application".
+2. Nazwa:  Zorza Client   (ta nazwa pokazuje się na Discordzie jako "Gra").
+3. Na stronie aplikacji skopiuj "Application ID".
+4. Wejdź w "Rich Presence" -> "Art Assets" -> "Add Image(s)" i wgraj plik
+   ui\assets\zorza-logo.png  – nazwij go dokładnie:  logo
+5. W launcher.py wklej ID tutaj:   DISCORD_APP_ID = "tu-wklej-id"
+6. Uruchom Discorda na komputerze, potem launcher. Status widać w Ustawieniach.
+Przycisk "Pobierz Zorza Client" widzą inni – ty sam na swoim profilu go nie zobaczysz.
