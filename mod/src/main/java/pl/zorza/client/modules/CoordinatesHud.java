@@ -2,8 +2,7 @@ package pl.zorza.client.modules;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import pl.zorza.client.gui.R;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.HudModule;
 import pl.zorza.client.module.Setting;
@@ -15,7 +14,7 @@ public class CoordinatesHud extends HudModule {
         super("coordinates", "Coordinates", "Your X / Y / Z position.", Category.HUD, true, 0.01, 0.10);
     }
 
-    public ItemStack icon() { return new ItemStack(Items.COMPASS); }
+    public String icon() { return "m_coords"; }
 
     private String[] lines(MinecraftClient mc) {
         if (mc.player == null) return new String[]{"X: 0", "Y: 64", "Z: 0"};
@@ -29,7 +28,7 @@ public class CoordinatesHud extends HudModule {
 
     public int width(MinecraftClient mc) {
         int w = 0;
-        for (String s : lines(mc)) w = Math.max(w, mc.textRenderer.getWidth(s));
+        for (String s : lines(mc)) w = Math.max(w, (int) R.width(s, 9));
         return w + 12;
     }
 
@@ -38,7 +37,7 @@ public class CoordinatesHud extends HudModule {
     public void draw(DrawContext ctx, MinecraftClient mc, boolean editor) {
         int y = 4;
         for (String s : lines(mc)) {
-            ctx.drawText(mc.textRenderer, s, 6, y, textColor.value, shadow.value);
+            R.text(ctx, s, 6, y, 9, textColor.value);
             y += 10;
         }
     }

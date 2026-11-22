@@ -1,8 +1,6 @@
 package pl.zorza.client.modules;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import pl.zorza.client.ZorzaClient;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.Setting;
@@ -15,9 +13,9 @@ public class CpsHud extends TextHud {
         super("cps", "CPS", "Clicks per second.", Category.HUD, true, 0.01, 0.055);
     }
 
-    public ItemStack icon() { return new ItemStack(Items.STONE_BUTTON); }
+    public String icon() { return "m_cps"; }
 
     public String text(MinecraftClient mc) {
-        return right.value ? ZorzaClient.leftCps() + " | " + ZorzaClient.rightCps() + " CPS" : ZorzaClient.leftCps() + " CPS";
+        return right.value ? "CPS|" + ZorzaClient.leftCps() + " · " + ZorzaClient.rightCps() : "CPS|" + ZorzaClient.leftCps();
     }
 }

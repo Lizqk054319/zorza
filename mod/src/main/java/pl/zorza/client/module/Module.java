@@ -3,7 +3,6 @@ package pl.zorza.client.module;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
 import pl.zorza.client.Config;
 
 import java.util.ArrayList;
@@ -27,7 +26,8 @@ public abstract class Module {
         this.enabled = this.defEnabled = enabledByDefault;
     }
 
-    public abstract ItemStack icon();
+    /** Nazwa ikonki z textures/gui/icons (albo krótki tekst, np. "3x"). */
+    public abstract String icon();
 
     protected <T extends Setting> T add(T s) {
         settings.add(s);

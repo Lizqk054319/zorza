@@ -16,7 +16,6 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.zorza.client.gui.HudEditorScreen;
-import pl.zorza.client.gui.QuickMenuScreen;
 import pl.zorza.client.module.HudModule;
 import pl.zorza.client.module.Module;
 
@@ -77,7 +76,7 @@ public class ZorzaClient implements ClientModInitializer {
 
     private static void tick(MinecraftClient mc) {
         while (MENU_KEY.wasPressed()) {
-            if (mc.currentScreen == null) mc.setScreen(new QuickMenuScreen());
+            if (mc.currentScreen == null) mc.setScreen(new HudEditorScreen(true));
         }
         if (mc.player != null) {
             int ht = mc.player.hurtTime;

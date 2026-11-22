@@ -3,8 +3,6 @@ package pl.zorza.client.modules;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import pl.zorza.client.ZorzaClient;
 import pl.zorza.client.gui.R;
 import pl.zorza.client.module.Category;
@@ -22,7 +20,7 @@ public class KeystrokesHud extends HudModule {
         background.value = false;
     }
 
-    public ItemStack icon() { return new ItemStack(Items.OAK_BUTTON); }
+    public String icon() { return "m_keys"; }
 
     public int width(MinecraftClient mc) { return 70; }
 
@@ -36,7 +34,7 @@ public class KeystrokesHud extends HudModule {
         String[] parts = label.split("\n");
         int ty = y + h / 2 - parts.length * 5 + 1;
         for (String p : parts) {
-            ctx.drawText(mc.textRenderer, p, x + w / 2 - mc.textRenderer.getWidth(p) / 2, ty, col, shadow.value && !down);
+            R.text(ctx, p, x + w / 2 - (int) R.width(p, 9) / 2, ty, 9, col);
             ty += 9;
         }
     }

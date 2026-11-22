@@ -16,6 +16,7 @@ public final class Config {
     public static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("zorza.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static boolean favoritesOnly = false;
+    public static boolean compact = false;
 
     private Config() {}
 
@@ -24,6 +25,7 @@ public final class Config {
             if (!Files.exists(FILE)) return;
             JsonObject root = JsonParser.parseString(Files.readString(FILE)).getAsJsonObject();
             if (root.has("accent")) R.ACCENT = root.get("accent").getAsInt();
+            if (root.has("compact")) compact = root.get("compact").getAsBoolean();
             JsonObject mods = root.getAsJsonObject("modules");
             if (mods == null) return;
             for (Module m : Modules.ALL) {
@@ -38,6 +40,7 @@ public final class Config {
         try {
             JsonObject root = new JsonObject();
             root.addProperty("accent", R.ACCENT);
+            root.addProperty("compact", compact);
             JsonObject mods = new JsonObject();
             for (Module m : Modules.ALL) mods.add(m.id, m.write());
             root.add("modules", mods);

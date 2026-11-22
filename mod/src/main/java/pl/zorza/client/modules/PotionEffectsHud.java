@@ -4,8 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import pl.zorza.client.gui.R;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.HudModule;
 
@@ -17,7 +16,7 @@ public class PotionEffectsHud extends HudModule {
         super("potion_effects", "Potion Effects", "Active effects with time left.", Category.HUD, false, 0.01, 0.30);
     }
 
-    public ItemStack icon() { return new ItemStack(Items.POTION); }
+    public String icon() { return "m_potion"; }
 
     private List<String> lines(MinecraftClient mc) {
         List<String> out = new ArrayList<>();
@@ -35,7 +34,7 @@ public class PotionEffectsHud extends HudModule {
 
     public int width(MinecraftClient mc) {
         int w = 0;
-        for (String s : lines(mc)) w = Math.max(w, mc.textRenderer.getWidth(s));
+        for (String s : lines(mc)) w = Math.max(w, (int) R.width(s, 9));
         return w + 12;
     }
 
@@ -45,7 +44,7 @@ public class PotionEffectsHud extends HudModule {
         if (!editor && mc.player != null && mc.player.getStatusEffects().isEmpty()) return;
         int y = 4;
         for (String s : lines(mc)) {
-            ctx.drawText(mc.textRenderer, s, 6, y, textColor.value, shadow.value);
+            R.text(ctx, s, 6, y, 9, textColor.value);
             y += 10;
         }
     }

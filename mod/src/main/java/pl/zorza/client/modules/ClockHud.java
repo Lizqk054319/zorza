@@ -1,8 +1,6 @@
 package pl.zorza.client.modules;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.Setting;
 import pl.zorza.client.module.TextHud;
@@ -17,7 +15,7 @@ public class ClockHud extends TextHud {
         super("clock", "Clock", "Real-world time.", Category.HUD, false, 0.01, 0.20);
     }
 
-    public ItemStack icon() { return new ItemStack(Items.CLOCK); }
+    public String icon() { return "m_clock"; }
 
     public String text(MinecraftClient mc) {
         return LocalTime.now().format(DateTimeFormatter.ofPattern(h12.value ? "hh:mm a" : "HH:mm"));

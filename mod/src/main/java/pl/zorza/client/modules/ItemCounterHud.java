@@ -5,6 +5,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import pl.zorza.client.gui.R;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.HudModule;
 
@@ -17,7 +18,7 @@ public class ItemCounterHud extends HudModule {
         super("item_counter", "Item Counter", "Counts totems, gapples, pearls and more.", Category.HUD, false, 0.82, 0.92);
     }
 
-    public ItemStack icon() { return new ItemStack(Items.TOTEM_OF_UNDYING); }
+    public String icon() { return "m_items"; }
 
     public int width(MinecraftClient mc) { return ITEMS.length * 22 + 6; }
 
@@ -30,7 +31,7 @@ public class ItemCounterHud extends HudModule {
             if (it == Items.GOLDEN_APPLE && mc.player != null) n += mc.player.getInventory().count(Items.ENCHANTED_GOLDEN_APPLE);
             ctx.drawItem(new ItemStack(it), x, 3);
             String t = String.valueOf(n);
-            ctx.drawText(mc.textRenderer, t, x + 8 - mc.textRenderer.getWidth(t) / 2, 21, n > 0 ? textColor.value : 0xFF777777, shadow.value);
+            R.text(ctx, t, x + 8 - (int) R.width(t, 9) / 2, 21, 9, n > 0 ? textColor.value : 0xFF777777);
             x += 22;
         }
     }

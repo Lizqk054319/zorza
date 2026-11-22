@@ -1,8 +1,6 @@
 package pl.zorza.client.modules;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.Module;
 
@@ -12,7 +10,7 @@ public class ToggleSprint extends Module {
         super("toggle_sprint", "Toggle Sprint", "Press sprint once instead of holding it.", Category.UTILITY, false);
     }
 
-    public ItemStack icon() { return new ItemStack(Items.LEATHER_BOOTS); }
+    public String icon() { return "m_sprint"; }
 
     @Override
     public void onTick(MinecraftClient mc) {

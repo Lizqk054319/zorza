@@ -1,8 +1,6 @@
 package pl.zorza.client.modules;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.Module;
 import pl.zorza.client.module.Setting;
@@ -15,7 +13,7 @@ public class HurtCam extends Module {
         super("hurt_cam", "Hurt Cam", "Reduce or remove camera shake when hurt.", Category.COMBAT, false);
     }
 
-    public ItemStack icon() { return new ItemStack(Items.SPYGLASS); }
+    public String icon() { return "m_camera"; }
 
     @Override
     public void onTick(MinecraftClient mc) {

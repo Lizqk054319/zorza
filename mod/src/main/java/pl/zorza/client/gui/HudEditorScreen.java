@@ -1,8 +1,8 @@
 package pl.zorza.client.gui;
 
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screen.option.OptionsScreen;
+import net.minecraft.util.Util;
 import pl.zorza.client.Config;
 import pl.zorza.client.Modules;
 import pl.zorza.client.module.HudModule;
@@ -11,22 +11,20 @@ import pl.zorza.client.module.Module;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Edytor HUD-a: przeciągnij, przewiń żeby zmienić rozmiar, prawy przycisk resetuje. */
-public class HudEditorScreen extends Screen {
-    private HudModule drag;
+/**
+ * Prawy Shift: edytowalny HUD (przeciągnij / przewiń / prawy klik = reset)
+ * i na środku logo, "zorza settings" oraz cztery przyciski z ikonkami.
+ */
+public class HudEditorScreen extends ZScreen {
+    private final boolean showMenu;
+    private HudModule dragging;
     private double offX, offY;
-    private final long opened = System.currentTimeMillis();
+    private static final String[] ICONS = {"folder", "list", "sparkles", "gear"};
+    private static final String[] TIPS = {"Config folder", "Mods", "Theme", "Game settings"};
 
-    public HudEditorScreen() {
-        super(Text.literal("Zorza HUD"));
-    }
-
-    @Override
-    public boolean shouldPause() { return false; }
-
-    @Override
-    public void renderBackground(DrawContext ctx, int mx, int my, float delta) {
-        ctx.fill(0, 0, width, height, 0x30000000);
+    public HudEditorScreen(boolean showMenu) {
+        super("Zorza");
+        this.showMenu = showMenu;
     }
 
     private List<HudModule> huds() {
@@ -35,90 +33,135 @@ public class HudEditorScreen extends Screen {
         return out;
     }
 
-    private HudModule at(double mx, double my) {
+    private HudModule hudAt(double gx, double gy) {
         List<HudModule> l = huds();
         for (int i = l.size() - 1; i >= 0; i--) {
             int[] r = l.get(i).rect(client, width, height);
-            if (R.in(mx, my, r[0], r[1], r[2], r[3])) return l.get(i);
+            if (R.in(gx, gy, r[0] - 2, r[1] - 2, r[2] + 4, r[3] + 4)) return l.get(i);
         }
         return null;
     }
 
     @Override
-    public void render(DrawContext ctx, int mx, int my, float delta) {
-        super.render(ctx, mx, my, delta);
-        HudModule hover = drag != null ? drag : at(mx, my);
+    protected void renderGui(DrawContext ctx, int mx, int my, float delta) {
+        HudModule hov = dragging != null ? dragging : hudAt(mx, my);
         for (HudModule h : huds()) {
             h.render(ctx, client, true);
             int[] r = h.rect(client, width, height);
-            int col = h == hover ? R.ACCENT : 0x80FFFFFF;
-            ctx.fill(r[0] - 1, r[1] - 1, r[0] + r[2] + 1, r[1], col);
-            ctx.fill(r[0] - 1, r[1] + r[3], r[0] + r[2] + 1, r[1] + r[3] + 1, col);
-            ctx.fill(r[0] - 1, r[1], r[0], r[1] + r[3], col);
-            ctx.fill(r[0] + r[2], r[1], r[0] + r[2] + 1, r[1] + r[3], col);
-            if (h == hover) R.text(ctx, h.name, r[0], Math.max(0, r[1] - 10), 0xFFFFFFFF);
+            float t = hover("hud" + h.id, h == hov);
+            int col = R.alpha(R.mix(0x55FFFFFF, R.ACCENT, t), 0.5f + 0.5f * t);
+            ctx.fill(r[0] - 2, r[1] - 2, r[0] + r[2] + 2, r[1] - 1, col);
+            ctx.fill(r[0] - 2, r[1] + r[3] + 1, r[0] + r[2] + 2, r[1] + r[3] + 2, col);
+            ctx.fill(r[0] - 2, r[1] - 1, r[0] - 1, r[1] + r[3] + 1, col);
+            ctx.fill(r[0] + r[2] + 1, r[1] - 1, r[0] + r[2] + 2, r[1] + r[3] + 1, col);
         }
-        float a = R.ease(opened, 300);
-        String hint = "Drag to move  ·  Scroll to resize  ·  Right-click to reset";
-        int w = R.width(hint) + 24;
-        int y = (int) (6 - (1 - a) * 20);
-        R.round(ctx, width / 2 - w / 2, y, w, 18, 8, 0xE0101014);
-        R.centered(ctx, hint, width / 2, y + 5, 0xFFE6E6EA);
-        int bw = 90, bx = width / 2 - bw / 2, by = height - 34;
-        boolean bh = R.in(mx, my, bx, by, bw, 20);
-        R.round(ctx, bx, by, bw, 20, 5, bh ? R.mix(R.ACCENT, 0xFFFFFFFF, 0.15f) : R.ACCENT);
-        R.centered(ctx, "Mod Menu", width / 2, by + 6, 0xFFFFFFFF);
+    }
+
+    // układ menu na środku (jednostki projektu)
+    private int cx() { return W / 2; }
+
+    private int cy() { return H / 2 + 10; }
+
+    private int[] btn() { return new int[]{cx() - 130, cy() - 6, 260, 52}; }
+
+    private int[] ico(int i) { return new int[]{cx() - 2 * 54 - 27 + i * 72 - 9 + 9, cy() + 66, 54, 54}; }
+
+    @Override
+    protected void draw(DrawContext ctx, double mx, double my, float delta) {
+        float a = R.ease(opened, 450);
+        // podpowiedź na górze
+        String hint = "Drag to move   ·   Scroll to resize   ·   Right-click to reset";
+        int hw = (int) R.width(hint, 17, R.SEMI) + 56, hy = (int) (22 - (1 - a) * 30);
+        R.bordered(ctx, W / 2 - hw / 2, hy, hw, 46, 23, 1, R.alpha(0xF0101014, a), R.alpha(0x30FFFFFF, a));
+        R.text(ctx, hint, W / 2f - hw / 2f + 28, R.midY(hy, 46, 17), 17, R.alpha(0xFFE8E8EE, a), R.SEMI);
+
+        if (!showMenu) return;
+        int cx = cx(), cy = cy();
+        float s = 0.9f + 0.1f * a;
+        ctx.getMatrices().push();
+        ctx.getMatrices().translate(cx, cy + (1 - a) * 20, 0);
+        ctx.getMatrices().scale(s, s, 1);
+        ctx.getMatrices().translate(-cx, -cy, 0);
+
+        R.logo(ctx, cx - 52, cy - 134, 104, R.alpha(0xFFFFFFFF, a));
+        int[] b = btn();
+        float hb = hover("settings", R.in(mx, my, b[0], b[1], b[2], b[3]));
+        R.bordered(ctx, b[0], b[1], b[2], b[3], 12, 1, R.alpha(R.mix(0xF20C0C10, 0xF2202028, hb), a), R.alpha(0x26FFFFFF, a));
+        R.centered(ctx, "zorza settings", cx, R.midY(b[1], b[3], 20), 20, R.alpha(0xFFFFFFFF, a), R.SEMI);
+
+        for (int i = 0; i < 4; i++) {
+            int[] r = ico(i);
+            float ai = R.ease(opened + 80 + i * 45L, 380);
+            int yy = r[1] + (int) ((1 - ai) * 14);
+            boolean over = R.in(mx, my, r[0], r[1], r[2], r[3]);
+            float h = hover("ico" + i, over);
+            R.bordered(ctx, r[0], yy, r[2], r[3], 12, 1, R.alpha(R.mix(0xF20C0C10, 0xF2202028, h), ai), R.alpha(0x26FFFFFF, ai));
+            R.icon(ctx, ICONS[i], r[0] + 14, yy + 14, 26, R.alpha(0xFFFFFFFF, ai));
+            if (h > 0.05f) R.centered(ctx, TIPS[i], r[0] + 27, yy + 66, 14, R.alpha(0xFFD0D0D8, h), R.MEDIUM);
+        }
+        ctx.getMatrices().pop();
     }
 
     @Override
-    public boolean mouseClicked(double mx, double my, int button) {
-        int bw = 90, bx = width / 2 - bw / 2, by = height - 34;
-        if (R.in(mx, my, bx, by, bw, 20)) {
-            client.setScreen(new ModMenuScreen(null));
-            return true;
+    protected boolean click(double mx, double my, int button) {
+        if (showMenu) {
+            int[] b = btn();
+            if (R.in(mx, my, b[0], b[1], b[2], b[3])) {
+                client.setScreen(new ModMenuScreen(null));
+                return true;
+            }
+            for (int i = 0; i < 4; i++) {
+                int[] r = ico(i);
+                if (R.in(mx, my, r[0], r[1], r[2], r[3])) {
+                    switch (i) {
+                        case 0 -> Util.getOperatingSystem().open(Config.FILE.getParent().toFile());
+                        case 1 -> client.setScreen(new ModMenuScreen(null));
+                        case 2 -> client.setScreen(new ModMenuScreen(pl.zorza.client.modules.MenuSettings.INSTANCE));
+                        default -> client.setScreen(new OptionsScreen(this, client.options));
+                    }
+                    return true;
+                }
+            }
         }
-        HudModule h = at(mx, my);
-        if (h == null) return super.mouseClicked(mx, my, button);
+        double gx = toGui(mx), gy = toGui(my);
+        HudModule h = hudAt(gx, gy);
+        if (h == null) return false;
         if (button == 1) {
             h.resetPosition();
             Config.save();
         } else if (button == 0) {
             int[] r = h.rect(client, width, height);
-            drag = h;
-            offX = mx - r[0];
-            offY = my - r[1];
+            dragging = h;
+            offX = gx - r[0];
+            offY = gy - r[1];
         }
         return true;
     }
 
     @Override
-    public boolean mouseDragged(double mx, double my, int button, double dx, double dy) {
-        if (drag != null) {
-            drag.fx = Math.max(0, Math.min(1, (mx - offX) / width));
-            drag.fy = Math.max(0, Math.min(1, (my - offY) / height));
-            return true;
-        }
-        return super.mouseDragged(mx, my, button, dx, dy);
+    protected boolean drag(double mx, double my, int button) {
+        if (dragging == null) return false;
+        double gx = toGui(mx), gy = toGui(my);
+        dragging.fx = Math.max(0, Math.min(1, (gx - offX) / width));
+        dragging.fy = Math.max(0, Math.min(1, (gy - offY) / height));
+        return true;
     }
 
     @Override
-    public boolean mouseReleased(double mx, double my, int button) {
-        if (drag != null) {
-            drag = null;
-            Config.save();
-        }
-        return super.mouseReleased(mx, my, button);
+    protected boolean release(double mx, double my, int button) {
+        if (dragging == null) return false;
+        dragging = null;
+        Config.save();
+        return true;
     }
 
     @Override
-    public boolean mouseScrolled(double mx, double my, double h, double v) {
-        HudModule m = at(mx, my);
-        if (m != null) {
-            m.scale = Math.max(0.5, Math.min(3.0, Math.round((m.scale + v * 0.1) * 10) / 10.0));
-            Config.save();
-            return true;
-        }
-        return super.mouseScrolled(mx, my, h, v);
+    protected boolean scroll(double mx, double my, double v) {
+        HudModule m = hudAt(toGui(mx), toGui(my));
+        if (m == null) return false;
+        m.scale = Math.max(0.5, Math.min(3.0, Math.round((m.scale + v * 0.1) * 10) / 10.0));
+        Config.save();
+        return true;
     }
 
     @Override

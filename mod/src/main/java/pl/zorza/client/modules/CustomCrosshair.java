@@ -2,8 +2,6 @@ package pl.zorza.client.modules;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.Module;
 import pl.zorza.client.module.Setting;
@@ -20,7 +18,7 @@ public class CustomCrosshair extends Module {
         super("crosshair", "Crosshair", "Your own crosshair shape and color.", Category.UTILITY, false);
     }
 
-    public ItemStack icon() { return new ItemStack(Items.TARGET); }
+    public String icon() { return "m_crosshair"; }
 
     private void bar(DrawContext c, int x1, int y1, int x2, int y2) {
         if (outline.value) c.fill(x1 - 1, y1 - 1, x2 + 1, y2 + 1, 0xC0000000);

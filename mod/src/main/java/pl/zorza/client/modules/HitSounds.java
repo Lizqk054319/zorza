@@ -2,8 +2,6 @@ package pl.zorza.client.modules;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import pl.zorza.client.module.Category;
@@ -16,10 +14,10 @@ public class HitSounds extends Module {
     private final Setting.Num pitch = add(new Setting.Num("pitch", "Pitch", 1.0, 0.5, 2.0, 0.05));
 
     public HitSounds() {
-        super("hit_sounds", "Hit Sounds", "Plays a sound when you hit something.", Category.COMBAT, false);
+        super("hit_sounds", "Hit Sounds", "Plays a sound when you hit something.", Category.SOUND, false);
     }
 
-    public ItemStack icon() { return new ItemStack(Items.NOTE_BLOCK); }
+    public String icon() { return "m_sound"; }
 
     private SoundEvent event() {
         return switch ((int) sound.value) {

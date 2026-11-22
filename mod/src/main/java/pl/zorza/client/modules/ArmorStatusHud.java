@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import pl.zorza.client.gui.R;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.HudModule;
 import pl.zorza.client.module.Setting;
@@ -25,7 +26,7 @@ public class ArmorStatusHud extends HudModule {
         super("armor_status", "Armor Status", "Armor durability in percent.", Category.HUD, true, 0.01, 0.80);
     }
 
-    public ItemStack icon() { return new ItemStack(Items.DIAMOND_CHESTPLATE); }
+    public String icon() { return "m_armor"; }
 
     private List<ItemStack> items(MinecraftClient mc, boolean editor) {
         List<ItemStack> out = new ArrayList<>();
@@ -62,8 +63,8 @@ public class ArmorStatusHud extends HudModule {
                 int pct = (int) Math.round(100.0 * (s.getMaxDamage() - s.getDamage()) / s.getMaxDamage());
                 int col = pct > 60 ? 0xFF7CF0C8 : pct > 30 ? 0xFFF5D36B : 0xFFFF6B6B;
                 String t = pct + "%";
-                if (vertical.value) ctx.drawText(mc.textRenderer, t, x + 20, y + 4, col, shadow.value);
-                else ctx.drawText(mc.textRenderer, t, x + 8 - mc.textRenderer.getWidth(t) / 2, y + 19, col, shadow.value);
+                if (vertical.value) R.text(ctx, t, x + 20, y + 4, 9, col);
+                else R.text(ctx, t, x + 8 - (int) R.width(t, 9) / 2, y + 19, 9, col);
             }
             i++;
         }

@@ -1,8 +1,6 @@
 package pl.zorza.client.modules;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import pl.zorza.client.gui.R;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.Module;
@@ -19,7 +17,7 @@ public class MenuSettings extends Module {
         INSTANCE = this;
     }
 
-    public ItemStack icon() { return new ItemStack(Items.NETHER_STAR); }
+    public String icon() { return "m_palette"; }
 
     @Override
     public void onTick(MinecraftClient mc) { R.ACCENT = accent.value; }
