@@ -54,6 +54,9 @@ NOWOSCI = [
     "Wersje gry od 1.20.1",
 ]
 
+# slug z Modrinth -> id moda w fabric.mod.json (do wykrywania duplikatów)
+MOD_ID = {"ferrite-core": "ferritecore"}
+
 # Napis "Logowanie Microsoft będzie dostępne wkrótce" – zmień na False po zgodzie Mojanga
 MICROSOFT_WKROTCE = True
 
@@ -552,9 +555,41 @@ def scan_lunar():
     return {"id": "lunar", "name": "Lunar Client", "path": str(lroot), "profiles": out}
 
 
+def scan_ogulniega():
+    """Ogulniega: wspólny folder gry w .ogulniega/profile, a mody osobno dla każdej wersji
+    w profile/mods/<wersja>-<wariant> (np. 1.21.4-sodium)."""
+    root = APPDATA / ".ogulniega"
+    gd = root / "profile"
+    mods_root = gd / "mods"
+    if not mods_root.is_dir():
+        return None
+    out = []
+    for d in sorted(mods_root.iterdir(), key=lambda x: x.name, reverse=True):
+        if not d.is_dir():
+            continue
+        m = re.match(r"(\d+\.\d+(?:\.\d+)?)", d.name)
+        if not m:
+            continue
+        bundled = set()     # mody dokładane przez sam launcher Ogulniega – nie kopiujemy ich
+        info = load_json(root / "launcher" / f"{d.name}.json", {})
+        for mod in info.get("mods", []) if isinstance(info, dict) else []:
+            if isinstance(mod, dict) and mod.get("filename"):
+                bundled.add(mod["filename"])
+        try:
+            jars = [f.name for f in d.iterdir() if f.suffix == ".jar" and f.name not in bundled]
+        except OSError:
+            jars = []
+        variant = d.name[len(m.group(1)):].strip("-_ ") or "fabric"
+        out.append({"key": d.name, "name": f"Ogulniega {m.group(1)} ({variant})", "version": m.group(1),
+                    "loader": "fabric", "ram_mb": 4096, "path": str(gd), "mods_path": str(d),
+                    "skip_mods": sorted(bundled), "counts": {**dir_counts(gd), "mods": len(jars)},
+                    "options": (gd / "options.txt").exists()})
+    return {"id": "ogulniega", "name": "Ogulniega", "path": str(root), "profiles": out}
+
+
 def scan_launchers():
     """Każdy launcher sprawdzany osobno i równolegle – jeden wolny lub zepsuty nie blokuje reszty."""
-    fns = (scan_official, scan_modrinth, scan_prism, scan_lunar)
+    fns = (scan_official, scan_ogulniega, scan_modrinth, scan_prism, scan_lunar)
     results = [None] * len(fns)
 
     def run(i, fn):
@@ -607,7 +642,12 @@ def do_import_launcher(d):
     c = d.get("copy", {})
     task.update(status=f"Kopiowanie z: {launcher['name']}...", max=0)
     if c.get("mods"):
-        copy_tree(Path(src.get("mods_path") or gd / "mods"), dst / "mods")
+        msrc = Path(src.get("mods_path") or gd / "mods")
+        skip = set(src.get("skip_mods") or [])
+        if msrc.is_dir():
+            for f in msrc.iterdir():
+                if f.is_file() and f.suffix in (".jar", ".disabled") and f.name not in skip:
+                    shutil.copy2(f, dst / "mods" / f.name)
     if c.get("settings"):
         for f in ("options.txt", "optionsof.txt", "optionsshaders.txt"):
             copy_tree(gd / f, dst / f)
@@ -870,7 +910,7 @@ def jar_info(f):
                     authors = j.get("authors") or j.get("contributors") or []
                     if isinstance(authors, dict):
                         authors = list(authors)
-                    info = {"title": j.get("name"), "version": j.get("version"),
+                    info = {"id": j.get("id"), "title": j.get("name"), "version": j.get("version"),
                             "author": ", ".join(a["name"] if isinstance(a, dict) else str(a) for a in authors[:3]),
                             "icon": j.get("icon") if isinstance(j.get("icon"), str) else None}
                     break
@@ -906,7 +946,14 @@ def list_content(p, kind):
                       "enabled": enabled, "size": f.stat().st_size if f.is_file() else 0})
     if kind == "mods":   # wbudowane, których jeszcze nie pobrano
         have = set(builtin.values())
+        own_ids = set()
+        for f in folder.iterdir():
+            base = f.name[:-9] if f.name.endswith(".disabled") else f.name
+            if base.endswith(".jar") and base not in builtin:
+                own_ids.add(jar_info(f).get("id"))
         for slug, title in MODY_WBUDOWANE:
+            if MOD_ID.get(slug, slug) in own_ids:
+                continue
             if slug not in have and not any(m.get("slug") == slug for m in mr.values()):
                 items.append({"file": "", "name": title, "author": "", "version": "",
                               "icon": builtin_icons.get(slug), "source": "builtin", "pending": True,
@@ -1053,8 +1100,15 @@ def ensure_builtins(p):
             for name in (m["file"], m["file"] + ".disabled"):
                 (d / name).unlink(missing_ok=True)
             bi.pop(slug)
+    # mody, które gracz już ma (np. po imporcie) – żeby nie wgrać drugiej kopii, bo gra by się wysypała
+    builtin_files = {m["file"] for m in bi.values()}
+    have_ids = set()
+    for f in d.iterdir():
+        base = f.name[:-9] if f.name.endswith(".disabled") else f.name
+        if base.endswith(".jar") and base not in builtin_files:
+            have_ids.add(jar_info(f).get("id"))
     for i, (slug, title) in enumerate(MODY_WBUDOWANE):
-        if slug in user_slugs:
+        if slug in user_slugs or MOD_ID.get(slug, slug) in have_ids:
             continue
         m = bi.get(slug)
         if m and ((d / m["file"]).exists() or (d / (m["file"] + ".disabled")).exists()):
