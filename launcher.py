@@ -42,10 +42,11 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.4.0"
+WERSJA_CLIENTA = "0.4.1"
 
 # Co nowego – pokazuje się na ekranie startowym w karcie "Nowość"
 NOWOSCI = [
+    "Import profili z launchera Ogulniega",
     "Mod Zorza Client w grze: prawy Shift otwiera menu (1.21.4)",
     "Mod Menu z modułami: Armor Status, Keystrokes, CPS, Zoom i inne",
     "Edytor HUD: przeciągnij, przewiń, prawy przycisk resetuje",
@@ -1781,6 +1782,13 @@ class Handler(BaseHTTPRequestHandler):
                 if settings["skin"] == d["file"]:
                     settings["skin"] = "startowy.png"
                     save_settings()
+            elif path == "/api/quit":
+                # nowa wersja launchera prosi starą o zamknięcie (gdy gra nie działa)
+                if game_running() or task["running"]:
+                    return self.send(409, {"error": "busy"})
+                self.send(200, {"ok": True})
+                threading.Timer(0.3, lambda: os._exit(0)).start()
+                return
             elif path == "/api/clear_error":
                 task["error"] = ""
                 task["done"] = ""
@@ -1829,9 +1837,26 @@ def main():
     try:
         server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
     except OSError:
-        print("Launcher już działa – otwieram okno.")
-        open_window()
-        return
+        # Działa inna (np. starsza) kopia launchera – poproś ją o zamknięcie i wystartuj tę.
+        server = None
+        try:
+            r = requests.post(f"http://127.0.0.1:{PORT}/api/quit", json={}, timeout=3,
+                              headers={"Origin": f"http://127.0.0.1:{PORT}"})
+            if r.status_code == 200:
+                for _ in range(30):
+                    time.sleep(0.2)
+                    try:
+                        server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+                        break
+                    except OSError:
+                        pass
+        except Exception:
+            pass
+        if server is None:
+            print("Launcher już działa (albo trwa gra/pobieranie) – otwieram jego okno.")
+            print("Jeśli to stara wersja: zamknij wszystkie czarne okna launchera i uruchom ponownie.")
+            open_window()
+            return
     log(f"{NAZWA_LAUNCHERA} Launcher – dane w {DATA_DIR}")
     threading.Thread(target=get_versions, daemon=True).start()
     threading.Thread(target=watchdog, daemon=True).start()
