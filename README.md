@@ -1,6 +1,6 @@
 # Zorza Launcher
 
-A small, free and non-commercial launcher for **Minecraft: Java Edition**, made as a hobby project for me and my friends.
+A small, free and non-commercial launcher for **Minecraft: Java Edition**, made as a hobby project for me, my friends and the players of my Minecraft server community.
 
 ## Features
 
