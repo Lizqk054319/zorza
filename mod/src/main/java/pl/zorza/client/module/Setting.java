@@ -3,6 +3,9 @@ package pl.zorza.client.module;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 public abstract class Setting {
     public final String id;
     public final String name;
@@ -74,6 +77,40 @@ public abstract class Setting {
         public JsonElement toJson() { return new JsonPrimitive(value); }
 
         public void fromJson(JsonElement e) { value = e.getAsInt(); }
+
+        public void reset() { value = def; }
+    }
+
+    /** Wybór z listy (np. dźwięk) – lista może się zmieniać, np. pliki z folderu. */
+    public static class Choice extends Setting {
+        public String value;
+        private final String def;
+        private final Supplier<List<String>> options;
+
+        public Choice(String id, String name, String def, Supplier<List<String>> options) {
+            super(id, name);
+            this.value = this.def = def;
+            this.options = options;
+        }
+
+        public List<String> options() { return options.get(); }
+
+        public void cycle(int dir) {
+            List<String> o = options();
+            if (o.isEmpty()) return;
+            int i = o.indexOf(value);
+            value = o.get(Math.floorMod((i < 0 ? 0 : i) + dir, o.size()));
+        }
+
+        public JsonElement toJson() { return new JsonPrimitive(value); }
+
+        public void fromJson(JsonElement e) {
+            if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber()) {   // stare ustawienie: numer dźwięku
+                List<String> o = options();
+                int i = e.getAsInt() - 1;
+                value = i >= 0 && i < o.size() ? o.get(i) : def;
+            } else value = e.getAsString();
+        }
 
         public void reset() { value = def; }
     }

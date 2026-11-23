@@ -16,7 +16,9 @@ import io
 import json
 import os
 import re
+import random
 import shutil
+import socket
 import sqlite3
 import struct
 import subprocess
@@ -44,28 +46,27 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.5.2"
+WERSJA_CLIENTA = "0.6.0"
 
-# Co nowego – pokazuje się na ekranie startowym w karcie "Nowość"
-NOWOSCI = [
-    "Instalacja z Modrinth: wybierasz profil i wersję",
-    "Nowa nazwa: Zora Client",
-    "Konta: postać śledzi kursor i macha, własne tło",
-    "Własne tło zakładki Modrinth",
-    "Płynniejsze przewijanie i poprawiony ekran startowy",
-    "Brakujące mody (np. Architectury, Cloth Config) dobierane automatycznie",
-    "Aktualizacje modów: Zorza pyta, czy zaktualizować stare mody",
-    "Import profili z launchera Ogulniega",
-    "Mod Zora Client w grze: prawy Shift otwiera menu (1.21.4)",
-    "Mod Menu z modułami: Armor Status, Keystrokes, CPS, Zoom i inne",
-    "Edytor HUD: przeciągnij, przewiń, prawy przycisk resetuje",
-    "Graj przez oficjalny launcher – z modami i ustawieniami Zorzy",
-    "Płynne animacje i nowy ekran startowy",
-    "Wersje gry od 1.20.1",
+# Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
+NOWOSCI_WERSJE = [
+    ("0.6.0", [
+        "Serwery: dodaj IP, zobacz opis i graczy, graj z automatycznym połączeniem",
+        "Więcej modów wbudowanych (AppleSkin, ModernFix, More Culling, Simple Voice Chat i inne)",
+        "Launcher sam sprawdza aktualizacje modów po uruchomieniu",
+        "Skiny: wyszukiwanie skinów graczy po nicku",
+        "W grze: własne dźwięki dla Hit Sounds i nowy moduł Kill Sounds",
+    ]),
+    ("0.5.2", [
+        "Instalacja z Modrinth: wybierasz profil i wersję",
+        "Nowa nazwa: Zora Client",
+    ]),
 ]
+NOWOSCI = [x for _, items in NOWOSCI_WERSJE[:2] for x in items]
 
 # slug z Modrinth -> id moda w fabric.mod.json (do wykrywania duplikatów)
-MOD_ID = {"ferrite-core": "ferritecore"}
+MOD_ID = {"ferrite-core": "ferritecore", "ebe": "enhancedblockentities", "simple-voice-chat": "voicechat",
+          "zfastnoise": "fastnoise"}
 
 # Napis "Logowanie Microsoft będzie dostępne wkrótce" – zmień na False po zgodzie Mojanga
 MICROSOFT_WKROTCE = True
@@ -80,11 +81,30 @@ MODY_WBUDOWANE = [
     ("fabric-api", "Fabric API"),
     ("sodium", "Sodium"),
     ("sodium-extra", "Sodium Extra"),
+    ("reeses-sodium-options", "Reese's Sodium Options"),
     ("lithium", "Lithium"),
     ("ferrite-core", "FerriteCore"),
     ("entityculling", "Entity Culling"),
+    ("moreculling", "More Culling"),
     ("immediatelyfast", "ImmediatelyFast"),
+    ("modernfix", "ModernFix"),
+    ("badoptimizations", "BadOptimizations"),
+    ("ebe", "Enhanced Block Entities"),
+    ("threadtweak", "ThreadTweak"),
+    ("zconfig", "ZConfig"),
+    ("zfastnoise", "Fast Noise"),
+    ("cloth-config", "Cloth Config API"),
+    ("appleskin", "AppleSkin"),
+    ("simple-voice-chat", "Simple Voice Chat"),
 ]
+# id projektów na Modrinth (do rozpoznawania, że gracz ma u siebie mod, który jest wbudowany)
+MODY_WBUDOWANE_ID = {
+    "fabric-api": "P7dR8mSH", "sodium": "AANobbMI", "sodium-extra": "PtjYWJkn", "reeses-sodium-options": "Bh37bMuy",
+    "lithium": "gvQqBUqZ", "ferrite-core": "uXXizFIs", "entityculling": "NNAgCjsB", "moreculling": "51shyZVL",
+    "immediatelyfast": "5ZwdcRci", "modernfix": "nmDcB62a", "badoptimizations": "g96Z4WVZ", "ebe": "OVuFYfre",
+    "threadtweak": "vSEH1ERy", "zconfig": "4qmvXRB9", "cloth-config": "9s6osm5g", "appleskin": "EsAfCjCV",
+    "simple-voice-chat": "9eGKb6K1",
+}
 
 # Logowanie Microsoft – NIE ZMIENIAJ (zatwierdzane przez Mojang dla tego ID)
 AZURE_CLIENT_ID = "6553e03b-b905-4f30-a877-535ed1c3a975"
@@ -1145,7 +1165,10 @@ def modrinth_search(q, kind, cat, sort, p, offset):
     data = r.json()
     meta = load_json(meta_path(p), {}).get("modrinth", {})
     d = profile_dir(p)
+    bi = load_json(meta_path(p), {}).get("builtin", {})
+    bi_ids = {MODY_WBUDOWANE_ID.get(sl) for sl in bi}
     for h in data.get("hits", []):
+        h["builtin"] = h["project_id"] in bi_ids or h.get("slug") in bi
         m = meta.get(h["project_id"])
         h["installed"] = bool(m and ((d / m["folder"] / m["file"]).exists()
                                      or (d / m["folder"] / (m["file"] + ".disabled")).exists()))
@@ -1169,6 +1192,12 @@ def modrinth_install(project_id, kind, p, _seen=None, version_id=None):
     seen.add(project_id)
     if kind == "mods" and p.get("loader") == "vanilla":
         raise RuntimeError("Ten profil jest bez modów (Vanilla). Wybierz profil z Fabric.")
+    if kind == "mods":
+        bi = load_json(meta_path(p), {}).get("builtin", {})
+        if project_id in bi or project_id in {MODY_WBUDOWANE_ID.get(sl) for sl in bi}:
+            if _seen is not None and len(seen) > 1:
+                return                    # zależność, która już jest wbudowana
+            raise RuntimeError("Ten mod jest już wbudowany w Zora Client.")
     versions = modrinth_versions(project_id, kind, p)
     if not versions:
         raise RuntimeError(f"Brak wersji tego projektu dla Minecraft {p['version']}.")
@@ -1252,63 +1281,137 @@ def ensure_zorza_mod(p):
         log(f"Nie udało się pobrać moda Zora Client: {e}")
 
 
-def check_mods(p):
-    """Sprawdza mody gracza na Modrinth: nieaktualne, na inną wersję gry albo bez wersji na tę grę."""
+def builtin_dups(p):
+    """Mody gracza, które są też wbudowane: {plik: (slug, nazwa)}."""
     d = profile_dir(p) / "mods"
-    deps_out = []
+    meta = load_json(meta_path(p), {})
+    bi = meta.get("builtin", {})
+    builtin_files = {m["file"] for m in bi.values()}
+    want = {}
+    for slug, title in MODY_WBUDOWANE:
+        want[MOD_ID.get(slug, slug)] = (slug, title)
+        if bi.get(slug, {}).get("mod_id"):
+            want[bi[slug]["mod_id"]] = (slug, title)
+    out = {}
+    if not d.is_dir():
+        return out
+    for f in d.iterdir():
+        base = f.name[:-9] if f.name.endswith(".disabled") else f.name
+        if f.is_file() and base.endswith(".jar") and base not in builtin_files and base != "zorza-client.jar":
+            mid = jar_info(f).get("id")
+            if mid in want:
+                out[f.name] = want[mid]
+    return out
+
+
+def sha1_file(f):
+    return hashlib.sha1(f.read_bytes()).hexdigest()
+
+
+def check_mods(p, auto=False):
+    """Sprawdza mody gracza: duplikaty wbudowanych, brakujące zależności, nieaktualne,
+    na inną wersję gry albo bez wersji na tę grę. auto=True pomija to, na co gracz już odpowiedział "Nie"."""
+    d = profile_dir(p) / "mods"
+    if not d.is_dir():
+        return []
+    meta = load_json(meta_path(p), {})
+    dismissed = set(meta.get("dismissed", []))
+    good = meta.get("updated", {})           # sha1 pliku -> id wersji, na którą gracz już zaktualizował
+    out_first = []
+    dups = builtin_dups(p)
+    for fname, (slug, title) in dups.items():
+        info = jar_info(d / fname)
+        out_first.append({"kind": "builtin_dup", "file": fname, "name": info.get("title") or title,
+                          "icon": builtin_icons.get(slug), "game": p["version"], "slug": slug})
     for dep, who in missing_deps(p).items():
         found = resolve_dep(dep, p["version"])
-        deps_out.append({"kind": "missing", "dep": dep, "name": found[1] if found else dep,
-                         "slug": found[0] if found else None, "required_by": who, "game": p["version"],
-                         "file": "", "icon": None})
-    meta = load_json(meta_path(p), {})
-    skip = {m["file"] for m in meta.get("builtin", {}).values()} | {"zorza-client.jar"}
+        out_first.append({"kind": "missing", "dep": dep, "name": found[1] if found else dep,
+                          "slug": found[0] if found else None, "required_by": who, "game": p["version"],
+                          "file": "", "icon": None})
+    skip = {m["file"] for m in meta.get("builtin", {}).values()} | {"zorza-client.jar"} | set(dups)
     files = {}
     for f in d.iterdir():
         base = f.name[:-9] if f.name.endswith(".disabled") else f.name
-        if f.is_file() and base.endswith(".jar") and base not in skip:
-            files[hashlib.sha1(f.read_bytes()).hexdigest()] = f
-    if not files:
-        return deps_out
-    hashes = list(files)
-    r = requests.post(f"{MODRINTH}/version_files", json={"hashes": hashes, "algorithm": "sha1"},
-                      headers=UA, timeout=20)
-    r.raise_for_status()
-    current = r.json()
-    known = [h for h in hashes if h in current]
-    if not known:
-        return deps_out
-    r = requests.post(f"{MODRINTH}/version_files/update", headers=UA, timeout=20,
-                      json={"hashes": known, "algorithm": "sha1", "loaders": ["fabric"],
-                            "game_versions": [p["version"]]})
-    r.raise_for_status()
-    updates = r.json()
-    ids = list({current[h]["project_id"] for h in known})
-    titles = {}
-    try:
-        pr = requests.get(f"{MODRINTH}/projects", params={"ids": json.dumps(ids)}, headers=UA, timeout=20)
-        for x in pr.json():
-            titles[x["id"]] = {"title": x.get("title"), "icon": x.get("icon_url")}
-    except Exception:
-        pass
+        if f.is_file() and base.endswith(".jar") and base not in skip and f.name not in skip:
+            files[sha1_file(f)] = f
     out = []
-    for h in known:
-        cur, upd, f = current[h], updates.get(h), files[h]
-        info = titles.get(cur["project_id"], {})
-        item = {"file": f.name, "name": info.get("title") or jar_info(f).get("title") or f.name,
-                "icon": info.get("icon"), "current": cur.get("version_number"),
-                "current_games": cur.get("game_versions", [])[-3:], "game": p["version"],
-                "enabled": not f.name.endswith(".disabled")}
-        fits = p["version"] in cur.get("game_versions", [])
-        if fits:
-            if upd and upd["id"] != cur["id"]:
-                out.append({**item, "kind": "outdated", "new": upd.get("version_number"), "version_id": upd["id"]})
-        elif upd:
-            out.append({**item, "kind": "wrong_version", "new": upd.get("version_number"), "version_id": upd["id"]})
-        elif item["enabled"]:
-            out.append({**item, "kind": "no_version"})
+    if files:
+        hashes = list(files)
+        r = requests.post(f"{MODRINTH}/version_files", json={"hashes": hashes, "algorithm": "sha1"},
+                          headers=UA, timeout=20)
+        r.raise_for_status()
+        current = r.json()
+        known = [h for h in hashes if h in current]
+        if known:
+            r = requests.post(f"{MODRINTH}/version_files/update", headers=UA, timeout=20,
+                              json={"hashes": known, "algorithm": "sha1", "loaders": ["fabric"],
+                                    "game_versions": [p["version"]]})
+            r.raise_for_status()
+            updates = r.json()
+            ids = list({current[h]["project_id"] for h in known})
+            titles = {}
+            try:
+                pr = requests.get(f"{MODRINTH}/projects", params={"ids": json.dumps(ids)}, headers=UA, timeout=20)
+                for x in pr.json():
+                    titles[x["id"]] = {"title": x.get("title"), "icon": x.get("icon_url")}
+            except Exception:
+                pass
+            for h in known:
+                cur, upd, f = current[h], updates.get(h), files[h]
+                info = titles.get(cur["project_id"], {})
+                item = {"file": f.name, "name": info.get("title") or jar_info(f).get("title") or f.name,
+                        "icon": info.get("icon"), "current": cur.get("version_number"),
+                        "current_games": cur.get("game_versions", [])[-3:], "game": p["version"],
+                        "enabled": not f.name.endswith(".disabled")}
+                # ten sam plik co najnowsza wersja albo gracz już na nią zaktualizował -> wszystko OK
+                same_file = bool(upd) and any(x.get("hashes", {}).get("sha1") == h for x in upd.get("files", []))
+                if same_file or (upd and good.get(h) == upd["id"]):
+                    continue
+                fits = p["version"] in cur.get("game_versions", []) or h in good
+                if fits:
+                    if upd and upd["id"] != cur["id"]:
+                        out.append({**item, "kind": "outdated", "new": upd.get("version_number"), "version_id": upd["id"]})
+                elif upd:
+                    out.append({**item, "kind": "wrong_version", "new": upd.get("version_number"), "version_id": upd["id"]})
+                elif item["enabled"]:
+                    out.append({**item, "kind": "no_version"})
     order = {"outdated": 0, "wrong_version": 1, "no_version": 2}
-    return deps_out + sorted(out, key=lambda x: (order[x["kind"]], x["name"].lower()))
+    res = out_first + sorted(out, key=lambda x: (order[x["kind"]], x["name"].lower()))
+    for it in res:
+        it["key"] = f"{it['kind']}|{it.get('file') or it.get('dep')}|{it.get('version_id', '')}"
+    if auto:
+        res = [it for it in res if it["key"] not in dismissed]
+    return res
+
+
+def dismiss_issues(p, keys):
+    meta = load_json(meta_path(p), {})
+    have = meta.setdefault("dismissed", [])
+    for k in keys:
+        if k not in have:
+            have.append(k)
+    meta["dismissed"] = have[-300:]
+    save_json(meta_path(p), meta)
+
+
+def do_remove_dups(p, files):
+    """Usuwa z modów gracza kopie modów wbudowanych i wgrywa wersje wbudowane (ustawienia w config/ zostają)."""
+    d = profile_dir(p) / "mods"
+    meta = load_json(meta_path(p), {})
+    for name in files:
+        try:
+            f = safe_child(d, name)
+            if f.exists():
+                f.unlink()
+                log(f"Usunięto {name} – ten mod jest wbudowany.")
+            base = name[:-9] if name.endswith(".disabled") else name
+            for pid in [k for k, m in meta.get("modrinth", {}).items() if m.get("file") == base]:
+                meta["modrinth"].pop(pid)
+        except Exception as e:
+            log(f"Nie udało się usunąć {name}: {e}")
+    save_json(meta_path(p), meta)
+    ensure_builtins(p)
+    task["done"] = f"Usunięto zdublowane mody: {len(files)}. Używasz teraz wersji wbudowanych."
 
 
 def do_update_mods(p, items):
@@ -1332,6 +1435,7 @@ def do_update_mods(p, items):
             if old.exists() and old != dest:
                 old.unlink()
             tmp.replace(dest)
+            meta.setdefault("updated", {})[sha1_file(dest)] = it["version_id"]
             for pid, m in meta.get("modrinth", {}).items():
                 if m.get("file") == (old.name[:-9] if disabled else old.name):
                     m["file"], m["version"] = f["filename"], v.get("version_number")
@@ -1343,29 +1447,43 @@ def do_update_mods(p, items):
     task["done"] = f"Zaktualizowano mody: {done}"
 
 
+def _download_builtin(d, slug, title, v):
+    f = next((x for x in v["files"] if x.get("primary")), v["files"][0])
+    dest = safe_child(d, f["filename"])
+    tmp = d / (f["filename"] + ".pobieranie")
+    with requests.get(f["url"], headers=UA, stream=True, timeout=60) as resp:
+        resp.raise_for_status()
+        with open(tmp, "wb") as out:
+            shutil.copyfileobj(resp.raw, out)
+    tmp.replace(dest)
+    return f["filename"], jar_info(dest).get("id")
+
+
 def ensure_builtins(p):
-    """Pobiera brakujące mody wbudowane dla wersji profilu. Wyłączonych (.disabled) nie rusza."""
+    """Pobiera brakujące mody wbudowane dla wersji profilu i raz na 12 h je aktualizuje.
+    Wyłączonych (.disabled) nie rusza. Jeśli gracz ma własną kopię takiego moda, wbudowana czeka,
+    aż gracz zgodzi się usunąć swoją (inaczej gra by się wysypała przez duplikat)."""
     d = profile_dir(p) / "mods"
+    d.mkdir(parents=True, exist_ok=True)
     meta = load_json(meta_path(p), {})
     bi = meta.setdefault("builtin", {})
-    user_slugs = {m.get("slug") for m in meta.get("modrinth", {}).values()}
-    for slug, m in list(bi.items()):          # zmieniono wersję profilu – usuń stare pliki
-        if m.get("game_version") != p["version"]:
+    for slug, m in list(bi.items()):          # zmieniono wersję profilu albo mod wypadł z listy – usuń stare pliki
+        if m.get("game_version") != p["version"] or slug not in dict(MODY_WBUDOWANE):
             for name in (m["file"], m["file"] + ".disabled"):
                 (d / name).unlink(missing_ok=True)
             bi.pop(slug)
-    # mody, które gracz już ma (np. po imporcie) – żeby nie wgrać drugiej kopii, bo gra by się wysypała
-    builtin_files = {m["file"] for m in bi.values()}
-    have_ids = set()
-    for f in d.iterdir():
-        base = f.name[:-9] if f.name.endswith(".disabled") else f.name
-        if base.endswith(".jar") and base not in builtin_files:
-            have_ids.add(jar_info(f).get("id"))
+    dup_slugs = {slug for slug, _ in builtin_dups(p).values()}
+    now = int(time.time())
     for i, (slug, title) in enumerate(MODY_WBUDOWANE):
-        if slug in user_slugs or MOD_ID.get(slug, slug) in have_ids:
-            continue
         m = bi.get(slug)
-        if m and ((d / m["file"]).exists() or (d / (m["file"] + ".disabled")).exists()):
+        present = m and ((d / m["file"]).exists() or (d / (m["file"] + ".disabled")).exists())
+        if slug in dup_slugs:
+            if present:                        # gracz ma swoją kopię – usuń wbudowaną, żeby nie było dwóch
+                for name in (m["file"], m["file"] + ".disabled"):
+                    (d / name).unlink(missing_ok=True)
+                bi.pop(slug, None)
+            continue
+        if present and now - m.get("checked", 0) < 12 * 3600:
             continue
         task.update(status=f"Mody wbudowane: {title}...", max=len(MODY_WBUDOWANE), progress=i)
         try:
@@ -1373,22 +1491,32 @@ def ensure_builtins(p):
                              params={"game_versions": json.dumps([p["version"]]),
                                      "loaders": json.dumps(["fabric"])})
             r.raise_for_status()
-            vs = r.json()
+            vs = [v for v in r.json() if v.get("version_type") == "release"] or r.json()
             if not vs:
                 continue      # brak wersji tego moda dla tej wersji gry
             v = vs[0]
-            f = next((x for x in v["files"] if x.get("primary")), v["files"][0])
-            dest = safe_child(d, f["filename"])
-            with requests.get(f["url"], headers=UA, stream=True, timeout=60) as resp:
-                resp.raise_for_status()
-                with open(dest, "wb") as out:
-                    shutil.copyfileobj(resp.raw, out)
-            bi[slug] = {"file": f["filename"], "title": title, "version": v.get("version_number"),
-                        "game_version": p["version"]}
+            if present and m.get("version_id") == v["id"]:
+                m["checked"] = now
+                continue
+            disabled = present and (d / (m["file"] + ".disabled")).exists()
+            fname, mod_id = _download_builtin(d, slug, title, v)
+            if present and m["file"] != fname:
+                for name in (m["file"], m["file"] + ".disabled"):
+                    (d / name).unlink(missing_ok=True)
+            if disabled:
+                (d / fname).replace(d / (fname + ".disabled"))
+            bi[slug] = {"file": fname, "title": title, "version": v.get("version_number"), "version_id": v["id"],
+                        "game_version": p["version"], "mod_id": mod_id, "checked": now}
             save_json(meta_path(p), meta)
-            log(f"Mod wbudowany: {f['filename']}")
+            log(f"Mod wbudowany: {fname}")
         except Exception as e:
             log(f"Nie udało się pobrać moda wbudowanego {title}: {e}")
+    # bezpiecznik: gdyby gracz miał kopię moda o tym samym id, zostaje tylko jego wersja
+    for slug in {sl for sl, _ in builtin_dups(p).values()} - dup_slugs:
+        m = bi.pop(slug, None)
+        if m:
+            for name in (m["file"], m["file"] + ".disabled"):
+                (d / name).unlink(missing_ok=True)
     save_json(meta_path(p), meta)
 
 
@@ -1498,6 +1626,278 @@ def do_apply_skin(fname):
 # ---------------------------------------------------------------------------
 #  Skiny (do postaci 3D na stronie startowej)
 # ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+#  Serwery – lista, sprawdzanie (Server List Ping) i automatyczne łączenie w grze
+# ---------------------------------------------------------------------------
+
+SERVERS_FILE = DATA_DIR / "serwery.json"
+servers = load_json(SERVERS_FILE, [])
+RE_HOST = re.compile(r"^[A-Za-z0-9.\-_]{1,253}(:\d{1,5})?$|^\[[0-9a-fA-F:]+\](:\d{1,5})?$")
+MC_COLORS = {"0": "#000000", "1": "#0000AA", "2": "#00AA00", "3": "#00AAAA", "4": "#AA0000", "5": "#AA00AA",
+             "6": "#FFAA00", "7": "#AAAAAA", "8": "#555555", "9": "#5555FF", "a": "#55FF55", "b": "#55FFFF",
+             "c": "#FF5555", "d": "#FF55FF", "e": "#FFFF55", "f": "#FFFFFF"}
+MC_NAMED = {"black": "0", "dark_blue": "1", "dark_green": "2", "dark_aqua": "3", "dark_red": "4",
+            "dark_purple": "5", "gold": "6", "gray": "7", "dark_gray": "8", "blue": "9", "green": "a",
+            "aqua": "b", "red": "c", "light_purple": "d", "yellow": "e", "white": "f"}
+
+
+def save_servers():
+    save_json(SERVERS_FILE, servers)
+
+
+def _dns_name(buf, i):
+    labels, jumped, end = [], False, None
+    for _ in range(64):
+        n = buf[i]
+        if n == 0:
+            i += 1
+            break
+        if n & 0xC0 == 0xC0:
+            if not jumped:
+                end = i + 2
+            i, jumped = ((n & 0x3F) << 8) | buf[i + 1], True
+            continue
+        labels.append(buf[i + 1:i + 1 + n].decode("ascii", "replace"))
+        i += 1 + n
+    return ".".join(labels), (end if jumped else i)
+
+
+def srv_lookup(host):
+    """Rekord SRV _minecraft._tcp (wiele serwerów go używa). Zwraca (host, port) albo None."""
+    import struct
+    qid = random.randint(0, 65535)
+    q = struct.pack(">HHHHHH", qid, 0x0100, 1, 0, 0, 0)
+    for part in f"_minecraft._tcp.{host}".split("."):
+        q += bytes([len(part)]) + part.encode("ascii", "ignore")
+    q += b"\x00" + struct.pack(">HH", 33, 1)
+    for dns in ("1.1.1.1", "8.8.8.8"):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sk:
+                sk.settimeout(2)
+                sk.sendto(q, (dns, 53))
+                buf = sk.recv(4096)
+            if struct.unpack(">H", buf[:2])[0] != qid:
+                continue
+            an = struct.unpack(">H", buf[6:8])[0]
+            _, i = _dns_name(buf, 12)
+            i += 4
+            best = None
+            for _ in range(an):
+                _, i = _dns_name(buf, i)
+                typ, _, _, rdlen = struct.unpack(">HHIH", buf[i:i + 10])
+                i += 10
+                if typ == 33:
+                    prio, _, port = struct.unpack(">HHH", buf[i:i + 6])
+                    target, _ = _dns_name(buf, i + 6)
+                    if best is None or prio < best[0]:
+                        best = (prio, target.rstrip("."), port)
+                i += rdlen
+            return (best[1], best[2]) if best else None
+        except Exception:
+            continue
+    return None
+
+
+def split_address(address):
+    address = address.strip()
+    if address.startswith("["):
+        host, _, rest = address[1:].partition("]")
+        return host, int(rest[1:]) if rest.startswith(":") else None
+    if address.count(":") == 1:
+        host, port = address.split(":")
+        return host, int(port)
+    return address, None
+
+
+def motd_lines(desc):
+    """Opis serwera (tekst z § albo komponent JSON) -> linie z kawałkami {t, c, b, i, u, s}."""
+    segs = []
+
+    def legacy(text, style):
+        st = dict(style)
+        parts = re.split(r"([§&][0-9a-fk-orA-FK-OR])", text) if "§" in text else [text]
+        for part in parts:
+            if len(part) == 2 and part[0] == "§":
+                k = part[1].lower()
+                if k in MC_COLORS:
+                    st = {"c": MC_COLORS[k]}
+                elif k == "l": st["b"] = True
+                elif k == "o": st["i"] = True
+                elif k == "n": st["u"] = True
+                elif k == "m": st["s"] = True
+                elif k == "r": st = {}
+            elif part:
+                segs.append({"t": part, **st})
+
+    def walk(c, style):
+        if isinstance(c, str):
+            return legacy(c, style)
+        if isinstance(c, list):
+            for x in c:
+                walk(x, style)
+            return
+        if not isinstance(c, dict):
+            return
+        st = dict(style)
+        col = c.get("color")
+        if isinstance(col, str):
+            st["c"] = MC_COLORS.get(MC_NAMED.get(col, ""), col if col.startswith("#") else st.get("c"))
+        for key, k in (("bold", "b"), ("italic", "i"), ("underlined", "u"), ("strikethrough", "s")):
+            if key in c:
+                st[k] = bool(c[key])
+        legacy(str(c.get("text", c.get("translate", ""))), st)
+        for x in c.get("extra", []) or []:
+            walk(x, st)
+
+    walk(desc, {})
+    lines = [[]]
+    for sg in segs:
+        pieces = sg["t"].split("\n")
+        for j, piece in enumerate(pieces):
+            if j:
+                lines.append([])
+            if piece:
+                lines[-1].append({**sg, "t": piece})
+    return [ln for ln in lines][:2]
+
+
+def _varint(n):
+    out = b""
+    n &= 0xFFFFFFFF
+    while True:
+        b = n & 0x7F
+        n >>= 7
+        out += bytes([b | (0x80 if n else 0)])
+        if not n:
+            return out
+
+
+def _read_varint(sk):
+    n = shift = 0
+    for _ in range(5):
+        b = sk.recv(1)
+        if not b:
+            raise ConnectionError("Serwer zamknął połączenie.")
+        n |= (b[0] & 0x7F) << shift
+        if not b[0] & 0x80:
+            return n
+        shift += 7
+    raise ValueError("Zła odpowiedź serwera.")
+
+
+def _recv_exact(sk, n):
+    buf = b""
+    while len(buf) < n:
+        chunk = sk.recv(n - len(buf))
+        if not chunk:
+            raise ConnectionError("Serwer zamknął połączenie.")
+        buf += chunk
+    return buf
+
+
+def mc_ping(address):
+    """Sprawdza serwer Minecraft tak jak lista serwerów w grze."""
+    import struct
+    if not RE_HOST.match(address.strip()):
+        raise ValueError("To nie wygląda na adres serwera (np. anarchia.gg albo 123.45.67.89:25565).")
+    host, port = split_address(address)
+    conn_host, conn_port = host, port or 25565
+    if port is None and not re.match(r"^\d+\.\d+\.\d+\.\d+$", host):
+        srv = srv_lookup(host)
+        if srv:
+            conn_host, conn_port = srv
+    t0 = time.time()
+    with socket.create_connection((conn_host, conn_port), timeout=5) as sk:
+        sk.settimeout(5)
+        hb = host.encode("utf-8")
+        data = _varint(0) + _varint(769) + _varint(len(hb)) + hb + struct.pack(">H", conn_port) + _varint(1)
+        sk.sendall(_varint(len(data)) + data + b"\x01\x00")
+        _read_varint(sk)
+        if _read_varint(sk) != 0:
+            raise ValueError("Zła odpowiedź serwera.")
+        ln = _read_varint(sk)
+        if ln > 2_000_000:
+            raise ValueError("Zła odpowiedź serwera.")
+        st = json.loads(_recv_exact(sk, ln).decode("utf-8", "replace"))
+        ping = int((time.time() - t0) * 1000)
+        try:
+            t1 = time.time()
+            sk.sendall(_varint(9) + b"\x01" + struct.pack(">q", 1))
+            _read_varint(sk)
+            ping = max(1, int((time.time() - t1) * 1000))
+        except Exception:
+            pass
+    pl = st.get("players") or {}
+    fav = st.get("favicon") if isinstance(st.get("favicon"), str) and st["favicon"].startswith("data:image/png;base64,") else None
+    ver = st.get("version") or {}
+    return {"online": True, "motd": motd_lines(st.get("description", "")), "players": int(pl.get("online", 0) or 0),
+            "max": int(pl.get("max", 0) or 0), "version": str(ver.get("name", ""))[:60],
+            "favicon": fav, "ping": ping}
+
+
+def server_status(address):
+    try:
+        return mc_ping(address)
+    except ValueError as e:
+        return {"online": False, "error": str(e)}
+    except Exception:
+        return {"online": False, "error": "Serwer nie odpowiada (jest wyłączony albo adres jest zły)."}
+
+
+def write_autojoin(p, srv, status):
+    """Plik dla moda Zora Client: po uruchomieniu gry zapyta, czy połączyć z serwerem."""
+    f = profile_dir(p) / "config" / "zorza" / "autojoin.json"
+    f.parent.mkdir(parents=True, exist_ok=True)
+    save_json(f, {"address": srv["address"], "name": srv.get("name") or srv["address"],
+                  "motd": status.get("motd", []), "players": status.get("players"), "max": status.get("max"),
+                  "favicon": status.get("favicon"), "created": int(time.time() * 1000)})
+
+
+def do_play_server(sid, mode, pid):
+    srv = next((x for x in servers if x["id"] == sid), None)
+    if not srv:
+        raise RuntimeError("Nie ma takiego serwera.")
+    p = get_profile(pid)
+    task.update(status=f"Sprawdzanie serwera {srv['address']}...", max=0)
+    write_autojoin(p, srv, server_status(srv["address"]))
+    srv["profile"], srv["last"] = p["id"], int(time.time())
+    save_servers()
+    if mode == "microsoft":
+        do_play(p["id"])
+    else:
+        do_play_official(p["id"])
+
+
+# ---------------------------------------------------------------------------
+#  Skiny graczy po nicku
+# ---------------------------------------------------------------------------
+
+def skin_by_nick(nick):
+    nick = nick.strip()
+    if not re.match(r"^[A-Za-z0-9_]{1,16}$", nick):
+        raise ValueError("Nick może mieć tylko litery, cyfry i _ (maks. 16 znaków).")
+    r = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{nick}", headers=UA, timeout=10)
+    if r.status_code in (204, 404) or not r.content:
+        raise ValueError(f"Nie ma gracza o nicku {nick}.")
+    r.raise_for_status()
+    prof = r.json()
+    r = requests.get(f"https://sessionserver.mojang.com/session/minecraft/profile/{prof['id']}", headers=UA, timeout=10)
+    r.raise_for_status()
+    tex = {}
+    for prop in r.json().get("properties", []):
+        if prop.get("name") == "textures":
+            tex = json.loads(base64.b64decode(prop["value"])).get("textures", {})
+    skin = tex.get("SKIN")
+    if not skin or not str(skin.get("url", "")).startswith("http://textures.minecraft.net/"):
+        raise ValueError(f"Gracz {prof['name']} ma domyślny skin.")
+    data = requests.get(skin["url"].replace("http://", "https://", 1), headers=UA, timeout=15).content
+    if png_size(data) not in ((64, 64), (64, 32)):
+        raise ValueError("Nie udało się pobrać skina.")
+    model = "slim" if (skin.get("metadata") or {}).get("model") == "slim" else "classic"
+    return {"name": prof["name"], "model": model, "data": base64.b64encode(data).decode()}
+
+
 
 def skin_for(uuid_):
     """Zwraca (bajty PNG, model 'slim'/'classic') – z pamięci podręcznej albo od Mojanga."""
@@ -1723,6 +2123,7 @@ def state_json():
         "discord_invite": DISCORD_INVITE,
         "builtin_names": [t for _, t in MODY_WBUDOWANE],
         "microsoft_soon": MICROSOFT_WKROTCE,
+        "zorza_mod_versions": sorted(ZORZA_MOD),
         "lang": settings["lang"],
         "accent": settings["accent"],
         "log_days": settings["log_days"],
@@ -1798,6 +2199,15 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(200, {"lines": lines, "next": log_counter})
             if u.path == "/api/content":
                 return self.send(200, list_content(get_profile(q.get("profile")), q["kind"]))
+            if u.path == "/api/servers":
+                return self.send(200, {"servers": servers})
+            if u.path == "/api/servers/status":
+                return self.send(200, server_status(q.get("address", "")))
+            if u.path == "/api/skins/lookup":
+                try:
+                    return self.send(200, skin_by_nick(q.get("nick", "")))
+                except ValueError as e:
+                    return self.send(400, {"error": str(e)})
             if u.path == "/api/modrinth/versions":
                 p = get_profile(q.get("profile"))
                 kind = q.get("kind", "mods")
@@ -1918,7 +2328,46 @@ class Handler(BaseHTTPRequestHandler):
                 if not run_task(do_play_official, d.get("id") or settings["active_profile"]):
                     return self.send(400, busy)
             elif path == "/api/mods/check":
-                return self.send(200, {"issues": check_mods(get_profile(d.get("profile")))})
+                return self.send(200, {"issues": check_mods(get_profile(d.get("profile")), bool(d.get("auto")))})
+            elif path == "/api/mods/dismiss":
+                dismiss_issues(get_profile(d.get("profile")), [str(k) for k in d.get("keys", [])][:200])
+            elif path == "/api/mods/remove_dups":
+                if not run_task(do_remove_dups, get_profile(d.get("profile")), [str(x) for x in d.get("files", [])]):
+                    return self.send(400, busy)
+            # --- serwery
+            elif path in ("/api/servers/add", "/api/servers/edit"):
+                addr = str(d.get("address", "")).strip()
+                if not RE_HOST.match(addr):
+                    return self.send(400, {"error": "To nie wygląda na adres serwera (np. anarchia.gg albo 123.45.67.89:25565)."})
+                name = str(d.get("name") or "").strip()[:40] or addr
+                if path.endswith("add"):
+                    if any(x["address"].lower() == addr.lower() for x in servers):
+                        return self.send(400, {"error": "Ten serwer jest już na liście."})
+                    servers.append({"id": uuid.uuid4().hex[:10], "name": name, "address": addr, "added": int(time.time())})
+                else:
+                    srv = next((x for x in servers if x["id"] == d.get("id")), None)
+                    if not srv:
+                        return self.send(404, {"error": "Nie ma takiego serwera."})
+                    srv.update(name=name, address=addr)
+                save_servers()
+            elif path == "/api/servers/delete":
+                servers[:] = [x for x in servers if x["id"] != d.get("id")]
+                save_servers()
+            elif path == "/api/servers/move":
+                ids = [str(x) for x in d.get("ids", [])]
+                servers.sort(key=lambda x: ids.index(x["id"]) if x["id"] in ids else 999)
+                save_servers()
+            elif path == "/api/servers/play":
+                if d.get("mode") == "microsoft" and (MICROSOFT_WKROTCE or not accounts):
+                    return self.send(400, {"error": "Logowanie przez Microsoft nie jest jeszcze dostępne – użyj oficjalnego launchera."})
+                if not run_task(do_play_server, d.get("id"), d.get("mode"), d.get("profile") or settings["active_profile"]):
+                    return self.send(400, busy)
+            elif path == "/api/skins/add_nick":
+                try:
+                    sk = skin_by_nick(str(d.get("nick", "")))
+                except ValueError as e:
+                    return self.send(400, {"error": str(e)})
+                return self.send(200, {"file": skin_add(sk["name"], base64.b64decode(sk["data"]), sk["model"])})
             elif path == "/api/mods/install_deps":
                 def _inst(pp, slugs):
                     for i, sl in enumerate(slugs):

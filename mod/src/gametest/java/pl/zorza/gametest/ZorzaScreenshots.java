@@ -48,7 +48,21 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             context.runOnClient(client -> client.setScreen(new ModMenuScreen(null)));
             context.waitTicks(30);
             context.takeScreenshot("07-mod-menu-big");
+            context.runOnClient(client -> client.setScreen(new ModMenuScreen(Modules.KILL_SOUNDS)));
+            context.waitTicks(30);
+            context.takeScreenshot("08-kill-sounds");
             context.runOnClient(client -> client.setScreen(null));
         }
+        // okno "Połączyć z serwerem?" (dane jak z launchera)
+        context.runOnClient(client -> {
+            java.util.List<net.minecraft.text.Text> motd = java.util.List.of(
+                    net.minecraft.text.Text.literal("ANARCHIA.GG ").formatted(net.minecraft.util.Formatting.WHITE, net.minecraft.util.Formatting.BOLD)
+                            .append(net.minecraft.text.Text.literal("» WBIJAJ NA DC.ANARCHIA.GG").formatted(net.minecraft.util.Formatting.YELLOW)),
+                    net.minecraft.text.Text.literal("NAPÓJ ANARCHIA JUŻ DOSTĘPNY W ŻABKACH").formatted(net.minecraft.util.Formatting.GREEN));
+            client.setScreen(new pl.zorza.client.gui.AutoJoinScreen(new net.minecraft.client.gui.screen.TitleScreen(),
+                    new pl.zorza.client.AutoJoin.Data("anarchia.gg", "anarchia.gg", motd, 17316, 17317, null)));
+        });
+        context.waitTicks(40);
+        context.takeScreenshot("09-autojoin");
     }
 }

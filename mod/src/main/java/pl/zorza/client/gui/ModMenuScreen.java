@@ -302,6 +302,7 @@ public class ModMenuScreen extends ZScreen {
             if (s instanceof Setting.Bool bo) rowToggle(ctx, mx, my, x, ry, w, bo.name, bo.value, a, i);
             else if (s instanceof Setting.Num n) rowSlider(ctx, x, ry, w, n, a, i);
             else if (s instanceof Setting.Color c) rowColor(ctx, x, ry, w, c, a, i);
+            else if (s instanceof Setting.Choice ch) rowChoice(ctx, mx, my, x, ry, w, ch, a, i);
             ry += ROW;
             i++;
         }
@@ -312,6 +313,10 @@ public class ModMenuScreen extends ZScreen {
 
     private List<String> actions(Module m) {
         List<String> l = new ArrayList<>(List.of("Reset settings"));
+        if (m instanceof pl.zorza.client.modules.SoundModule) {
+            l.add("Test sound");
+            l.add("Open sounds folder");
+        }
         if (m instanceof HudModule) {
             l.add("Reset position");
             l.add("Edit HUD");
@@ -354,6 +359,23 @@ public class ModMenuScreen extends ZScreen {
         int fill = (int) (sw * (n.value - n.min) / (n.max - n.min));
         R.round(ctx, sx, cy - 3, Math.max(6, fill), 6, 3, R.ACCENT);
         R.round(ctx, sx + fill - 10, cy - 10, 20, 20, 10, 0xFFFFFFFF);
+    }
+
+    private static final int CHOICE_W = 340;
+
+    private void rowChoice(DrawContext ctx, double mx, double my, int x, int y, int w, Setting.Choice c, float a, int i) {
+        rowBase(ctx, x, y, w, c.name, a, i);
+        int bx = x + w - 24 - CHOICE_W, by = y + (ROW - 10 - 40) / 2;
+        R.round(ctx, bx, by, CHOICE_W, 40, 10, 0xFF22222A);
+        float hl = hover("chl" + c.id, R.in(mx, my, bx, by, 40, 40)), hr = hover("chr" + c.id, R.in(mx, my, bx + CHOICE_W - 40, by, 40, 40));
+        R.round(ctx, bx, by, 40, 40, 10, R.mix(0xFF2A2A33, R.ACCENT, hl * 0.6f));
+        R.round(ctx, bx + CHOICE_W - 40, by, 40, 40, 10, R.mix(0xFF2A2A33, R.ACCENT, hr * 0.6f));
+        R.centered(ctx, "<", bx + 20, R.midY(by, 40, 16), 16, 0xFFFFFFFF, R.BOLD);
+        R.centered(ctx, ">", bx + CHOICE_W - 20, R.midY(by, 40, 16), 16, 0xFFFFFFFF, R.BOLD);
+        String v = c.value;
+        while (v.length() > 4 && R.width(v, 15, R.SEMI) > CHOICE_W - 100) v = v.substring(0, v.length() - 2);
+        if (!v.equals(c.value)) v = v + "…";
+        R.centered(ctx, v, bx + CHOICE_W / 2f, R.midY(by, 40, 15), 15, 0xFFFFFFFF, R.SEMI);
     }
 
     private int swatchX(int x, int w) { return x + w - 24 - Setting.Color.PALETTE.length * 38 + 8; }
@@ -482,6 +504,11 @@ public class ModMenuScreen extends ZScreen {
                     dragX = sliderX(x, w);
                     dragW = 380;
                     slide(mx);
+                } else if (s instanceof Setting.Choice ch) {
+                    int bx = x + w - 24 - CHOICE_W;
+                    if (mx < bx) return true;
+                    ch.cycle(mx < bx + CHOICE_W / 2.0 ? -1 : 1);
+                    if (m instanceof pl.zorza.client.modules.SoundModule sm) sm.preview();
                 } else if (s instanceof Setting.Color c) {
                     int sx = swatchX(x, w), idx = (int) Math.floor((mx - sx + 4) / 38);
                     if (idx >= 0 && idx < Setting.Color.PALETTE.length) c.value = Setting.Color.PALETTE[idx];
@@ -500,6 +527,8 @@ public class ModMenuScreen extends ZScreen {
                 switch (label) {
                     case "Reset settings" -> m.resetSettings();
                     case "Reset position" -> ((HudModule) m).resetPosition();
+                    case "Test sound" -> ((pl.zorza.client.modules.SoundModule) m).preview();
+                    case "Open sounds folder" -> pl.zorza.client.CustomSounds.openFolder();
                     default -> client.setScreen(new HudEditorScreen(false));
                 }
                 Config.save();

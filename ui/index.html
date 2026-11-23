@@ -161,7 +161,7 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
 .note{color:var(--muted);font-size:15px;margin-top:auto;padding-top:22px;border-top:1px solid #ffffff12}
 
 /* konsola */
-#log{margin-top:24px;background:#0c0c0e;border:1px solid #ffffff12;border-radius:16px;padding:18px;height:calc(100vh - 230px);overflow:auto;font:13px/1.55 Consolas,"Cascadia Mono",monospace;color:#c9d1d9;white-space:pre-wrap;user-select:text}
+#log{display:block;width:100%;resize:none;outline:0;margin-top:24px;background:#0c0c0e;border:1px solid #ffffff12;border-radius:16px;padding:18px;height:calc(100vh - 230px);overflow:auto;font:13px/1.55 Consolas,"Cascadia Mono",monospace;color:#c9d1d9;white-space:pre-wrap;user-select:text}
 
 /* ustawienia */
 .set{background:var(--card);border-radius:20px;padding:26px;margin-top:20px;max-width:820px}
@@ -409,6 +409,32 @@ body.boot #home .logo,body.logohide #home .logo{visibility:hidden}
 .ihead .ic img{width:100%;height:100%;object-fit:cover}
 .ihead b{display:block;font-size:18px}.ihead span{color:#9a9aa6;font-size:14px}
 select.inp:disabled{opacity:.6}
+
+.srvadd{display:flex;gap:12px;margin-top:24px;max-width:860px}
+.srvadd .inp{flex:1;height:58px}
+#srvPreview{margin-top:18px;max-width:1100px}
+#srvList{margin-top:26px;display:flex;flex-direction:column;gap:12px;max-width:1100px}
+.srv{display:flex;align-items:center;gap:18px;background:#141417;border:1px solid #ffffff12;border-radius:18px;padding:16px 18px}
+.srvrow .srv:hover{background:#18181c;border-color:#ffffff1f}
+.srv .fav{width:72px;height:72px;border-radius:12px;background:#1f1f24;display:grid;place-items:center;flex:none;overflow:hidden;color:var(--blue)}
+.srv .fav img{width:100%;height:100%;image-rendering:pixelated}
+.srv .mid{flex:1;min-width:0}
+.srv .top{display:flex;align-items:center;gap:12px}
+.srv .top b{font-size:19px;white-space:nowrap}
+.srv .addr{color:var(--muted);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srv .pl{color:#d8d8de;font-size:16px;font-variant-numeric:tabular-nums;white-space:nowrap}.srv .pl em{color:var(--muted);font-style:normal;margin:0 2px}
+.srv .err{color:#ff6b6b}
+.srv .motd{margin-top:6px;font-size:15.5px;line-height:1.45;color:#aaa;white-space:pre;overflow:hidden;text-overflow:ellipsis}
+.srv .acts{display:flex;gap:10px;align-items:center;flex:none}
+.srv .acts .btn{height:48px;padding:0 20px;font-size:16px}
+.srv.down .fav{opacity:.55}
+.bars{display:inline-flex;align-items:flex-end;gap:2px;height:17px}
+.bars i{width:4px;background:#3a3a42;border-radius:1px}.bars i.on{background:#3ddc6e}.bars.off i{background:#5a2a2a}
+.skres{display:flex;align-items:center;gap:16px;margin-top:14px;max-width:640px;background:#141417;border:1px solid #ffffff12;border-radius:16px;padding:12px 14px}
+.skres .ic{width:48px;height:72px;display:grid;place-items:center}
+.skres .ic canvas{width:36px;height:72px;image-rendering:pixelated}
+.skres b{display:block;font-size:18px}.skres span{color:var(--muted);font-size:14px}
+.opt:disabled{opacity:.5;cursor:default}
 </style>
 </head>
 <body class="boot logohide">
@@ -434,6 +460,7 @@ select.inp:disabled{opacity:.6}
   <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-move" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 13h7M13 10l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></symbol>
   <symbol id="i-img" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M21 16l-5-5-9 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </svg>
@@ -590,7 +617,7 @@ select.inp:disabled{opacity:.6}
   <section class="page" id="console">
     <div class="wrap">
       <div class="head"><h2>Konsola</h2><div class="grow"></div><button class="btn" id="copyLog">Skopiuj logi</button><button class="btn" id="clearLog">Wyczyść</button></div>
-      <div id="log"></div>
+      <textarea id="log" readonly spellcheck="false"></textarea>
     </div>
   </section>
 
@@ -643,7 +670,15 @@ select.inp:disabled{opacity:.6}
     </div>
   </section>
 
-  <section class="page hero" id="servers"><div class="wrap"><h2 style="font-size:52px">Serwery</h2><div class="sub">Ta zakładka będzie dostępna wkrótce.</div></div></section>
+  <section class="page" id="servers">
+    <div class="wrap">
+      <div class="head"><h2>Serwery</h2><div class="grow"></div><button class="btn" id="srvRefresh">Odśwież</button></div>
+      <div class="sub">Wpisz adres serwera, sprawdź go i dodaj do listy. Graj – a gra sama zaproponuje połączenie.</div>
+      <div class="srvadd"><input class="inp" id="srvIp" maxlength="80" spellcheck="false" placeholder="Adres serwera, np. anarchia.gg"><button class="btn primary" id="srvCheck">Sprawdź</button></div>
+      <div id="srvPreview"></div>
+      <div id="srvList"></div>
+    </div>
+  </section>
   <section class="page" id="skins">
     <div class="skwrap">
       <div class="skprev">
@@ -655,6 +690,8 @@ select.inp:disabled{opacity:.6}
       <div class="sklist">
         <div class="head"><h2>Skiny</h2></div>
         <div class="sub" style="color:var(--muted)">Wgraj plik skina (PNG 64×64), wybierz go i kliknij Zastosuj.</div>
+        <div class="srvadd" style="max-width:640px"><input class="inp" id="skNick" maxlength="16" spellcheck="false" placeholder="Szukaj skina po nicku gracza"><button class="btn" id="skFind">Szukaj</button></div>
+        <div id="skFound"></div>
         <div class="skgrid" id="skGrid"></div>
       </div>
     </div>
@@ -1034,6 +1071,52 @@ Potrzebne biblioteki pobiorą się same.|Required libraries will be downloaded a
 Instaluję {0} do profilu {1}.|Installing {0} into profile {1}.|{0} wird in Profil {1} installiert.|Встановлюю {0} у профіль {1}.|Instalando {0} en el perfil {1}.
 Instalacja z Modrinth: wybierasz profil i wersję|Modrinth installs: choose the profile and version|Modrinth-Installation: Profil und Version wählbar|Встановлення з Modrinth: вибір профілю й версії|Instalar desde Modrinth: eliges perfil y versión
 Ten profil jest bez modów (Vanilla). Wybierz profil z Fabric.|This profile has no mods (Vanilla). Choose a Fabric profile.|Dieses Profil ist ohne Mods (Vanilla). Wähle ein Fabric-Profil.|Цей профіль без модів (Vanilla). Обери профіль з Fabric.|Este perfil no tiene mods (Vanilla). Elige un perfil con Fabric.
+Edytuj|Edit|Bearbeiten|Редагувати|Editar
+Dodaj|Add|Hinzufügen|Додати|Añadir
+Anuluj|Cancel|Abbrechen|Скасувати|Cancelar
+Zapisano.|Saved.|Gespeichert.|Збережено.|Guardado.
+Nazwa|Name|Name|Назва|Nombre
+Sprawdź|Check|Prüfen|Перевірити|Comprobar
+Odśwież|Refresh|Aktualisieren|Оновити|Actualizar
+Wpisz adres serwera, sprawdź go i dodaj do listy. Graj – a gra sama zaproponuje połączenie.|Type a server address, check it and add it to the list. Hit Play and the game will offer to connect.|Gib eine Serveradresse ein, prüfe sie und füge sie hinzu. Klick auf Spielen – das Spiel bietet die Verbindung an.|Введи адресу сервера, перевір її та додай до списку. Натисни «Грати» – гра сама запропонує підключитися.|Escribe la dirección de un servidor, compruébala y añádela. Pulsa Jugar y el juego te ofrecerá conectarte.
+Adres serwera, np. anarchia.gg|Server address, e.g. anarchia.gg|Serveradresse, z. B. anarchia.gg|Адреса сервера, напр. anarchia.gg|Dirección del servidor, p. ej. anarchia.gg
+Sprawdzanie...|Checking...|Wird geprüft...|Перевірка...|Comprobando...
+Offline|Offline|Offline|Офлайн|Sin conexión
+Nie masz jeszcze serwerów|You have no servers yet|Du hast noch keine Server|У тебе ще немає серверів|Aún no tienes servidores
+Wpisz adres serwera wyżej i kliknij Sprawdź.|Type a server address above and click Check.|Gib oben eine Serveradresse ein und klicke auf Prüfen.|Введи адресу сервера вище й натисни «Перевірити».|Escribe arriba la dirección del servidor y pulsa Comprobar.
+Dodano serwer.|Server added.|Server hinzugefügt.|Сервер додано.|Servidor añadido.
+Edytuj serwer|Edit server|Server bearbeiten|Редагувати сервер|Editar servidor
+Adres IP|IP address|IP-Adresse|IP-адреса|Dirección IP
+Gra jest już uruchomiona albo trwa pobieranie.|The game is already running or a download is in progress.|Das Spiel läuft bereits oder ein Download läuft.|Гра вже запущена або триває завантаження.|El juego ya está abierto o hay una descarga en curso.
+Po uruchomieniu gra zapyta, czy połączyć cię z serwerem {0}.|When the game starts, it will ask whether to connect you to {0}.|Nach dem Start fragt das Spiel, ob du mit {0} verbunden werden willst.|Після запуску гра запитає, чи підключити тебе до {0}.|Al iniciarse, el juego te preguntará si quieres conectarte a {0}.
+Logowanie przez Microsoft|Sign in with Microsoft|Mit Microsoft anmelden|Вхід через Microsoft|Iniciar sesión con Microsoft
+Gra startuje prosto z Zora Client.|The game starts straight from Zora Client.|Das Spiel startet direkt aus Zora Client.|Гра запускається прямо із Zora Client.|El juego se inicia directamente desde Zora Client.
+Przez oficjalny launcher|Through the official launcher|Über den offiziellen Launcher|Через офіційний лаунчер|Con el launcher oficial
+Klikasz Graj w oficjalnym launcherze, a gra zapyta o serwer.|Click Play in the official launcher and the game will ask about the server.|Klicke im offiziellen Launcher auf Spielen – das Spiel fragt nach dem Server.|Натисни «Грати» в офіційному лаунчері, і гра запитає про сервер.|Pulsa Jugar en el launcher oficial y el juego te preguntará por el servidor.
+Automatyczne łączenie działa w profilach z Fabric na wersji {0}.|Auto-connect works in Fabric profiles on version {0}.|Automatisches Verbinden funktioniert in Fabric-Profilen mit Version {0}.|Автопідключення працює в профілях Fabric на версії {0}.|La conexión automática funciona en perfiles Fabric con la versión {0}.
+To nie wygląda na adres serwera (np. anarchia.gg albo 123.45.67.89:25565).|That doesn't look like a server address (e.g. anarchia.gg or 123.45.67.89:25565).|Das sieht nicht wie eine Serveradresse aus (z. B. anarchia.gg oder 123.45.67.89:25565).|Це не схоже на адресу сервера (напр. anarchia.gg або 123.45.67.89:25565).|Eso no parece la dirección de un servidor (p. ej. anarchia.gg o 123.45.67.89:25565).
+Serwer nie odpowiada (jest wyłączony albo adres jest zły).|The server isn't responding (it's offline or the address is wrong).|Der Server antwortet nicht (offline oder falsche Adresse).|Сервер не відповідає (вимкнений або неправильна адреса).|El servidor no responde (está apagado o la dirección es incorrecta).
+Ten serwer jest już na liście.|This server is already on the list.|Dieser Server ist schon in der Liste.|Цей сервер уже є в списку.|Este servidor ya está en la lista.
+Nie ma takiego serwera.|No such server.|Diesen Server gibt es nicht.|Такого сервера немає.|Ese servidor no existe.
+Logowanie przez Microsoft nie jest jeszcze dostępne – użyj oficjalnego launchera.|Microsoft sign-in isn't available yet – use the official launcher.|Die Microsoft-Anmeldung ist noch nicht verfügbar – nutze den offiziellen Launcher.|Вхід через Microsoft ще недоступний – скористайся офіційним лаунчером.|El inicio de sesión con Microsoft aún no está disponible: usa el launcher oficial.
+Sprawdzanie serwera {0}...|Checking server {0}...|Server {0} wird geprüft...|Перевірка сервера {0}...|Comprobando el servidor {0}...
+Szukaj skina po nicku gracza|Search for a skin by player name|Skin per Spielername suchen|Шукати скін за ніком гравця|Buscar skin por nombre de jugador
+Szukaj|Search|Suchen|Шукати|Buscar
+Nick może mieć tylko litery, cyfry i _ (maks. 16 znaków).|A name can only have letters, digits and _ (max 16 characters).|Ein Name darf nur Buchstaben, Ziffern und _ enthalten (max. 16 Zeichen).|Нік може містити лише літери, цифри та _ (до 16 символів).|El nombre solo puede tener letras, números y _ (máx. 16 caracteres).
+Nie ma gracza o nicku {0}.|There's no player named {0}.|Es gibt keinen Spieler namens {0}.|Немає гравця з ніком {0}.|No hay ningún jugador llamado {0}.
+Gracz {0} ma domyślny skin.|{0} uses a default skin.|{0} nutzt einen Standard-Skin.|Гравець {0} має стандартний скін.|{0} usa una skin predeterminada.
+Nie udało się pobrać skina.|Couldn't download the skin.|Skin konnte nicht geladen werden.|Не вдалося завантажити скін.|No se pudo descargar la skin.
+Wbudowany|Built-in|Integriert|Вбудований|Integrado
+Ten mod jest już wbudowany w Zora Client. Czy chcesz usunąć go ze swoich modów?|This mod is already built into Zora Client. Do you want to remove it from your mods?|Dieser Mod ist bereits in Zora Client integriert. Willst du ihn aus deinen Mods entfernen?|Цей мод уже вбудований у Zora Client. Видалити його з твоїх модів?|Este mod ya viene integrado en Zora Client. ¿Quieres quitarlo de tus mods?
+Ustawienia tego moda zostaną takie, jakie są teraz.|The mod's settings will stay exactly as they are now.|Die Einstellungen des Mods bleiben so, wie sie sind.|Налаштування цього мода залишаться такими, як зараз.|Los ajustes del mod se quedarán como están ahora.
+Usuwam zdublowane mody...|Removing duplicate mods...|Doppelte Mods werden entfernt...|Видаляю дубльовані моди...|Quitando mods duplicados...
+Ten mod jest już wbudowany w Zora Client.|This mod is already built into Zora Client.|Dieser Mod ist bereits in Zora Client integriert.|Цей мод уже вбудований у Zora Client.|Este mod ya viene integrado en Zora Client.
+Usunięto zdublowane mody: {0}. Używasz teraz wersji wbudowanych.|Removed duplicate mods: {0}. You're now using the built-in versions.|Doppelte Mods entfernt: {0}. Du nutzt jetzt die integrierten Versionen.|Видалено дубльовані моди: {0}. Тепер використовуються вбудовані версії.|Mods duplicados eliminados: {0}. Ahora usas las versiones integradas.
+Serwery: dodaj IP, zobacz opis i graczy, graj z automatycznym połączeniem|Servers: add an IP, see the description and players, play with auto-connect|Server: IP hinzufügen, Beschreibung und Spieler sehen, mit Auto-Verbinden spielen|Сервери: додай IP, дивись опис і гравців, грай з автопідключенням|Servidores: añade una IP, mira la descripción y los jugadores, juega con conexión automática
+Więcej modów wbudowanych (AppleSkin, ModernFix, More Culling, Simple Voice Chat i inne)|More built-in mods (AppleSkin, ModernFix, More Culling, Simple Voice Chat and more)|Mehr integrierte Mods (AppleSkin, ModernFix, More Culling, Simple Voice Chat u. a.)|Більше вбудованих модів (AppleSkin, ModernFix, More Culling, Simple Voice Chat та інші)|Más mods integrados (AppleSkin, ModernFix, More Culling, Simple Voice Chat y otros)
+Launcher sam sprawdza aktualizacje modów po uruchomieniu|The launcher checks for mod updates by itself on start|Der Launcher prüft beim Start selbst auf Mod-Updates|Лаунчер сам перевіряє оновлення модів після запуску|El launcher busca actualizaciones de mods al iniciarse
+Skiny: wyszukiwanie skinów graczy po nicku|Skins: search player skins by name|Skins: Spieler-Skins per Name suchen|Скіни: пошук скінів гравців за ніком|Skins: busca skins de jugadores por nombre
+W grze: własne dźwięki dla Hit Sounds i nowy moduł Kill Sounds|In game: your own sounds for Hit Sounds and a new Kill Sounds module|Im Spiel: eigene Sounds für Hit Sounds und neues Modul Kill Sounds|У грі: власні звуки для Hit Sounds і новий модуль Kill Sounds|En el juego: tus propios sonidos para Hit Sounds y nuevo módulo Kill Sounds
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1258,6 +1341,7 @@ function go(p) {
   if (p === "skins") renderSkinsPage();
   if (p === "modrinth" && !$("#results").innerHTML) search(true);
   if (p === "console") pollLog();
+  if (p === "servers") renderServers();
 }
 $$(".nav").forEach(b => b.onclick = () => go(b.dataset.p));
 
@@ -1691,28 +1775,35 @@ $("#fileIn").onchange = e => { uploadFiles([...e.target.files], pTab); e.target.
 
 
 /* ================= AKTUALIZACJE MODÓW ================= */
-async function checkMods(pid, manual) {
+async function checkMods(pid, manual, auto) {
   if (manual) toast(t("Sprawdzam mody na Modrinth..."));
   let res;
-  try { res = await api("/api/mods/check", {profile:pid}); }
+  try { res = await api("/api/mods/check", {profile:pid, auto:!!auto}); }
   catch (e) { if (manual) toast(e.message, true); return; }
   const issues = res.issues || [];
   if (!issues.length) { if (manual) toast(t("Wszystkie mody są aktualne i pasują do tej wersji gry.")); return; }
-  const upd = [], off = [], deps = [];
+  if (auto && ($("#modal").className || S.task.running)) return;   // nie przeszkadzaj, gdy coś się dzieje
+  const upd = [], off = [], deps = [], dups = [], no = [];
   let i = 0, all = false;
+  const waitTask = async () => { await new Promise(r => setTimeout(r, 1200)); while (S.task.running) await new Promise(r => setTimeout(r, 700)); };
   const finish = async () => {
     closeModal();
+    if (no.length) api("/api/mods/dismiss", {profile:pid, keys:no}).catch(() => {});
+    if (dups.length) {
+      try { await api("/api/mods/remove_dups", {profile:pid, files:dups}); toast(t("Usuwam zdublowane mody...")); await waitTask(); } catch (e) { toast(e.message, true); }
+    }
     for (const f of off) await api("/api/content/toggle", {profile:pid, kind:"mods", file:f}).catch(() => {});
     if (deps.length) {
       try { await api("/api/mods/install_deps", {profile:pid, slugs:deps}); toast(t("Pobieram brakujące mody...")); } catch (e) { toast(e.message, true); }
-      if (upd.length) { await new Promise(r => setTimeout(r, 1500)); while (S.task.running) await new Promise(r => setTimeout(r, 700)); }
+      if (upd.length) await waitTask();
     }
     if (upd.length) { try { await api("/api/mods/update", {profile:pid, items:upd}); toast(t("Aktualizuję mody...")); } catch (e) { toast(e.message, true); } }
     else if (off.length) toast(t("Wyłączono mody: {0}", off.length));
     if (page === "profile") renderProfilePage();
   };
   const accept = it => {
-    if (it.kind === "missing") { if (it.slug) deps.push(it.slug); }
+    if (it.kind === "builtin_dup") dups.push(it.file);
+    else if (it.kind === "missing") { if (it.slug) deps.push(it.slug); }
     else if (it.kind === "no_version") off.push(it.file);
     else upd.push({file:it.file, version_id:it.version_id});
   };
@@ -1721,7 +1812,9 @@ async function checkMods(pid, manual) {
     if (i >= issues.length) return finish();
     const it = issues[i];
     const who = esc((it.required_by || []).join(", "));
-    const q = it.kind === "missing"
+    const q = it.kind === "builtin_dup"
+      ? t("Ten mod jest już wbudowany w Zora Client. Czy chcesz usunąć go ze swoich modów?") + `<div class="hint" style="margin-top:10px">(${t("Ustawienia tego moda zostaną takie, jakie są teraz.")})</div>`
+      : it.kind === "missing"
       ? (it.slug ? t("Brakuje moda {0}, którego wymaga: {1}. Bez niego gra się nie uruchomi. Czy chcesz go pobrać?", "<b>" + esc(it.name) + "</b>", who)
                  : t("Brakuje moda {0}, którego wymaga: {1}, ale nie ma go na Modrinth. Dodaj go ręcznie albo wyłącz mody, które go wymagają.", "<b>" + esc(it.dep) + "</b>", who))
       : it.kind === "outdated"
@@ -1741,12 +1834,17 @@ async function checkMods(pid, manual) {
         ${issues.length - i > 1 ? `<button class="btn" id="mdAll" style="margin-left:auto">${t("Tak dla wszystkich")}</button>` : ""}
       </div>`);
     $("#mdYes").onclick = () => { accept(it); i++; show(); };
-    $("#mdNo").onclick = () => { i++; show(); };
+    $("#mdNo").onclick = () => { no.push(it.key); i++; show(); };
     $("#mdX").onclick = () => finish();
     if ($("#mdAll")) $("#mdAll").onclick = () => { all = true; show(); };
   };
   show();
 }
+
+setTimeout(function autoCheck() {
+  if (!S) return setTimeout(autoCheck, 1500);
+  if (S.profile.loader !== "vanilla" && !S.game_running) checkMods(S.profile.id, false, true);
+}, 5000);
 
 /* ================= SKINY ================= */
 let skSel = null, skData = null;
@@ -1808,9 +1906,117 @@ async function uploadSkin(f) {
   skSel = j.file; toast(t("Dodano skin. Kliknij Zastosuj, żeby go ustawić.")); renderSkinsPage();
 }
 $("#skIn").onchange = e => { uploadSkin(e.target.files[0]); e.target.value = ""; };
+async function findSkin() {
+  const nick = $("#skNick").value.trim(); if (!nick) return;
+  $("#skFind").disabled = true;
+  try {
+    const r = await api("/api/skins/lookup?nick=" + encodeURIComponent(nick));
+    const url = "data:image/png;base64," + r.data, img = await loadImg(url);
+    $("#skFound").innerHTML = `<div class="skres"><div class="ic"></div><div class="grow"><b>${esc(r.name)}</b><span>${t(r.model === "slim" ? "Smukły (Alex)" : "Klasyczny")}</span></div>
+      <button class="btn primary" id="skNickAdd">${ic("i-plus")}${t("Dodaj")}</button><button class="mini" id="skNickX">${ic("i-x")}</button></div>`;
+    $("#skFound .ic").appendChild(skinFront(img, r.model));
+    const pl = Player.build($("#skScene"), url, r.model === "slim", img.naturalHeight === 32 ? 32 : 64, Math.max(6, Math.round(Math.min(innerHeight * 0.48, 480) / 32)));
+    pl.classList.add("hi");
+    $("#skNickX").onclick = () => { $("#skFound").innerHTML = ""; renderSkinsPage(); };
+    $("#skNickAdd").onclick = async () => {
+      try { const j = await api("/api/skins/add_nick", {nick:r.name}); skSel = j.file; $("#skFound").innerHTML = ""; $("#skNick").value = "";
+        toast(t("Dodano skin. Kliknij Zastosuj, żeby go ustawić.")); renderSkinsPage(); }
+      catch (e) { toast(e.message, true); }
+    };
+  } catch (e) { $("#skFound").innerHTML = ""; toast(e.message, true); }
+  $("#skFind").disabled = false;
+}
+$("#skFind").onclick = findSkin;
+$("#skNick").onkeydown = e => { if (e.key === "Enter") findSkin(); };
 $("#skins").addEventListener("dragover", e => { e.preventDefault(); $("#skAdd")?.classList.add("on"); });
 $("#skins").addEventListener("dragleave", e => { if (!$("#skins").contains(e.relatedTarget)) $("#skAdd")?.classList.remove("on"); });
 $("#skins").addEventListener("drop", e => { e.preventDefault(); $("#skAdd")?.classList.remove("on"); uploadSkin(e.dataTransfer.files[0]); });
+
+
+/* ================= SERWERY ================= */
+const motdHtml = lines => (lines || []).map(l => `<div>${l.map(s => `<span style="${s.c ? `color:${esc(s.c)};` : ""}${s.b ? "font-weight:700;" : ""}${s.i ? "font-style:italic;" : ""}${s.u || s.s ? `text-decoration:${s.u ? "underline " : ""}${s.s ? "line-through" : ""};` : ""}">${esc(s.t)}</span>`).join("") || "&nbsp;"}</div>`).join("");
+function bars(ping, on) {
+  const n = !on ? 0 : ping < 150 ? 5 : ping < 300 ? 4 : ping < 600 ? 3 : ping < 1000 ? 2 : 1;
+  return `<span class="bars ${on ? "" : "off"}" title="${on ? ping + " ms" : ""}">${[1,2,3,4,5].map(k => `<i style="height:${k * 3 + 2}px" class="${k <= n ? "on" : ""}"></i>`).join("")}</span>`;
+}
+function srvCard(name, address, st, extra) {
+  const fmtN = n => new Intl.NumberFormat(LOCALES[lang] || "pl-PL").format(n);
+  return `<div class="srv ${st && st.online ? "" : "down"}">
+    <div class="fav">${st && st.favicon ? `<img src="${esc(st.favicon)}">` : `<svg width="34" height="34"><use href="#logo"/></svg>`}</div>
+    <div class="mid">
+      <div class="top"><b>${esc(name)}</b>${name !== address ? `<span class="addr">${esc(address)}</span>` : ""}<div class="grow"></div>
+        ${!st ? `<span class="pl">${t("Sprawdzanie...")}</span>` : st.online ? `<span class="pl">${fmtN(st.players)}<em>/</em>${fmtN(st.max)}</span>${bars(st.ping, true)}` : `<span class="pl err">${t("Offline")}</span>${bars(0, false)}`}</div>
+      <div class="motd">${st ? (st.online ? motdHtml(st.motd) : `<div class="err">${esc(t(st.error || "Serwer nie odpowiada."))}</div>`) : ""}</div>
+    </div>${extra || ""}</div>`;
+}
+const srvStatus = {};
+async function pingServer(address) {
+  try { srvStatus[address] = await api("/api/servers/status?address=" + encodeURIComponent(address)); }
+  catch (e) { srvStatus[address] = {online:false, error:e.message}; }
+  return srvStatus[address];
+}
+let srvData = [];
+async function renderServers(repoll) {
+  if (page !== "servers") return;
+  srvData = (await api("/api/servers").catch(() => ({servers: []}))).servers;
+  const L = $("#srvList");
+  if (!srvData.length) { L.innerHTML = `<div class="empty"><h3>${t("Nie masz jeszcze serwerów")}</h3><p>${t("Wpisz adres serwera wyżej i kliknij Sprawdź.")}</p></div>`; return; }
+  const draw = () => { L.innerHTML = srvData.map(x => `<div class="srvrow" data-id="${esc(x.id)}">${srvCard(x.name, x.address, srvStatus[x.address],
+    `<div class="acts"><button class="btn primary" data-a="play">${ic("i-play")}${t("Graj")}</button><button class="btn" data-a="edit">${t("Edytuj")}</button><button class="mini" data-a="del" title="${t("Usuń")}">${ic("i-trash", 18)}</button></div>`)}</div>`).join("");
+    $$("#srvList [data-a]").forEach(b => b.onclick = e => {
+      const id = b.closest(".srvrow").dataset.id, srv = srvData.find(x => x.id === id);
+      if (b.dataset.a === "play") playServer(srv);
+      if (b.dataset.a === "edit") editServer(srv);
+      if (b.dataset.a === "del") { if (!confirmBtn(b, `<span style="color:#ff4d4d">${ic("i-trash", 18)}</span>`)) return; api("/api/servers/delete", {id}).then(() => renderServers()); }
+    });
+  };
+  draw();
+  for (const x of srvData) if (repoll || !srvStatus[x.address]) pingServer(x.address).then(() => page === "servers" && draw());
+}
+async function checkServer() {
+  const address = $("#srvIp").value.trim(); if (!address) return;
+  $("#srvPreview").innerHTML = srvCard(address, address, null);
+  const st = await pingServer(address);
+  if ($("#srvIp").value.trim() !== address) return;
+  $("#srvPreview").innerHTML = srvCard(address, address, st, `<div class="acts"><button class="btn primary" id="srvAdd">${ic("i-plus")}${t("Dodaj")}</button></div>`);
+  $("#srvAdd").onclick = async () => {
+    try { await api("/api/servers/add", {address}); $("#srvIp").value = ""; $("#srvPreview").innerHTML = ""; toast(t("Dodano serwer.")); renderServers(); }
+    catch (e) { toast(e.message, true); }
+  };
+}
+$("#srvCheck").onclick = checkServer;
+$("#srvIp").onkeydown = e => { if (e.key === "Enter") checkServer(); };
+$("#srvRefresh").onclick = () => renderServers(true);
+function editServer(srv) {
+  openModal(mhead("Edytuj serwer") + `
+    <div class="fld"><label>${t("Nazwa")}</label><input class="inp" id="eName" maxlength="40" value="${esc(srv.name)}"></div>
+    <div class="fld"><label>${t("Adres IP")}</label><input class="inp" id="eAddr" maxlength="80" spellcheck="false" value="${esc(srv.address)}"></div>
+    <div class="mfoot"><button class="btn primary" id="eSave">${t("Zapisz")}</button><button class="btn" onclick="closeModal()">${t("Anuluj")}</button></div>`);
+  $("#eSave").onclick = async () => {
+    try { await api("/api/servers/edit", {id:srv.id, name:$("#eName").value, address:$("#eAddr").value}); closeModal(); renderServers(true); toast(t("Zapisano.")); }
+    catch (e) { toast(e.message, true); }
+  };
+}
+function playServer(srv) {
+  if (S.task.running || S.game_running) return toast(t("Gra jest już uruchomiona albo trwa pobieranie."));
+  const profs = S.profiles, start = profs.some(p => p.id === srv.profile) ? srv.profile : S.profile.id;
+  const msOk = !S.microsoft_soon && S.accounts.length;
+  openModal(mhead("Jak chcesz zagrać?") + `
+    <div class="hint" style="margin-top:0">${t("Po uruchomieniu gra zapyta, czy połączyć cię z serwerem {0}.", "<b>" + esc(srv.address) + "</b>")}</div>
+    <div class="fld"><label>${t("Profil")}</label><select class="inp" id="spProf">${profs.map(p => `<option value="${esc(p.id)}" ${p.id === start ? "selected" : ""}>${esc(p.name)} · ${esc(p.version)}</option>`).join("")}</select>
+      <div class="hint" id="spHint"></div></div>
+    <button class="opt" id="spMs" ${msOk ? "" : "disabled"}><div class="oi">${ic("i-play", 26)}</div><div><b>${t("Logowanie przez Microsoft")}</b><span>${msOk ? t("Gra startuje prosto z Zora Client.") : t("Logowanie przez Microsoft będzie dostępne wkrótce.")}</span></div><div class="arr">${ic("i-arrow")}</div></button>
+    <button class="opt" id="spOff"><div class="oi"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></div><div><b>${t("Przez oficjalny launcher")}</b><span>${t("Klikasz Graj w oficjalnym launcherze, a gra zapyta o serwer.")}</span></div><div class="arr">${ic("i-arrow")}</div></button>`);
+  const hint = () => { const p = profs.find(x => x.id === $("#spProf").value);
+    $("#spHint").textContent = p && p.loader !== "vanilla" && (S.zorza_mod_versions || []).includes(p.version) ? "" : t("Automatyczne łączenie działa w profilach z Fabric na wersji {0}.", (S.zorza_mod_versions || ["1.21.4"]).join(", ")); };
+  $("#spProf").onchange = hint; hint();
+  const go2 = async mode => {
+    try { await api("/api/servers/play", {id:srv.id, mode, profile:$("#spProf").value}); closeModal(); refresh(); }
+    catch (e) { toast(e.message, true); }
+  };
+  $("#spMs").onclick = () => msOk && go2("microsoft");
+  $("#spOff").onclick = () => go2("official");
+}
 
 /* ================= DISCORD ================= */
 $$("[data-discord]").forEach(b => b.onclick = () => api("/api/open_url", {url:S.discord_invite}).catch(e => toast(e.message, true)));
@@ -1852,7 +2058,7 @@ async function search(reset) {
         <div class="d">${esc(h.description)}</div>
         <div class="m">${esc(t(CATPL[h.display_categories?.[0]] || h.display_categories?.[0] || ""))} · ${t("{0} pobrań", fmt(h.downloads))}</div>
       </div>
-      <button class="inst ${h.installed?"done":""}" data-id="${esc(h.project_id)}">${h.installed?"Zainstalowano":"Zainstaluj"}</button>
+      ${h.builtin ? `<button class="inst done" disabled>${t("Wbudowany")}</button>` : `<button class="inst ${h.installed?"done":""}" data-id="${esc(h.project_id)}">${h.installed?"Zainstalowano":"Zainstaluj"}</button>`}
     </div>`).join("") : `<div class="empty"><h3>Nic nie znaleziono</h3><p>Spróbuj innej nazwy albo innego profilu.</p></div>`;
   $("#loadMore").style.display = data.total_hits > mOffset ? "block" : "none";
   $$("#results .inst").forEach(b => b.onclick = () => {
@@ -1940,15 +2146,19 @@ async function pollLog() {
   try {
     const d = await api("/api/log?since=" + logNext);
     if (d.lines.length) { const el = $("#log"), atEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 30;
-      el.textContent += d.lines.join("\n") + "\n"; if (el.textContent.length > 400000) el.textContent = el.textContent.slice(-300000);
-      if (atEnd) el.scrollTop = el.scrollHeight; }
+      const s0 = el.selectionStart, s1 = el.selectionEnd, top = el.scrollTop;
+      let v = el.value + d.lines.join("\n") + "\n", cut = 0;
+      if (v.length > 400000) { cut = v.length - 300000; v = v.slice(cut); }
+      el.value = v;
+      if (s1 > s0) el.setSelectionRange(Math.max(0, s0 - cut), Math.max(0, s1 - cut));
+      el.scrollTop = atEnd ? el.scrollHeight : top; }
     logNext = d.next;
   } catch {}
   pollLog.on = false;
   setTimeout(pollLog, 800);
 }
-$("#clearLog").onclick = () => $("#log").textContent = "";
-$("#copyLog").onclick = async () => { try { await navigator.clipboard.writeText($("#log").textContent); toast("Skopiowano logi."); } catch { toast("Nie udało się skopiować.", true); } };
+$("#clearLog").onclick = () => $("#log").value = "";
+$("#copyLog").onclick = async () => { try { await navigator.clipboard.writeText($("#log").value); toast("Skopiowano logi."); } catch { toast("Nie udało się skopiować.", true); } };
 
 /* ================= USTAWIENIA ================= */
 $("#jvm").onchange = () => api("/api/settings", {jvm_args:$("#jvm").value});
@@ -2010,9 +2220,10 @@ addEventListener("wheel", e => {
 }, {passive: false});
 
 /* ================= BEZ MENU PRAWEGO PRZYCISKU ================= */
-addEventListener("contextmenu", e => {
-  if (!e.target.closest("input, textarea, [contenteditable], #log")) e.preventDefault();
-});
+addEventListener("contextmenu", e => e.preventDefault());   // Ctrl+C / Ctrl+V działają normalnie
+const noAuto = root => root.querySelectorAll?.("input, textarea").forEach(el => { el.autocomplete = "off"; el.setAttribute("autocorrect", "off"); });
+noAuto(document);
+new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => n.nodeType === 1 && (n.matches?.("input,textarea") ? noAuto(n.parentNode) : noAuto(n))))).observe(document.body, {childList: true, subtree: true});
 
 /* ================= EKRAN STARTOWY ================= */
 (async function splash() {

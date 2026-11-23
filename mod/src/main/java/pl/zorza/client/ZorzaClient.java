@@ -40,6 +40,8 @@ public class ZorzaClient implements ClientModInitializer {
     public void onInitializeClient() {
         Modules.init();
         Config.load();
+        CustomSounds.init();
+        AutoJoin.register();
         MENU_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.zorza.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT, "category.zorza"));
         ZOOM_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -68,6 +70,7 @@ public class ZorzaClient implements ClientModInitializer {
                 combo = now - lastHitTime > 3000 ? 1 : combo + 1;
                 lastHitTime = now;
                 Modules.HIT_SOUNDS.onHit();
+                Modules.KILL_SOUNDS.onHit(entity);
             }
             return ActionResult.PASS;
         });
@@ -75,6 +78,7 @@ public class ZorzaClient implements ClientModInitializer {
     }
 
     private static void tick(MinecraftClient mc) {
+        CustomSounds.cleanup();
         while (MENU_KEY.wasPressed()) {
             if (mc.currentScreen == null) mc.setScreen(new HudEditorScreen(true));
         }
