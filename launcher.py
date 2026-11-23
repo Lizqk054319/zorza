@@ -44,10 +44,11 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.5.1"
+WERSJA_CLIENTA = "0.5.2"
 
 # Co nowego – pokazuje się na ekranie startowym w karcie "Nowość"
 NOWOSCI = [
+    "Instalacja z Modrinth: wybierasz profil i wersję",
     "Nowa nazwa: Zora Client",
     "Konta: postać śledzi kursor i macha, własne tło",
     "Własne tło zakładki Modrinth",
@@ -1151,20 +1152,28 @@ def modrinth_search(q, kind, cat, sort, p, offset):
     return data
 
 
-def modrinth_install(project_id, kind, p, _seen=None):
-    seen = _seen if _seen is not None else set()
-    if project_id in seen:
-        return
-    seen.add(project_id)
+def modrinth_versions(project_id, kind, p):
+    """Wersje projektu pasujące do profilu (wersja gry + Fabric dla modów), najnowsze pierwsze."""
     params = {"game_versions": json.dumps([p["version"]])}
     if kind == "mods":
         params["loaders"] = json.dumps(["fabric"])
     r = requests.get(f"{MODRINTH}/project/{project_id}/version", params=params, headers=UA, timeout=15)
     r.raise_for_status()
-    versions = r.json()
+    return r.json()
+
+
+def modrinth_install(project_id, kind, p, _seen=None, version_id=None):
+    seen = _seen if _seen is not None else set()
+    if project_id in seen:
+        return
+    seen.add(project_id)
+    if kind == "mods" and p.get("loader") == "vanilla":
+        raise RuntimeError("Ten profil jest bez modów (Vanilla). Wybierz profil z Fabric.")
+    versions = modrinth_versions(project_id, kind, p)
     if not versions:
         raise RuntimeError(f"Brak wersji tego projektu dla Minecraft {p['version']}.")
-    v = versions[0]
+    v = next((x for x in versions if x.get("id") == version_id), None) if version_id else None
+    v = v or versions[0]
     f = next((x for x in v["files"] if x.get("primary")), v["files"][0])
     proj = requests.get(f"{MODRINTH}/project/{project_id}", headers=UA, timeout=15).json()
     folder_name = KINDS[kind][0]
@@ -1176,6 +1185,15 @@ def modrinth_install(project_id, kind, p, _seen=None):
         with open(dest, "wb") as out:
             shutil.copyfileobj(resp.raw, out)
     meta = load_json(meta_path(p), {})
+    old = meta.get("modrinth", {}).get(project_id)
+    if old and old.get("file") and old["file"] != f["filename"]:   # inna wersja – usuń starą
+        for name in (old["file"], old["file"] + ".disabled"):
+            try:
+                op = safe_child(profile_dir(p) / old.get("folder", folder_name), name)
+                if op.exists():
+                    shutil.rmtree(op) if op.is_dir() else op.unlink()
+            except Exception:
+                pass
     meta.setdefault("modrinth", {})[project_id] = {
         "file": f["filename"], "folder": folder_name, "title": proj.get("title"),
         "icon": proj.get("icon_url"), "slug": proj.get("slug"), "version": v.get("version_number")}
@@ -1780,6 +1798,17 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(200, {"lines": lines, "next": log_counter})
             if u.path == "/api/content":
                 return self.send(200, list_content(get_profile(q.get("profile")), q["kind"]))
+            if u.path == "/api/modrinth/versions":
+                p = get_profile(q.get("profile"))
+                kind = q.get("kind", "mods")
+                if kind not in KINDS:
+                    return self.send(400, {"error": "Zły rodzaj."})
+                out = [{"id": v["id"], "number": v.get("version_number"), "name": v.get("name"),
+                        "type": v.get("version_type"), "date": v.get("date_published", "")[:10],
+                        "games": v.get("game_versions", [])} for v in modrinth_versions(q.get("id", ""), kind, p)]
+                meta = load_json(meta_path(p), {}).get("modrinth", {}).get(q.get("id", ""))
+                return self.send(200, {"versions": out[:60], "installed": meta.get("version") if meta else None,
+                                       "game": p["version"], "vanilla": p.get("loader") == "vanilla"})
             if u.path == "/api/modrinth/search":
                 return self.send(200, modrinth_search(q.get("q", ""), q.get("kind", "mods"),
                                                       q.get("cat", ""), q.get("sort", "relevance"),
@@ -1956,7 +1985,7 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send(400, busy)
             # --- zawartość
             elif path == "/api/modrinth/install":
-                if not run_task(modrinth_install, d["project_id"], d["kind"], get_profile(d.get("profile"))):
+                if not run_task(modrinth_install, d["project_id"], d["kind"], get_profile(d.get("profile")), None, d.get("version_id")):
                     return self.send(400, busy)
             elif path == "/api/content/toggle":
                 folder = profile_dir(get_profile(d.get("profile"))) / KINDS[d["kind"]][0]

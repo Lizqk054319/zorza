@@ -403,6 +403,12 @@ body.boot #home .logo,body.logohide #home .logo{visibility:hidden}
 
 .mrprev{width:120px;height:68px;border-radius:12px;flex:none;background:radial-gradient(ellipse at 70% 0%,#1d5a2c 0%,#173a2a 40%,#141416 90%) center/cover;border:1px solid #ffffff1a}
 .acl .bgbtn{z-index:4}
+
+.ihead{display:flex;align-items:center;gap:14px;margin-top:6px}
+.ihead .ic{width:56px;height:56px;border-radius:14px;background:#ffffff0f;overflow:hidden;flex:none}
+.ihead .ic img{width:100%;height:100%;object-fit:cover}
+.ihead b{display:block;font-size:18px}.ihead span{color:#9a9aa6;font-size:14px}
+select.inp:disabled{opacity:.6}
 </style>
 </head>
 <body class="boot logohide">
@@ -1014,6 +1020,20 @@ Nowa nazwa: Zora Client|New name: Zora Client|Neuer Name: Zora Client|Нова �
 Konta: postać śledzi kursor i macha, własne tło|Accounts: the character follows your cursor and waves, custom background|Konten: Figur folgt dem Cursor und winkt, eigener Hintergrund|Акаунти: персонаж стежить за курсором і махає, власний фон|Cuentas: el personaje sigue el cursor y saluda, fondo propio
 Własne tło zakładki Modrinth|Custom Modrinth tab background|Eigener Hintergrund für den Modrinth-Tab|Власний фон вкладки Modrinth|Fondo propio para la pestaña Modrinth
 Płynniejsze przewijanie i poprawiony ekran startowy|Smoother scrolling and a fixed splash screen|Flüssigeres Scrollen und verbesserter Startbildschirm|Плавніше прокручування та виправлений стартовий екран|Desplazamiento más suave y pantalla de inicio corregida
+Profil|Profile|Profil|Профіль|Perfil
+Wersja|Version|Version|Версія|Versión
+Wczytywanie...|Loading...|Wird geladen...|Завантаження...|Cargando...
+Brak wersji|No versions|Keine Versionen|Немає версій|Sin versiones
+Stabilna|Stable|Stabil|Стабільна|Estable
+Beta|Beta|Beta|Бета|Beta
+Alfa|Alpha|Alpha|Альфа|Alfa
+najnowsza|latest|neueste|найновіша|la más reciente
+zainstalowana|installed|installiert|встановлена|instalada
+Wersje pasujące do Minecraft {0}.|Versions that work with Minecraft {0}.|Versionen passend zu Minecraft {0}.|Версії, що підходять до Minecraft {0}.|Versiones compatibles con Minecraft {0}.
+Potrzebne biblioteki pobiorą się same.|Required libraries will be downloaded automatically.|Benötigte Bibliotheken werden automatisch geladen.|Потрібні бібліотеки завантажаться самі.|Las librerías necesarias se descargarán solas.
+Instaluję {0} do profilu {1}.|Installing {0} into profile {1}.|{0} wird in Profil {1} installiert.|Встановлюю {0} у профіль {1}.|Instalando {0} en el perfil {1}.
+Instalacja z Modrinth: wybierasz profil i wersję|Modrinth installs: choose the profile and version|Modrinth-Installation: Profil und Version wählbar|Встановлення з Modrinth: вибір профілю й версії|Instalar desde Modrinth: eliges perfil y versión
+Ten profil jest bez modów (Vanilla). Wybierz profil z Fabric.|This profile has no mods (Vanilla). Choose a Fabric profile.|Dieses Profil ist ohne Mods (Vanilla). Wähle ein Fabric-Profil.|Цей профіль без модів (Vanilla). Обери профіль з Fabric.|Este perfil no tiene mods (Vanilla). Elige un perfil con Fabric.
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1835,14 +1855,57 @@ async function search(reset) {
       <button class="inst ${h.installed?"done":""}" data-id="${esc(h.project_id)}">${h.installed?"Zainstalowano":"Zainstaluj"}</button>
     </div>`).join("") : `<div class="empty"><h3>Nic nie znaleziono</h3><p>Spróbuj innej nazwy albo innego profilu.</p></div>`;
   $("#loadMore").style.display = data.total_hits > mOffset ? "block" : "none";
-  $$("#results .inst").forEach(b => b.onclick = async () => {
-    if (b.classList.contains("done")) return;
+  $$("#results .inst").forEach(b => b.onclick = () => {
     if (S.task.running) return toast("Poczekaj, trwa inne pobieranie.");
-    if (mKind === "mods" && S.profile.loader === "vanilla") return toast("Ten profil jest bez modów (Vanilla). Zmień go na Fabric w edycji profilu.", true);
-    b.textContent = "Pobieranie...";
-    try { await api("/api/modrinth/install", {project_id:b.dataset.id, kind:mKind, profile:S.profile.id}); }
-    catch (e) { b.textContent = "Zainstaluj"; toast(e.message, true); }
+    installDialog(lastHits.find(h => h.project_id === b.dataset.id), mKind);
   });
+}
+
+/* okno instalacji: wybór profilu i wersji */
+const VTYPE = {release:"Stabilna", beta:"Beta", alpha:"Alfa"};
+function installDialog(h, kind) {
+  if (!h) return;
+  const profs = S.profiles.filter(p => kind !== "mods" || p.loader !== "vanilla");
+  if (!profs.length) return toast("Ten profil jest bez modów (Vanilla). Zmień go na Fabric w edycji profilu.", true);
+  const start = profs.some(p => p.id === S.profile.id) ? S.profile.id : profs[0].id;
+  openModal(mhead("Zainstaluj") + `
+    <div class="ihead"><div class="ic">${h.icon_url ? `<img src="${esc(h.icon_url)}">` : ""}</div>
+      <div><b>${esc(h.title)}</b><span>${esc(h.author)}</span></div></div>
+    <div class="fld"><label>Profil</label><select class="inp" id="iProf">${profs.map(p =>
+      `<option value="${esc(p.id)}" ${p.id === start ? "selected" : ""}>${esc(p.name)} · ${esc(p.version)}</option>`).join("")}</select></div>
+    <div class="fld"><label>Wersja</label><select class="inp" id="iVer" disabled><option>Wczytywanie...</option></select>
+      <div class="hint" id="iHint"></div></div>
+    <div class="mfoot"><button class="btn primary" id="iGo" disabled>${ic("i-down")}Zainstaluj</button></div>`);
+  let seq = 0;
+  const load = async () => {
+    const my = ++seq, pid = $("#iProf").value;
+    $("#iVer").disabled = true; $("#iGo").disabled = true; $("#iVer").innerHTML = `<option>${t("Wczytywanie...")}</option>`; $("#iHint").textContent = "";
+    try {
+      const r = await api(`/api/modrinth/versions?` + new URLSearchParams({id:h.project_id, kind, profile:pid}));
+      if (my !== seq || !$("#iVer")) return;
+      if (!r.versions.length) {
+        $("#iVer").innerHTML = `<option>${t("Brak wersji")}</option>`;
+        $("#iHint").textContent = t("Brak wersji tego projektu dla Minecraft {0}.", r.game);
+        return;
+      }
+      $("#iVer").innerHTML = r.versions.map((v, i) => `<option value="${esc(v.id)}">${esc(v.number || v.name)}` +
+        `${v.type !== "release" ? " · " + t(VTYPE[v.type] || v.type) : ""}${i === 0 ? " · " + t("najnowsza") : ""}` +
+        `${v.number === r.installed ? " · " + t("zainstalowana") : ""}</option>`).join("");
+      $("#iVer").disabled = false; $("#iGo").disabled = false;
+      $("#iHint").textContent = t("Wersje pasujące do Minecraft {0}.", r.game) + (kind === "mods" ? " " + t("Potrzebne biblioteki pobiorą się same.") : "");
+    } catch (e) { if (my === seq && $("#iHint")) $("#iHint").textContent = e.message; }
+  };
+  $("#iProf").onchange = load; load();
+  $("#iGo").onclick = async () => {
+    if (S.task.running) return toast("Poczekaj, trwa inne pobieranie.");
+    const profile = $("#iProf").value, version_id = $("#iVer").value;
+    try {
+      await api("/api/modrinth/install", {project_id:h.project_id, kind, profile, version_id});
+      closeModal();
+      const p = S.profiles.find(x => x.id === profile);
+      toast(t("Instaluję {0} do profilu {1}.", h.title, p ? p.name : ""));
+    } catch (e) { toast(e.message, true); }
+  };
 }
 async function markInstalled() { if ($("#results").innerHTML) { const y = $("#modrinth").scrollTop; await search(true); $("#modrinth").scrollTop = y; } }
 
