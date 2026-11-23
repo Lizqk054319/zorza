@@ -46,7 +46,7 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.6.0"
+WERSJA_CLIENTA = "0.6.1"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
@@ -156,6 +156,7 @@ log_counter = 0
 task = {"running": False, "status": "", "progress": 0, "max": 0, "error": "", "done": "", "after": ""}
 game = {"proc": None, "profile": None, "where": "", "start": 0}
 last_ping = time.time()
+bye_at = 0.0          # okno zgłosiło zamknięcie
 pending_logins = {}   # state -> code_verifier
 login_message = {"text": "", "ok": True}
 version_cache = {"list": None}
@@ -2167,7 +2168,7 @@ class Handler(BaseHTTPRequestHandler):
         return origin in (None, f"http://127.0.0.1:{PORT}", f"http://localhost:{PORT}")
 
     def do_GET(self):
-        global last_ping
+        global last_ping, bye_at
         u = urllib.parse.urlparse(self.path)
         q = {k: v[0] for k, v in urllib.parse.parse_qs(u.query).items()}
         try:
@@ -2189,6 +2190,9 @@ class Handler(BaseHTTPRequestHandler):
                 ctype = {".png": "image/png", ".webp": "image/webp", ".gif": "image/gif"}.get(
                     f.suffix.lower(), "image/jpeg")
                 return self.send(200, f.read_bytes(), ctype)
+            if u.path == "/api/bye":
+                bye_at = time.time()
+                return self.send(200, {"ok": True})
             if u.path == "/api/state":
                 last_ping = time.time()
                 return self.send(200, state_json())
@@ -2568,7 +2572,8 @@ def watchdog():
     while True:
         time.sleep(5)
         busy = task["running"] or game_running()
-        if not busy and time.time() - last_ping > 150:
+        closed = bye_at > last_ping and time.time() - bye_at > 6     # okno zamknięte (nie odświeżone)
+        if not busy and (closed or time.time() - last_ping > 150):
             log("Okno zamknięte – kończę.")
             os._exit(0)
 

@@ -18,7 +18,7 @@ UninstallDisplayIcon={app}\Zora Client.exe
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
-CloseApplications=yes
+CloseApplications=no
 
 [Languages]
 Name: "polish"; MessagesFile: "compiler:Languages\Polish.isl"
@@ -45,3 +45,16 @@ Name: "{autodesktop}\Zora Client"; Filename: "{app}\Zora Client.exe"; Tasks: des
 
 [Run]
 Filename: "{app}\Zora Client.exe"; Description: "{cm:LaunchProgram,Zora Client}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+// Launcher działa w tle bez okna, więc zamykamy go sami przed instalacją (stare nazwy też)
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+var
+  Code: Integer;
+begin
+  Exec(ExpandConstant('{sys}\taskkill.exe'), '/F /IM "Zora Client.exe"', '', SW_HIDE, ewWaitUntilTerminated, Code);
+  Exec(ExpandConstant('{sys}\taskkill.exe'), '/F /IM "Zorza Visuals.exe"', '', SW_HIDE, ewWaitUntilTerminated, Code);
+  Exec(ExpandConstant('{sys}\taskkill.exe'), '/F /IM "Zorza Launcher.exe"', '', SW_HIDE, ewWaitUntilTerminated, Code);
+  Sleep(800);
+  Result := '';
+end;

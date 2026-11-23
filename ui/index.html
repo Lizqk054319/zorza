@@ -2220,7 +2220,8 @@ addEventListener("wheel", e => {
 }, {passive: false});
 
 /* ================= BEZ MENU PRAWEGO PRZYCISKU ================= */
-addEventListener("contextmenu", e => e.preventDefault());   // Ctrl+C / Ctrl+V działają normalnie
+addEventListener("contextmenu", e => e.preventDefault());
+addEventListener("pagehide", () => { try { fetch("/api/bye", {keepalive: true}); } catch {} });   // Ctrl+C / Ctrl+V działają normalnie
 const noAuto = root => root.querySelectorAll?.("input, textarea").forEach(el => { el.autocomplete = "off"; el.setAttribute("autocorrect", "off"); });
 noAuto(document);
 new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => n.nodeType === 1 && (n.matches?.("input,textarea") ? noAuto(n.parentNode) : noAuto(n))))).observe(document.body, {childList: true, subtree: true});
