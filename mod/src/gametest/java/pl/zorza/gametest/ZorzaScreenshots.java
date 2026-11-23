@@ -64,5 +64,7 @@ public class ZorzaScreenshots implements FabricClientGameTest {
         });
         context.waitTicks(40);
         context.takeScreenshot("09-autojoin");
+        context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.TitleScreen()));
+        context.waitTicks(10);
     }
 }
