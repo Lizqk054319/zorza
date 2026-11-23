@@ -46,10 +46,14 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.6.1"
+WERSJA_CLIENTA = "0.6.2"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.6.2", [
+        "Import profilu przenosi też ustawienia modów",
+        "W grze: zakładka Zora Mods z twoimi modami",
+    ]),
     ("0.6.0", [
         "Serwery: dodaj IP, zobacz opis i graczy, graj z automatycznym połączeniem",
         "Więcej modów wbudowanych (AppleSkin, ModernFix, More Culling, Simple Voice Chat i inne)",
@@ -96,6 +100,7 @@ MODY_WBUDOWANE = [
     ("cloth-config", "Cloth Config API"),
     ("appleskin", "AppleSkin"),
     ("simple-voice-chat", "Simple Voice Chat"),
+    ("modmenu", "Mod Menu"),
 ]
 # id projektów na Modrinth (do rozpoznawania, że gracz ma u siebie mod, który jest wbudowany)
 MODY_WBUDOWANE_ID = {
@@ -103,7 +108,7 @@ MODY_WBUDOWANE_ID = {
     "lithium": "gvQqBUqZ", "ferrite-core": "uXXizFIs", "entityculling": "NNAgCjsB", "moreculling": "51shyZVL",
     "immediatelyfast": "5ZwdcRci", "modernfix": "nmDcB62a", "badoptimizations": "g96Z4WVZ", "ebe": "OVuFYfre",
     "threadtweak": "vSEH1ERy", "zconfig": "4qmvXRB9", "cloth-config": "9s6osm5g", "appleskin": "EsAfCjCV",
-    "simple-voice-chat": "9eGKb6K1",
+    "simple-voice-chat": "9eGKb6K1", "modmenu": "mOgUt4GM",
 }
 
 # Logowanie Microsoft – NIE ZMIENIAJ (zatwierdzane przez Mojang dla tego ID)
@@ -661,6 +666,36 @@ def copy_tree(src, dst):
     return n
 
 
+# Foldery z ustawieniami i danymi modów (poza config/), które warto przenieść razem z modami
+MOD_DATA_DIRS = ("config", "xaero", "XaeroWaypoints", "XaeroWorldMap", "journeymap", "schematics",
+                 "syncmatica", "voxelmap", "replay_recordings", "emotes", "itemscroller", "litematica")
+# Nigdy nie kopiujemy niczego, co może zawierać konta lub tokeny logowania
+RE_SECRET = re.compile(r"account|token|auth|session|credential|password|secret|_ias_|^ias\.", re.I)
+
+
+def copy_mod_settings(gd, dst):
+    """Ustawienia modów z innego launchera – bez plików z kontami/tokenami."""
+    n = 0
+    for name in MOD_DATA_DIRS:
+        src = gd / name
+        if not src.is_dir():
+            continue
+        for f in src.rglob("*"):
+            rel = f.relative_to(src)
+            if not f.is_file() or any(RE_SECRET.search(part) for part in rel.parts):
+                continue
+            t = dst / name / rel
+            try:
+                t.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(f, t)
+                n += 1
+            except OSError:
+                pass
+            if n % 25 == 0:
+                task["progress"] = n
+    return n
+
+
 def do_import_launcher(d):
     launcher = next((l for l in scan_launchers() if l["id"] == d["launcher"]), None)
     if not launcher:
@@ -681,10 +716,13 @@ def do_import_launcher(d):
             for f in msrc.iterdir():
                 if f.is_file() and f.suffix in (".jar", ".disabled") and f.name not in skip:
                     shutil.copy2(f, dst / "mods" / f.name)
+    if c.get("mods") or c.get("settings"):
+        task.update(status="Kopiowanie ustawień modów...")
+        n = copy_mod_settings(gd, dst)
+        log(f"Skopiowano ustawienia modów: {n} plików")
     if c.get("settings"):
         for f in ("options.txt", "optionsof.txt", "optionsshaders.txt"):
             copy_tree(gd / f, dst / f)
-        copy_tree(gd / "config", dst / "config")
     if c.get("packs"):
         copy_tree(gd / "resourcepacks", dst / "resourcepacks")
         copy_tree(gd / "shaderpacks", dst / "shaderpacks")
@@ -806,6 +844,7 @@ def do_play(pid):
         raise RuntimeError("Najpierw dodaj konto Microsoft.")
     launch_id = install_profile(p)
     if launch_id.startswith("fabric-loader"):
+        apply_game_toggles(p)
         ensure_builtins(p)
         ensure_zorza_mod(p)
         ensure_deps(p)
@@ -867,6 +906,7 @@ def do_play_official(pid):
     p = get_profile(pid)
     launch_id = install_profile(p)
     if launch_id.startswith("fabric-loader"):
+        apply_game_toggles(p)
         ensure_builtins(p)
         ensure_zorza_mod(p)
         ensure_deps(p)
@@ -1460,6 +1500,35 @@ def _download_builtin(d, slug, title, v):
     return f["filename"], jar_info(dest).get("id")
 
 
+def apply_game_toggles(p):
+    """Zmiany z zakładki ZORA MODS w grze (włącz/wyłącz mod) – stosowane przed uruchomieniem."""
+    f = profile_dir(p) / "config" / "zorza" / "toggle.json"
+    data = load_json(f, {})
+    d = profile_dir(p) / "mods"
+    for name, on in (data.items() if isinstance(data, dict) else []):
+        try:
+            if not str(name).endswith(".jar"):
+                continue
+            jar, off = safe_child(d, name), safe_child(d, name + ".disabled")
+            if on and off.exists() and not jar.exists():
+                off.replace(jar)
+            elif not on and jar.exists():
+                jar.replace(off)
+        except Exception as e:
+            log(f"Nie udało się przełączyć {name}: {e}")
+    f.unlink(missing_ok=True)
+
+
+def write_builtin_list(p, bi):
+    """Dla moda Zora Client – które pliki to mody wbudowane (zakładka ZORA MODS)."""
+    f = profile_dir(p) / "config" / "zorza" / "builtin.json"
+    f.parent.mkdir(parents=True, exist_ok=True)
+    save_json(f, {"files": sorted(m["file"] for m in bi.values())})
+    mm = profile_dir(p) / "config" / "modmenu.json"     # Mod Menu tylko dla ekranów ustawień – bez swoich przycisków
+    if "modmenu" in bi and not mm.exists():
+        save_json(mm, {"modify_title_screen": False, "modify_game_menu": False})
+
+
 def ensure_builtins(p):
     """Pobiera brakujące mody wbudowane dla wersji profilu i raz na 12 h je aktualizuje.
     Wyłączonych (.disabled) nie rusza. Jeśli gracz ma własną kopię takiego moda, wbudowana czeka,
@@ -1518,6 +1587,7 @@ def ensure_builtins(p):
         if m:
             for name in (m["file"], m["file"] + ".disabled"):
                 (d / name).unlink(missing_ok=True)
+    write_builtin_list(p, bi)
     save_json(meta_path(p), meta)
 
 

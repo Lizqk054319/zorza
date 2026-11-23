@@ -143,6 +143,8 @@ public class ModMenuScreen extends ZScreen {
 
     private int[] closeRect() { return new int[]{px + pw - 56, y1 + 6, 52, 52}; }
 
+    private int[] zoraTab() { return new int[]{px + 214 + 16 + 3 * (82 + 14), y1, 214, 64}; }
+
     private void tabs(DrawContext ctx, double mx, double my, float a) {
         int[] t = modTab();
         float h = hover("tabMods", R.in(mx, my, t[0], t[1], t[2], t[3]));
@@ -150,6 +152,11 @@ public class ModMenuScreen extends ZScreen {
         R.icon(ctx, "grid", t[0] + 30, t[1] + 21, 22, R.alpha(0xFFFFFFFF, a));
         R.text(ctx, "MOD MENU", t[0] + 68, R.midY(t[1], 64, 17), 17, R.alpha(0xFFFFFFFF, a), R.BOLD);
         for (int i = 0; i < 3; i++) squareButton(ctx, mx, my, sideTab(i), SIDE_TABS[i], "side" + i, a, false);
+        int[] z = zoraTab();
+        float hz = hover("tabZora", R.in(mx, my, z[0], z[1], z[2], z[3]));
+        R.bordered(ctx, z[0], z[1], z[2], z[3], 12, 1, R.alpha(R.mix(0xF00C0C0F, 0xF0202027, hz), a), R.alpha(0x1CFFFFFF, a));
+        R.logo(ctx, z[0] + 24, z[1] + 17, 30, R.alpha(0xFFFFFFFF, a));
+        R.text(ctx, "ZORA MODS", z[0] + 66, R.midY(z[1], 64, 17), 17, R.alpha(0xFFFFFFFF, a), R.BOLD);
         int[] c = closeRect();
         float hc = hover("close", R.in(mx, my, c[0], c[1], c[2], c[3]));
         R.bordered(ctx, c[0], c[1], c[2], c[3], 10, 2, R.alpha(R.mix(0xF0160B0D, 0xF0471418, hc), a), R.alpha(0xFFE5484D, a));
@@ -408,6 +415,11 @@ public class ModMenuScreen extends ZScreen {
         int[] mv = moveRect();
         if (R.in(mx, my, mv[0], mv[1], mv[2], mv[3])) {
             client.setScreen(new HudEditorScreen(false));
+            return true;
+        }
+        int[] zt = zoraTab();
+        if (R.in(mx, my, zt[0], zt[1], zt[2], zt[3])) {
+            client.setScreen(new ZoraModsScreen(this));
             return true;
         }
         int[] mt = modTab();

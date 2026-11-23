@@ -1117,6 +1117,10 @@ Więcej modów wbudowanych (AppleSkin, ModernFix, More Culling, Simple Voice Cha
 Launcher sam sprawdza aktualizacje modów po uruchomieniu|The launcher checks for mod updates by itself on start|Der Launcher prüft beim Start selbst auf Mod-Updates|Лаунчер сам перевіряє оновлення модів після запуску|El launcher busca actualizaciones de mods al iniciarse
 Skiny: wyszukiwanie skinów graczy po nicku|Skins: search player skins by name|Skins: Spieler-Skins per Name suchen|Скіни: пошук скінів гравців за ніком|Skins: busca skins de jugadores por nombre
 W grze: własne dźwięki dla Hit Sounds i nowy moduł Kill Sounds|In game: your own sounds for Hit Sounds and a new Kill Sounds module|Im Spiel: eigene Sounds für Hit Sounds und neues Modul Kill Sounds|У грі: власні звуки для Hit Sounds і новий модуль Kill Sounds|En el juego: tus propios sonidos para Hit Sounds y nuevo módulo Kill Sounds
+Mody z ich ustawieniami|Mods with their settings|Mods mit ihren Einstellungen|Моди з їхніми налаштуваннями|Mods con sus ajustes
+Kopiowanie ustawień modów...|Copying mod settings...|Mod-Einstellungen werden kopiert...|Копіювання налаштувань модів...|Copiando ajustes de mods...
+Import profilu przenosi też ustawienia modów|Profile import also brings over mod settings|Profilimport übernimmt auch Mod-Einstellungen|Імпорт профілю переносить і налаштування модів|Importar un perfil también trae los ajustes de los mods
+W grze: zakładka Zora Mods z twoimi modami|In game: Zora Mods tab with your mods|Im Spiel: Tab „Zora Mods“ mit deinen Mods|У грі: вкладка Zora Mods з твоїми модами|En el juego: pestaña Zora Mods con tus mods
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1549,7 +1553,7 @@ function confirmImport(found, l, p) {
     (ok ? "" : `<div class="warn">${p.version ? t("Wersja {0} nie jest dostępna w launcherze (obsługujemy od {1} wzwyż).", esc(p.version), esc(S.versions.at(-1).items.at(-1).id)) : t("Nie udało się odczytać wersji.")} ${t("Wybierz wersję poniżej – mody mogą nie działać na innej wersji.")}</div>`) +
     profileFields({name:p.name, version:p.version, loader:p.loader, ram_mb:p.ram_mb}) + `
     <div class="fld"><label>Co przenieść</label>
-      <label class="chk"><input type="checkbox" id="cMods" ${c.mods ? "checked" : ""}>Mody <small>(${c.mods || 0})</small></label>
+      <label class="chk"><input type="checkbox" id="cMods" ${c.mods ? "checked" : ""}>Mody z ich ustawieniami <small>(${c.mods || 0})</small></label>
       <label class="chk"><input type="checkbox" id="cSet" ${p.options ? "checked" : ""}>Ustawienia Minecrafta <small>(sterowanie, grafika, dźwięk, język)</small></label>
       <label class="chk"><input type="checkbox" id="cPacks" checked>Paczki zasobów i shadery <small>(${(c.resourcepacks || 0) + (c.shaders || 0)})</small></label>
       <label class="chk"><input type="checkbox" id="cServ" checked>Lista serwerów</label>

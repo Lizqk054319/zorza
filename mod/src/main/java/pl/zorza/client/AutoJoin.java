@@ -33,6 +33,11 @@ public final class AutoJoin {
 
     public static void register() {
         ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
+            if (screen instanceof TitleScreen || screen instanceof net.minecraft.client.gui.screen.GameMenuScreen) {
+                net.fabricmc.fabric.api.client.screen.v1.Screens.getButtons(screen).add(
+                        net.minecraft.client.gui.widget.ButtonWidget.builder(Text.literal("Zora Mods"),
+                                b -> client.setScreen(new pl.zorza.client.gui.ZoraModsScreen(screen))).dimensions(6, 6, 90, 20).build());
+            }
             if (checked || !(screen instanceof TitleScreen)) return;
             checked = true;
             Data d = read();

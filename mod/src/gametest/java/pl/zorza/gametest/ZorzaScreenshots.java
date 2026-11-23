@@ -48,6 +48,9 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             context.runOnClient(client -> client.setScreen(new ModMenuScreen(null)));
             context.waitTicks(30);
             context.takeScreenshot("07-mod-menu-big");
+            context.runOnClient(client -> client.setScreen(new pl.zorza.client.gui.ZoraModsScreen(null)));
+            context.waitTicks(30);
+            context.takeScreenshot("10-zora-mods");
             context.runOnClient(client -> client.setScreen(new ModMenuScreen(Modules.KILL_SOUNDS)));
             context.waitTicks(30);
             context.takeScreenshot("08-kill-sounds");
