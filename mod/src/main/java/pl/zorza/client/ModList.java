@@ -54,6 +54,9 @@ public final class ModList {
             if (c.getContainingMod().isPresent()) continue;            // moduły w środku innego moda (np. fabric-api)
             ModMetadata md = c.getMetadata();
             if (md.getType().equals("builtin")) continue;              // minecraft, java, fabricloader
+            if (md.getId().startsWith("fabric-") && !md.getId().equals("fabric-api")
+                    && FabricLoader.getInstance().isModLoaded("fabric-api")) continue;   // części Fabric API
+            if (md.getId().equals("mixinextras")) continue;
             Entry e = new Entry();
             e.id = md.getId();
             e.name = md.getName();
