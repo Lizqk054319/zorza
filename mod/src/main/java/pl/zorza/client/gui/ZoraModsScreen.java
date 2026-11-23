@@ -102,6 +102,12 @@ public class ZoraModsScreen extends ZScreen {
         ctx.getMatrices().pop();
     }
 
+    private final java.util.Map<String, java.util.Optional<java.nio.file.Path>> files = new java.util.HashMap<>();
+
+    private java.nio.file.Path cfgFile(ModList.Entry e) {
+        return files.computeIfAbsent(e.id, k -> java.util.Optional.ofNullable(ModList.configFile(k))).orElse(null);
+    }
+
     private int[] switchRect(int x, int y, int w) { return new int[]{x + w - 24 - 60, y + (ROW - 32) / 2, 60, 32}; }
 
     private int[] gearRect(int x, int y, int w) { return new int[]{x + w - 24 - 60 - 20 - 52, y + (ROW - 52) / 2, 52, 52}; }
@@ -135,11 +141,17 @@ public class ZoraModsScreen extends ZScreen {
         R.text(ctx, desc, tx, y + 56, 14, R.alpha(0xFF9C9CA6, a * dim), R.MEDIUM);
 
         Function<Screen, Screen> cfg = e.loaded ? ModList.configScreen(e.id) : null;
-        if (cfg != null) {
+        java.nio.file.Path file = cfg == null ? cfgFile(e) : null;
+        if (cfg != null || file != null) {
             int[] g = gearRect(x, y, w);
-            float hg = hover("gear" + e.id, R.in(mx, my, g[0], g[1], g[2], g[3]));
+            boolean ov = R.in(mx, my, g[0], g[1], g[2], g[3]);
+            float hg = hover("gear" + e.id, ov);
             R.bordered(ctx, g[0], g[1], g[2], g[3], 12, 1, R.alpha(R.mix(0xF00C0C0F, 0xF02A2A33, hg), a), R.alpha(0x1CFFFFFF, a));
-            R.icon(ctx, "gear", g[0] + 14, g[1] + 14, 24, R.alpha(0xFFFFFFFF, a));
+            R.icon(ctx, cfg != null ? "gear" : "folder", g[0] + 14, g[1] + 14, 24, R.alpha(0xFFFFFFFF, a));
+            if (hg > 0.05f) {
+                String tip = cfg != null ? "Settings" : "Open settings file";
+                R.centered(ctx, tip, g[0] + 26, g[1] - 22, 13, R.alpha(0xFFD0D0D8, a * hg), R.SEMI);
+            }
         }
         int[] sw = switchRect(x, y, w);
         float t = hover("sw" + e.id, e.enabled);
@@ -170,10 +182,17 @@ public class ZoraModsScreen extends ZScreen {
             }
             int[] g = gearRect(x, y, w);
             Function<Screen, Screen> cfg = e.loaded ? ModList.configScreen(e.id) : null;
-            if (cfg != null && R.in(mx, my, g[0], g[1], g[2], g[3])) {
-                Screen sc = cfg.apply(this);
-                if (sc != null) client.setScreen(sc);
-                return true;
+            if (R.in(mx, my, g[0], g[1], g[2], g[3])) {
+                if (cfg != null) {
+                    Screen sc = cfg.apply(this);
+                    if (sc != null) client.setScreen(sc);
+                    return true;
+                }
+                java.nio.file.Path f = cfgFile(e);
+                if (f != null) {
+                    net.minecraft.util.Util.getOperatingSystem().open(f.toFile());
+                    return true;
+                }
             }
         }
         return true;

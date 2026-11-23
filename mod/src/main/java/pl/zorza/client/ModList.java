@@ -205,7 +205,32 @@ public final class ModList {
             } catch (Throwable ignored) {
             }
         }
-        return configScreens.get(modId);
+        Function<Screen, Screen> f = configScreens.get(modId);
+        if (f == null && Set.of("sodium", "sodium-extra", "reeses-sodium-options", "iris", "immediatelyfast", "entityculling", "moreculling").contains(modId)) {
+            // te mody podpinają swoje ustawienia pod ekran "Grafika"
+            f = parent -> new net.minecraft.client.gui.screen.option.VideoOptionsScreen(parent, MinecraftClient.getInstance(), MinecraftClient.getInstance().options);
+        }
+        return f;
+    }
+
+    /** Plik albo folder z ustawieniami moda w config/ (gdy mod nie ma ekranu ustawień). */
+    public static Path configFile(String modId) {
+        Path dir = FabricLoader.getInstance().getConfigDir();
+        String id = modId.toLowerCase(Locale.ROOT);
+        for (String cand : new String[]{id, id.replace("-", ""), id.replace("-", "_")}) {
+            if (Files.isDirectory(dir.resolve(cand))) return dir.resolve(cand);
+            for (String ext : new String[]{".json", ".json5", ".toml", ".properties", ".yml", ".yaml", ".cfg", ".txt"}) {
+                if (Files.isRegularFile(dir.resolve(cand + ext))) return dir.resolve(cand + ext);
+            }
+        }
+        try (Stream<Path> st = Files.list(dir)) {
+            return st.filter(p -> {
+                String n = p.getFileName().toString().toLowerCase(Locale.ROOT);
+                return n.startsWith(id + "-") || n.startsWith(id + "_") || n.startsWith(id + ".");
+            }).findFirst().orElse(null);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static Method findIface(Class<?> cls, String name) {
