@@ -18,16 +18,16 @@ public abstract class ItemCountMixin {
         return Text.literal(s).setStyle(Style.EMPTY.withFont(VANILLA));
     }
 
-    @Redirect(method = {"drawItemCount", "drawStackOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"},
+    @Redirect(method = "drawStackCount",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I"),
-            require = 0)
+            require = 1)
     private int zorza$count(DrawContext ctx, TextRenderer tr, String s, int x, int y, int color, boolean shadow) {
         return ctx.drawText(tr, zorza$v(s), x, y, color, shadow);
     }
 
-    @Redirect(method = {"drawItemCount", "drawStackOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"},
+    @Redirect(method = "drawStackCount",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;getWidth(Ljava/lang/String;)I"),
-            require = 0)
+            require = 1)
     private int zorza$width(TextRenderer tr, String s) {
         return tr.getWidth(zorza$v(s));
     }
