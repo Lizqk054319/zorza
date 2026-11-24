@@ -34,6 +34,23 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             context.takeScreenshot("15-freelook");
             context.runOnClient(client -> {
                 Modules.FREELOOK.active = false;
+                client.options.setPerspective(net.minecraft.client.option.Perspective.FIRST_PERSON);
+                client.player.getInventory().selectedSlot = 1;
+                Modules.VIEW_MODEL.enabled = true;
+                for (var st : Modules.VIEW_MODEL.settings) {
+                    if (st.id.equals("main_ry") && st instanceof pl.zorza.client.module.Setting.Num n) n.value = -25;
+                    if (st.id.equals("main_tx") && st instanceof pl.zorza.client.module.Setting.Num n) n.value = -0.15;
+                    if (st.id.equals("main_sx") && st instanceof pl.zorza.client.module.Setting.Num n) n.value = 1.4;
+                }
+            });
+            context.waitTicks(20);
+            context.takeScreenshot("16-viewmodel-hotbar");
+            context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.ingame.InventoryScreen(client.player)));
+            context.waitTicks(20);
+            context.takeScreenshot("17-inventory");
+            context.runOnClient(client -> {
+                client.setScreen(null);
+                Modules.VIEW_MODEL.enabled = false;
                 Modules.TIME_CHANGER.enabled = false;
                 client.options.setPerspective(net.minecraft.client.option.Perspective.FIRST_PERSON);
             });

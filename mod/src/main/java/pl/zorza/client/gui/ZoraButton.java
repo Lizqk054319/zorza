@@ -42,6 +42,12 @@ public class ZoraButton extends ClickableWidget {
             else R.icon(ctx, icon, ix, iy, is, 0xFFFFFFFF);
         } else {
             float tw = R.width(label, ts, R.SEMI);
+            if ("".equals(icon)) {                                   // sam napis
+                R.text(ctx, label, x + (w - tw) / 2f, R.midY(y, h, ts), ts, 0xFFFFFFFF, R.SEMI);
+                ctx.getMatrices().pop();
+                R.pxPerUnit = old;
+                return;
+            }
             float total = is + h * 0.25f + tw;
             float sx = x + (w - total) / 2f;
             int iy = y + (h - is) / 2;

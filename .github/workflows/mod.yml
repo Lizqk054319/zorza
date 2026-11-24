@@ -22,6 +22,12 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.12"
+      - name: Dark GUI pack (z tekstur Minecrafta)
+        run: |
+          pip install --quiet pillow
+          (cd mod && gradle --no-daemon -q help > /dev/null)
+          JAR=$(find ~/.gradle/caches/fabric-loom -name "minecraft-client.jar" | head -1)
+          python3 tools/dark_gui.py "$JAR" mod/src/main/resources/resourcepacks/zora_dark_gui
       - name: Build
         working-directory: mod
         run: gradle build --no-daemon --stacktrace
@@ -47,6 +53,12 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.12"
+      - name: Dark GUI pack (z tekstur Minecrafta)
+        run: |
+          pip install --quiet pillow
+          (cd mod && gradle --no-daemon -q help > /dev/null)
+          JAR=$(find ~/.gradle/caches/fabric-loom -name "minecraft-client.jar" | head -1)
+          python3 tools/dark_gui.py "$JAR" mod/src/main/resources/resourcepacks/zora_dark_gui
       - name: Install virtual display
         run: sudo apt-get update && sudo apt-get install -y xvfb mesa-utils libgl1-mesa-dri
       - name: Run Minecraft and take screenshots

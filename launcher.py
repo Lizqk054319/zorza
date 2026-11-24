@@ -46,10 +46,14 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.8.0"
+WERSJA_CLIENTA = "0.8.1"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.8.1", [
+        "W grze: ViewModel, Freelook 360°, ciemny ekwipunek i własny pasek przedmiotów",
+        "Przyciski Czcionka WŁ/WYŁ i Styl WŁ/WYŁ w menu gry",
+    ]),
     ("0.8.0", [
         "Automatyczne aktualizacje z paskiem postępu – bez pobierania instalatora",
         "W grze: Freelook (lewy Alt) i nowe moduły: Low Fire, Time Changer, Clear Weather, Day Counter",

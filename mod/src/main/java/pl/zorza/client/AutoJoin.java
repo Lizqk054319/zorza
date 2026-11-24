@@ -26,6 +26,8 @@ import java.util.List;
 public final class AutoJoin {
     public static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("zorza").resolve("autojoin.json");
     private static boolean checked = false;
+    private static final java.util.Set<net.minecraft.client.gui.screen.Screen> HOOKED =
+            java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
 
     private AutoJoin() {}
 
@@ -34,7 +36,8 @@ public final class AutoJoin {
     public static void register() {
         ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
             MenuButtons.add(client, screen);
-            ScreenEvents.beforeRender(screen).register((sc, ctx, mx, my, delta) -> SmoothScroll.frame());
+            if (HOOKED.add(screen))           // ponowne init (zmiana rozmiaru okna) nie dubluje zdarzenia
+                ScreenEvents.beforeRender(screen).register((sc, ctx, mx, my, delta) -> SmoothScroll.frame());
             if (checked || !(screen instanceof TitleScreen)) return;
             checked = true;
             Data d = read();

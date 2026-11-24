@@ -18,7 +18,10 @@
     "TrueTypeFontLoaderMixin",
     "FireOverlayMixin",
     "ClientWorldPropertiesMixin",
-    "WeatherMixin"
+    "WeatherMixin",
+    "HeldItemMixin",
+    "HotbarMixin",
+    "HandledScreenTextMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -12,6 +12,9 @@ public class MenuSettings extends Module {
     public final Setting.Color accent = add(new Setting.Color("accent", "Accent color", 0xFF2F6BFF));
     public final Setting.Bool animations = add(new Setting.Bool("animations", "Menu animations", true));
     public final Setting.Bool styledMinecraft = add(new Setting.Bool("styled_minecraft", "Zora style for Minecraft menus", true));
+    public final Setting.Bool customHotbar = add(new Setting.Bool("custom_hotbar", "Custom hotbar", true));
+
+    public static boolean hotbar() { return INSTANCE == null || INSTANCE.customHotbar.value; }
 
     public static boolean styled() { return INSTANCE == null || INSTANCE.styledMinecraft.value; }
 

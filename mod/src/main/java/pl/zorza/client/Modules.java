@@ -16,6 +16,7 @@ public final class Modules {
     public static LowFire LOW_FIRE;
     public static TimeChanger TIME_CHANGER;
     public static ClearWeather CLEAR_WEATHER;
+    public static ViewModel VIEW_MODEL;
     public static CustomCrosshair CROSSHAIR;
 
     private Modules() {}
@@ -45,6 +46,7 @@ public final class Modules {
         ALL.add(LOW_FIRE = new LowFire());
         ALL.add(TIME_CHANGER = new TimeChanger());
         ALL.add(CLEAR_WEATHER = new ClearWeather());
+        ALL.add(VIEW_MODEL = new ViewModel());
         ALL.add(new DayCounterHud());
         ALL.add(new HurtCam());
         // Utility

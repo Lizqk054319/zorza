@@ -14,7 +14,9 @@ import java.util.List;
 public class Freelook extends Module {
     public final Setting.Choice mode = add(new Setting.Choice("mode", "Mode", "Hold", () -> List.of("Hold", "Toggle")));
     public final Setting.Bool thirdPerson = add(new Setting.Bool("third_person", "Third person view", true));
+    public final Setting.Bool full360 = add(new Setting.Bool("full_360", "360° rotation (also up/down)", true));
     public final Setting.Bool invert = add(new Setting.Bool("invert", "Invert vertical", false));
+    public final Setting.Bool invertX = add(new Setting.Bool("invert_x", "Invert horizontal", false));
     public final Setting.Num sensitivity = add(new Setting.Num("sensitivity", "Sensitivity", 1.0, 0.2, 3.0, 0.1));
 
     public boolean active = false;
@@ -63,8 +65,9 @@ public class Freelook extends Module {
     public boolean onMouse(double dx, double dy) {
         if (!active) return false;
         double s = 0.15 * sensitivity.value;
-        yaw += (float) (dx * s);
-        pitch = MathHelper.clamp(pitch + (float) (dy * s * (invert.value ? -1 : 1)), -90f, 90f);
+        yaw = MathHelper.wrapDegrees(yaw + (float) (dx * s * (invertX.value ? -1 : 1)));
+        float p = pitch + (float) (dy * s * (invert.value ? -1 : 1));
+        pitch = full360.value ? MathHelper.wrapDegrees(p) : MathHelper.clamp(p, -90f, 90f);
         return true;
     }
 }

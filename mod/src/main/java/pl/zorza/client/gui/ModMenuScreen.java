@@ -41,6 +41,7 @@ public class ModMenuScreen extends ZScreen {
 
     private void openSettings(Module m) {
         settingsOf = m;
+        setScroll = setScrollTarget = 0;
         settingsOpened = System.currentTimeMillis();
     }
 
@@ -285,7 +286,17 @@ public class ModMenuScreen extends ZScreen {
 
     private static final int ROW = 62;
 
-    private int rowsTop() { return y2 + 132; }
+    private double setScroll = 0, setScrollTarget = 0;
+
+    private int rowsBase() { return y2 + 132; }
+
+    private int rowsTop() { return rowsBase() - (int) setScroll; }
+
+    private int maxSetScroll() {
+        if (settingsOf == null) return 0;
+        int content = (1 + settingsOf.settings.size()) * ROW + 10 + 60;
+        return Math.max(0, content - (bottom - rowsBase() - 12));
+    }
 
     private void settings(DrawContext ctx, double mx, double my) {
         Module m = settingsOf;
@@ -301,6 +312,8 @@ public class ModMenuScreen extends ZScreen {
         R.text(ctx, m.name, x + 202, y2 + 26, 24, R.alpha(0xFFFFFFFF, a), R.BOLD);
         R.text(ctx, m.description, x + 202, y2 + 58, 15, R.alpha(0xFF9C9CA6, a), R.MEDIUM);
 
+        setScroll = smoothTo(setScroll, setScrollTarget);
+        scissor(ctx, x - 4, rowsBase() - 6, w + 8, bottom - rowsBase());
         int ry = rowsTop();
         int i = 0;
         rowToggle(ctx, mx, my, x, ry, w, "Enabled", m.enabled, a, i++);
@@ -316,6 +329,7 @@ public class ModMenuScreen extends ZScreen {
         ry += 10;
         int bx = x;
         for (String label : actions(m)) bx = button(ctx, mx, my, bx, ry, label, a) + 12;
+        endScissor(ctx);
     }
 
     private List<String> actions(Module m) {
@@ -501,6 +515,7 @@ public class ModMenuScreen extends ZScreen {
             settingsOf = null;
             return true;
         }
+        if (my < rowsBase() - 6 || my > bottom) return true;      // poza przewijanym obszarem
         int ry = rowsTop();
         if (R.in(mx, my, x, ry, w, ROW - 10)) {
             m.toggle();
@@ -574,7 +589,10 @@ public class ModMenuScreen extends ZScreen {
 
     @Override
     protected boolean scroll(double mx, double my, double v) {
-        if (settingsOf != null) return false;
+        if (settingsOf != null) {
+            setScrollTarget = Math.max(0, Math.min(maxSetScroll(), setScrollTarget - v * 120));
+            return true;
+        }
         scrollTarget = Math.max(0, Math.min(maxScroll(), scrollTarget - v * 170));
         return true;
     }

@@ -57,9 +57,28 @@ public final class MenuButtons {
             w = back.getWidth();
             y = back.getY() - 24;
         } else return;
+        addToggles(client, buttons);
         buttons.add(new ZoraButton(x, y, w, 20, "Zora Mods", null, false,
                 () -> client.setScreen(new ZoraModsScreen(screen))));
         buttons.add(new ZoraButton(x - 24, y, 20, 20, "Mods folder", "folder", true,
                 () -> Util.getOperatingSystem().open(FabricLoader.getInstance().getGameDir().resolve("mods").toFile())));
+    }
+
+    /** Lewy górny róg: Czcionka WŁ/WYŁ i Styl WŁ/WYŁ (ciemne przyciski, ekwipunek, pasek). */
+    private static void addToggles(MinecraftClient client, List<ClickableWidget> buttons) {
+        boolean polish = client.getLanguageManager().getLanguage().startsWith("pl");
+        String on = polish ? "WŁ" : "ON", off = polish ? "WYŁ" : "OFF";
+        boolean font = Packs.enabled(Packs.FONT);
+        boolean style = pl.zorza.client.modules.MenuSettings.styled();
+        buttons.add(new ZoraButton(6, 6, 104, 18, (polish ? "Czcionka: " : "Font: ") + (font ? on : off), "", false,
+                () -> Packs.set(!font, Packs.FONT)));
+        buttons.add(new ZoraButton(6, 28, 104, 18, (polish ? "Styl: " : "Style: ") + (style ? on : off), "", false, () -> {
+            var ms = pl.zorza.client.modules.MenuSettings.INSTANCE;
+            ms.styledMinecraft.value = !style;
+            ms.customHotbar.value = !style;
+            Config.save();
+            if (Packs.exists(Packs.DARK)) Packs.set(!style, Packs.DARK);
+            else client.setScreen(client.currentScreen);      // odśwież przyciski
+        }));
     }
 }
