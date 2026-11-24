@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Prawy Shift: edytowalny HUD (przeciągnij / przewiń / prawy klik = reset)
- * i na środku logo, "zorza settings" oraz cztery przyciski z ikonkami.
+ * i na środku logo, "zora settings" oraz cztery przyciski z ikonkami.
  */
 public class HudEditorScreen extends ZScreen {
     private final boolean showMenu;
@@ -83,7 +83,7 @@ public class HudEditorScreen extends ZScreen {
         int[] b = btn();
         float hb = hover("settings", R.in(mx, my, b[0], b[1], b[2], b[3]));
         R.bordered(ctx, b[0], b[1], b[2], b[3], 12, 1, R.alpha(R.mix(0xF20C0C10, 0xF2202028, hb), a), R.alpha(0x26FFFFFF, a));
-        R.centered(ctx, "zorza settings", cx, R.midY(b[1], b[3], 20), 20, R.alpha(0xFFFFFFFF, a), R.SEMI);
+        R.centered(ctx, "zora settings", cx, R.midY(b[1], b[3], 20), 20, R.alpha(0xFFFFFFFF, a), R.SEMI);
 
         for (int i = 0; i < 4; i++) {
             int[] r = ico(i);

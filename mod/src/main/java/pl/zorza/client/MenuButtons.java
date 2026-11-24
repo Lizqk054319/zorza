@@ -35,13 +35,24 @@ public final class MenuButtons {
             x = anchor.getX();
             w = anchor.getWidth();
             y = anchor.getY() + 24;
-            for (ClickableWidget b : buttons) if (b.getY() >= y) b.setY(b.getY() + 24);   // przesuń Options/Quit w dół
+            int lowest = 0;
+            for (ClickableWidget b : buttons) if (b.getY() >= y) lowest = Math.max(lowest, b.getY() + b.getHeight());
+            if (lowest + 24 <= screen.height - 14) {
+                for (ClickableWidget b : buttons) if (b.getY() >= y) b.setY(b.getY() + 24);   // Options/Quit w dół
+            } else {
+                // mało miejsca (małe okno) – główne przyciski idą w górę
+                for (ClickableWidget b : buttons) if (b.getY() < y && b.getY() > 20 && !(b instanceof net.minecraft.client.gui.widget.TextWidget)) b.setY(b.getY() - 24);
+                y -= 24;
+            }
         } else if (screen instanceof GameMenuScreen) {
             ClickableWidget back = find(buttons, "menu.returnToGame");
             if (back == null) return;                       // menu bez przycisków (F3+Esc)
-            int top = back.getY();
-            int need = 52 - (top - 24);                      // miejsce na tytuł "Game Menu"
-            if (need > 0) for (ClickableWidget b : buttons) b.setY(b.getY() + need);
+            // tytuł "Game Menu" to też widżet – nasz przycisk musi być pod nim
+            int titleBottom = 0;
+            for (ClickableWidget b : buttons)
+                if (b instanceof net.minecraft.client.gui.widget.TextWidget) titleBottom = Math.max(titleBottom, b.getY() + b.getHeight());
+            int need = titleBottom + 6 - (back.getY() - 24);
+            if (need > 0) for (ClickableWidget b : buttons) if (!(b instanceof net.minecraft.client.gui.widget.TextWidget)) b.setY(b.getY() + need);
             x = back.getX();
             w = back.getWidth();
             y = back.getY() - 24;
