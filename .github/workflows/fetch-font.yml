@@ -1,0 +1,18 @@
+name: Fetch font
+on:
+  push:
+    paths: [".github/workflows/fetch-font.yml"]
+permissions:
+  contents: write
+jobs:
+  f:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          D=mod/src/main/resources/assets/zorza/font
+          curl -fsSL -o $D/cherry_bomb.ttf "https://github.com/google/fonts/raw/main/ofl/cherrybombone/CherryBombOne-Regular.ttf"
+          curl -fsSL -o mod/src/main/resources/cherry-bomb-one-license.txt "https://github.com/google/fonts/raw/main/ofl/cherrybombone/OFL.txt"
+          ls -la $D/cherry_bomb.ttf
+          git config user.name ci; git config user.email ci@users.noreply.github.com
+          git add -A mod && git commit -m "Czcionka Cherry Bomb One (OFL)" && git push
