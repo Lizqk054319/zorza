@@ -83,7 +83,7 @@ public class ModMenuScreen extends ZScreen {
     protected void draw(DrawContext ctx, double mx, double my, float delta) {
         layout();
         float a = MenuSettings.anim(opened, 420);
-        scroll += (scrollTarget - scroll) * 0.3;
+        scroll = smoothTo(scroll, scrollTarget);
         ctx.getMatrices().push();
         ctx.getMatrices().translate(0, (1 - a) * 24, 0);
 
@@ -575,7 +575,7 @@ public class ModMenuScreen extends ZScreen {
     @Override
     protected boolean scroll(double mx, double my, double v) {
         if (settingsOf != null) return false;
-        scrollTarget = Math.max(0, Math.min(maxScroll(), scrollTarget - v * 80));
+        scrollTarget = Math.max(0, Math.min(maxScroll(), scrollTarget - v * 170));
         return true;
     }
 

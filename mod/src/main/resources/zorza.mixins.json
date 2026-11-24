@@ -11,7 +11,14 @@
     "PressableWidgetMixin",
     "SliderWidgetMixin",
     "ClickableWidgetInvoker",
-    "ScrollableWidgetMixin"
+    "ScrollableWidgetMixin",
+    "EntityLookMixin",
+    "CameraMixin",
+    "ItemCountMixin",
+    "TrueTypeFontLoaderMixin",
+    "FireOverlayMixin",
+    "ClientWorldPropertiesMixin",
+    "WeatherMixin"
   ],
   "injectors": {
     "defaultRequire": 1

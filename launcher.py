@@ -46,10 +46,15 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.7.1"
+WERSJA_CLIENTA = "0.8.0"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.8.0", [
+        "Automatyczne aktualizacje z paskiem postępu – bez pobierania instalatora",
+        "W grze: Freelook (lewy Alt) i nowe moduły: Low Fire, Time Changer, Clear Weather, Day Counter",
+        "Ostrzejsze napisy i szybsze płynne przewijanie w grze",
+    ]),
     ("0.7.0", [
         "Logowanie kontem Microsoft działa – Mojang zatwierdził Zora Client!",
         "W grze: moduł Gamma (rozjaśnianie), ładniejszy HUD i rozmiar elementów w ustawieniach",
@@ -2248,6 +2253,7 @@ def state_json():
         "discord_invite": DISCORD_INVITE,
         "builtin_names": [t for _, t in MODY_WBUDOWANE],
         "microsoft_soon": MICROSOFT_WKROTCE,
+        "app_update": app_update,
         "zorza_mod_versions": sorted(ZORZA_MOD),
         "lang": settings["lang"],
         "accent": settings["accent"],
@@ -2457,6 +2463,10 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send(400, busy)
             elif path == "/api/mods/check":
                 return self.send(200, {"issues": check_mods(get_profile(d.get("profile")), bool(d.get("auto")))})
+            elif path == "/api/app_update/start":
+                if app_update["version"] and app_update["state"] in ("idle", "error") and not game_running() \
+                        and not task.get("running"):
+                    threading.Thread(target=do_app_update, daemon=True).start()
             elif path == "/api/mods/dismiss":
                 dismiss_issues(get_profile(d.get("profile")), [str(k) for k in d.get("keys", [])][:200])
             elif path == "/api/mods/remove_dups":
@@ -2702,6 +2712,61 @@ def watchdog():
             os._exit(0)
 
 
+# ---------------------------------------------------------------------------
+#  Automatyczna aktualizacja aplikacji (wersja z instalatora)
+# ---------------------------------------------------------------------------
+
+APP_RELEASE = "https://github.com/Lizqk054319/zorza/releases/download/app-latest/"
+app_update = {"version": None, "state": "idle", "progress": 0, "error": None}
+
+
+def _ver(v):
+    return tuple(int(x) for x in re.findall(r"\d+", str(v))[:4])
+
+
+def check_app_update():
+    """Tylko zainstalowana aplikacja (.exe) – porównuje wersję z najnowszym wydaniem na GitHubie."""
+    if not getattr(sys, "frozen", False):
+        return
+    try:
+        r = requests.get(APP_RELEASE + "version.json", headers=UA, timeout=15)
+        r.raise_for_status()
+        latest = r.json().get("version")
+        if latest and _ver(latest) > _ver(WERSJA_CLIENTA):
+            app_update["version"] = latest
+            log(f"Dostępna nowa wersja Zora Client: {latest}")
+    except Exception as e:
+        log(f"Nie udało się sprawdzić aktualizacji aplikacji: {e}")
+
+
+def do_app_update():
+    try:
+        app_update.update(state="downloading", progress=0, error=None)
+        folder = DATA_DIR / "aktualizacja"
+        folder.mkdir(exist_ok=True)
+        dest = folder / "ZorzaSetup.exe"
+        with requests.get(APP_RELEASE + "ZorzaSetup.exe", headers=UA, stream=True, timeout=60) as r:
+            r.raise_for_status()
+            total = int(r.headers.get("content-length") or 0)
+            done = 0
+            with open(dest, "wb") as out:
+                for chunk in r.iter_content(256 * 1024):
+                    out.write(chunk)
+                    done += len(chunk)
+                    if total:
+                        app_update["progress"] = min(99, int(done * 100 / total))
+        app_update.update(state="installing", progress=100)
+        log("Instalowanie aktualizacji...")
+        flags = 0x00000008 | 0x00000200 if os.name == "nt" else 0      # DETACHED_PROCESS | NEW_PROCESS_GROUP
+        subprocess.Popen([str(dest), "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/AUTOUPDATE=1"],
+                         creationflags=flags, close_fds=True)
+        time.sleep(1.5)
+        os._exit(0)                     # instalator podmieni pliki i uruchomi nową wersję
+    except Exception as e:
+        app_update.update(state="error", error=str(e))
+        log(f"Aktualizacja nie powiodła się: {e}")
+
+
 def main():
     try:
         server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
@@ -2733,7 +2798,15 @@ def main():
     threading.Thread(target=fetch_builtin_icons, daemon=True).start()
     skins_list()
     discord.update()
-    if "--no-window" not in sys.argv:
+    threading.Thread(target=check_app_update, daemon=True).start()
+    if "--updated" in sys.argv:
+        # po automatycznej aktualizacji stare okno samo się przeładuje – nowe otwieramy tylko, gdy go nie ma
+        def maybe_open():
+            time.sleep(7)
+            if time.time() - last_ping > 6:
+                open_window()
+        threading.Thread(target=maybe_open, daemon=True).start()
+    elif "--no-window" not in sys.argv:
         open_window()
     print("Nie zamykaj tego okna, dopóki używasz launchera.")
     server.serve_forever()

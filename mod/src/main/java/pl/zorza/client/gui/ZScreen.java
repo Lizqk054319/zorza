@@ -108,4 +108,15 @@ public abstract class ZScreen extends Screen {
     protected boolean release(double mx, double my, int button) { return false; }
 
     protected boolean scroll(double mx, double my, double v) { return false; }
+
+    private long zorza$lastSmooth = System.nanoTime();
+
+    /** Płynne dojście do celu niezależne od FPS (przewijanie). */
+    protected double smoothTo(double cur, double target) {
+        long now = System.nanoTime();
+        double dt = Math.min(0.05, (now - zorza$lastSmooth) / 1e9);
+        zorza$lastSmooth = now;
+        double next = cur + (target - cur) * (1 - Math.exp(-dt * 18));
+        return Math.abs(target - next) < 0.5 ? target : next;
+    }
 }

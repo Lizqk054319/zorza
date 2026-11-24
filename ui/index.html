@@ -435,9 +435,25 @@ select.inp:disabled{opacity:.6}
 .skres .ic canvas{width:36px;height:72px;image-rendering:pixelated}
 .skres b{display:block;font-size:18px}.skres span{color:var(--muted);font-size:14px}
 .opt:disabled{opacity:.5;cursor:default}
+
+#updOv{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;background:rgba(8,8,12,.86);backdrop-filter:blur(14px);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+#updOv.on{opacity:1;visibility:visible}
+#updOv .ub{width:min(520px,86vw);text-align:center;color:#fff}
+#updOv svg{color:var(--blue);filter:drop-shadow(0 0 24px color-mix(in srgb,var(--blue) 60%,transparent))}
+#updOv h2{margin:18px 0 6px;font-size:28px}#updOv h2 span{color:var(--muted);font-size:16px;font-weight:600;margin-left:6px}
+#updOv p{color:#c8c8d2;margin:0 0 22px;font-size:16px}
+#updOv .bar{height:12px;border-radius:8px;background:#ffffff14;overflow:hidden}
+#updOv .bar i{display:block;height:100%;width:0;border-radius:8px;background:var(--blue);transition:width .3s}
+#updOv b{display:block;margin-top:12px;font-variant-numeric:tabular-nums;color:#e8e8f0}
 </style>
 </head>
 <body class="boot logohide">
+<div id="updOv"><div class="ub">
+  <svg width="74" height="74"><use href="#logo"/></svg>
+  <h2>Zora Client <span id="updVer"></span></h2>
+  <p id="updText">Trwa aktualizowanie Clienta, proszę czekać</p>
+  <div class="bar"><i id="updBar"></i></div><b id="updPct">0%</b>
+</div></div>
 <div id="splash"><div class="bg"></div>
   <svg viewBox="0 0 64 64"><defs><linearGradient id="slg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7dffb4"/><stop offset="1" stop-color="#4aa8ff"/></linearGradient></defs>
     <path class="w1" d="M8 40c8-14 16-18 24-12s16 2 24-12" fill="none" stroke="url(#slg)" stroke-width="5" stroke-linecap="round"/>
@@ -1125,6 +1141,12 @@ W grze: moduł Gamma (rozjaśnianie), ładniejszy HUD i rozmiar elementów w ust
 Przyciski Zora Mods i folder modów w menu gry|Zora Mods and mods-folder buttons in the game menu|Zora-Mods- und Mod-Ordner-Buttons im Spielmenü|Кнопки Zora Mods і папки модів у меню гри|Botones de Zora Mods y carpeta de mods en el menú del juego
 Lepsza wydajność: ustawienia Javy pod wyższe i stabilniejsze FPS|Better performance: Java settings for higher, steadier FPS|Bessere Leistung: Java-Einstellungen für höhere, stabilere FPS|Краща продуктивність: налаштування Java для вищих і стабільніших FPS|Mejor rendimiento: ajustes de Java para más FPS y más estables
 Najpierw dodaj konto Microsoft w zakładce Konta.|First add a Microsoft account in the Accounts tab.|Füge zuerst im Tab Konten ein Microsoft-Konto hinzu.|Спершу додай акаунт Microsoft у вкладці «Акаунти».|Primero añade una cuenta de Microsoft en la pestaña Cuentas.
+Trwa aktualizowanie Clienta, proszę czekać|Updating the Client, please wait|Client wird aktualisiert, bitte warten|Оновлення клієнта, зачекай|Actualizando el cliente, espera por favor
+Instalowanie aktualizacji...|Installing the update...|Update wird installiert...|Встановлення оновлення...|Instalando la actualización...
+Nie udało się zaktualizować. Spróbuję przy następnym uruchomieniu.|Couldn't update. I'll try again next time.|Update fehlgeschlagen. Nächstes Mal neuer Versuch.|Не вдалося оновити. Спробую наступного разу.|No se pudo actualizar. Lo intentaré la próxima vez.
+Automatyczne aktualizacje z paskiem postępu – bez pobierania instalatora|Automatic updates with a progress bar – no installer downloads|Automatische Updates mit Fortschrittsbalken – ohne Installer-Download|Автоматичні оновлення з індикатором – без завантаження інсталятора|Actualizaciones automáticas con barra de progreso, sin descargar el instalador
+W grze: Freelook (lewy Alt) i nowe moduły: Low Fire, Time Changer, Clear Weather, Day Counter|In game: Freelook (Left Alt) and new modules: Low Fire, Time Changer, Clear Weather, Day Counter|Im Spiel: Freelook (linke Alt) und neue Module: Low Fire, Time Changer, Clear Weather, Day Counter|У грі: Freelook (лівий Alt) і нові модулі: Low Fire, Time Changer, Clear Weather, Day Counter|En el juego: Freelook (Alt izq.) y nuevos módulos: Low Fire, Time Changer, Clear Weather, Day Counter
+Ostrzejsze napisy i szybsze płynne przewijanie w grze|Sharper text and faster smooth scrolling in game|Schärferer Text und schnelleres flüssiges Scrollen im Spiel|Чіткіший текст і швидше плавне прокручування в грі|Texto más nítido y desplazamiento suave más rápido en el juego
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1356,8 +1378,14 @@ $$(".nav").forEach(b => b.onclick = () => go(b.dataset.p));
 /* ================= STAN ================= */
 const loaderName = l => l === "fabric" ? "Fabric" : "Vanilla";
 let lastAcc = "", lastProf = "";
+let updMode = false, updStarted = false;
 async function refresh() {
-  try { S = await api("/api/state"); } catch { return; }
+  try { S = await api("/api/state"); } catch {
+    if (updMode) { $("#updText").textContent = t("Instalowanie aktualizacji..."); $("#updBar").style.width = "100%"; $("#updPct").textContent = ""; }
+    return;
+  }
+  if (updMode && S.app_update.state === "idle" && !S.app_update.version) return location.reload();   // nowa wersja już działa
+  updateOverlay();
   if (Date.now() - accentLock > 1500) document.documentElement.style.setProperty("--blue", S.accent);
   if (!refresh._init) { refresh._init = 1; renderNews(); renderSwatches(); }
   applyLang(S.lang);
@@ -2023,6 +2051,28 @@ function playServer(srv) {
   };
   $("#spMs").onclick = () => msOk && go2("microsoft");
   $("#spOff").onclick = () => go2("official");
+}
+
+/* ================= AUTOMATYCZNA AKTUALIZACJA ================= */
+function updateOverlay() {
+  const u = S.app_update;
+  if (!u || !u.version) return;
+  if (!updStarted && !S.game_running && !S.task.running) {
+    updStarted = updMode = true;
+    $("#updOv").classList.add("on");
+    api("/api/app_update/start", {}).catch(() => {});
+  }
+  if (!updMode) return;
+  $("#updVer").textContent = "v" + u.version;
+  if (u.state === "error") {
+    $("#updText").textContent = t("Nie udało się zaktualizować. Spróbuję przy następnym uruchomieniu.");
+    setTimeout(() => $("#updOv").classList.remove("on"), 4000);
+    updMode = false;
+    return;
+  }
+  $("#updText").textContent = u.state === "installing" ? t("Instalowanie aktualizacji...") : t("Trwa aktualizowanie Clienta, proszę czekać");
+  $("#updBar").style.width = u.progress + "%";
+  $("#updPct").textContent = u.progress + "%";
 }
 
 /* ================= DISCORD ================= */

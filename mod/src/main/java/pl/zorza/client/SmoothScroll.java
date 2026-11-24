@@ -29,6 +29,7 @@ public final class SmoothScroll {
     }
 
     public static void start(Access w, double from, double to) {
+        to = from + (to - from) * 2.0;                 // szybciej niż zwykle w Minecrafcie
         State s = ACTIVE.get(w);
         if (s == null || Math.abs(w.zorza$get() - s.last) > 0.5) {   // nowa animacja albo ktoś przeciągnął pasek
             s = new State();
@@ -53,7 +54,7 @@ public final class SmoothScroll {
             if (Math.abs(cur - s.last) > 0.5) { it.remove(); continue; }     // przewinięte inaczej (np. pasek)
             double dt = Math.min(0.05, (now - s.time) / 1e9);
             s.time = now;
-            double k = 1 - Math.exp(-dt * 16);                               // wygładzenie niezależne od FPS
+            double k = 1 - Math.exp(-dt * 20);                               // wygładzenie niezależne od FPS
             double next = cur + (s.target - cur) * k;
             if (Math.abs(s.target - next) < 0.4) next = s.target;
             w.zorza$set(next);

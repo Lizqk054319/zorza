@@ -55,7 +55,7 @@ public class ZoraModsScreen extends ZScreen {
     protected void draw(DrawContext ctx, double mx, double my, float delta) {
         layout();
         float a = R.ease(opened, 380);
-        scroll += (scrollTarget - scroll) * 0.3;
+        scroll = smoothTo(scroll, scrollTarget);
         ctx.getMatrices().push();
         ctx.getMatrices().translate(0, (1 - a) * 24, 0);
 
@@ -200,7 +200,7 @@ public class ZoraModsScreen extends ZScreen {
 
     @Override
     protected boolean scroll(double mx, double my, double v) {
-        scrollTarget = Math.max(0, Math.min(maxScroll(), scrollTarget - v * 80));
+        scrollTarget = Math.max(0, Math.min(maxScroll(), scrollTarget - v * 170));
         return true;
     }
 

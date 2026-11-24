@@ -21,6 +21,22 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             });
             context.waitTicks(20);
             context.takeScreenshot("01-hud");
+            context.runOnClient(client -> {
+                Modules.FREELOOK.active = true;
+                Modules.FREELOOK.yaw = client.player.getYaw() + 150;
+                Modules.FREELOOK.pitch = 25;
+                client.options.setPerspective(net.minecraft.client.option.Perspective.THIRD_PERSON_BACK);
+                Modules.TIME_CHANGER.enabled = true;
+                Modules.TIME_CHANGER.time.value = "Sunset";
+                client.player.getInventory().setStack(1, new net.minecraft.item.ItemStack(net.minecraft.item.Items.COOKED_BEEF, 25));
+            });
+            context.waitTicks(20);
+            context.takeScreenshot("15-freelook");
+            context.runOnClient(client -> {
+                Modules.FREELOOK.active = false;
+                Modules.TIME_CHANGER.enabled = false;
+                client.options.setPerspective(net.minecraft.client.option.Perspective.FIRST_PERSON);
+            });
             context.runOnClient(client -> client.setScreen(new HudEditorScreen(true)));
             context.waitTicks(30);
             context.takeScreenshot("02-right-shift");

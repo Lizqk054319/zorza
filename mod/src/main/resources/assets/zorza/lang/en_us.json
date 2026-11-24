@@ -1,5 +1,6 @@
 {
   "category.zorza": "Zora Client",
-  "key.zorza.menu": "Open Zorza menu",
-  "key.zorza.zoom": "Zoom"
+  "key.zorza.menu": "Open Zora menu",
+  "key.zorza.zoom": "Zoom",
+  "key.zorza.freelook": "Freelook"
 }

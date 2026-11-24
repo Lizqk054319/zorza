@@ -12,6 +12,10 @@ public final class Modules {
     public static HitSounds HIT_SOUNDS;
     public static KillSounds KILL_SOUNDS;
     public static Gamma GAMMA;
+    public static Freelook FREELOOK;
+    public static LowFire LOW_FIRE;
+    public static TimeChanger TIME_CHANGER;
+    public static ClearWeather CLEAR_WEATHER;
     public static CustomCrosshair CROSSHAIR;
 
     private Modules() {}
@@ -37,6 +41,11 @@ public final class Modules {
         ALL.add(HIT_SOUNDS = new HitSounds());
         ALL.add(KILL_SOUNDS = new KillSounds());
         ALL.add(GAMMA = new Gamma());
+        ALL.add(FREELOOK = new Freelook());
+        ALL.add(LOW_FIRE = new LowFire());
+        ALL.add(TIME_CHANGER = new TimeChanger());
+        ALL.add(CLEAR_WEATHER = new ClearWeather());
+        ALL.add(new DayCounterHud());
         ALL.add(new HurtCam());
         // Utility
         ALL.add(ZOOM = new Zoom());

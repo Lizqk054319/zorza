@@ -45,8 +45,15 @@ Name: "{autodesktop}\Zora Client"; Filename: "{app}\Zora Client.exe"; Tasks: des
 
 [Run]
 Filename: "{app}\Zora Client.exe"; Description: "{cm:LaunchProgram,Zora Client}"; Flags: nowait postinstall skipifsilent
+; po automatycznej aktualizacji z launchera – uruchom nową wersję
+Filename: "{app}\Zora Client.exe"; Parameters: "--updated"; Flags: nowait; Check: IsAutoUpdate
 
 [Code]
+function IsAutoUpdate(): Boolean;
+begin
+  Result := ExpandConstant('{param:AUTOUPDATE|0}') = '1';
+end;
+
 // Launcher działa w tle bez okna, więc zamykamy go sami przed instalacją (stare nazwy też)
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
