@@ -1,9 +1,41 @@
 {
   "providers": [
-    {"type": "ttf", "file": "zorza:inter_medium.ttf", "size": 8.6, "oversample": 4.0, "shift": [0.0, 1.0],
-     "skip": "§"},
-    {"type": "reference", "id": "minecraft:include/space"},
-    {"type": "reference", "id": "minecraft:include/default", "filter": {"uniform": false}},
-    {"type": "reference", "id": "minecraft:include/unifont"}
+    {
+      "type": "ttf",
+      "file": "zorza:cherry_bomb.ttf",
+      "size": 8.6,
+      "oversample": 4.0,
+      "shift": [
+        0.0,
+        1.0
+      ],
+      "skip": "\u00a7"
+    },
+    {
+      "type": "ttf",
+      "file": "zorza:inter_medium.ttf",
+      "size": 8.6,
+      "oversample": 4.0,
+      "shift": [
+        0.0,
+        1.0
+      ],
+      "skip": "\u00a7"
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:include/space"
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:include/default",
+      "filter": {
+        "uniform": false
+      }
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:include/unifont"
+    }
   ]
 }

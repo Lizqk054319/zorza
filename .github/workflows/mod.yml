@@ -58,7 +58,8 @@ jobs:
         if: always()
         run: |
           mkdir -p /tmp/shots
-          J=$(find ~/.gradle/caches mod/.gradle -name "minecraft-clientOnly-*named*.jar" -o -name "minecraft-merged-*named*.jar" 2>/dev/null | head -1)
+          find ~/.gradle/caches/fabric-loom mod/.gradle -name "*.jar" 2>/dev/null | grep -i "minecraft-" | grep -iv "sources\|intermediary\|official" | head -20 > /tmp/shots/jars.txt || true
+          J=$(grep -i "yarn\|named" /tmp/shots/jars.txt | grep -i "client\|merged" | head -1)
           if [ -n "$J" ]; then javap -p -c -cp "$J" net.minecraft.client.gui.DrawContext 2>/dev/null | grep -E "^  (public|private|protected).*\(|drawText|getWidth" > /tmp/shots/drawcontext.txt || true; fi
           cp -r mod/build/run/clientGameTest/screenshots/. /tmp/shots/ 2>/dev/null || true
           cp -r mod/run/screenshots/. /tmp/shots/ 2>/dev/null || true

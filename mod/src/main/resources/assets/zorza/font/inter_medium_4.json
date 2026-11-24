@@ -1,1 +1,1 @@
-{"providers":[{"type":"ttf","file":"zorza:inter_medium.ttf","shift":[0,0],"size":11.0,"oversample":4.0}]}
+{"providers": [{"type": "ttf", "file": "zorza:cherry_bomb.ttf", "shift": [0, 0], "size": 11.0, "oversample": 4.0}, {"type": "ttf", "file": "zorza:inter_medium.ttf", "shift": [0, 0], "size": 11.0, "oversample": 4.0}]}
