@@ -21,7 +21,14 @@
     "WeatherMixin",
     "HeldItemMixin",
     "HotbarMixin",
-    "HandledScreenTextMixin"
+    "HandledScreenTextMixin",
+    "MouseFreelookMixin",
+    "CooldownAccessor",
+    "CooldownEntryAccessor",
+    "DirectConnectMixin",
+    "PlayerListScaleMixin",
+    "ScoreboardScaleMixin",
+    "BossBarScaleMixin"
   ],
   "injectors": {
     "defaultRequire": 1

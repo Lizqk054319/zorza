@@ -62,7 +62,8 @@ public class ZorzaClient implements ClientModInitializer {
                 "key.zorza.freelook", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "category.zorza"));
 
         ClientTickEvents.END_CLIENT_TICK.register(ZorzaClient::tick);
-        HudRenderCallback.EVENT.register((ctx, tickCounter) -> {
+        net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents.AFTER_ENTITIES.register(c -> Modules.HEALTH.render(c));
+                HudRenderCallback.EVENT.register((ctx, tickCounter) -> {
             MinecraftClient mc = MinecraftClient.getInstance();
             if (mc.options.hudHidden || mc.player == null) return;
             if (mc.currentScreen instanceof HudEditorScreen) return;

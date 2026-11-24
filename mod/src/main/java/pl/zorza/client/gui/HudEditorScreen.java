@@ -58,6 +58,8 @@ public class HudEditorScreen extends ZScreen {
 
     private int cy() { return H / 2 + 10; }
 
+    private int[] scaleBtn() { return new int[]{W - 24 - 290, 22, 290, 46}; }
+
     private int[] btn() { return new int[]{cx() - 130, cy() - 6, 260, 52}; }
 
     private int[] ico(int i) { return new int[]{cx() - 2 * 54 - 27 + i * 72 - 9 + 9, cy() + 66, 54, 54}; }
@@ -70,6 +72,13 @@ public class HudEditorScreen extends ZScreen {
         int hw = (int) R.width(hint, 17, R.SEMI) + 56, hy = (int) (22 - (1 - a) * 30);
         R.bordered(ctx, W / 2 - hw / 2, hy, hw, 46, 23, 1, R.alpha(0xF0101014, a), R.alpha(0x30FFFFFF, a));
         R.text(ctx, hint, W / 2f - hw / 2f + 28, R.midY(hy, 46, 17), 17, R.alpha(0xFFE8E8EE, a), R.SEMI);
+
+        int[] sb = scaleBtn();
+        sb[1] = (int) (sb[1] - (1 - a) * 30);
+        float hs = hover("scale", R.in(mx, my, sb[0], sb[1], sb[2], sb[3]));
+        R.bordered(ctx, sb[0], sb[1], sb[2], sb[3], 23, 1, R.alpha(R.mix(0xF0101014, 0xF0202028, hs), a), R.alpha(R.mix(0x30FFFFFF, R.ACCENT, hs), a));
+        R.icon(ctx, "m_resize", sb[0] + 20, sb[1] + 12, 22, R.alpha(0xFFFFFFFF, a));
+        R.text(ctx, "Tab & Scoreboard", sb[0] + 54, R.midY(sb[1], 46, 17), 17, R.alpha(0xFFE8E8EE, a), R.SEMI);
 
         if (!showMenu) return;
         int cx = cx(), cy = cy();
@@ -100,6 +109,11 @@ public class HudEditorScreen extends ZScreen {
 
     @Override
     protected boolean click(double mx, double my, int button) {
+        int[] sb = scaleBtn();
+        if (R.in(mx, my, sb[0], sb[1], sb[2], sb[3])) {
+            client.setScreen(new ScaleScreen(this));
+            return true;
+        }
         if (showMenu) {
             int[] b = btn();
             if (R.in(mx, my, b[0], b[1], b[2], b[3])) {

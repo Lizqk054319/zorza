@@ -16,6 +16,6 @@ public class Gamma extends Module {
 
     /** Wartość jasności przekazywana do oświetlenia (gra normalnie używa 0..1). */
     public Double factor() {
-        return 1.0 + brightness.value / 100.0 * 5.0;
+        return 1.0 + brightness.value / 100.0 * 9.5;      // 150% ≈ 15 – cienie też się rozjaśniają
     }
 }

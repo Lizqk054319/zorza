@@ -49,6 +49,15 @@ public class ZorzaScreenshots implements FabricClientGameTest {
                 client.player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(net.minecraft.entity.effect.StatusEffects.NIGHT_VISION, 600, 0));
             });
             context.waitTicks(5);
+            context.runOnClient(client -> {
+                Modules.HEALTH.enabled = true;
+                Modules.HEALTH.mobs.value = true;
+                for (var m : Modules.ALL) if (m.id.equals("cooldowns")) m.enabled = true;
+                client.player.getItemCooldownManager().set(new net.minecraft.item.ItemStack(net.minecraft.item.Items.ENDER_PEARL), 300);
+                client.player.getItemCooldownManager().set(new net.minecraft.item.ItemStack(net.minecraft.item.Items.WIND_CHARGE), 30);
+            });
+            sp.getServer().runCommand("execute at @p run summon minecraft:zombie ^1 ^ ^4 {NoAI:1b}");
+            context.waitTicks(10);
             context.takeScreenshot("16-viewmodel-hotbar");
             context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.ingame.InventoryScreen(client.player)));
             context.waitTicks(20);
@@ -62,6 +71,9 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             context.runOnClient(client -> client.setScreen(new HudEditorScreen(true)));
             context.waitTicks(30);
             context.takeScreenshot("02-right-shift");
+        context.runOnClient(client -> client.setScreen(new pl.zorza.client.gui.ScaleScreen(null)));
+        context.waitTicks(20);
+        context.takeScreenshot("19-scale");
             context.runOnClient(client -> client.setScreen(new ModMenuScreen(null)));
             context.waitTicks(30);
             context.takeScreenshot("03-mod-menu");
@@ -118,6 +130,12 @@ public class ZorzaScreenshots implements FabricClientGameTest {
         context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen(new net.minecraft.client.gui.screen.TitleScreen())));
         context.waitTicks(30);
         context.takeScreenshot("14-multiplayer");
+        context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.multiplayer.DirectConnectScreen(
+                new net.minecraft.client.gui.screen.TitleScreen(), b -> {}, new net.minecraft.client.network.ServerInfo("", "", net.minecraft.client.network.ServerInfo.ServerType.OTHER))));
+        context.waitTicks(5);
+        context.getInput().typeChars("hypixel.net");
+        context.waitTicks(80);
+        context.takeScreenshot("18-direct-connect");
         context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.TitleScreen()));
         context.waitTicks(10);
     }

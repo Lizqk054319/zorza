@@ -17,6 +17,8 @@ public final class Modules {
     public static TimeChanger TIME_CHANGER;
     public static ClearWeather CLEAR_WEATHER;
     public static ViewModel VIEW_MODEL;
+    public static HealthIndicators HEALTH;
+    public static HudScale HUD_SCALE;
     public static CustomCrosshair CROSSHAIR;
 
     private Modules() {}
@@ -47,6 +49,9 @@ public final class Modules {
         ALL.add(TIME_CHANGER = new TimeChanger());
         ALL.add(CLEAR_WEATHER = new ClearWeather());
         ALL.add(VIEW_MODEL = new ViewModel());
+        ALL.add(HEALTH = new HealthIndicators());
+        ALL.add(new CooldownsHud());
+        ALL.add(HUD_SCALE = new HudScale());
         ALL.add(new DayCounterHud());
         ALL.add(new HurtCam());
         // Utility
