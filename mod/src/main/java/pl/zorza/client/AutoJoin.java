@@ -36,8 +36,8 @@ public final class AutoJoin {
     public static void register() {
         ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
             MenuButtons.add(client, screen);
-            if (HOOKED.add(screen))           // ponowne init (zmiana rozmiaru okna) nie dubluje zdarzenia
-                ScreenEvents.beforeRender(screen).register((sc, ctx, mx, my, delta) -> SmoothScroll.frame());
+            // Fabric tworzy zdarzenia ekranu od nowa przy każdym init – trzeba się podpiąć za każdym razem
+            ScreenEvents.beforeRender(screen).register((sc, ctx, mx, my, delta) -> SmoothScroll.frame());
             if (checked || !(screen instanceof TitleScreen)) return;
             checked = true;
             Data d = read();

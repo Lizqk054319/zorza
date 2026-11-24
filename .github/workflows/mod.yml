@@ -72,7 +72,7 @@ jobs:
           mkdir -p /tmp/shots
           find ~/.gradle/caches/fabric-loom mod/.gradle -name "*.jar" 2>/dev/null | grep -i "minecraft-" | grep -iv "sources\|intermediary\|official" | head -20 > /tmp/shots/jars.txt || true
           J=$(grep -i "yarn\|named" /tmp/shots/jars.txt | grep -i "client\|merged" | head -1)
-          if [ -n "$J" ]; then javap -p -c -cp "$J" net.minecraft.client.render.item.HeldItemRenderer 2>/dev/null | grep -E "^  (public|private|protected).*\(|renderItem|invokevirtual.*HeldItemRenderer" > /tmp/shots/helditem.txt || true; fi
+          if [ -n "$J" ]; then for C in net.minecraft.client.Mouse net.minecraft.client.render.Camera net.minecraft.client.gui.hud.PlayerListHud net.minecraft.client.gui.hud.InGameHud net.minecraft.client.gui.hud.BossBarHud net.minecraft.entity.player.ItemCooldownManager 'net.minecraft.entity.player.ItemCooldownManager$Entry' net.minecraft.client.gui.screen.multiplayer.DirectConnectScreen net.minecraft.client.network.MultiplayerServerListPinger net.minecraft.client.network.ServerInfo net.minecraft.client.render.LightmapTextureManager net.minecraft.client.network.ClientPlayerEntity; do echo "== $C"; javap -p -cp "$J" "$C" 2>/dev/null; done > /tmp/shots/sigs.txt; javap -p -c -cp "$J" net.minecraft.client.Mouse | grep -E "^  (public|private).*\\(|changeLookDirection" >> /tmp/shots/sigs.txt; fi
           cp -r mod/build/run/clientGameTest/screenshots/. /tmp/shots/ 2>/dev/null || true
           cp -r mod/run/screenshots/. /tmp/shots/ 2>/dev/null || true
           cp mod/build/run/clientGameTest/logs/latest.log /tmp/shots/ 2>/dev/null || cp mod/run/logs/latest.log /tmp/shots/ 2>/dev/null || true
