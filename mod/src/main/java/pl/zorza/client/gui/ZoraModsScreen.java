@@ -157,7 +157,7 @@ public class ZoraModsScreen extends ZScreen {
         float t = hover("sw" + e.id, e.enabled);
         int off = e.required ? 0xFF2A2A30 : 0xFF3A3A44;
         R.round(ctx, sw[0], sw[1], sw[2], sw[3], 16, R.alpha(R.mix(off, e.required ? 0xFF3A4A6A : R.ACCENT, t), a));
-        R.round(ctx, sw[0] + 4 + (int) (28 * t), sw[1] + 4, 24, 24, 12, R.alpha(e.required ? 0xFFB8B8C2 : 0xFFFFFFFF, a));
+        R.round(ctx, sw[0] + 4 + (int) (28 * t), sw[1] + 4, 24, 24, 12, R.alpha(e.required ? 0xFFB8B8C2 : R.mix(0xFFFFFFFF, R.onAccent(), t), a));
     }
 
     @Override

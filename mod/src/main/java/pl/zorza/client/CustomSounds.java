@@ -44,14 +44,20 @@ public final class CustomSounds {
     public static void init() {
         try {
             Files.createDirectories(DIR);
-            Path readme = DIR.resolve("CZYTAJ.txt");
+            Files.deleteIfExists(DIR.resolve("CZYTAJ.txt"));     // stara nazwa
+            Path readme = DIR.resolve("README.txt");
             if (!Files.exists(readme)) {
                 Files.writeString(readme, """
+                        === POLSKI ===
                         Wrzuć tutaj własne dźwięki w formacie .ogg albo .wav.
                         Potem w grze: prawy Shift -> Mod Menu -> Hit Sounds (albo Kill Sounds) -> Sound
-                        i wybierz swój plik strzałkami. Krótkie dźwięki (do 2 sekund) działają najlepiej.
+                        i wybierz swój plik strzałkami. Najlepiej działają krótkie dźwięki (do 2 sekund).
 
-                        Put your own .ogg or .wav sounds here and pick them in Hit Sounds / Kill Sounds.
+
+                        === ENGLISH ===
+                        Put your own sounds here as .ogg or .wav files.
+                        Then in game: Right Shift -> Mod Menu -> Hit Sounds (or Kill Sounds) -> Sound
+                        and pick your file with the arrows. Short sounds (up to 2 seconds) work best.
                         """);
             }
         } catch (Exception e) {

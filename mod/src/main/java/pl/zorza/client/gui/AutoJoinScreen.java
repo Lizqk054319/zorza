@@ -93,7 +93,7 @@ public class AutoJoinScreen extends ZScreen {
         n[1] += off;
         float hy = hover("yes", R.in(mx, my, y[0], y[1], y[2], y[3])), hn = hover("no", R.in(mx, my, n[0], n[1], n[2], n[3]));
         R.round(ctx, y[0], y[1], y[2], y[3], 14, R.alpha(R.mix(R.ACCENT, 0xFFFFFFFF, hy * 0.15f), a));
-        R.centered(ctx, s("Tak, połącz", "Yes, connect"), y[0] + y[2] / 2f, R.midY(y[1], y[3], 17), 17, R.alpha(0xFFFFFFFF, a), R.SEMI);
+        R.centered(ctx, s("Tak, połącz", "Yes, connect"), y[0] + y[2] / 2f, R.midY(y[1], y[3], 17), 17, R.alpha(R.onAccent(), a), R.SEMI);
         R.round(ctx, n[0], n[1], n[2], n[3], 14, R.alpha(R.mix(0xFF26262E, 0xFF32323C, hn), a));
         R.centered(ctx, s("Nie", "No"), n[0] + n[2] / 2f, R.midY(n[1], n[3], 17), 17, R.alpha(0xFFFFFFFF, a), R.SEMI);
     }

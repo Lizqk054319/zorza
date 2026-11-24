@@ -27,6 +27,15 @@ public final class R {
     private static final Identifier BR = Identifier.of("zorza", "textures/gui/corner_br.png");
 
     public static int ACCENT = 0xFF2F6BFF;
+
+    /** Kolor tekstu/ikon na tle w kolorze akcentu – ciemny, gdy akcent jest jasny (np. biały). */
+    public static int onAccent() {
+        int r = (ACCENT >> 16) & 255, g = (ACCENT >> 8) & 255, b = ACCENT & 255;
+        return (0.299 * r + 0.587 * g + 0.114 * b) > 170 ? 0xFF111116 : 0xFFFFFFFF;
+    }
+
+    /** Czy akcent jest jasny. */
+    public static boolean lightAccent() { return onAccent() != 0xFFFFFFFF; }
     public static final int PANEL = 0xEB121216;
     public static final int CARD = 0xFF1A1A1F;
     public static final int CARD_HOVER = 0xFF222228;
@@ -110,7 +119,8 @@ public final class R {
     }
 
     public static void shadowText(DrawContext c, String s, float x, float y, float size, int color, Identifier font) {
-        text(c, s, x + size * 0.08f, y + size * 0.08f, size, alpha(0xFF000000, ((color >>> 24) / 255f) * 0.55f), font);
+        float o = Math.max(1f / Math.max(0.5f, pxPerUnit), size * 0.045f);      // ~1 prawdziwy piksel
+        text(c, s, x + o, y + o, size, alpha(0xFF000000, ((color >>> 24) / 255f) * 0.4f), font);
         text(c, s, x, y, size, color, font);
     }
 

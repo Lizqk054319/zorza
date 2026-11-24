@@ -46,14 +46,10 @@ public class HudEditorScreen extends ZScreen {
     protected void renderGui(DrawContext ctx, int mx, int my, float delta) {
         HudModule hov = dragging != null ? dragging : hudAt(mx, my);
         for (HudModule h : huds()) {
+            // w edytorze: delikatna ramka, po najechaniu – zaokrąglona ramka w kolorze akcentu
+            h.highlight = 0.25f + 0.75f * hover("hud" + h.id, h == hov);
             h.render(ctx, client, true);
-            int[] r = h.rect(client, width, height);
-            float t = hover("hud" + h.id, h == hov);
-            int col = R.alpha(R.mix(0x55FFFFFF, R.ACCENT, t), 0.5f + 0.5f * t);
-            ctx.fill(r[0] - 2, r[1] - 2, r[0] + r[2] + 2, r[1] - 1, col);
-            ctx.fill(r[0] - 2, r[1] + r[3] + 1, r[0] + r[2] + 2, r[1] + r[3] + 2, col);
-            ctx.fill(r[0] - 2, r[1] - 1, r[0] - 1, r[1] + r[3] + 1, col);
-            ctx.fill(r[0] + r[2] + 1, r[1] - 1, r[0] + r[2] + 2, r[1] + r[3] + 1, col);
+            h.highlight = 0f;
         }
     }
 
@@ -159,7 +155,7 @@ public class HudEditorScreen extends ZScreen {
     protected boolean scroll(double mx, double my, double v) {
         HudModule m = hudAt(toGui(mx), toGui(my));
         if (m == null) return false;
-        m.scale = Math.max(0.5, Math.min(3.0, Math.round((m.scale + v * 0.1) * 10) / 10.0));
+        m.setScale(Math.round((m.scale() + v * 0.1) * 10) / 10.0);
         Config.save();
         return true;
     }

@@ -134,7 +134,7 @@ public class ModMenuScreen extends ZScreen {
         int fill = on ? R.ACCENT : R.mix(0xF00C0C0F, 0xF0202027, h);
         R.bordered(ctx, r[0], r[1], r[2], r[3], 12, 1, R.alpha(fill, a), R.alpha(on ? 0x00000000 : 0x1CFFFFFF, a));
         int s = 26;
-        R.icon(ctx, icon, r[0] + (r[2] - s) / 2, r[1] + (r[3] - s) / 2, s, R.alpha(0xFFFFFFFF, a));
+        R.icon(ctx, icon, r[0] + (r[2] - s) / 2, r[1] + (r[3] - s) / 2, s, R.alpha(on ? R.onAccent() : 0xFFFFFFFF, a));
     }
 
     private int[] modTab() { return new int[]{px, y1, 214, 64}; }
@@ -149,8 +149,8 @@ public class ModMenuScreen extends ZScreen {
         int[] t = modTab();
         float h = hover("tabMods", R.in(mx, my, t[0], t[1], t[2], t[3]));
         R.round(ctx, t[0], t[1], t[2], t[3], 12, R.alpha(R.mix(R.ACCENT, 0xFFFFFFFF, h * 0.08f), a));
-        R.icon(ctx, "grid", t[0] + 30, t[1] + 21, 22, R.alpha(0xFFFFFFFF, a));
-        R.text(ctx, "MOD MENU", t[0] + 68, R.midY(t[1], 64, 17), 17, R.alpha(0xFFFFFFFF, a), R.BOLD);
+        R.icon(ctx, "grid", t[0] + 30, t[1] + 21, 22, R.alpha(R.onAccent(), a));
+        R.text(ctx, "MOD MENU", t[0] + 68, R.midY(t[1], 64, 17), 17, R.alpha(R.onAccent(), a), R.BOLD);
         for (int i = 0; i < 3; i++) squareButton(ctx, mx, my, sideTab(i), SIDE_TABS[i], "side" + i, a, false);
         int[] z = zoraTab();
         float hz = hover("tabZora", R.in(mx, my, z[0], z[1], z[2], z[3]));
@@ -185,7 +185,7 @@ public class ModMenuScreen extends ZScreen {
             float h = hover("chip" + i, R.in(mx, my, r[0], r[1], r[2], r[3]));
             R.round(ctx, r[0], r[1], r[2], r[3], 10, R.alpha(on ? R.ACCENT : R.mix(0xFF1B1B21, 0xFF26262E, h), a));
             R.centered(ctx, chipLabel(i), r[0] + r[2] / 2f, R.midY(r[1], r[3], 15), 15,
-                    R.alpha(on ? 0xFFFFFFFF : 0xFFC4C4CC, a), R.SEMI);
+                    R.alpha(on ? R.onAccent() : 0xFFC4C4CC, a), R.SEMI);
         }
         int[] s = searchRect();
         R.bordered(ctx, s[0], s[1], s[2], s[3], 10, 1, R.alpha(0xFF1B1B21, a), R.alpha(searchFocus ? R.ACCENT : 0x14FFFFFF, a));
@@ -196,7 +196,7 @@ public class ModMenuScreen extends ZScreen {
         int[] f = favRect();
         float hf = hover("fav", R.in(mx, my, f[0], f[1], f[2], f[3]));
         R.round(ctx, f[0], f[1], f[2], f[3], 10, R.alpha(Config.favoritesOnly ? R.ACCENT : R.mix(0xFF1B1B21, 0xFF26262E, hf), a));
-        R.icon(ctx, Config.favoritesOnly ? "heart_fill" : "heart", f[0] + 12, f[1] + 12, 22, R.alpha(0xFFFFFFFF, a));
+        R.icon(ctx, Config.favoritesOnly ? "heart_fill" : "heart", f[0] + 12, f[1] + 12, 22, R.alpha(Config.favoritesOnly ? R.onAccent() : 0xFFFFFFFF, a));
     }
 
     private int[] cardRect(int i) {
@@ -277,7 +277,7 @@ public class ModMenuScreen extends ZScreen {
             if (on) R.round(ctx, r[0], r[1], r[2], r[3], 22, R.alpha(R.ACCENT, a));
             else if (h > 0.02f) R.round(ctx, r[0], r[1], r[2], r[3], 22, R.alpha(0x22FFFFFF, h * a));
             R.centered(ctx, STYLES[i], r[0] + r[2] / 2f, R.midY(r[1], r[3], 15), 15,
-                    R.alpha(on ? 0xFFFFFFFF : 0xFFB4B4BE, a), R.SEMI);
+                    R.alpha(on ? R.onAccent() : 0xFFB4B4BE, a), R.SEMI);
         }
     }
 
@@ -352,7 +352,7 @@ public class ModMenuScreen extends ZScreen {
         float t = hover("sw" + label, on);
         int tx = x + w - 24 - 56, ty = y + (ROW - 10 - 30) / 2;
         R.round(ctx, tx, ty, 56, 30, 15, R.mix(0xFF3A3A44, R.ACCENT, t));
-        R.round(ctx, tx + 3 + (int) (26 * t), ty + 3, 24, 24, 12, 0xFFFFFFFF);
+        R.round(ctx, tx + 3 + (int) (26 * t), ty + 3, 24, 24, 12, R.mix(0xFFFFFFFF, R.onAccent(), t));
     }
 
     private int sliderX(int x, int w) { return x + w - 24 - 80 - 380; }

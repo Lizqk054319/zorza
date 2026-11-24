@@ -46,10 +46,16 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.6.2"
+WERSJA_CLIENTA = "0.7.0"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.7.0", [
+        "Logowanie kontem Microsoft działa – Mojang zatwierdził Zora Client!",
+        "W grze: moduł Gamma (rozjaśnianie), ładniejszy HUD i rozmiar elementów w ustawieniach",
+        "Przyciski Zora Mods i folder modów w menu gry",
+        "Lepsza wydajność: ustawienia Javy pod wyższe i stabilniejsze FPS",
+    ]),
     ("0.6.2", [
         "Import profilu przenosi też ustawienia modów",
         "W grze: zakładka Zora Mods z twoimi modami",
@@ -73,7 +79,7 @@ MOD_ID = {"ferrite-core": "ferritecore", "ebe": "enhancedblockentities", "simple
           "zfastnoise": "fastnoise"}
 
 # Napis "Logowanie Microsoft będzie dostępne wkrótce" – zmień na False po zgodzie Mojanga
-MICROSOFT_WKROTCE = True
+MICROSOFT_WKROTCE = False
 
 # Mod Zora Client (budowany automatycznie na GitHubie) – wersja gry -> adres pliku
 ZORZA_MOD = {
@@ -385,7 +391,7 @@ def export_code(p):
 def decode_code(code):
     code = re.sub(r"\s+", "", code or "")
     if not code.upper().startswith("ZORZA-"):
-        raise ValueError("To nie jest kod profilu Zorzy (powinien zaczynać się od ZORZA-).")
+        raise ValueError("To nie jest kod profilu Zora Client (powinien zaczynać się od ZORZA-).")
     body = code[6:]
     try:
         data = json.loads(zlib.decompress(base64.urlsafe_b64decode(body + "=" * (-len(body) % 4))))
@@ -730,6 +736,11 @@ def do_import_launcher(d):
         copy_tree(gd / "servers.dat", dst / "servers.dat")
     if c.get("saves"):
         copy_tree(gd / "saves", dst / "saves")
+    if p.get("loader") != "vanilla":
+        try:
+            ensure_builtins(p)          # mody wbudowane (Fabric API, Sodium...) od razu w profilu
+        except Exception as e:
+            log(f"Mody wbudowane pobiorą się przy pierwszym uruchomieniu: {e}")
     task["done"] = f"Zaimportowano profil {p['name']}"
     task["after"] = "check_mods"
     log(f"Import z {launcher['name']} ({src['name']}) zakończony")
@@ -837,6 +848,20 @@ def watch_log_line(line):
     discord.update()
 
 
+# Ustawienia Javy pod płynniejszą grę (mniej przycięć od Garbage Collectora)
+JVM_WYDAJNOSC = ["-XX:+UseG1GC", "-XX:+ParallelRefProcEnabled", "-XX:MaxGCPauseMillis=40",
+                 "-XX:+UnlockExperimentalVMOptions", "-XX:+DisableExplicitGC",
+                 "-XX:G1NewSizePercent=20", "-XX:G1ReservePercent=20", "-XX:G1HeapRegionSize=16M",
+                 "-XX:+UseStringDeduplication"]
+
+
+def jvm_args(p):
+    ram = int(p["ram_mb"])
+    user = settings["jvm_args"].split()
+    extra = [] if any(a.startswith("-XX:+Use") and "GC" in a for a in user) else JVM_WYDAJNOSC
+    return [f"-Xmx{ram}M", f"-Xms{min(ram, 2048)}M"] + extra + user
+
+
 def do_play(pid):
     p = get_profile(pid)
     acc = next((a for a in accounts if a["uuid"] == settings["active_account"]), None)
@@ -850,8 +875,7 @@ def do_play(pid):
         ensure_deps(p)
     task.update(status="Logowanie...", max=0)
     token = refresh_account(acc)
-    ram = int(p["ram_mb"])
-    jvm = [f"-Xmx{ram}M", f"-Xms{min(ram, 1024)}M"] + settings["jvm_args"].split()
+    jvm = jvm_args(p)
     options = {
         "username": acc["name"],
         "uuid": acc["uuid"],
@@ -921,8 +945,8 @@ def do_play_official(pid):
         icon = "data:image/png;base64," + base64.b64encode((UI_DIR / "assets" / "logo-128.png").read_bytes()).decode()
     except OSError:
         pass
-    entry = {"name": f"Zorza – {p['name']}", "type": "custom", "lastVersionId": launch_id,
-             "gameDir": str(profile_dir(p)), "javaArgs": f"-Xmx{p['ram_mb']}M -Xms{min(p['ram_mb'], 1024)}M",
+    entry = {"name": f"Zora Client – {p['name']}", "type": "custom", "lastVersionId": launch_id,
+             "gameDir": str(profile_dir(p)), "javaArgs": " ".join(jvm_args(p)),
              "created": now, "lastUsed": now}
     if icon:
         entry["icon"] = icon
@@ -1060,6 +1084,8 @@ def missing_deps(p):
     Zwraca {id: [nazwy modów, które go wymagają]}."""
     d = profile_dir(p) / "mods"
     provided, needs = set(DEP_IGNORE), {}
+    # mody wbudowane i tak trafią do profilu przed uruchomieniem gry
+    provided |= {MOD_ID.get(slug, slug) for slug, _ in MODY_WBUDOWANE} | {"fabric", "cloth-config2", "cloth_config"}
     for f in d.iterdir():
         if not (f.is_file() and f.suffix == ".jar"):
             continue

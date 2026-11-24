@@ -54,6 +54,9 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             context.runOnClient(client -> client.setScreen(new ModMenuScreen(Modules.KILL_SOUNDS)));
             context.waitTicks(30);
             context.takeScreenshot("08-kill-sounds");
+            context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.GameMenuScreen(true)));
+            context.waitTicks(30);
+            context.takeScreenshot("12-pause");
             context.runOnClient(client -> client.setScreen(null));
         }
         // okno "Połączyć z serwerem?" (dane jak z launchera)
@@ -68,6 +71,7 @@ public class ZorzaScreenshots implements FabricClientGameTest {
         context.waitTicks(40);
         context.takeScreenshot("09-autojoin");
         context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.TitleScreen()));
-        context.waitTicks(10);
+        context.waitTicks(40);
+        context.takeScreenshot("11-title");
     }
 }

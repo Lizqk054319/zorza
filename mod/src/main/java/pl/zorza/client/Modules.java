@@ -11,6 +11,7 @@ public final class Modules {
     public static Zoom ZOOM;
     public static HitSounds HIT_SOUNDS;
     public static KillSounds KILL_SOUNDS;
+    public static Gamma GAMMA;
     public static CustomCrosshair CROSSHAIR;
 
     private Modules() {}
@@ -35,6 +36,7 @@ public final class Modules {
         ALL.add(new ComboCounterHud());
         ALL.add(HIT_SOUNDS = new HitSounds());
         ALL.add(KILL_SOUNDS = new KillSounds());
+        ALL.add(GAMMA = new Gamma());
         ALL.add(new HurtCam());
         // Utility
         ALL.add(ZOOM = new Zoom());
