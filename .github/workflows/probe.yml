@@ -8,16 +8,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          set -x
-          mkdir out
-          for s in appleskin badoptimizations cloth-config ebe enhanced-block-entities entityculling fast-noise fastnoise ferrite-core immediatelyfast lithium modernfix moreculling reeses-sodium-options simple-voice-chat sodium sodium-extra threadtweak zconfig fabric-api; do
-            curl -s "https://api.modrinth.com/v2/project/$s" | jq -c '{slug,id,title,project_type}' > out/$s.json || true
-            for g in 1.20.1 1.21.1 1.21.4 1.21.8; do
-              curl -s -G "https://api.modrinth.com/v2/project/$s/version" --data-urlencode "game_versions=[\"$g\"]" --data-urlencode 'loaders=["fabric"]' | jq -c --arg g $g '{g:$g, n:length, v:(.[0].version_number), deps:[.[0].dependencies[]? | select(.dependency_type=="required") | .project_id]}' >> out/$s.json || true
-            done
+          mkdir -p out
+          for s in dynamic-fps krypton scalablelux fastquit noisium c2me-fabric debugify clumps lazy-language-loader cull-leaves ksyxis language-reload sodium-leaf-culling; do
+            curl -s "https://api.modrinth.com/v2/project/$s" | jq -c '{slug,id,title,downloads}' > out/$s.json || true
+            curl -s -G "https://api.modrinth.com/v2/project/$s/version" --data-urlencode 'game_versions=["1.21.4"]' --data-urlencode 'loaders=["fabric"]' | jq -c '{n:length, v:(.[0].version_number), deps:[.[0].dependencies[]? | select(.dependency_type=="required") | .project_id], inc:[.[0].dependencies[]? | select(.dependency_type=="incompatible") | .project_id]}' >> out/$s.json || true
           done
-          curl -s "https://api.modrinth.com/v2/search?query=fast%20noise&limit=5" | jq -c '.hits[]|{slug,title,author}' > out/search_fastnoise.json
-          curl -s "https://api.modrinth.com/v2/search?query=zconfig&limit=5" | jq -c '.hits[]|{slug,title,author}' > out/search_zconfig.json
-          curl -s "https://api.modrinth.com/v2/search?query=enhanced%20block%20entities&limit=3" | jq -c '.hits[]|{slug,title,author}' > out/search_ebe.json
           git config user.name ci; git config user.email ci@x
           git add out; git commit -qm out; git push origin HEAD:ci-probe
