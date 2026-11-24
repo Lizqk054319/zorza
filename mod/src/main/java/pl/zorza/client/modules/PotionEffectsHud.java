@@ -8,7 +8,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import pl.zorza.client.gui.R;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.HudModule;
@@ -69,9 +68,8 @@ public class PotionEffectsHud extends HudModule {
         long blink = System.currentTimeMillis() / 300 % 2;
         for (Line l : lines(mc)) {
             if (icons.value) {
-                Identifier sprite = l.effect().getKey()
-                        .map(k -> k.getValue().withPrefixedPath("mob_effect/")).orElse(null);
-                if (sprite != null) ctx.drawGuiTexture(RenderLayer::getGuiTextured, sprite, 5, y + 2, 9, 9);
+                var sprite = mc.getStatusEffectSpriteManager().getSprite(l.effect());
+                if (sprite != null) ctx.drawSpriteStretched(RenderLayer::getGuiTextured, sprite, 5, y + 2, 9, 9);
             }
             int col = l.ending() && blink == 0 ? R.alpha(textColor.value, 0.55f) : textColor.value;
             if (shadow.value) R.shadowText(ctx, l.text(), textX(), y + 3, 9, col, R.MEDIUM);
