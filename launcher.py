@@ -46,7 +46,7 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.7.0"
+WERSJA_CLIENTA = "0.7.1"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
@@ -1321,29 +1321,57 @@ def fetch_builtin_icons():
         log(f"Nie udało się pobrać ikonek modów: {e}")
 
 
+_mod_release = {"t": 0, "assets": {}}
+
+
+def zorza_mod_release():
+    """Najnowsze wydanie moda Zora Client na GitHubie: {nazwa pliku: (id, data, rozmiar)} – pamiętane 5 min."""
+    if time.time() - _mod_release["t"] < 300 and _mod_release["assets"]:
+        return _mod_release["assets"]
+    r = requests.get("https://api.github.com/repos/Lizqk054319/zorza/releases/tags/mod-latest",
+                     headers={**UA, "Accept": "application/vnd.github+json"}, timeout=15)
+    r.raise_for_status()
+    _mod_release["assets"] = {a["name"]: (a["id"], a["updated_at"], a["size"]) for a in r.json().get("assets", [])}
+    _mod_release["t"] = time.time()
+    return _mod_release["assets"]
+
+
 def ensure_zorza_mod(p):
-    """Mod Zora Client dla obsługiwanych wersji – pobierany z GitHuba, odświeżany raz dziennie."""
+    """Mod Zora Client – przy każdym uruchomieniu sprawdza, czy na GitHubie jest nowsza wersja (dla każdego profilu)."""
     url = ZORZA_MOD.get(p["version"])
     d = profile_dir(p) / "mods"
+    d.mkdir(parents=True, exist_ok=True)
     dest, off = d / "zorza-client.jar", d / "zorza-client.jar.disabled"
     for f in d.glob("zorza-client-*.jar"):
         f.unlink(missing_ok=True)
     if not url:
         dest.unlink(missing_ok=True)
         return
-    if off.exists():
+    if off.exists():                       # gracz sam wyłączył moda
         return
-    if dest.exists() and time.time() - dest.stat().st_mtime < 86400:
-        return
-    task.update(status="Pobieranie moda Zora Client...", max=0)
+    meta = load_json(meta_path(p), {})
+    have = meta.get("zorza_mod")
+    want = None
     try:
+        want = zorza_mod_release().get(url.rsplit("/", 1)[1])
+    except Exception as e:
+        log(f"Nie udało się sprawdzić aktualizacji moda Zora Client: {e}")
+        if dest.exists():
+            return
+    if dest.exists() and want and have == list(want) and dest.stat().st_size == want[2]:
+        return                              # już najnowszy
+    task.update(status="Aktualizacja moda Zora Client...", max=0)
+    try:
+        tmp = dest.with_suffix(".tmp")
         with requests.get(url, headers=UA, stream=True, timeout=60) as resp:
             resp.raise_for_status()
-            tmp = dest.with_suffix(".tmp")
             with open(tmp, "wb") as out:
                 shutil.copyfileobj(resp.raw, out)
-            tmp.replace(dest)
-        log("Pobrano mod Zora Client.")
+        tmp.replace(dest)
+        if want:
+            meta["zorza_mod"] = list(want)
+            save_json(meta_path(p), meta)
+        log("Pobrano najnowszy mod Zora Client.")
     except Exception as e:
         log(f"Nie udało się pobrać moda Zora Client: {e}")
 
