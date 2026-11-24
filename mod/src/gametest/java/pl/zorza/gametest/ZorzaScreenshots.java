@@ -16,7 +16,7 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             sp.getClientWorld().waitForChunksRender();
             context.runOnClient(client -> {
                 for (Module m : Modules.ALL) {
-                    if (m.id.equals("item_counter") || m.id.equals("reach_display") || m.id.equals("keystrokes")) m.enabled = true;
+                    if (m.id.equals("item_counter") || m.id.equals("reach_display") || m.id.equals("keystrokes") || m.id.equals("potion_effects")) m.enabled = true;
                 }
             });
             context.waitTicks(20);
@@ -44,6 +44,11 @@ public class ZorzaScreenshots implements FabricClientGameTest {
                 }
             });
             context.waitTicks(20);
+            context.runOnClient(client -> {
+                client.player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(net.minecraft.entity.effect.StatusEffects.SPEED, 1800, 1));
+                client.player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(net.minecraft.entity.effect.StatusEffects.NIGHT_VISION, 600, 0));
+            });
+            context.waitTicks(5);
             context.takeScreenshot("16-viewmodel-hotbar");
             context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.ingame.InventoryScreen(client.player)));
             context.waitTicks(20);

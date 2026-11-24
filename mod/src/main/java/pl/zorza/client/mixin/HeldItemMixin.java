@@ -15,7 +15,8 @@ import pl.zorza.client.Modules;
 @Mixin(HeldItemRenderer.class)
 public class HeldItemMixin {
     @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V"))
+            target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V"),
+            require = 0)
     private void zorza$viewModel(CallbackInfo ci, @Local(argsOnly = true) AbstractClientPlayerEntity player,
                                  @Local(argsOnly = true) Hand hand, @Local(argsOnly = true) MatrixStack matrices) {
         if (Modules.VIEW_MODEL == null || !Modules.VIEW_MODEL.enabled) return;

@@ -72,7 +72,7 @@ jobs:
           mkdir -p /tmp/shots
           find ~/.gradle/caches/fabric-loom mod/.gradle -name "*.jar" 2>/dev/null | grep -i "minecraft-" | grep -iv "sources\|intermediary\|official" | head -20 > /tmp/shots/jars.txt || true
           J=$(grep -i "yarn\|named" /tmp/shots/jars.txt | grep -i "client\|merged" | head -1)
-          if [ -n "$J" ]; then javap -p -c -cp "$J" net.minecraft.client.gui.DrawContext 2>/dev/null | grep -E "^  (public|private|protected).*\(|drawText|getWidth" > /tmp/shots/drawcontext.txt || true; fi
+          if [ -n "$J" ]; then javap -p -c -cp "$J" net.minecraft.client.render.item.HeldItemRenderer 2>/dev/null | grep -E "^  (public|private|protected).*\(|renderItem|invokevirtual.*HeldItemRenderer" > /tmp/shots/helditem.txt || true; fi
           cp -r mod/build/run/clientGameTest/screenshots/. /tmp/shots/ 2>/dev/null || true
           cp -r mod/run/screenshots/. /tmp/shots/ 2>/dev/null || true
           cp mod/build/run/clientGameTest/logs/latest.log /tmp/shots/ 2>/dev/null || cp mod/run/logs/latest.log /tmp/shots/ 2>/dev/null || true
