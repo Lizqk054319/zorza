@@ -77,6 +77,9 @@ public class ZorzaScreenshots implements FabricClientGameTest {
                 new net.minecraft.client.gui.screen.TitleScreen(), client, client.options)));
         context.waitTicks(30);
         context.takeScreenshot("13-video-options");
+        context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen(new net.minecraft.client.gui.screen.TitleScreen())));
+        context.waitTicks(30);
+        context.takeScreenshot("14-multiplayer");
         context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.TitleScreen()));
         context.waitTicks(10);
     }

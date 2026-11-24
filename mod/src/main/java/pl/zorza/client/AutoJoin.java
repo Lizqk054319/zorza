@@ -34,6 +34,7 @@ public final class AutoJoin {
     public static void register() {
         ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
             MenuButtons.add(client, screen);
+            ScreenEvents.beforeRender(screen).register((sc, ctx, mx, my, delta) -> SmoothScroll.frame());
             if (checked || !(screen instanceof TitleScreen)) return;
             checked = true;
             Data d = read();

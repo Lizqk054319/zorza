@@ -10,7 +10,8 @@
     "LightmapMixin",
     "PressableWidgetMixin",
     "SliderWidgetMixin",
-    "ClickableWidgetInvoker"
+    "ClickableWidgetInvoker",
+    "ScrollableWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1
