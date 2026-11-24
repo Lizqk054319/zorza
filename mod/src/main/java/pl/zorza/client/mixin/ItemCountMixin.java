@@ -20,14 +20,14 @@ public abstract class ItemCountMixin {
 
     @Redirect(method = {"drawItemCount", "drawStackOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"},
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I"),
-            require = 1)
+            require = 0)
     private int zorza$count(DrawContext ctx, TextRenderer tr, String s, int x, int y, int color, boolean shadow) {
         return ctx.drawText(tr, zorza$v(s), x, y, color, shadow);
     }
 
     @Redirect(method = {"drawItemCount", "drawStackOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"},
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;getWidth(Ljava/lang/String;)I"),
-            require = 1)
+            require = 0)
     private int zorza$width(TextRenderer tr, String s) {
         return tr.getWidth(zorza$v(s));
     }

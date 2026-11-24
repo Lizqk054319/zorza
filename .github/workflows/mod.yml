@@ -35,14 +35,6 @@ jobs:
         with:
           name: zorza-client
           path: ${{ env.JAR }}
-      - name: Publish release "mod-latest"
-        if: github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release delete mod-latest --yes --cleanup-tag || true
-          gh release create mod-latest "$JAR" --title "Zora Client mod (najnowszy)" \
-            --notes "Automatycznie zbudowany mod Zora Client. Launcher pobiera go sam." --target "$GITHUB_SHA"
 
   screenshots:
     runs-on: ubuntu-latest
@@ -66,6 +58,8 @@ jobs:
         if: always()
         run: |
           mkdir -p /tmp/shots
+          J=$(find ~/.gradle/caches mod/.gradle -name "minecraft-clientOnly-*named*.jar" -o -name "minecraft-merged-*named*.jar" 2>/dev/null | head -1)
+          if [ -n "$J" ]; then javap -p -c -cp "$J" net.minecraft.client.gui.DrawContext 2>/dev/null | grep -E "^  (public|private|protected).*\(|drawText|getWidth" > /tmp/shots/drawcontext.txt || true; fi
           cp -r mod/build/run/clientGameTest/screenshots/. /tmp/shots/ 2>/dev/null || true
           cp -r mod/run/screenshots/. /tmp/shots/ 2>/dev/null || true
           cp mod/build/run/clientGameTest/logs/latest.log /tmp/shots/ 2>/dev/null || cp mod/run/logs/latest.log /tmp/shots/ 2>/dev/null || true
@@ -82,3 +76,22 @@ jobs:
             mod/build/run/clientGameTest/logs/latest.log
             mod/run/logs/latest.log
           if-no-files-found: warn
+
+  # Wydanie tylko wtedy, gdy gra uruchomiła się z modem bez błędów
+  publish:
+    needs: [build, screenshots]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: zorza-client
+      - name: Publish release "mod-latest"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          JAR=$(ls zorza-client-*.jar | head -1)
+          gh release delete mod-latest --yes --cleanup-tag || true
+          gh release create mod-latest "$JAR" --title "Zora Client mod (najnowszy)" \
+            --notes "Automatycznie zbudowany mod Zora Client. Launcher pobiera go sam." --target "$GITHUB_SHA"
