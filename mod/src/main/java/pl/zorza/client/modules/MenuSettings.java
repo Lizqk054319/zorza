@@ -11,6 +11,9 @@ public class MenuSettings extends Module {
     public static MenuSettings INSTANCE;
     public final Setting.Color accent = add(new Setting.Color("accent", "Accent color", 0xFF2F6BFF));
     public final Setting.Bool animations = add(new Setting.Bool("animations", "Menu animations", true));
+    public final Setting.Bool styledMinecraft = add(new Setting.Bool("styled_minecraft", "Zora style for Minecraft menus", true));
+
+    public static boolean styled() { return INSTANCE == null || INSTANCE.styledMinecraft.value; }
 
     public MenuSettings() {
         super("menu", "Zora Menu", "Accent color and animations of this menu.", Category.CLIENT, true);
