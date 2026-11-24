@@ -40,12 +40,18 @@ public final class VanillaStyle {
         ctx.getMatrices().scale(1f / k, 1f / k, 1f);
         int X = Math.round(x * k), Y = Math.round(y * k), W = Math.round(w * k), H = Math.round(h * k);
         int pad = Math.round(3 * k);
-        int fillW = Math.round((W - 2 * pad) * (float) Math.max(0, Math.min(1, value)));
-        if (fillW > 0) R.round(ctx, X + pad, Y + pad, Math.max(fillW, Math.round(4 * k)), H - 2 * pad,
-                Math.round(Math.min((H - 2 * pad) * 0.3f, 5 * k)), R.alpha(R.mix(0x55000000, R.ACCENT, active ? 0.45f : 0.15f), alpha));
-        int kw = Math.round(4 * k), kx = X + pad + fillW - kw / 2;
-        kx = Math.max(X + pad, Math.min(X + W - pad - kw, kx));
-        R.round(ctx, kx, Y + pad, kw, H - 2 * pad, kw / 2, R.alpha(active ? 0xFFFFFFFF : 0xFF8C8C96, alpha));
+        float v = (float) Math.max(0, Math.min(1, value));
+        int inner = W - 2 * pad;
+        int fillW = Math.round(inner * v);
+        // delikatne podświetlenie do wartości + cienki pasek na dole (nie zasłania napisu)
+        if (fillW > 0) R.round(ctx, X + pad, Y + pad, Math.max(fillW, Math.round(3 * k)), H - 2 * pad,
+                Math.round(Math.min((H - 2 * pad) * 0.3f, 5 * k)), R.alpha(R.mix(0x00000000, R.ACCENT, active ? 0.22f : 0.08f), alpha));
+        int bh = Math.max(2, Math.round(1.2f * k)), by = Y + H - pad - bh;
+        R.round(ctx, X + pad * 2, by, inner - 2 * pad, bh, bh / 2, R.alpha(0x33FFFFFF, alpha));
+        int fw = Math.round((inner - 2 * pad) * v);
+        if (fw > 0) R.round(ctx, X + pad * 2, by, fw, bh, bh / 2, R.alpha(active ? R.ACCENT : 0xFF5A5A64, alpha));
+        int d = Math.round(3.4f * k);
+        R.round(ctx, X + pad * 2 + fw - d / 2, by + bh / 2 - d / 2, d, d, d / 2, R.alpha(active ? 0xFFFFFFFF : 0xFF8C8C96, alpha));
         ctx.getMatrices().pop();
     }
 
