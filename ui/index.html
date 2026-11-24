@@ -608,7 +608,6 @@ select.inp:disabled{opacity:.6}
       <div class="cap" style="margin-top:40px;color:var(--muted)">ZAPISANE KONTA <span id="accCount" style="margin-left:8px">0</span></div>
       <div class="list" id="accList"></div>
       <button class="btn" id="addAcc" style="margin-top:22px;align-self:flex-start;background:none;border:0;padding-left:20px"><svg width="22" height="22"><use href="#i-plus"/></svg>Dodaj konto Microsoft</button>
-      <div class="soon" id="msSoon">Logowanie przez Microsoft będzie dostępne wkrótce.</div>
       <div class="note">Logujesz się na stronie Microsoftu – launcher nie widzi twojego e-maila ani hasła.<br>Dane logowania są zapisane tylko na tym komputerze i zaszyfrowane przez Windows.</div>
     </div>
   </section>
@@ -1125,6 +1124,7 @@ Logowanie kontem Microsoft działa – Mojang zatwierdził Zora Client!|Microsof
 W grze: moduł Gamma (rozjaśnianie), ładniejszy HUD i rozmiar elementów w ustawieniach|In game: Gamma module (brightness), nicer HUD and element size in settings|Im Spiel: Gamma-Modul (Helligkeit), schöneres HUD und Elementgröße in den Einstellungen|У грі: модуль Gamma (яскравість), гарніший HUD і розмір елементів у налаштуваннях|En el juego: módulo Gamma (brillo), HUD más bonito y tamaño de elementos en ajustes
 Przyciski Zora Mods i folder modów w menu gry|Zora Mods and mods-folder buttons in the game menu|Zora-Mods- und Mod-Ordner-Buttons im Spielmenü|Кнопки Zora Mods і папки модів у меню гри|Botones de Zora Mods y carpeta de mods en el menú del juego
 Lepsza wydajność: ustawienia Javy pod wyższe i stabilniejsze FPS|Better performance: Java settings for higher, steadier FPS|Bessere Leistung: Java-Einstellungen für höhere, stabilere FPS|Краща продуктивність: налаштування Java для вищих і стабільніших FPS|Mejor rendimiento: ajustes de Java para más FPS y más estables
+Najpierw dodaj konto Microsoft w zakładce Konta.|First add a Microsoft account in the Accounts tab.|Füge zuerst im Tab Konten ein Microsoft-Konto hinzu.|Спершу додай акаунт Microsoft у вкладці «Акаунти».|Primero añade una cuenta de Microsoft en la pestaña Cuentas.
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1407,7 +1407,6 @@ async function refresh() {
   $("#discord").classList.toggle("on", S.settings.discord);
   $("#dcStatus").textContent = t("Stan") + ": " + tr(S.discord_status);
   $("#dataDir").textContent = S.data_dir;
-  $("#msSoon").style.display = S.microsoft_soon ? "" : "none";
   if (refresh._wasRunning && !tk.running) { if (page === "profile") renderProfilePage(); if (page === "modrinth") markInstalled(); if (page === "skins") renderSkinsPage(); }
   refresh._wasRunning = tk.running;
 }
@@ -2013,7 +2012,7 @@ function playServer(srv) {
     <div class="hint" style="margin-top:0">${t("Po uruchomieniu gra zapyta, czy połączyć cię z serwerem {0}.", "<b>" + esc(srv.address) + "</b>")}</div>
     <div class="fld"><label>${t("Profil")}</label><select class="inp" id="spProf">${profs.map(p => `<option value="${esc(p.id)}" ${p.id === start ? "selected" : ""}>${esc(p.name)} · ${esc(p.version)}</option>`).join("")}</select>
       <div class="hint" id="spHint"></div></div>
-    <button class="opt" id="spMs" ${msOk ? "" : "disabled"}><div class="oi">${ic("i-play", 26)}</div><div><b>${t("Logowanie przez Microsoft")}</b><span>${msOk ? t("Gra startuje prosto z Zora Client.") : t("Logowanie przez Microsoft będzie dostępne wkrótce.")}</span></div><div class="arr">${ic("i-arrow")}</div></button>
+    <button class="opt" id="spMs" ${msOk ? "" : "disabled"}><div class="oi">${ic("i-play", 26)}</div><div><b>${t("Logowanie przez Microsoft")}</b><span>${msOk ? t("Gra startuje prosto z Zora Client.") : t("Najpierw dodaj konto Microsoft w zakładce Konta.")}</span></div><div class="arr">${ic("i-arrow")}</div></button>
     <button class="opt" id="spOff"><div class="oi"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></div><div><b>${t("Przez oficjalny launcher")}</b><span>${t("Klikasz Graj w oficjalnym launcherze, a gra zapyta o serwer.")}</span></div><div class="arr">${ic("i-arrow")}</div></button>`);
   const hint = () => { const p = profs.find(x => x.id === $("#spProf").value);
     $("#spHint").textContent = p && p.loader !== "vanilla" && (S.zorza_mod_versions || []).includes(p.version) ? "" : t("Automatyczne łączenie działa w profilach z Fabric na wersji {0}.", (S.zorza_mod_versions || ["1.21.4"]).join(", ")); };
