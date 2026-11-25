@@ -1,7 +1,9 @@
 package pl.zorza.client.fx;
 
 import com.mojang.blaze3d.systems.ProjectionType;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import org.lwjgl.opengl.GL14;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.ShaderProgramKeys;
@@ -31,8 +33,10 @@ public final class MotionBlurRenderer {
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         if (blend) {
+            // stała przezroczystość – kanał alfa klatki Minecrafta bywa 0, więc nie można na nim polegać
             RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
+            RenderSystem.blendFunc(GlStateManager.SrcFactor.CONSTANT_ALPHA, GlStateManager.DstFactor.ONE_MINUS_CONSTANT_ALPHA);
+            GL14.glBlendColor(0f, 0f, 0f, a);
         } else RenderSystem.disableBlend();
         RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
         RenderSystem.setShaderTexture(0, source.getColorAttachment());
@@ -42,15 +46,19 @@ public final class MotionBlurRenderer {
         mv.pushMatrix();
         mv.identity();
         BufferBuilder b = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-        b.vertex(0, 0, 0).texture(0, 0).color(1f, 1f, 1f, a);
-        b.vertex(w, 0, 0).texture(1, 0).color(1f, 1f, 1f, a);
-        b.vertex(w, h, 0).texture(1, 1).color(1f, 1f, 1f, a);
-        b.vertex(0, h, 0).texture(0, 1).color(1f, 1f, 1f, a);
+        b.vertex(0, 0, 0).texture(0, 0).color(1f, 1f, 1f, 1f);
+        b.vertex(w, 0, 0).texture(1, 0).color(1f, 1f, 1f, 1f);
+        b.vertex(w, h, 0).texture(1, 1).color(1f, 1f, 1f, 1f);
+        b.vertex(0, h, 0).texture(0, 1).color(1f, 1f, 1f, 1f);
         BufferRenderer.drawWithGlobalProgram(b.end());
         mv.popMatrix();
         RenderSystem.restoreProjectionMatrix();
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
+        if (blend) {
+            GL14.glBlendColor(0f, 0f, 0f, 0f);
+            RenderSystem.defaultBlendFunc();
+        }
         RenderSystem.disableBlend();
     }
 

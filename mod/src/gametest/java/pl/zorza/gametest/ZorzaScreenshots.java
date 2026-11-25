@@ -62,6 +62,9 @@ public class ZorzaScreenshots implements FabricClientGameTest {
                 client.options.setPerspective(net.minecraft.client.option.Perspective.FIRST_PERSON);
             });
             context.runOnClient(client -> Modules.MOTION_BLUR.strength.value = 100);
+            sp.getServer().runCommand("execute at @p run fill ^-3 ^ ^5 ^3 ^4 ^5 minecraft:gold_block");
+            sp.getServer().runCommand("execute at @p run fill ^-2 ^ ^5 ^2 ^3 ^5 minecraft:air");
+            context.waitTicks(10);
             for (int i = 0; i < 6; i++) {
                 context.getInput().moveCursor(120, 0);
                 context.waitTick();
