@@ -1164,6 +1164,8 @@ Nie udało się sprawdzić aktualizacji (brak internetu?).|Couldn't check for up
 Dostępna jest wersja {0}.|Version {0} is available.|Version {0} ist verfügbar.|Доступна версія {0}.|La versión {0} está disponible.
 To najnowsza wersja.|This is the latest version.|Das ist die neueste Version.|Це найновіша версія.|Es la versión más reciente.
 Automatyczne aktualizacje działają w wersji z instalatora.|Automatic updates work in the installer version.|Automatische Updates funktionieren in der Installer-Version.|Автооновлення працюють у версії з інсталятора.|Las actualizaciones automáticas funcionan en la versión del instalador.
+W grze: Custom Hitboxes, serca z Minecrafta w rzędach (strzałki ↑ ↓ zmieniają wysokość)|In game: Custom Hitboxes, Minecraft hearts in rows (↑ ↓ keys change the height)|Im Spiel: Custom Hitboxes, Minecraft-Herzen in Reihen (↑ ↓ ändern die Höhe)|У грі: Custom Hitboxes, серця Minecraft рядами (↑ ↓ змінюють висоту)|En el juego: Custom Hitboxes, corazones de Minecraft en filas (↑ ↓ cambian la altura)
+Cooldowny z teksturami z paczek, grubsze i dłuższe Trails na plecach, naprawiony Motion Blur|Cooldowns with resource pack textures, thicker and longer Trails from your back, fixed Motion Blur|Cooldowns mit Texturen aus Ressourcenpaketen, dickere und längere Trails am Rücken, Motion Blur repariert|Кулдауни з текстурами з ресурспаків, товщі й довші Trails зі спини, виправлений Motion Blur|Cooldowns con texturas de paquetes, Trails más gruesos y largos desde la espalda, Motion Blur arreglado
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -2340,11 +2342,8 @@ new MutationObserver(ms => ms.forEach(m => m.addedNodes.forEach(n => n.nodeType 
 /* ================= USTAWIENIA: język, kolor, logi ================= */
 const ACCENTS = ["#1f6bff", "#7c4dff", "#d946ef", "#ff4d6d", "#ff7a1a", "#f5b400", "#22c55e", "#14b8a6", "#06b6d4"];
 function renderSwatches() {
-  $("#swatches").innerHTML = ACCENTS.map(c => `<button style="background:${c}" data-c="${c}" class="${c.toLowerCase() === S.accent.toLowerCase() ? "on" : ""}"></button>`).join("") +
-    `<label class="custom ${ACCENTS.includes(S.accent.toLowerCase()) ? "" : "on"}" title="${t("Własny kolor")}" style="--c:${esc(S.accent)}">+<input type="color" id="accCustom" value="${esc(S.accent)}"></label>`;
+  $("#swatches").innerHTML = ACCENTS.map(c => `<button style="background:${c}" data-c="${c}" class="${c.toLowerCase() === S.accent.toLowerCase() ? "on" : ""}"></button>`).join("");
   $$("#swatches [data-c]").forEach(b => b.onclick = () => setAccent(b.dataset.c));
-  $("#accCustom").oninput = e => { accentLock = Date.now(); document.documentElement.style.setProperty("--blue", e.target.value); };
-  $("#accCustom").onchange = e => setAccent(e.target.value);
 }
 let accentLock = 0;
 async function setAccent(c) {

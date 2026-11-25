@@ -2,5 +2,7 @@
   "category.zorza": "Zora Client",
   "key.zorza.menu": "Otwórz menu Zora",
   "key.zorza.zoom": "Przybliżenie (Zoom)",
-  "key.zorza.freelook": "Freelook"
+  "key.zorza.freelook": "Freelook",
+  "key.zorza.health_up": "Player Health: serca wyżej",
+  "key.zorza.health_down": "Player Health: serca niżej"
 }

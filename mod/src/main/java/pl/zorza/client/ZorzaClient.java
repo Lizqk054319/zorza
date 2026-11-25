@@ -27,6 +27,8 @@ public class ZorzaClient implements ClientModInitializer {
     public static KeyBinding MENU_KEY;
     public static KeyBinding ZOOM_KEY;
     public static KeyBinding FREELOOK_KEY;
+    public static KeyBinding HEALTH_UP_KEY;
+    public static KeyBinding HEALTH_DOWN_KEY;
 
     private static final Deque<Long> LEFT = new ArrayDeque<>(), RIGHT = new ArrayDeque<>();
     public static double lastReach = -1;
@@ -60,6 +62,10 @@ public class ZorzaClient implements ClientModInitializer {
                 "key.zorza.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C, "category.zorza"));
         FREELOOK_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.zorza.freelook", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "category.zorza"));
+        HEALTH_UP_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.zorza.health_up", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_UP, "category.zorza"));
+        HEALTH_DOWN_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.zorza.health_down", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_DOWN, "category.zorza"));
 
         ClientTickEvents.END_CLIENT_TICK.register(ZorzaClient::tick);
         net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents.AFTER_ENTITIES.register(c -> {
@@ -99,6 +105,7 @@ public class ZorzaClient implements ClientModInitializer {
     private static void tick(MinecraftClient mc) {
         CustomSounds.cleanup();
         Modules.FREELOOK.update(mc);
+        Modules.HEALTH.tickKeys(mc);
         pl.zorza.client.fx.Effects.tick(mc);
         while (MENU_KEY.wasPressed()) {
             if (mc.currentScreen == null) mc.setScreen(new HudEditorScreen(true));

@@ -2,5 +2,7 @@
   "category.zorza": "Zora Client",
   "key.zorza.menu": "Open Zora menu",
   "key.zorza.zoom": "Zoom",
-  "key.zorza.freelook": "Freelook"
+  "key.zorza.freelook": "Freelook",
+  "key.zorza.health_up": "Player Health: raise hearts",
+  "key.zorza.health_down": "Player Health: lower hearts"
 }

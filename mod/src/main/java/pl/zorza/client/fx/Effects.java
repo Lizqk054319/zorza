@@ -169,9 +169,12 @@ public final class Effects {
         }
         long life = (long) (t.length.value * 1000);
         while (!TRAIL.isEmpty() && ms - TRAIL.peekFirst().time() > life) TRAIL.pollFirst();
-        Vec3d p = mc.player.getLerpedPos(delta).add(0, t.height.value, 0);
+        // punkt na plecach: trochę za postacią (zgodnie z obrotem ciała)
+        float body = MathHelper.lerpAngleDegrees(delta, mc.player.prevBodyYaw, mc.player.bodyYaw) * MathHelper.RADIANS_PER_DEGREE;
+        double back = t.height.value > 0.6 ? 0.3 : 0;
+        Vec3d p = mc.player.getLerpedPos(delta).add(MathHelper.sin(body) * back, t.height.value, -MathHelper.cos(body) * back);
         if (TRAIL.isEmpty() || TRAIL.peekLast().pos().squaredDistanceTo(p) > 0.0009) TRAIL.addLast(new TrailPoint(p, ms));
-        while (TRAIL.size() > 400) TRAIL.pollFirst();
+        while (TRAIL.size() > 900) TRAIL.pollFirst();
     }
 
     private static void drawTrail(VertexConsumer vc, Vec3d cp, Camera cam) {
@@ -192,6 +195,7 @@ public final class Effects {
             int ca = t.rainbow.value ? Shapes.rainbow(i / (float) n) : t.color.value;
             int cb = t.rainbow.value ? Shapes.rainbow((i + 1) / (float) n) : t.color.value;
             Vec3d pa = a.pos().subtract(cp), pb = b.pos().subtract(cp);
+            if (pa.lengthSquared() < 0.5 && pb.lengthSquared() < 0.5) continue;   // nie zasłaniaj kamery w 1. osobie
             if (ribbon) {
                 // pionowa wstęga – dół jaśniejszy, góra zanika
                 float h = w * 1.6f * fa, hb = w * 1.6f * fb;

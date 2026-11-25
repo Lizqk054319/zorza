@@ -29,7 +29,8 @@
     "PlayerListScaleMixin",
     "ScoreboardScaleMixin",
     "BossBarScaleMixin",
-    "GameRendererBlurMixin"
+    "GameRendererBlurMixin",
+    "HitboxMixin"
   ],
   "injectors": {
     "defaultRequire": 1

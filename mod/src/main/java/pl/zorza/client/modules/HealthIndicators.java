@@ -5,16 +5,21 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Matrix4f;
+import pl.zorza.client.Config;
+import pl.zorza.client.ZorzaClient;
 import pl.zorza.client.module.Category;
 import pl.zorza.client.module.Module;
 import pl.zorza.client.module.Setting;
@@ -22,49 +27,77 @@ import pl.zorza.client.module.Setting;
 import java.util.List;
 import java.util.Locale;
 
-/** Serduszka (albo liczba HP) nad głowami graczy – jak Player Health Indicators. */
+/** Serca nad głowami graczy – prawdziwe serca z Minecrafta (także z paczek zasobów), po 10 w rzędzie, rzędy w górę. */
 public class HealthIndicators extends Module {
     private static final Style VANILLA = Style.EMPTY.withFont(Identifier.of("zorza", "vanilla"));
-    private static final Style HEARTS = Style.EMPTY.withFont(Identifier.of("zorza", "hearts")).withColor(0xFFFFFF);
+    private static final Identifier CONTAINER = Identifier.ofVanilla("hud/heart/container"),
+            FULL = Identifier.ofVanilla("hud/heart/full"), HALF = Identifier.ofVanilla("hud/heart/half"),
+            ABS_FULL = Identifier.ofVanilla("hud/heart/absorbing_full"), ABS_HALF = Identifier.ofVanilla("hud/heart/absorbing_half");
+
     public final Setting.Choice mode = add(new Setting.Choice("mode", "Display", "Hearts", () -> List.of("Hearts", "Number", "Both")));
+    public final Setting.Num offset = add(new Setting.Num("offset", "Height (↑ ↓ keys)", 0, 0, 30, 0.5));
     public final Setting.Bool mobs = add(new Setting.Bool("mobs", "Also show for mobs", false));
     public final Setting.Num distance = add(new Setting.Num("distance", "Max distance", 32, 8, 64, 1));
-    public final Setting.Bool background = add(new Setting.Bool("background", "Background", true));
+    public final Setting.Bool background = add(new Setting.Bool("background", "Number background", true));
+    private long changedAt = 0;
 
     public HealthIndicators() {
-        super("health_indicators", "Player Health", "Shows hearts above other players' heads.", Category.COMBAT, false);
+        super("health_indicators", "Player Health", "Minecraft hearts above other players' heads. Arrow keys ↑ ↓ change the height.", Category.COMBAT, false);
     }
 
     public String icon() { return "m_heart"; }
 
-    private Text label(LivingEntity e) {
-        float hp = Math.max(0, e.getHealth()), abs = e.getAbsorptionAmount(), max = Math.max(1, e.getMaxHealth());
-        MutableText t = Text.empty().setStyle(VANILLA);
-        if (!"Number".equals(mode.value)) {
-            // pikselowe serca jak w Minecrafcie: pełne, połówki i puste (+ złote za absorpcję)
-            int hearts = Math.min(10, (int) Math.ceil(max / 2f));
-            float per = max / (hearts * 2f);                         // przy >20 HP jedno serce = więcej życia
-            int halves = Math.round(hp / per);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hearts; i++) {
-                sb.append(halves >= 2 ? '\ue000' : halves == 1 ? '\ue001' : '\ue002');
-                halves -= 2;
-            }
-            int absHalves = Math.min(20, Math.round(abs));
-            while (absHalves > 0) {
-                sb.append(absHalves >= 2 ? '\ue003' : '\ue004');
-                absHalves -= 2;
-            }
-            t.append(Text.literal(sb.toString()).setStyle(HEARTS));
+    /** Strzałki ↑ ↓: podnoszenie serc o 0.5 (0 – 30). */
+    public void tickKeys(MinecraftClient mc) {
+        boolean changed = false;
+        while (ZorzaClient.HEALTH_UP_KEY.wasPressed()) {
+            if (enabled && mc.currentScreen == null) { offset.set(offset.value + 0.5); changed = true; }
         }
-        if (!"Hearts".equals(mode.value)) {
-            String n = String.format(Locale.ROOT, hp % 1 == 0 ? "%.0f" : "%.1f", hp);
-            if ("Number".equals(mode.value)) t.append(Text.literal("\ue000 ").setStyle(HEARTS));
-            else t.append(Text.literal(" ").setStyle(VANILLA));
-            t.append(Text.literal(n).setStyle(VANILLA.withColor(0xFFFFFF)));
-            if (abs > 0) t.append(Text.literal(String.format(Locale.ROOT, " +%.0f", abs)).setStyle(VANILLA.withColor(0xFFD43B)));
+        while (ZorzaClient.HEALTH_DOWN_KEY.wasPressed()) {
+            if (enabled && mc.currentScreen == null) { offset.set(offset.value - 0.5); changed = true; }
         }
-        return t;
+        if (changed) {
+            changedAt = System.currentTimeMillis();
+            Config.save();
+        }
+    }
+
+    private static void quad(VertexConsumer vc, Matrix4f m, Sprite s, float x, float y, float size, int light) {
+        vc.vertex(m, x, y, 0).color(255, 255, 255, 255).texture(s.getMinU(), s.getMinV()).light(light);
+        vc.vertex(m, x, y + size, 0).color(255, 255, 255, 255).texture(s.getMinU(), s.getMaxV()).light(light);
+        vc.vertex(m, x + size, y + size, 0).color(255, 255, 255, 255).texture(s.getMaxU(), s.getMaxV()).light(light);
+        vc.vertex(m, x + size, y, 0).color(255, 255, 255, 255).texture(s.getMaxU(), s.getMinV()).light(light);
+    }
+
+    /** Rysuje serca (od dołu w górę) – zwraca wysokość w pikselach. */
+    private int drawHearts(VertexConsumerProvider vcp, Matrix4f m, LivingEntity e, int light) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        var atlas = mc.getGuiAtlasManager();
+        Sprite cont = atlas.getSprite(CONTAINER), full = atlas.getSprite(FULL), half = atlas.getSprite(HALF),
+                absF = atlas.getSprite(ABS_FULL), absH = atlas.getSprite(ABS_HALF);
+        VertexConsumer vc = vcp.getBuffer(RenderLayer.getText(full.getAtlasId()));
+        int hp = (int) Math.ceil(Math.max(0, e.getHealth())), abs = (int) Math.ceil(e.getAbsorptionAmount());
+        int maxHearts = (int) Math.ceil(Math.max(1, e.getMaxHealth()) / 2f);
+        int absHearts = (int) Math.ceil(abs / 2f);
+        int total = Math.min(100, maxHearts + absHearts);
+        int rows = (total + 9) / 10;
+        for (int i = 0; i < total; i++) {
+            int row = i / 10, col = i % 10;
+            int inRow = Math.min(10, total - row * 10);
+            float x = -(inRow * 8 + 1) / 2f + col * 8;
+            float y = -row * 10f;                                    // kolejne rzędy w górę
+            if (i < maxHearts) {
+                quad(vc, m, cont, x, y, 9, light);
+                int v = hp - i * 2;
+                if (v >= 2) quad(vc, m, full, x, y, 9, light);
+                else if (v == 1) quad(vc, m, half, x, y, 9, light);
+            } else {
+                int v = abs - (i - maxHearts) * 2;
+                quad(vc, m, cont, x, y, 9, light);
+                quad(vc, m, v >= 2 ? absF : absH, x, y, 9, light);
+            }
+        }
+        return rows * 10;
     }
 
     public void render(WorldRenderContext ctx) {
@@ -77,6 +110,8 @@ public class HealthIndicators extends Module {
         TextRenderer tr = mc.textRenderer;
         VertexConsumerProvider.Immediate vc = mc.getBufferBuilders().getEntityVertexConsumers();
         double maxD = distance.value * distance.value;
+        int light = LightmapTextureManager.MAX_LIGHT_COORDINATE;
+        boolean showChange = System.currentTimeMillis() - changedAt < 1500;
         boolean drew = false;
         for (Entity en : mc.world.getEntities()) {
             if (!(en instanceof LivingEntity le) || en == mc.player || en == cam.getFocusedEntity()) continue;
@@ -85,15 +120,28 @@ public class HealthIndicators extends Module {
             if (en.squaredDistanceTo(cp) > maxD) continue;
             Vec3d p = en.getLerpedPos(delta);
             boolean tag = en instanceof PlayerEntity || en.hasCustomName();
-            MatrixStack m = new MatrixStack();
-            m.translate(p.x - cp.x, p.y - cp.y + en.getHeight() + (tag ? 0.78 : 0.5), p.z - cp.z);
-            m.multiply(cam.getRotation());
-            m.scale(0.025f, -0.025f, 0.025f);
-            Text t = label(le);
-            float x = -tr.getWidth(t) / 2f;
-            int bg = background.value ? 0x55000000 : 0;
-            tr.draw(t, x, 0, 0xFFFFFFFF, false, m.peek().getPositionMatrix(), vc, TextRenderer.TextLayerType.NORMAL, bg,
-                    LightmapTextureManager.MAX_LIGHT_COORDINATE);
+            MatrixStack ms = new MatrixStack();
+            ms.translate(p.x - cp.x, p.y - cp.y + en.getHeight() + (tag ? 0.8 : 0.5) + offset.value * 0.1, p.z - cp.z);
+            ms.multiply(cam.getRotation());
+            ms.scale(0.025f, -0.025f, 0.025f);
+            Matrix4f m = ms.peek().getPositionMatrix();
+            float top = 0;
+            if (!"Number".equals(mode.value)) top = drawHearts(vc, m, le, light) - 10;
+            if (!"Hearts".equals(mode.value)) {
+                float hp = Math.max(0, le.getHealth());
+                Text t = Text.literal("❤ ").setStyle(VANILLA.withColor(0xFF4040)).append(Text.literal(
+                        String.format(Locale.ROOT, hp % 1 == 0 ? "%.0f" : "%.1f", hp)).setStyle(VANILLA.withColor(0xFFFFFF)));
+                float y = "Number".equals(mode.value) ? 0 : -top - 11;
+                tr.draw(t, -tr.getWidth(t) / 2f, y, 0xFFFFFFFF, false, m, vc, TextRenderer.TextLayerType.NORMAL,
+                        background.value ? 0x55000000 : 0, light);
+                top += 11;
+            }
+            if (showChange) {
+                String s = (mc.getLanguageManager().getLanguage().startsWith("pl") ? "Podniesione o " : "Raised by ")
+                        + String.format(Locale.ROOT, "%.1f", offset.value);
+                Text t = Text.literal(s).setStyle(VANILLA.withColor(0xFFE066));
+                tr.draw(t, -tr.getWidth(t) / 2f, -top - 12, 0xFFFFFFFF, false, m, vc, TextRenderer.TextLayerType.NORMAL, 0x66000000, light);
+            }
             drew = true;
         }
         if (drew) vc.draw();

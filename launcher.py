@@ -46,10 +46,14 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.8.4"
+WERSJA_CLIENTA = "0.8.5"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.8.5", [
+        "W grze: Custom Hitboxes, serca z Minecrafta w rzędach (strzałki ↑ ↓ zmieniają wysokość)",
+        "Cooldowny z teksturami z paczek, grubsze i dłuższe Trails na plecach, naprawiony Motion Blur",
+    ]),
     ("0.8.3", [
         "W grze: Trails, Jump Circles, Jump Particles, Ambient Particles i Motion Blur",
         "Naprawiony Freelook, pikselowe serca z połówkami, polski format czasu",

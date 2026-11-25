@@ -61,9 +61,20 @@ public class ZorzaScreenshots implements FabricClientGameTest {
                 Modules.MOTION_BLUR.enabled = true;
                 client.options.setPerspective(net.minecraft.client.option.Perspective.FIRST_PERSON);
             });
-            context.getInput().moveCursor(300, 0);
-            context.waitTicks(2);
+            context.runOnClient(client -> Modules.MOTION_BLUR.strength.value = 100);
+            for (int i = 0; i < 6; i++) {
+                context.getInput().moveCursor(120, 0);
+                context.waitTick();
+            }
+            context.getInput().moveCursor(120, 0);
             context.takeScreenshot("22-motion-blur");
+            context.runOnClient(client -> {
+                Modules.CUSTOM_HITBOXES.enabled = true;
+                Modules.CUSTOM_HITBOXES.color.value = 0xFF22C55E;
+                Modules.HEALTH.enabled = true;
+                Modules.HEALTH.mobs.value = true;
+                Modules.HEALTH.mode.value = "Both";
+            });
             context.runOnClient(client -> Modules.MOTION_BLUR.enabled = false);
             context.runOnClient(client -> {
                 Modules.FREELOOK.active = true;
@@ -100,7 +111,7 @@ public class ZorzaScreenshots implements FabricClientGameTest {
                 client.player.getItemCooldownManager().set(new net.minecraft.item.ItemStack(net.minecraft.item.Items.ENDER_PEARL), 300);
                 client.player.getItemCooldownManager().set(new net.minecraft.item.ItemStack(net.minecraft.item.Items.WIND_CHARGE), 30);
             });
-            sp.getServer().runCommand("execute at @p run summon minecraft:zombie ^1 ^ ^4 {NoAI:1b}");
+            sp.getServer().runCommand("execute at @p run summon minecraft:zombie ^1 ^ ^4 {NoAI:1b,Health:45f,AbsorptionAmount:6f,attributes:[{id:\"minecraft:max_health\",base:60}]}");
             context.waitTicks(10);
             context.takeScreenshot("16-viewmodel-hotbar");
             context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.ingame.InventoryScreen(client.player)));
