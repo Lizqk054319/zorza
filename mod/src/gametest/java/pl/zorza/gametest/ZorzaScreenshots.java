@@ -71,6 +71,8 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             }
             context.getInput().moveCursor(120, 0);
             context.takeScreenshot("22-motion-blur");
+            context.waitTicks(30);                                   // kamera stoi – obraz ma być ostry, bez smug
+            context.takeScreenshot("23-motion-blur-still");
             context.runOnClient(client -> {
                 Modules.CUSTOM_HITBOXES.enabled = true;
                 Modules.CUSTOM_HITBOXES.color.value = 0xFF22C55E;
@@ -116,6 +118,20 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             sp.getServer().runCommand("execute at @p run summon minecraft:zombie ^1 ^ ^4 {NoAI:1b,Health:45f,AbsorptionAmount:6f,attributes:[{id:\"minecraft:max_health\",base:60}]}");
             context.waitTicks(10);
             context.takeScreenshot("16-viewmodel-hotbar");
+            sp.getServer().runCommand("gamemode survival @a");
+            sp.getServer().runCommand("item replace entity @a armor.chest with minecraft:diamond_chestplate");
+            sp.getServer().runCommand("item replace entity @a armor.legs with minecraft:iron_leggings");
+            context.waitTicks(10);
+            context.takeScreenshot("24a-bars-normal");
+            context.runOnClient(client -> {
+                Modules.HIDE_BARS.enabled = true;
+                Modules.HIDE_BARS.armor.value = true;
+                Modules.HIDE_BARS.hunger.value = true;
+            });
+            context.waitTicks(5);
+            context.takeScreenshot("24b-bars-hidden");
+            context.runOnClient(client -> Modules.HIDE_BARS.enabled = false);
+            sp.getServer().runCommand("gamemode creative @a");
             context.runOnClient(client -> client.setScreen(new net.minecraft.client.gui.screen.ingame.InventoryScreen(client.player)));
             context.waitTicks(20);
             context.takeScreenshot("17-inventory");

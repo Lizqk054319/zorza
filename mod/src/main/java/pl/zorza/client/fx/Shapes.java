@@ -31,7 +31,20 @@ public final class Shapes {
         }
     }
 
+    private static final java.util.Map<Long, float[][]> CACHE = new java.util.HashMap<>();
+
+    private static float[][] cached(long key, java.util.function.Supplier<float[][]> make) {
+        float[][] r = CACHE.get(key);
+        if (r == null) CACHE.put(key, r = make.get());
+        return r;
+    }
+
     public static void star(VertexConsumer vc, Matrix4f m, int points, float inner, int color) {
+        float[][] p = cached(((long) points << 32) | Float.floatToIntBits(inner), () -> starPts(points, inner));
+        fan(vc, m, p[0], p[1], color, color);
+    }
+
+    private static float[][] starPts(int points, float inner) {
         int n = points * 2;
         float[] xs = new float[n], ys = new float[n];
         for (int i = 0; i < n; i++) {
@@ -40,20 +53,30 @@ public final class Shapes {
             xs[i] = (float) Math.cos(ang) * r;
             ys[i] = (float) Math.sin(ang) * r;
         }
-        fan(vc, m, xs, ys, color, color);
+        return new float[][]{xs, ys};
     }
 
     public static void circle(VertexConsumer vc, Matrix4f m, int seg, int center, int edge) {
+        float[][] p = cached(-1000L - seg, () -> circlePts(seg));
+        fan(vc, m, p[0], p[1], center, edge);
+    }
+
+    private static float[][] circlePts(int seg) {
         float[] xs = new float[seg], ys = new float[seg];
         for (int i = 0; i < seg; i++) {
             double ang = i * Math.PI * 2 / seg;
             xs[i] = (float) Math.cos(ang);
             ys[i] = (float) Math.sin(ang);
         }
-        fan(vc, m, xs, ys, center, edge);
+        return new float[][]{xs, ys};
     }
 
     public static void heart(VertexConsumer vc, Matrix4f m, int color) {
+        float[][] p = cached(-1L, Shapes::heartPts);
+        fan(vc, m, p[0], p[1], color, color);
+    }
+
+    private static float[][] heartPts() {
         int seg = 28;
         float[] xs = new float[seg], ys = new float[seg];
         for (int i = 0; i < seg; i++) {
@@ -61,7 +84,7 @@ public final class Shapes {
             xs[i] = (float) (16 * Math.pow(Math.sin(t), 3)) / 17f;
             ys[i] = (float) (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) / 17f + 0.1f;
         }
-        fan(vc, m, xs, ys, color, color);
+        return new float[][]{xs, ys};
     }
 
     /** Śnieżynka: 3 ramiona z odgałęzieniami. */

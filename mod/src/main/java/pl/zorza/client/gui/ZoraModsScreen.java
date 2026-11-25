@@ -105,7 +105,7 @@ public class ZoraModsScreen extends ZScreen {
     private final java.util.Map<String, java.util.Optional<java.nio.file.Path>> files = new java.util.HashMap<>();
 
     private java.nio.file.Path cfgFile(ModList.Entry e) {
-        return files.computeIfAbsent(e.id, k -> java.util.Optional.ofNullable(ModList.configFile(k))).orElse(null);
+        return files.computeIfAbsent(e.id, k -> java.util.Optional.ofNullable(ModList.configFile(e))).orElse(null);
     }
 
     private int[] switchRect(int x, int y, int w) { return new int[]{x + w - 24 - 60, y + (ROW - 32) / 2, 60, 32}; }
@@ -136,11 +136,15 @@ public class ZoraModsScreen extends ZScreen {
         int rightLimit = gearRect(x, y, w)[0] - 24;
         String desc = e.description.replace('\n', ' ');
         if (!e.authors.isEmpty()) desc = "by " + e.authors + (desc.isEmpty() ? "" : "  ·  " + desc);
-        while (desc.length() > 4 && R.width(desc, 14, R.MEDIUM) > rightLimit - tx) desc = desc.substring(0, desc.length() - 2);
-        if (!desc.equals(e.description) && !desc.isEmpty() && R.width(desc + "…", 14, R.MEDIUM) <= rightLimit - tx + 10) desc += "…";
+        boolean cut = false;
+        while (desc.length() > 4 && R.width(desc + "…", 14, R.MEDIUM) > rightLimit - tx) {
+            desc = desc.substring(0, desc.length() - 1);
+            cut = true;
+        }
+        if (cut) desc = desc.stripTrailing() + "…";              // "…" tylko gdy tekst naprawdę się nie mieści
         R.text(ctx, desc, tx, y + 56, 14, R.alpha(0xFF9C9CA6, a * dim), R.MEDIUM);
 
-        Function<Screen, Screen> cfg = e.loaded ? ModList.configScreen(e.id) : null;
+        Function<Screen, Screen> cfg = e.loaded ? ModList.configScreen(e) : null;
         java.nio.file.Path file = cfg == null ? cfgFile(e) : null;
         if (cfg != null || file != null) {
             int[] g = gearRect(x, y, w);
@@ -181,12 +185,14 @@ public class ZoraModsScreen extends ZScreen {
                 return true;
             }
             int[] g = gearRect(x, y, w);
-            Function<Screen, Screen> cfg = e.loaded ? ModList.configScreen(e.id) : null;
+            Function<Screen, Screen> cfg = e.loaded ? ModList.configScreen(e) : null;
             if (R.in(mx, my, g[0], g[1], g[2], g[3])) {
                 if (cfg != null) {
                     Screen sc = cfg.apply(this);
-                    if (sc != null) client.setScreen(sc);
-                    return true;
+                    if (sc != null) {
+                        client.setScreen(sc);
+                        return true;
+                    }
                 }
                 java.nio.file.Path f = cfgFile(e);
                 if (f != null) {

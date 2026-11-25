@@ -46,10 +46,14 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.8.5"
+WERSJA_CLIENTA = "0.8.6"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.8.6", [
+        "W grze: Armor Bar (chowa zbroję i głód), Motion Blur bez smug, lżejsze Ambient Particles",
+        "Ustawienia modów typu CreamyKeys widoczne w Zora Mods, nowy wbudowany mod Fast IP Ping",
+    ]),
     ("0.8.5", [
         "W grze: Custom Hitboxes, serca z Minecrafta w rzędach (strzałki ↑ ↓ zmieniają wysokość)",
         "Cooldowny z teksturami z paczek, grubsze i dłuższe Trails na plecach, naprawiony Motion Blur",
@@ -96,7 +100,7 @@ NOWOSCI_WERSJE = [
 NOWOSCI = [x for _, items in NOWOSCI_WERSJE[:2] for x in items]
 
 # slug z Modrinth -> id moda w fabric.mod.json (do wykrywania duplikatów)
-MOD_ID = {"ferrite-core": "ferritecore", "dynamic-fps": "dynamic_fps", "ebe": "enhancedblockentities", "simple-voice-chat": "voicechat",
+MOD_ID = {"fast-ip-ping": "fastipping", "ferrite-core": "ferritecore", "dynamic-fps": "dynamic_fps", "ebe": "enhancedblockentities", "simple-voice-chat": "voicechat",
           "zfastnoise": "fastnoise"}
 
 # Napis "Logowanie Microsoft będzie dostępne wkrótce" – zmień na False po zgodzie Mojanga
@@ -132,6 +136,7 @@ MODY_WBUDOWANE = [
     ("krypton", "Krypton"),
     ("scalablelux", "ScalableLux"),
     ("fastquit", "FastQuit"),
+    ("fast-ip-ping", "Fast IP Ping"),
 ]
 # id projektów na Modrinth (do rozpoznawania, że gracz ma u siebie mod, który jest wbudowany)
 MODY_WBUDOWANE_ID = {
@@ -141,6 +146,7 @@ MODY_WBUDOWANE_ID = {
     "threadtweak": "vSEH1ERy", "zconfig": "4qmvXRB9", "cloth-config": "9s6osm5g", "appleskin": "EsAfCjCV",
     "simple-voice-chat": "9eGKb6K1", "modmenu": "mOgUt4GM",
     "dynamic-fps": "LQ3K71Q1", "krypton": "fQEb0iXm", "scalablelux": "Ps1zyz6x", "fastquit": "x1hIzbuY",
+    "fast-ip-ping": "9mtu0sUO",
 }
 
 # Logowanie Microsoft – NIE ZMIENIAJ (zatwierdzane przez Mojang dla tego ID)

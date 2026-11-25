@@ -43,6 +43,33 @@ public final class ModList {
         public String id, name, version, description, authors, file;
         public boolean loaded, enabled, builtin, required;
         public Identifier icon;
+        /** id moda i wszystkich modów schowanych w jego środku (np. wersje "Universal" mają w środku właściwego moda) */
+        public List<String> ids = new ArrayList<>();
+    }
+
+    private static void collectIds(ModContainer c, List<String> out, int depth) {
+        out.add(c.getMetadata().getId());
+        if (depth > 3) return;
+        for (ModContainer sub : c.getContainedMods()) collectIds(sub, out, depth + 1);
+    }
+
+    /** Ekran ustawień dla wpisu – sprawdza też mody w środku. */
+    public static Function<Screen, Screen> configScreen(Entry e) {
+        if (e.ids.isEmpty()) return configScreen(e.id);
+        for (String id : e.ids) {
+            Function<Screen, Screen> f = configScreen(id);
+            if (f != null) return f;
+        }
+        return null;
+    }
+
+    public static Path configFile(Entry e) {
+        if (e.ids.isEmpty()) return configFile(e.id);
+        for (String id : e.ids) {
+            Path p = configFile(id);
+            if (p != null) return p;
+        }
+        return null;
     }
 
     public static List<Entry> load() {
@@ -70,6 +97,7 @@ public final class ModList {
             e.required = REQUIRED.contains(e.id) || e.file == null;
             e.enabled = e.file == null || pending.getOrDefault(e.file, true);
             e.icon = icon(c);
+            collectIds(c, e.ids, 0);
             if (e.file != null) seenFiles.add(e.file);
             out.add(e);
         }
@@ -192,13 +220,20 @@ public final class ModList {
                         if (factory == null) continue;
                         Method create = findIface(factory.getClass(), "create");
                         if (create == null) continue;
-                        configScreens.put(ec.getProvider().getMetadata().getId(), parent -> {
-                            try {
-                                return (Screen) create.invoke(factory, parent);
-                            } catch (Throwable t) {
-                                return null;
+                        configScreens.put(ec.getProvider().getMetadata().getId(), wrap(factory, create));
+                    } catch (Throwable ignored) {
+                    }
+                    // mody mogą też dawać ekrany ustawień dla innych modów (getProvidedConfigScreenFactories)
+                    try {
+                        Object api = ec.getEntrypoint();
+                        Method prov = findIface(api.getClass(), "getProvidedConfigScreenFactories");
+                        if (prov != null && prov.invoke(api) instanceof Map<?, ?> m) {
+                            for (Map.Entry<?, ?> me : m.entrySet()) {
+                                if (me.getValue() == null || configScreens.containsKey(String.valueOf(me.getKey()))) continue;
+                                Method create = findIface(me.getValue().getClass(), "create");
+                                if (create != null) configScreens.put(String.valueOf(me.getKey()), wrap(me.getValue(), create));
                             }
-                        });
+                        }
                     } catch (Throwable ignored) {
                     }
                 }
@@ -233,10 +268,21 @@ public final class ModList {
         }
     }
 
+    private static Function<Screen, Screen> wrap(Object factory, Method create) {
+        return parent -> {
+            try {
+                create.setAccessible(true);
+                return (Screen) create.invoke(factory, parent);
+            } catch (Throwable t) {
+                return null;
+            }
+        };
+    }
+
     private static Method findIface(Class<?> cls, String name) {
         for (Class<?> c = cls; c != null; c = c.getSuperclass()) {
             for (Class<?> i : c.getInterfaces()) {
-                for (Method m : i.getMethods()) if (m.getName().equals(name)) return m;
+                for (Method m : i.getMethods()) if (m.getName().equals(name) && m.getParameterCount() <= 1) return m;
             }
         }
         return null;

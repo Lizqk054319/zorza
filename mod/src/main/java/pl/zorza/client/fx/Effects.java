@@ -62,7 +62,9 @@ public final class Effects {
     private static long lastFrame = System.nanoTime();
     private static boolean wasOnGround = true;
     private static float ambientAcc = 0;
-    private static final int MAX_PARTICLES = 600;
+    private static final int MAX_PARTICLES = 400;
+    private static final Matrix4f TMP = new Matrix4f();
+    private static final org.joml.Vector3f LOOK = new org.joml.Vector3f();
 
     /** Co tick: wykrywanie skoku. */
     public static void tick(MinecraftClient mc) {
@@ -108,21 +110,21 @@ public final class Effects {
     private static void spawnAmbient(MinecraftClient mc, Vec3d cam, float dt) {
         AmbientParticles ap = Modules.AMBIENT;
         if (ap == null || !ap.enabled) return;
-        ambientAcc += dt * (float) ap.density.value * 25f;
+        ambientAcc += dt * (float) ap.density.value * 14f;
         Shape sh = shape(ap.shape.value);
         while (ambientAcc >= 1 && PARTICLES.size() < MAX_PARTICLES) {
             ambientAcc -= 1;
             P q = new P();
             q.ambient = true;
-            q.x = cam.x + (RND.nextDouble() - 0.5) * 36;
-            q.z = cam.z + (RND.nextDouble() - 0.5) * 36;
-            q.y = cam.y - 3 + RND.nextDouble() * 19;          // pojawiają się (płynnie) w całym powietrzu wokół ciebie
+            q.x = cam.x + (RND.nextDouble() - 0.5) * 30;
+            q.z = cam.z + (RND.nextDouble() - 0.5) * 30;
+            q.y = cam.y - 3 + RND.nextDouble() * 16;          // pojawiają się (płynnie) w całym powietrzu wokół ciebie
             boolean falling = sh == Shape.SNOW || sh == Shape.HEARTS || sh == Shape.DOTS;
             q.vy = falling ? -(0.7 + RND.nextDouble() * 0.7) : (sh == Shape.BUBBLES ? 0.3 : -0.15 - RND.nextDouble() * 0.2);
             if (sh == Shape.BUBBLES) q.y = cam.y - 4 + RND.nextDouble() * 6;
             q.vx = (RND.nextDouble() - 0.5) * 0.4;
             q.vz = (RND.nextDouble() - 0.5) * 0.4;
-            q.max = q.life = 9 + RND.nextFloat() * 5;
+            q.max = q.life = 7 + RND.nextFloat() * 4;
             q.size = (float) (0.08 + RND.nextFloat() * 0.09) * (float) ap.size.value;
             q.rot = RND.nextFloat() * 360;
             q.spin = (RND.nextFloat() - 0.5f) * 60;
@@ -269,6 +271,8 @@ public final class Effects {
     private static void drawParticles(VertexConsumer vc, Vec3d cp, Camera cam, float dt) {
         Iterator<P> it = PARTICLES.iterator();
         boolean ambientOn = Modules.AMBIENT != null && Modules.AMBIENT.enabled;
+        Vec3d lk = Vec3d.fromPolar(cam.getPitch(), cam.getYaw());
+        LOOK.set((float) lk.x, (float) lk.y, (float) lk.z);
         while (it.hasNext()) {
             P q = it.next();
             q.life -= dt;
@@ -290,13 +294,15 @@ public final class Effects {
             float lf = q.life / q.max;
             float a = q.ambient ? Math.min(1, Math.min((q.max - q.life) * 1.5f, q.life * 0.8f)) : Math.min(1, lf * 2.2f);
             if (q.shape == Shape.STARS || q.shape == Shape.SPARKLES) a *= 0.75f + 0.25f * (float) Math.sin(q.phase * 6 + q.rot);
-            MatrixStack s = new MatrixStack();
-            s.translate(q.x - cp.x, q.y - cp.y, q.z - cp.z);
-            s.multiply(cam.getRotation());
-            s.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(q.rot));
+            float rx = (float) (q.x - cp.x), ry = (float) (q.y - cp.y), rz = (float) (q.z - cp.z);
+            if (q.ambient) {
+                // nie rysujemy tego, czego i tak nie widać: za plecami, bardzo daleko albo prawie przezroczyste
+                float d2 = rx * rx + ry * ry + rz * rz;
+                if (a < 0.03f || d2 > 22 * 22 || (d2 > 4 && rx * LOOK.x + ry * LOOK.y + rz * LOOK.z < -0.35f * (float) Math.sqrt(d2))) continue;
+            }
             float size = q.size * (q.ambient ? 1 : 0.6f + 0.4f * lf);
-            s.scale(size, size, size);
-            Matrix4f m = s.peek().getPositionMatrix();
+            Matrix4f m = TMP.identity().translate(rx, ry, rz).rotate(cam.getRotation())
+                    .rotateZ((float) Math.toRadians(q.rot)).scale(size, size, size);
             int col = Shapes.alpha(q.color, a);
             switch (q.shape) {
                 case STARS -> {

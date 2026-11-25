@@ -26,6 +26,7 @@ public final class Modules {
     public static MotionBlur MOTION_BLUR;
     public static CustomHitboxes CUSTOM_HITBOXES;
     public static CustomCrosshair CROSSHAIR;
+    public static HideBars HIDE_BARS;
 
     private Modules() {}
 
@@ -64,6 +65,7 @@ public final class Modules {
         ALL.add(AMBIENT = new AmbientParticles());
         ALL.add(MOTION_BLUR = new MotionBlur());
         ALL.add(CUSTOM_HITBOXES = new CustomHitboxes());
+        ALL.add(HIDE_BARS = new HideBars());
         ALL.add(new DayCounterHud());
         ALL.add(new HurtCam());
         // Utility

@@ -62,12 +62,21 @@ public final class MotionBlurRenderer {
         RenderSystem.disableBlend();
     }
 
+    private static float histAge = 0;
+    private static float lastYaw, lastPitch;
+
+    /*
+     * Dlaczego były smugi: przy wysokim FPS (np. 1600) każda klatka mieszała ~96% starego obrazu.
+     * 8-bitowe kolory zaokrąglały wtedy zmianę do zera – stary obraz "przyklejał się" na stałe.
+     * Teraz: historia odświeża się najwyżej ~60 razy na sekundę, mieszanie ma rozsądny limit,
+     * a gdy kamera stoi w miejscu, rozmycie szybko gaśnie (żadnych duchów za mobami).
+     */
     public static void afterWorld() {
         MinecraftClient mc = MinecraftClient.getInstance();
         long now = System.nanoTime();
         float dt = Math.min(0.1f, (now - last) / 1e9f);
         last = now;
-        if (Modules.MOTION_BLUR == null || !Modules.MOTION_BLUR.enabled || mc.world == null) {
+        if (Modules.MOTION_BLUR == null || !Modules.MOTION_BLUR.enabled || mc.world == null || mc.player == null) {
             valid = false;
             return;
         }
@@ -79,12 +88,22 @@ public final class MotionBlurRenderer {
             valid = false;
         }
         float strength = (float) Modules.MOTION_BLUR.strength.value / 100f;
-        // 0-100% -> do 0.82 przy 60 FPS; przy innym FPS taki sam efekt w czasie
-        float a = (float) Math.pow(0.82f * strength, dt * 60f);
-        if (strength <= 0.001f) a = 0;
-        if (valid && a > 0.01f) drawTexture(main, prev, w, h, a, true);
-        // zapamiętaj tę klatkę (rysowanie zamiast surowego kopiowania – stan OpenGL zostaje spójny)
-        drawTexture(prev, main, w, h, 1f, false);
+        // ruch kamery (stopnie na sekundę) – rozmywamy głównie przy obracaniu
+        float yaw = mc.gameRenderer.getCamera().getYaw(), pitch = mc.gameRenderer.getCamera().getPitch();
+        float dYaw = Math.abs(net.minecraft.util.math.MathHelper.wrapDegrees(yaw - lastYaw)), dPitch = Math.abs(pitch - lastPitch);
+        lastYaw = yaw;
+        lastPitch = pitch;
+        float speed = dt > 0 ? (dYaw + dPitch) / dt : 0;
+        if (speed > 4000) valid = false;                       // teleport / nagły skok kamery – bez smugi
+        float motion = Math.min(1f, speed / 180f);             // pełne rozmycie od ~180°/s
+        float a = 0.62f * strength * (0.25f + 0.75f * motion);
+        if (valid && a > 0.02f) drawTexture(main, prev, w, h, a, true);
+        // historię odświeżamy co ~1/60 s (przy wysokim FPS nie kumulujemy błędów zaokrągleń)
+        histAge += dt;
+        if (!valid || histAge >= 1f / 60f) {
+            drawTexture(prev, main, w, h, 1f, false);
+            histAge = 0;
+        }
         main.beginWrite(false);
         valid = true;
     }
