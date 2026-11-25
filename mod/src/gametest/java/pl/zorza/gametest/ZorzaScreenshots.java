@@ -76,7 +76,6 @@ public class ZorzaScreenshots implements FabricClientGameTest {
                 Modules.CUSTOM_HITBOXES.color.value = 0xFF22C55E;
                 Modules.HEALTH.enabled = true;
                 Modules.HEALTH.mobs.value = true;
-                Modules.HEALTH.mode.value = "Both";
             });
             context.runOnClient(client -> Modules.MOTION_BLUR.enabled = false);
             context.runOnClient(client -> {

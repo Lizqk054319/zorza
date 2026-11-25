@@ -24,7 +24,6 @@ import pl.zorza.client.module.Category;
 import pl.zorza.client.module.Module;
 import pl.zorza.client.module.Setting;
 
-import java.util.List;
 import java.util.Locale;
 
 /** Serca nad głowami graczy – prawdziwe serca z Minecrafta (także z paczek zasobów), po 10 w rzędzie, rzędy w górę. */
@@ -34,11 +33,9 @@ public class HealthIndicators extends Module {
             FULL = Identifier.ofVanilla("hud/heart/full"), HALF = Identifier.ofVanilla("hud/heart/half"),
             ABS_FULL = Identifier.ofVanilla("hud/heart/absorbing_full"), ABS_HALF = Identifier.ofVanilla("hud/heart/absorbing_half");
 
-    public final Setting.Choice mode = add(new Setting.Choice("mode", "Display", "Hearts", () -> List.of("Hearts", "Number", "Both")));
     public final Setting.Num offset = add(new Setting.Num("offset", "Height (↑ ↓ keys)", 0, 0, 30, 0.5));
     public final Setting.Bool mobs = add(new Setting.Bool("mobs", "Also show for mobs", false));
     public final Setting.Num distance = add(new Setting.Num("distance", "Max distance", 32, 8, 64, 1));
-    public final Setting.Bool background = add(new Setting.Bool("background", "Number background", true));
     private long changedAt = 0;
 
     public HealthIndicators() {
@@ -125,17 +122,7 @@ public class HealthIndicators extends Module {
             ms.multiply(cam.getRotation());
             ms.scale(0.025f, -0.025f, 0.025f);
             Matrix4f m = ms.peek().getPositionMatrix();
-            float top = 0;
-            if (!"Number".equals(mode.value)) top = drawHearts(vc, m, le, light) - 10;
-            if (!"Hearts".equals(mode.value)) {
-                float hp = Math.max(0, le.getHealth());
-                Text t = Text.literal("❤ ").setStyle(VANILLA.withColor(0xFF4040)).append(Text.literal(
-                        String.format(Locale.ROOT, hp % 1 == 0 ? "%.0f" : "%.1f", hp)).setStyle(VANILLA.withColor(0xFFFFFF)));
-                float y = "Number".equals(mode.value) ? 0 : -top - 11;
-                tr.draw(t, -tr.getWidth(t) / 2f, y, 0xFFFFFFFF, false, m, vc, TextRenderer.TextLayerType.NORMAL,
-                        background.value ? 0x55000000 : 0, light);
-                top += 11;
-            }
+            float top = drawHearts(vc, m, le, light) - 10;         // same serca – bez liczby nad nimi
             if (showChange) {
                 String s = (mc.getLanguageManager().getLanguage().startsWith("pl") ? "Podniesione o " : "Raised by ")
                         + String.format(Locale.ROOT, "%.1f", offset.value);
