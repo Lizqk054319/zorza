@@ -47,9 +47,11 @@ public class ZorzaScreenshots implements FabricClientGameTest {
                 Modules.AMBIENT.density.value = 3;
                 client.options.setPerspective(net.minecraft.client.option.Perspective.THIRD_PERSON_BACK);
             });
-            context.getInput().holdKeyFor(client -> client.forwardKey, 15);
-            context.getInput().pressKey(client -> client.jumpKey);
-            context.waitTicks(6);
+            context.waitTicks(40);
+            context.getInput().holdKeyFor(opts -> opts.forwardKey, 15);
+            context.getInput().holdKeyFor(opts -> opts.jumpKey, 3);
+            context.waitTicks(4);
+            context.runOnClient(client -> pl.zorza.client.ZorzaClient.LOG.info("JUMP TEST onGround={} vy={}", client.player.isOnGround(), client.player.getVelocity().y));
             context.takeScreenshot("21-effects");
             context.runOnClient(client -> {
                 Modules.TRAILS.enabled = false;

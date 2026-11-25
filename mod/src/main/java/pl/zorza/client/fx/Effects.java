@@ -116,7 +116,7 @@ public final class Effects {
             q.ambient = true;
             q.x = cam.x + (RND.nextDouble() - 0.5) * 36;
             q.z = cam.z + (RND.nextDouble() - 0.5) * 36;
-            q.y = cam.y + 6 + RND.nextDouble() * 12;
+            q.y = cam.y - 3 + RND.nextDouble() * 19;          // pojawiają się (płynnie) w całym powietrzu wokół ciebie
             boolean falling = sh == Shape.SNOW || sh == Shape.HEARTS || sh == Shape.DOTS;
             q.vy = falling ? -(0.7 + RND.nextDouble() * 0.7) : (sh == Shape.BUBBLES ? 0.3 : -0.15 - RND.nextDouble() * 0.2);
             if (sh == Shape.BUBBLES) q.y = cam.y - 4 + RND.nextDouble() * 6;
