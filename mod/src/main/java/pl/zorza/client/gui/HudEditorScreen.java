@@ -45,6 +45,7 @@ public class HudEditorScreen extends ZScreen {
     @Override
     protected void renderGui(DrawContext ctx, int mx, int my, float delta) {
         HudModule hov = dragging != null ? dragging : hudAt(mx, my);
+        HudModule.FRAME++;
         for (HudModule h : huds()) {
             // w edytorze: delikatna ramka, po najechaniu – zaokrąglona ramka w kolorze akcentu
             h.highlight = 0.25f + 0.75f * hover("hud" + h.id, h == hov);

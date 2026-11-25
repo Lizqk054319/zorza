@@ -12,11 +12,23 @@ public abstract class TextHud extends HudModule {
 
     public abstract String text(MinecraftClient mc);
 
+    // tekst liczony raz na klatkę (wcześniej 3 razy: szerokość, pozycja, rysowanie)
+    private String cache;
+    private long cacheFrame = -1;
+
+    protected String cached(MinecraftClient mc) {
+        if (cacheFrame != HudModule.FRAME || cache == null) {
+            cache = text(mc);
+            cacheFrame = HudModule.FRAME;
+        }
+        return cache;
+    }
+
     /** Tekst można podzielić znakiem "|" na etykietę (szarą) i wartość (białą), np. "Reach|3.00|blocks". */
     @Override
     public int width(MinecraftClient mc) {
         float w = 0;
-        String[] p = text(mc).split("\\|");
+        String[] p = cached(mc).split("\\|");
         for (int i = 0; i < p.length; i++) w += R.width(p[i], 9, i == 1 ? R.SEMI : R.MEDIUM) + (i > 0 ? 4 : 0);
         return (int) Math.ceil(w) + (background.value ? 16 : 2);
     }
@@ -29,7 +41,7 @@ public abstract class TextHud extends HudModule {
     @Override
     public void draw(DrawContext ctx, MinecraftClient mc, boolean editor) {
         float x = background.value ? 8 : 1, y = background.value ? R.midY(0, 18, 9) : 1;
-        String[] p = text(mc).split("\\|");
+        String[] p = cached(mc).split("\\|");
         for (int i = 0; i < p.length; i++) {
             int col = p.length > 1 && i != 1 ? R.alpha(textColor.value, 0.7f) : textColor.value;
             if (shadow.value) R.shadowText(ctx, p[i], x, y, 9, col, i == 1 ? R.SEMI : R.MEDIUM);

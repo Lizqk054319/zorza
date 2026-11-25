@@ -21,6 +21,40 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             });
             context.waitTicks(20);
             context.takeScreenshot("01-hud");
+            // Freelook z prawdziwym klawiszem i ruchem myszy
+            context.getInput().holdKey(org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_ALT);
+            context.waitTicks(5);
+            context.getInput().moveCursor(500, -120);
+            context.waitTicks(10);
+            context.runOnClient(client -> pl.zorza.client.ZorzaClient.LOG.info("FREELOOK TEST active={} camYaw={} playerYaw={} persp={}",
+                    Modules.FREELOOK.active, Modules.FREELOOK.yaw, client.player.getYaw(), client.options.getPerspective()));
+            context.takeScreenshot("20-freelook-real");
+            context.getInput().releaseKey(org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_ALT);
+            context.waitTicks(5);
+            context.runOnClient(client -> {
+                Modules.TRAILS.enabled = true;
+                Modules.JUMP_CIRCLES.enabled = true;
+                Modules.JUMP_PARTICLES.enabled = true;
+                Modules.AMBIENT.enabled = true;
+                Modules.AMBIENT.density.value = 3;
+                client.options.setPerspective(net.minecraft.client.option.Perspective.THIRD_PERSON_BACK);
+            });
+            context.getInput().holdKeyFor(client -> client.forwardKey, 15);
+            context.getInput().pressKey(client -> client.jumpKey);
+            context.waitTicks(6);
+            context.takeScreenshot("21-effects");
+            context.runOnClient(client -> {
+                Modules.TRAILS.enabled = false;
+                Modules.JUMP_CIRCLES.enabled = false;
+                Modules.JUMP_PARTICLES.enabled = false;
+                Modules.AMBIENT.enabled = false;
+                Modules.MOTION_BLUR.enabled = true;
+                client.options.setPerspective(net.minecraft.client.option.Perspective.FIRST_PERSON);
+            });
+            context.getInput().moveCursor(300, 0);
+            context.waitTicks(2);
+            context.takeScreenshot("22-motion-blur");
+            context.runOnClient(client -> Modules.MOTION_BLUR.enabled = false);
             context.runOnClient(client -> {
                 Modules.FREELOOK.active = true;
                 Modules.FREELOOK.yaw = client.player.getYaw() + 150;

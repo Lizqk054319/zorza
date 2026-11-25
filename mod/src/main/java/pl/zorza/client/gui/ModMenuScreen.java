@@ -21,6 +21,8 @@ import java.util.Locale;
 
 /** MOD MENU w stylu z screena: nagłówek, zakładki, kategorie, wyszukiwarka, karty modułów. */
 public class ModMenuScreen extends ZScreen {
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd.MM.yyyy  HH:mm", Locale.ROOT);
+
     private Category filter = null;
     private String search = "";
     private boolean searchFocus = false;
@@ -114,7 +116,7 @@ public class ModMenuScreen extends ZScreen {
     private void header(DrawContext ctx, double mx, double my, float a) {
         R.logo(ctx, px, y0 + 2, 60, R.alpha(0xFFFFFFFF, a));
         R.text(ctx, "MOD MENU", px + 78, R.midY(y0, 64, 25), 25, R.alpha(0xFFFFFFFF, a), R.BOLD);
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd  hh:mm a", Locale.ENGLISH));
+        String date = LocalDateTime.now().format(DATE_FMT);   // czas z twojego komputera (Polska: 25.11.2026  13:57)
         int dx = px + 270, dw = (int) R.width(date, 16, R.SEMI) + 80;
         R.bordered(ctx, dx, y0, dw, 64, 12, 1, R.alpha(0xF00C0C0F, a), R.alpha(0x1CFFFFFF, a));
         R.icon(ctx, "clock", dx + 24, y0 + 21, 22, R.alpha(0xFFFFFFFF, a));

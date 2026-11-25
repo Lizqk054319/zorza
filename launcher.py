@@ -46,10 +46,14 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.8.2"
+WERSJA_CLIENTA = "0.8.3"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.8.3", [
+        "W grze: Trails, Jump Circles, Jump Particles, Ambient Particles i Motion Blur",
+        "Naprawiony Freelook, pikselowe serca z połówkami, polski format czasu",
+    ]),
     ("0.8.2", [
         "Więcej modów optymalizacyjnych: Dynamic FPS, Krypton, ScalableLux, FastQuit",
         "W grze: Player Health, Cooldowns, podgląd serwera w Direct Connection, rozmiar Tab/Scoreboard",

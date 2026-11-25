@@ -62,12 +62,16 @@ public class ZorzaClient implements ClientModInitializer {
                 "key.zorza.freelook", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "category.zorza"));
 
         ClientTickEvents.END_CLIENT_TICK.register(ZorzaClient::tick);
-        net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents.AFTER_ENTITIES.register(c -> Modules.HEALTH.render(c));
+        net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents.AFTER_ENTITIES.register(c -> {
+            Modules.HEALTH.render(c);
+            pl.zorza.client.fx.Effects.render(c);
+        });
                 HudRenderCallback.EVENT.register((ctx, tickCounter) -> {
             MinecraftClient mc = MinecraftClient.getInstance();
             if (mc.options.hudHidden || mc.player == null) return;
             if (mc.currentScreen instanceof HudEditorScreen) return;
             if (mc.getDebugHud().shouldShowDebugHud()) return;
+            HudModule.FRAME++;
             for (Module m : Modules.ALL) {
                 if (m.enabled && m instanceof HudModule h) h.render(ctx, mc, false);
             }
@@ -95,6 +99,7 @@ public class ZorzaClient implements ClientModInitializer {
     private static void tick(MinecraftClient mc) {
         CustomSounds.cleanup();
         Modules.FREELOOK.update(mc);
+        pl.zorza.client.fx.Effects.tick(mc);
         while (MENU_KEY.wasPressed()) {
             if (mc.currentScreen == null) mc.setScreen(new HudEditorScreen(true));
         }

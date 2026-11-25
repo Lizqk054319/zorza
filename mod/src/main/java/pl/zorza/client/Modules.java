@@ -19,6 +19,11 @@ public final class Modules {
     public static ViewModel VIEW_MODEL;
     public static HealthIndicators HEALTH;
     public static HudScale HUD_SCALE;
+    public static Trails TRAILS;
+    public static JumpCircles JUMP_CIRCLES;
+    public static JumpParticles JUMP_PARTICLES;
+    public static AmbientParticles AMBIENT;
+    public static MotionBlur MOTION_BLUR;
     public static CustomCrosshair CROSSHAIR;
 
     private Modules() {}
@@ -52,6 +57,11 @@ public final class Modules {
         ALL.add(HEALTH = new HealthIndicators());
         ALL.add(new CooldownsHud());
         ALL.add(HUD_SCALE = new HudScale());
+        ALL.add(TRAILS = new Trails());
+        ALL.add(JUMP_CIRCLES = new JumpCircles());
+        ALL.add(JUMP_PARTICLES = new JumpParticles());
+        ALL.add(AMBIENT = new AmbientParticles());
+        ALL.add(MOTION_BLUR = new MotionBlur());
         ALL.add(new DayCounterHud());
         ALL.add(new HurtCam());
         // Utility

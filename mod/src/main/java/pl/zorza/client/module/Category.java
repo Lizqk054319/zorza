@@ -1,7 +1,7 @@
 package pl.zorza.client.module;
 
 public enum Category {
-    COMBAT("Combat"), HUD("HUD"), SOUND("Sound"), UTILITY("Utility"), CLIENT("Client");
+    COMBAT("Combat"), HUD("HUD"), SOUND("Sound"), UTILITY("Utility"), VISUAL("Visual"), CLIENT("Client");
 
     public final String label;
 

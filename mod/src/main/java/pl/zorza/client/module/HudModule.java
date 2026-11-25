@@ -7,6 +7,9 @@ import pl.zorza.client.gui.R;
 
 /** Element HUD-a: pozycja (ułamek ekranu), skala, tło i kolor tekstu. */
 public abstract class HudModule extends Module {
+    /** Numer klatki HUD-a – do zapamiętywania obliczeń w jednej klatce. */
+    public static long FRAME = 0;
+
     public double fx, fy;
     private final double dfx, dfy;
     public final Setting.Num size;

@@ -28,7 +28,8 @@
     "DirectConnectMixin",
     "PlayerListScaleMixin",
     "ScoreboardScaleMixin",
-    "BossBarScaleMixin"
+    "BossBarScaleMixin",
+    "GameRendererBlurMixin"
   ],
   "injectors": {
     "defaultRequire": 1
