@@ -46,7 +46,7 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.8.3"
+WERSJA_CLIENTA = "0.8.4"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
@@ -2480,6 +2480,9 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send(400, busy)
             elif path == "/api/mods/check":
                 return self.send(200, {"issues": check_mods(get_profile(d.get("profile")), bool(d.get("auto")))})
+            elif path == "/api/app_update/check":
+                check_app_update()
+                return self.send(200, {"app_update": app_update, "version": WERSJA_CLIENTA})
             elif path == "/api/app_update/start":
                 if app_update["version"] and app_update["state"] in ("idle", "error") and not game_running() \
                         and not task.get("running"):
@@ -2734,7 +2737,8 @@ def watchdog():
 # ---------------------------------------------------------------------------
 
 APP_RELEASE = "https://github.com/Lizqk054319/zorza/releases/download/app-latest/"
-app_update = {"version": None, "state": "idle", "progress": 0, "error": None}
+app_update = {"version": None, "state": "idle", "progress": 0, "error": None,
+              "current": None, "checked": 0, "check_error": None, "installed": False}
 
 
 def _ver(v):
@@ -2743,17 +2747,26 @@ def _ver(v):
 
 def check_app_update():
     """Tylko zainstalowana aplikacja (.exe) – porównuje wersję z najnowszym wydaniem na GitHubie."""
-    if not getattr(sys, "frozen", False):
-        return
+    app_update["installed"] = bool(getattr(sys, "frozen", False))
     try:
-        r = requests.get(APP_RELEASE + "version.json", headers=UA, timeout=15)
+        r = requests.get(APP_RELEASE + "version.json", headers={**UA, "Cache-Control": "no-cache"}, timeout=15)
         r.raise_for_status()
-        latest = r.json().get("version")
-        if latest and _ver(latest) > _ver(WERSJA_CLIENTA):
+        latest = json.loads(r.content.decode("utf-8-sig")).get("version")
+        app_update.update(current=latest, checked=int(time.time()), check_error=None)
+        if latest and _ver(latest) > _ver(WERSJA_CLIENTA) and app_update["installed"]:
             app_update["version"] = latest
             log(f"Dostępna nowa wersja Zora Client: {latest}")
     except Exception as e:
+        app_update.update(checked=int(time.time()), check_error=str(e))
         log(f"Nie udało się sprawdzić aktualizacji aplikacji: {e}")
+
+
+def app_update_loop():
+    """Sprawdza od razu po starcie, a potem co 15 minut – nie trzeba restartować launchera."""
+    while True:
+        if app_update["state"] in ("idle", "error"):
+            check_app_update()
+        time.sleep(15 * 60)
 
 
 def do_app_update():
@@ -2815,7 +2828,7 @@ def main():
     threading.Thread(target=fetch_builtin_icons, daemon=True).start()
     skins_list()
     discord.update()
-    threading.Thread(target=check_app_update, daemon=True).start()
+    threading.Thread(target=app_update_loop, daemon=True).start()
     if "--updated" in sys.argv:
         # po automatycznej aktualizacji stare okno samo się przeładuje – nowe otwieramy tylko, gdy go nie ma
         def maybe_open():

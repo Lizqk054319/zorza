@@ -679,6 +679,10 @@ select.inp:disabled{opacity:.6}
         <input type="text" id="jvm" placeholder="np. -XX:+UseG1GC">
       </div>
       <div class="set setrow">
+        <div class="grow"><h4>Aktualizacje</h4><p id="updInfo"></p></div>
+        <button class="btn" id="updCheck">Sprawdź aktualizacje</button>
+      </div>
+      <div class="set setrow">
         <div class="grow"><h4>Folder launchera</h4><p id="dataDir"></p></div>
         <button class="btn" id="openData">Otwórz</button>
       </div>
@@ -1153,6 +1157,13 @@ Więcej modów optymalizacyjnych: Dynamic FPS, Krypton, ScalableLux, FastQuit|Mo
 W grze: Player Health, Cooldowns, podgląd serwera w Direct Connection, rozmiar Tab/Scoreboard|In game: Player Health, Cooldowns, server preview in Direct Connection, Tab/Scoreboard size|Im Spiel: Player Health, Cooldowns, Servervorschau bei Direktverbindung, Tab/Scoreboard-Größe|У грі: Player Health, Cooldowns, перегляд сервера в Direct Connection, розмір Tab/Scoreboard|En el juego: Player Health, Cooldowns, vista previa del servidor en Conexión directa, tamaño de Tab/Scoreboard
 W grze: Trails, Jump Circles, Jump Particles, Ambient Particles i Motion Blur|In game: Trails, Jump Circles, Jump Particles, Ambient Particles and Motion Blur|Im Spiel: Trails, Jump Circles, Jump Particles, Ambient Particles und Motion Blur|У грі: Trails, Jump Circles, Jump Particles, Ambient Particles і Motion Blur|En el juego: Trails, Jump Circles, Jump Particles, Ambient Particles y Motion Blur
 Naprawiony Freelook, pikselowe serca z połówkami, polski format czasu|Fixed Freelook, pixel hearts with halves, local time format|Freelook repariert, Pixel-Herzen mit Hälften, lokales Zeitformat|Виправлений Freelook, піксельні серця з половинками, місцевий формат часу|Freelook arreglado, corazones pixelados con mitades, formato de hora local
+Aktualizacje|Updates|Updates|Оновлення|Actualizaciones
+Sprawdź aktualizacje|Check for updates|Nach Updates suchen|Перевірити оновлення|Buscar actualizaciones
+Masz wersję {0}.|You have version {0}.|Du hast Version {0}.|У тебе версія {0}.|Tienes la versión {0}.
+Nie udało się sprawdzić aktualizacji (brak internetu?).|Couldn't check for updates (no internet?).|Update-Prüfung fehlgeschlagen (kein Internet?).|Не вдалося перевірити оновлення (немає інтернету?).|No se pudieron buscar actualizaciones (¿sin internet?).
+Dostępna jest wersja {0}.|Version {0} is available.|Version {0} ist verfügbar.|Доступна версія {0}.|La versión {0} está disponible.
+To najnowsza wersja.|This is the latest version.|Das ist die neueste Version.|Це найновіша версія.|Es la versión más reciente.
+Automatyczne aktualizacje działają w wersji z instalatora.|Automatic updates work in the installer version.|Automatische Updates funktionieren in der Installer-Version.|Автооновлення працюють у версії з інсталятора.|Las actualizaciones automáticas funcionan en la versión del instalador.
 `;
 /* ================= JĘZYKI ================= */
 const LOCALES = {pl:"pl-PL", en:"en-GB", de:"de-DE", uk:"uk-UA", es:"es-ES"};
@@ -1392,6 +1403,7 @@ async function refresh() {
   }
   if (updMode && S.app_update.state === "idle" && !S.app_update.version) return location.reload();   // nowa wersja już działa
   updateOverlay();
+  if (page === "settings") updInfoText();
   if (Date.now() - accentLock > 1500) document.documentElement.style.setProperty("--blue", S.accent);
   if (!refresh._init) { refresh._init = 1; renderNews(); renderSwatches(); }
   applyLang(S.lang);
@@ -2228,6 +2240,24 @@ $("#jvm").onchange = () => api("/api/settings", {jvm_args:$("#jvm").value});
 $("#remember").onclick = () => api("/api/settings", {remember_accounts:!S.settings.remember_accounts}).then(refresh);
 $("#discord").onclick = () => api("/api/settings", {discord:!S.settings.discord}).then(refresh);
 $("#openData").onclick = () => api("/api/open_folder", {});
+function updInfoText() {
+  const u = S.app_update || {};
+  let txt = t("Masz wersję {0}.", S.client_version);
+  if (u.check_error) txt += " " + t("Nie udało się sprawdzić aktualizacji (brak internetu?).");
+  else if (u.current) txt += " " + (u.version ? t("Dostępna jest wersja {0}.", u.current) : t("To najnowsza wersja."));
+  if (!u.installed) txt += " " + t("Automatyczne aktualizacje działają w wersji z instalatora.");
+  $("#updInfo").textContent = txt;
+}
+$("#updCheck").onclick = async () => {
+  $("#updCheck").disabled = true;
+  try {
+    const r = await api("/api/app_update/check", {});
+    S.app_update = r.app_update; updInfoText();
+    if (r.app_update.version) { updStarted = false; updateOverlay(); }
+    else toast(r.app_update.check_error ? t("Nie udało się sprawdzić aktualizacji (brak internetu?).") : t("To najnowsza wersja."), !!r.app_update.check_error);
+  } catch (e) { toast(e.message, true); }
+  $("#updCheck").disabled = false;
+};
 $("#mrBgPick").onclick = () => { bgSlot = "modrinth"; $("#bgIn").click(); };
 $("#mrBgReset").onclick = async () => { await api("/api/background/reset", {slot:"modrinth"}); refresh(); toast("Przywrócono domyślne tło."); };
 
