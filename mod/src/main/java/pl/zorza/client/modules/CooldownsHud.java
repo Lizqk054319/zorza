@@ -31,6 +31,12 @@ public class CooldownsHud extends HudModule {
     private final Map<Identifier, ItemStack> lastStack = new HashMap<>();
     private long lastFrame = System.nanoTime();
 
+    public CooldownsHud() {
+        super("cooldowns", "Cooldowns", "Shows how long until you can use an item again (ender pearl, wind charge...).", Category.COMBAT, false, 0.80, 0.62);
+    }
+
+    public String icon() { return "m_clock"; }
+
     private List<Cd> list(MinecraftClient mc, boolean editor) {
         List<Cd> out = new ArrayList<>();
         Map<Identifier, Float[]> active = new HashMap<>();
