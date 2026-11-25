@@ -7,20 +7,19 @@ import org.joml.Matrix4f;
 public final class Shapes {
     private Shapes() {}
 
-    public static void tri(VertexConsumer vc, Matrix4f m, float x1, float y1, float x2, float y2, float x3, float y3, int argb) {
-        int a = argb >>> 24, r = (argb >> 16) & 255, g = (argb >> 8) & 255, b = argb & 255;
-        vc.vertex(m, x1, y1, 0).color(r, g, b, a);
-        vc.vertex(m, x2, y2, 0).color(r, g, b, a);
-        vc.vertex(m, x3, y3, 0).color(r, g, b, a);
-        vc.vertex(m, x3, y3, 0).color(r, g, b, a);
+    /** Czworokąt widoczny z obu stron (2 kolejności wierzchołków). */
+    public static void quad(VertexConsumer vc, Matrix4f m, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int argb) {
+        quadC(vc, m, x1, y1, argb, x2, y2, argb, x3, y3, argb, x4, y4, argb);
     }
 
-    public static void quad(VertexConsumer vc, Matrix4f m, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int argb) {
-        int a = argb >>> 24, r = (argb >> 16) & 255, g = (argb >> 8) & 255, b = argb & 255;
-        vc.vertex(m, x1, y1, 0).color(r, g, b, a);
-        vc.vertex(m, x2, y2, 0).color(r, g, b, a);
-        vc.vertex(m, x3, y3, 0).color(r, g, b, a);
-        vc.vertex(m, x4, y4, 0).color(r, g, b, a);
+    public static void quadC(VertexConsumer vc, Matrix4f m, float x1, float y1, int c1, float x2, float y2, int c2,
+                             float x3, float y3, int c3, float x4, float y4, int c4) {
+        v(vc, m, x1, y1, c1); v(vc, m, x2, y2, c2); v(vc, m, x3, y3, c3); v(vc, m, x4, y4, c4);
+        v(vc, m, x4, y4, c4); v(vc, m, x3, y3, c3); v(vc, m, x2, y2, c2); v(vc, m, x1, y1, c1);
+    }
+
+    private static void v(VertexConsumer vc, Matrix4f m, float x, float y, int c) {
+        vc.vertex(m, x, y, 0).color((c >> 16) & 255, (c >> 8) & 255, c & 255, c >>> 24);
     }
 
     /** Wielokąt z punktów (wachlarz od środka). */
@@ -28,11 +27,7 @@ public final class Shapes {
         int n = xs.length;
         for (int i = 0; i < n; i++) {
             int j = (i + 1) % n;
-            int a1 = center >>> 24, a2 = edge >>> 24;
-            vc.vertex(m, 0, 0, 0).color((center >> 16) & 255, (center >> 8) & 255, center & 255, a1);
-            vc.vertex(m, xs[i], ys[i], 0).color((edge >> 16) & 255, (edge >> 8) & 255, edge & 255, a2);
-            vc.vertex(m, xs[j], ys[j], 0).color((edge >> 16) & 255, (edge >> 8) & 255, edge & 255, a2);
-            vc.vertex(m, xs[j], ys[j], 0).color((edge >> 16) & 255, (edge >> 8) & 255, edge & 255, a2);
+            quadC(vc, m, 0, 0, center, xs[i], ys[i], edge, xs[j], ys[j], edge, xs[j], ys[j], edge);
         }
     }
 

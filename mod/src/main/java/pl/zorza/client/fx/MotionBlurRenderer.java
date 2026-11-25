@@ -13,8 +13,6 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 import pl.zorza.client.Modules;
 
 /**
@@ -27,6 +25,34 @@ public final class MotionBlurRenderer {
     private static long last = System.nanoTime();
 
     private MotionBlurRenderer() {}
+
+    private static void drawTexture(Framebuffer target, Framebuffer source, int w, int h, float a, boolean blend) {
+        target.beginWrite(false);
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        if (blend) {
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+        } else RenderSystem.disableBlend();
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
+        RenderSystem.setShaderTexture(0, source.getColorAttachment());
+        RenderSystem.backupProjectionMatrix();
+        RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0, w, 0, h, -1000, 1000), ProjectionType.ORTHOGRAPHIC);
+        Matrix4fStack mv = RenderSystem.getModelViewStack();
+        mv.pushMatrix();
+        mv.identity();
+        BufferBuilder b = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+        b.vertex(0, 0, 0).texture(0, 0).color(1f, 1f, 1f, a);
+        b.vertex(w, 0, 0).texture(1, 0).color(1f, 1f, 1f, a);
+        b.vertex(w, h, 0).texture(1, 1).color(1f, 1f, 1f, a);
+        b.vertex(0, h, 0).texture(0, 1).color(1f, 1f, 1f, a);
+        BufferRenderer.drawWithGlobalProgram(b.end());
+        mv.popMatrix();
+        RenderSystem.restoreProjectionMatrix();
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
+    }
 
     public static void afterWorld() {
         MinecraftClient mc = MinecraftClient.getInstance();
@@ -48,35 +74,9 @@ public final class MotionBlurRenderer {
         // 0-100% -> do 0.82 przy 60 FPS; przy innym FPS taki sam efekt w czasie
         float a = (float) Math.pow(0.82f * strength, dt * 60f);
         if (strength <= 0.001f) a = 0;
-        if (valid && a > 0.01f) {
-            main.beginWrite(false);
-            RenderSystem.disableDepthTest();
-            RenderSystem.depthMask(false);
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
-            RenderSystem.setShaderTexture(0, prev.getColorAttachment());
-            RenderSystem.backupProjectionMatrix();
-            RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0, w, 0, h, -1000, 1000), ProjectionType.ORTHOGRAPHIC);
-            Matrix4fStack mv = RenderSystem.getModelViewStack();
-            mv.pushMatrix();
-            mv.identity();
-            BufferBuilder b = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-            b.vertex(0, 0, 0).texture(0, 0).color(1f, 1f, 1f, a);
-            b.vertex(w, 0, 0).texture(1, 0).color(1f, 1f, 1f, a);
-            b.vertex(w, h, 0).texture(1, 1).color(1f, 1f, 1f, a);
-            b.vertex(0, h, 0).texture(0, 1).color(1f, 1f, 1f, a);
-            BufferRenderer.drawWithGlobalProgram(b.end());
-            mv.popMatrix();
-            RenderSystem.restoreProjectionMatrix();
-            RenderSystem.depthMask(true);
-            RenderSystem.enableDepthTest();
-            RenderSystem.disableBlend();
-        }
-        // zapamiętaj tę klatkę
-        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, main.fbo);
-        GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, prev.fbo);
-        GL30.glBlitFramebuffer(0, 0, w, h, 0, 0, w, h, GL11.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST);
+        if (valid && a > 0.01f) drawTexture(main, prev, w, h, a, true);
+        // zapamiętaj tę klatkę (rysowanie zamiast surowego kopiowania – stan OpenGL zostaje spójny)
+        drawTexture(prev, main, w, h, 1f, false);
         main.beginWrite(false);
         valid = true;
     }

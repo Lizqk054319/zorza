@@ -217,8 +217,22 @@ public final class Effects {
         }
     }
 
+    private static final double[] QX = new double[4], QY = new double[4], QZ = new double[4];
+    private static final int[] QC = new int[4];
+    private static int qn = 0;
+
+    /** Zbiera 4 wierzchołki i rysuje czworokąt z obu stron. */
     private static void vert(VertexConsumer vc, Matrix4f m, double x, double y, double z, int argb) {
-        vc.vertex(m, (float) x, (float) y, (float) z).color((argb >> 16) & 255, (argb >> 8) & 255, argb & 255, argb >>> 24);
+        QX[qn] = x; QY[qn] = y; QZ[qn] = z; QC[qn] = argb;
+        if (++qn < 4) return;
+        qn = 0;
+        for (int i = 0; i < 4; i++) emit(vc, m, i);
+        for (int i = 3; i >= 0; i--) emit(vc, m, i);
+    }
+
+    private static void emit(VertexConsumer vc, Matrix4f m, int i) {
+        int c = QC[i];
+        vc.vertex(m, (float) QX[i], (float) QY[i], (float) QZ[i]).color((c >> 16) & 255, (c >> 8) & 255, c & 255, c >>> 24);
     }
 
     // ---------- kręgi przy skoku ----------

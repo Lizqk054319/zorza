@@ -22,6 +22,14 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             context.waitTicks(20);
             context.takeScreenshot("01-hud");
             // Freelook z prawdziwym klawiszem i ruchem myszy
+            context.runOnClient(client -> {
+                client.onWindowFocusChanged(true);
+                client.mouse.lockCursor();
+            });
+            context.waitTicks(2);
+            context.getInput().moveCursor(200, 0);
+            context.waitTicks(3);
+            context.runOnClient(client -> pl.zorza.client.ZorzaClient.LOG.info("MOUSE TEST playerYaw={}", client.player.getYaw()));
             context.getInput().holdKey(org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_ALT);
             context.waitTicks(5);
             context.getInput().moveCursor(500, -120);
