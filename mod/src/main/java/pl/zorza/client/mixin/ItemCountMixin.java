@@ -14,18 +14,24 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class ItemCountMixin {
     private static final Identifier VANILLA = Identifier.of("zorza", "vanilla");
 
+    //#if MC >= 1.21.2
+    private static final String COUNT = "drawStackCount";
+    //#else
+    //$$ private static final String COUNT = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V";
+    //#endif
+
     private static Text zorza$v(String s) {
         return Text.literal(s).setStyle(Style.EMPTY.withFont(VANILLA));
     }
 
-    @Redirect(method = "drawStackCount",
+    @Redirect(method = COUNT,
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawText(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;IIIZ)I"),
             require = 1)
     private int zorza$count(DrawContext ctx, TextRenderer tr, String s, int x, int y, int color, boolean shadow) {
         return ctx.drawText(tr, zorza$v(s), x, y, color, shadow);
     }
 
-    @Redirect(method = "drawStackCount",
+    @Redirect(method = COUNT,
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;getWidth(Ljava/lang/String;)I"),
             require = 1)
     private int zorza$width(TextRenderer tr, String s) {

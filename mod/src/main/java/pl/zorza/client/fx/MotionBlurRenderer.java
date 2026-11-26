@@ -1,12 +1,17 @@
 package pl.zorza.client.fx;
 
+//#if MC >= 1.21.2
 import com.mojang.blaze3d.systems.ProjectionType;
+import net.minecraft.client.gl.ShaderProgramKeys;
+//#else
+//$$ import com.mojang.blaze3d.systems.VertexSorter;
+//$$ import net.minecraft.client.render.GameRenderer;
+//#endif
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.opengl.GL14;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
@@ -38,10 +43,18 @@ public final class MotionBlurRenderer {
             RenderSystem.blendFunc(GlStateManager.SrcFactor.CONSTANT_ALPHA, GlStateManager.DstFactor.ONE_MINUS_CONSTANT_ALPHA);
             GL14.glBlendColor(0f, 0f, 0f, a);
         } else RenderSystem.disableBlend();
+        //#if MC >= 1.21.2
         RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
+        //#else
+        //$$ RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
+        //#endif
         RenderSystem.setShaderTexture(0, source.getColorAttachment());
         RenderSystem.backupProjectionMatrix();
+        //#if MC >= 1.21.2
         RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0, w, 0, h, -1000, 1000), ProjectionType.ORTHOGRAPHIC);
+        //#else
+        //$$ RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0, w, 0, h, -1000, 1000), VertexSorter.BY_Z);
+        //#endif
         Matrix4fStack mv = RenderSystem.getModelViewStack();
         mv.pushMatrix();
         mv.identity();
@@ -82,9 +95,17 @@ public final class MotionBlurRenderer {
         }
         Framebuffer main = mc.getFramebuffer();
         int w = main.textureWidth, h = main.textureHeight;
+        //#if MC >= 1.21.2
         if (prev == null) prev = new SimpleFramebuffer(w, h, false);
+        //#else
+        //$$ if (prev == null) prev = new SimpleFramebuffer(w, h, false, MinecraftClient.IS_SYSTEM_MAC);
+        //#endif
         if (prev.textureWidth != w || prev.textureHeight != h) {
+            //#if MC >= 1.21.2
             prev.resize(w, h);
+            //#else
+            //$$ prev.resize(w, h, MinecraftClient.IS_SYSTEM_MAC);
+            //#endif
             valid = false;
         }
         float strength = (float) Modules.MOTION_BLUR.strength.value / 100f;

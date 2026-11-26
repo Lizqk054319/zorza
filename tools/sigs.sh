@@ -1,7 +1,8 @@
 #!/bin/bash
 # Zrzut sygnatur klas Minecrafta (po mapowaniu) – do przenoszenia moda między wersjami.
-OUT="$1"; mkdir -p "$OUT"
-J=$(find ~/.gradle/caches/fabric-loom mod/.gradle -name "minecraft-*.jar" 2>/dev/null | grep -iE "merged|client" | grep -iv "sources\|intermediary\|official\|-obf" | head -1)
+OUT="$1"; MC="$2"; mkdir -p "$OUT"
+J=$(find ~/.gradle/caches/fabric-loom mod/.gradle -name "minecraft-*${MC}-net.fabricmc.yarn*.jar" 2>/dev/null | grep -iv "sources" | head -1)
+find ~/.gradle/caches/fabric-loom mod/.gradle -name "*.jar" 2>/dev/null | grep -i minecraft | head -40 > "$OUT/_all_jars.txt"
 echo "jar: $J" > "$OUT/_jar.txt"
 [ -z "$J" ] && exit 0
 CP="$J:$(find ~/.gradle/caches -name 'blaze3d*.jar' -o -name 'joml*.jar' 2>/dev/null | tr '\n' ':')"
