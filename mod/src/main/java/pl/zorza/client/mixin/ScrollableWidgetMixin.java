@@ -22,12 +22,12 @@ public abstract class ScrollableWidgetMixin implements SmoothScroll.Access {
     private double zorza$before;
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"))
-    private void zorza$scrollStart(double mx, double my, double h, double v, CallbackInfoReturnable<Boolean> cir) {
+    private void zorza$scrollStart(CallbackInfoReturnable<Boolean> cir) {   // bez argumentów – w 1.20.1 metoda ma ich 3, później 4
         zorza$before = getScrollY();
     }
 
     @Inject(method = "mouseScrolled", at = @At("RETURN"))
-    private void zorza$scrollEnd(double mx, double my, double h, double v, CallbackInfoReturnable<Boolean> cir) {
+    private void zorza$scrollEnd(CallbackInfoReturnable<Boolean> cir) {
         double after = getScrollY();
         if (after != zorza$before && SmoothScroll.enabled()) {
             SmoothScroll.start(this, zorza$before, after);
