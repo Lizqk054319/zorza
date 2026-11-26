@@ -144,7 +144,7 @@ public final class Effects {
         float dt = Math.min(0.1f, (now - lastFrame) / 1e9f);
         lastFrame = now;
         Camera cam = ctx.camera();
-        Vec3d cp = cam.getPos();
+        Vec3d cp = pl.zorza.client.compat.Gfx.camPos(cam);
         float delta = ctx.delta();
 
         updateTrail(mc, delta);

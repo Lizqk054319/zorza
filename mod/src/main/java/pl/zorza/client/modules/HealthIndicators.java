@@ -139,7 +139,7 @@ public class HealthIndicators extends Module {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.world == null || mc.player == null || mc.options.hudHidden) return;
         Camera cam = ctx.camera();
-        Vec3d cp = cam.getPos();
+        Vec3d cp = pl.zorza.client.compat.Gfx.camPos(cam);
         float delta = ctx.delta();
         TextRenderer tr = mc.textRenderer;
         VertexConsumerProvider.Immediate vc = mc.getBufferBuilders().getEntityVertexConsumers();

@@ -137,4 +137,13 @@ public final class Gfx {
         return st.withFont(font);
         //#endif
     }
+
+    /** Pozycja kamery w świecie. */
+    public static net.minecraft.util.math.Vec3d camPos(net.minecraft.client.render.Camera cam) {
+        //#if MC >= 1.21.11
+        //$$ return cam.getCameraPos();
+        //#else
+        return cam.getPos();
+        //#endif
+    }
 }

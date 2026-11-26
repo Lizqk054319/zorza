@@ -82,3 +82,6 @@ net.minecraft.client.network.ClientPlayerEntity
 net.minecraft.client.network.AbstractClientPlayerEntity
 net.minecraft.world.World
 net.minecraft.client.render.command.OrderedRenderCommandQueue
+net.minecraft.client.render.RenderLayers
+net.minecraft.client.sound.PositionedSoundInstance
+net.minecraft.client.network.MultiplayerServerListPinger
