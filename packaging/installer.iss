@@ -40,8 +40,8 @@ Type: files; Name: "{group}\Zorza Launcher.lnk"
 Type: files; Name: "{autodesktop}\Zorza Launcher.lnk"
 
 [Icons]
-Name: "{group}\Zora Client"; Filename: "{app}\Zora Client.exe"
-Name: "{autodesktop}\Zora Client"; Filename: "{app}\Zora Client.exe"; Tasks: desktopicon
+Name: "{group}\Zora Client"; Filename: "{app}\Zora Client.exe"; AppUserModelID: "UwU.ZoraClient"
+Name: "{autodesktop}\Zora Client"; Filename: "{app}\Zora Client.exe"; Tasks: desktopicon; AppUserModelID: "UwU.ZoraClient"
 
 [Run]
 Filename: "{app}\Zora Client.exe"; Description: "{cm:LaunchProgram,Zora Client}"; Flags: nowait postinstall skipifsilent

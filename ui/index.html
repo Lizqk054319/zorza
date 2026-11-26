@@ -238,6 +238,26 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
 .fld label{display:block;color:#c9c9d2;font-size:14px;margin-bottom:8px;font-weight:600}
 .inp,select.inp,textarea.inp{width:100%;background:#121215;border:1px solid #ffffff1a;border-radius:12px;padding:14px;outline:0;font-size:16px}
 .inp:focus{border-color:var(--blue)}
+.vpick{width:100%;display:flex;align-items:center;gap:10px;background:#121215;border:1px solid #ffffff1a;border-radius:12px;padding:12px 14px;font-size:16px;text-align:left}
+.vpick:hover{border-color:#ffffff33}.vpick .vpv{flex:1;display:flex;align-items:center;gap:8px}
+.vb{font-size:11px;font-weight:700;letter-spacing:.4px;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.vb.z{background:color-mix(in srgb,var(--blue) 28%,#16161a);color:color-mix(in srgb,var(--blue) 45%,#fff)}
+.vb.d{background:#16a34a2e;color:#5ee08f}
+.vpanel{position:fixed;z-index:200;background:#18181c;border:1px solid #ffffff1f;border-radius:16px;box-shadow:0 24px 60px #000a;padding:12px;display:flex;flex-direction:column;gap:10px;max-height:420px;animation:vpin .14s ease}
+@keyframes vpin{from{opacity:0;transform:translateY(-4px)}}
+.vps{width:100%;background:#111114;border:1px solid #ffffff14;border-radius:10px;padding:10px 12px;outline:0;font-size:15px}
+.vps:focus{border-color:var(--blue)}
+.vpg{display:flex;gap:6px;flex-wrap:wrap}
+.vpg button{padding:6px 12px;border-radius:999px;background:#ffffff0d;color:#c9c9d2;font-weight:700;font-size:13px}
+.vpg button:hover{background:#ffffff18}.vpg button.on{background:var(--blue);color:#fff}
+.vpl{overflow:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding-right:2px}
+.vi{display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:10px;background:#ffffff08;text-align:left;font-size:15px}
+.vi b{flex:1}.vi:hover{background:#ffffff14}.vi.on{background:color-mix(in srgb,var(--blue) 30%,#18181c);outline:1px solid var(--blue)}
+.vi span{display:flex;gap:4px}
+.vpe{color:var(--muted);padding:14px}
+.vpleg{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:12px;border-top:1px solid #ffffff10;padding-top:8px}
+.vpleg .vb.d{margin-left:10px}
+
 textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:13px;user-select:text}
 .seg{display:flex;background:#121215;border:1px solid #ffffff1a;border-radius:12px;padding:4px;gap:4px}
 .seg button{flex:1;padding:10px;border-radius:9px;font-size:15px;color:#bbb}
@@ -303,6 +323,10 @@ textarea.inp{height:110px;resize:none;font-family:Consolas,monospace;font-size:1
 /* strona profilu */
 .phead{display:flex;align-items:center;gap:16px;padding:26px 40px 0}
 .pswitch{display:flex;align-items:center;gap:14px;background:#ffffff0a;border:1px solid #ffffff14;border-radius:16px;padding:8px 16px 8px 8px}
+.picon.mi{width:30px;height:30px;border-radius:8px;font-size:14px}
+.picon img{width:100%;height:100%;border-radius:inherit;display:block}
+.picon img.mc{image-rendering:pixelated}
+.picon:has(img){background:none}
 .pswitch .picon{width:44px;height:44px;font-size:19px;border-radius:11px}
 .pswitch b{display:block;font-size:19px;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
 .pswitch small{color:var(--muted);font-size:13px}
@@ -1177,6 +1201,17 @@ To najnowsza wersja.|This is the latest version.|Das ist die neueste Version.|Ц
 Automatyczne aktualizacje działają w wersji z instalatora.|Automatic updates work in the installer version.|Automatische Updates funktionieren in der Installer-Version.|Автооновлення працюють у версії з інсталятора.|Las actualizaciones automáticas funcionan en la versión del instalador.
 Mod Zora Client działa na wszystkich wersjach od 1.20.1 do 1.21.11|Zora Client mod now works on every version from 1.20.1 to 1.21.11|Zora Client Mod läuft auf allen Versionen von 1.20.1 bis 1.21.11|Мод Zora Client працює на всіх версіях від 1.20.1 до 1.21.11|El mod Zora Client funciona en todas las versiones de 1.20.1 a 1.21.11
 Mod Zora Client działa też na 1.21.3 (kolejne wersje dochodzą same, bez aktualizacji launchera)|Zora Client mod now also works on 1.21.3 (more versions arrive automatically)|Zora Client Mod läuft jetzt auch auf 1.21.3 (weitere Versionen kommen automatisch)|Мод Zora Client тепер працює і на 1.21.3 (нові версії додаються самі)|El mod Zora Client ya funciona en 1.21.3 (más versiones llegarán solas)
+Mod Zora Client działa na tej wersji|Zora Client mod works on this version|Zora Client Mod läuft auf dieser Version|Мод Zora Client працює на цій версії|El mod Zora Client funciona en esta versión
+Szukaj wersji...|Search versions...|Versionen suchen...|Пошук версій...|Buscar versiones...
+mod Zora Client|Zora Client mod|Zora Client Mod|мод Zora Client|mod Zora Client
+Pobrana|Downloaded|Heruntergeladen|Завантажена|Descargada
+już na dysku|already on disk|bereits auf dem Gerät|вже на диску|ya en el disco
+Brak wersji|No versions|Keine Versionen|Немає версій|No hay versiones
+Wybierz|Choose|Auswählen|Обрати|Elegir
+Uruchamianie...|Starting...|Wird gestartet...|Запуск...|Iniciando...
+Trwa pobieranie...|Downloading...|Wird heruntergeladen...|Завантаження...|Descargando...
+Nowy wybór wersji, ikonki profili (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client na pasku zadań|New version picker, profile icons (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client on the taskbar|Neue Versionsauswahl, Profil-Icons (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client in der Taskleiste|Новий вибір версії, іконки профілів (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client на панелі завдань|Nuevo selector de versión, iconos de perfiles (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client en la barra de tareas
+Launcher zamyka się do końca; gdy gra wyłączy się od razu, launcher pokaże dlaczego i sam naprawi zepsuty mod|The launcher now closes completely; if the game closes right away, the launcher shows why and fixes the broken mod|Der Launcher schließt sich jetzt vollständig; schließt sich das Spiel sofort, zeigt der Launcher warum und repariert den Mod|Лаунчер тепер закривається повністю; якщо гра одразу закривається, лаунчер покаже чому і виправить мод|El launcher ahora se cierra por completo; si el juego se cierra al instante, el launcher muestra por qué y repara el mod
 Anuluj instalację|Cancel installation|Installation abbrechen|Скасувати встановлення|Cancelar instalación
 Czy na pewno chcesz anulować instalację?|Are you sure you want to cancel the installation?|Möchtest du die Installation wirklich abbrechen?|Ти точно хочеш скасувати встановлення?|¿Seguro que quieres cancelar la instalación?
 Niedokończony profil zostanie usunięty. Twój stary launcher zostaje bez zmian.|The unfinished profile will be removed. Your old launcher stays unchanged.|Das unfertige Profil wird gelöscht. Dein alter Launcher bleibt unverändert.|Незавершений профіль буде видалено. Твій старий лаунчер не зміниться.|El perfil sin terminar se eliminará. Tu launcher anterior no cambia.
@@ -1460,13 +1495,13 @@ async function refresh() {
   const tk = S.task, play = $("#play");
   play.classList.toggle("busy", tk.running);
   if (tk.running) {
-    $("#goTxt").textContent = tk.status ? tr(tk.status) : t("Pracuję...");
+    $("#goTxt").textContent = /Uruchamian/.test(tk.status || "") ? t("Uruchamianie...") : t("Trwa pobieranie...");      // szczegóły (co dokładnie) są małym napisem pod przyciskiem
     $("#bar").style.width = tk.max ? (100 * tk.progress / tk.max) + "%" : "0";
   } else {
     $("#goTxt").textContent = S.game_running ? t("Gra działa") : t("Graj");
     $("#bar").style.width = "0";
   }
-  $("#status").textContent = tk.running && tk.max ? `${tk.progress} / ${tk.max}` : "";
+  $("#status").textContent = tk.running ? (tk.status ? tr(tk.status) : "") + (tk.max ? `  ·  ${Math.round(100 * tk.progress / tk.max)}%` : "") : "";
   $("#cancelTask").hidden = !(tk.running && tk.kind === "import" && !tk.cancel);
   if (tk.error) { toast(tk.error, true); api("/api/clear_error", {}); if (page === "modrinth") markInstalled(); }
   else if (tk.done && !tk.running) {
@@ -1514,7 +1549,7 @@ document.addEventListener("click", e => { const m = $("#pmenu"); if (!m.contains
 function profileMenu(anchor, pos, withRepair) {
   let h = `<div class="g">PROFILE</div>`;
   for (const p of S.profiles)
-    h += `<button class="it ${p.id === S.profile.id ? "sel" : ""}" data-a="sel" data-v="${esc(p.id)}"><span class="grow">${esc(p.name)}<small>Minecraft ${esc(p.version)} · ${loaderName(p.loader)}</small></span>${p.id === S.profile.id ? ic("i-check", 20) : ""}</button>`;
+    h += `<button class="it ${p.id === S.profile.id ? "sel" : ""}" data-a="sel" data-v="${esc(p.id)}"><span class="picon mi">${profileIcon(p)}</span><span class="grow">${esc(p.name)}<small>Minecraft ${esc(p.version)} · ${loaderName(p.loader)}</small></span>${p.id === S.profile.id ? ic("i-check", 20) : ""}</button>`;
   h += `<hr><button class="it" data-a="add">${ic("i-plus", 20)}Dodaj profil</button>`;
   h += `<button class="it" data-a="edit">${ic("i-pen", 20)}Edytuj profil</button>`;
   h += `<hr><button class="it" data-a="official"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Graj przez oficjalny launcher</button>`;
@@ -1553,14 +1588,62 @@ $("#goBtn").onclick = async () => {
 };
 
 /* ================= DODAJ PROFIL ================= */
+/* Wybór wersji – własny panel zamiast systemowej listy (wartość w ukrytym polu #id) */
 function versionSelect(id, sel) {
-  let h = `<select class="inp" id="${id}">`;
-  for (const g of S.versions) {
-    h += `<optgroup label="${esc(g.group)}">`;
-    for (const v of g.items) h += `<option value="${esc(v.id)}" ${v.id === sel ? "selected" : ""}>${esc(v.id)}${v.installed ? "  (pobrana)" : ""}</option>`;
-    h += `</optgroup>`;
-  }
-  return h + `</select>`;
+  return `<input type="hidden" id="${id}" value="${esc(sel || "")}">
+    <button type="button" class="vpick" data-for="${id}">
+      <span class="vpv"><b>${esc(sel || t("Wybierz"))}</b>${verBadges(sel)}</span>
+      <svg width="20" height="20"><use href="#i-chev"/></svg>
+    </button>`;
+}
+function verInfo(v) { for (const g of S.versions) for (const i of g.items) if (i.id === v) return i; return null; }
+function verBadges(v) {
+  const i = verInfo(v), z = (S.zorza_mod_versions || []).includes(v);
+  return (z ? `<span class="vb z" title="${t("Mod Zora Client działa na tej wersji")}">Zora</span>` : "") +
+         (i && i.installed ? `<span class="vb d">${t("Pobrana")}</span>` : "");
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest(".vpick");
+  if (!b) return;
+  const inp = $("#" + b.dataset.for);
+  openVerPanel(b, inp.value, v => {
+    inp.value = v;
+    b.querySelector(".vpv").innerHTML = `<b>${esc(v)}</b>${verBadges(v)}`;
+    inp.dispatchEvent(new Event("change"));
+  });
+});
+function openVerPanel(anchor, sel, pick) {
+  document.querySelector(".vpanel")?.remove();
+  const groups = S.versions.map(g => g.group);
+  let grp = (S.versions.find(g => g.items.some(i => i.id === sel)) || S.versions[0]).group, q = "";
+  const el = document.createElement("div");
+  el.className = "vpanel";
+  el.innerHTML = `<div class="vptop"><input class="vps" placeholder="${t("Szukaj wersji...")}" autocomplete="off"></div>
+    <div class="vpg">${groups.map(g => `<button type="button" data-g="${esc(g)}">${esc(g)}</button>`).join("")}</div>
+    <div class="vpl"></div>
+    <div class="vpleg"><span class="vb z">Zora</span> ${t("mod Zora Client")} <span class="vb d">${t("Pobrana")}</span> ${t("już na dysku")}</div>`;
+  document.body.appendChild(el);
+  const r = anchor.getBoundingClientRect();
+  el.style.left = r.left + "px";
+  el.style.width = Math.max(r.width, 420) + "px";
+  const below = innerHeight - r.bottom;
+  if (below > 380) el.style.top = (r.bottom + 8) + "px"; else el.style.bottom = (innerHeight - r.top + 8) + "px";
+  const draw = () => {
+    el.querySelectorAll(".vpg button").forEach(b => b.classList.toggle("on", !q && b.dataset.g === grp));
+    const items = q ? S.versions.flatMap(g => g.items).filter(i => i.id.includes(q))
+                    : (S.versions.find(g => g.group === grp)?.items || []);
+    el.querySelector(".vpl").innerHTML = items.length ? items.map(i => `<button type="button" class="vi ${i.id === sel ? "on" : ""}" data-v="${esc(i.id)}">
+        <b>${esc(i.id)}</b><span>${verBadges(i.id)}</span></button>`).join("") : `<div class="vpe">${t("Brak wersji")}</div>`;
+  };
+  el.querySelector(".vpg").onclick = e => { const b = e.target.closest("button"); if (b) { grp = b.dataset.g; q = ""; el.querySelector(".vps").value = ""; draw(); } };
+  el.querySelector(".vpl").onclick = e => { const b = e.target.closest(".vi"); if (b) { pick(b.dataset.v); close(); } };
+  el.querySelector(".vps").oninput = e => { q = e.target.value.trim(); draw(); };
+  const close = () => { el.remove(); document.removeEventListener("mousedown", out, true); };
+  const out = e => { if (!el.contains(e.target) && !anchor.contains(e.target)) close(); };
+  setTimeout(() => document.addEventListener("mousedown", out, true));
+  draw();
+  el.querySelector(".vi.on")?.scrollIntoView({block: "center"});
+  el.querySelector(".vps").focus();
 }
 const inList = v => S.versions.some(g => g.items.some(i => i.id === v));
 function profileFields(p) {
@@ -1704,12 +1787,18 @@ function ago(ts) {
 }
 const fmtDate = ts => ts ? new Date(ts * 1000).toLocaleString(LOCALES[lang] || "pl-PL", {day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit"}) : "—";
 const initial = n => esc((n || "?").trim()[0] || "?").toUpperCase();
+/* Ikonka profilu: launcher, z którego przyszedł profil, albo zwykły Minecraft */
+const LAUNCHER_ICONS = {ogulniega: 1, lunar: 1, modrinth: 1};
+function profileIcon(p) {
+  const src = LAUNCHER_ICONS[p.source] ? `/assets/launchers/${p.source}.png` : "/api/mc_icon";
+  return `<img class="${LAUNCHER_ICONS[p.source] ? "li" : "mc"}" src="${src}" alt="" onerror="this.replaceWith(document.createTextNode('${initial(p.name)}'))">`;
+}
 
 function renderProfiles() {
   if (!S) return;
   $("#pgrid").innerHTML = S.profiles.map(p => `
     <div class="pcard ${p.id === S.profile.id ? "sel" : ""}">
-      <div class="top"><div class="picon">${initial(p.name)}</div>
+      <div class="top"><div class="picon">${profileIcon(p)}</div>
         <div style="min-width:0"><div class="nm">${esc(p.name)}</div><div class="vv">${loaderName(p.loader)} ${esc(p.version)}</div></div>
         ${p.id === S.profile.id ? `<span class="badge">${t("Wybrany")}</span>` : ""}</div>
       <div class="pstats">
@@ -1752,7 +1841,7 @@ async function openProfile(id, tab) {
 }
 function renderProfileHead() {
   const P = S.profile;
-  $("#pIcon").innerHTML = initial(P.name);
+  $("#pIcon").innerHTML = profileIcon(P);
   $("#pName").textContent = P.name;
   $("#pVer").textContent = `${loaderName(P.loader)} ${P.version}`;
   $$("#ptabs button").forEach(b => b.classList.toggle("on", b.dataset.t === pTab));

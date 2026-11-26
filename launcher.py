@@ -13,6 +13,7 @@ import ctypes
 import hashlib
 import html
 import io
+import collections
 import json
 import os
 import re
@@ -46,10 +47,14 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.9.1"
+WERSJA_CLIENTA = "0.9.2"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.9.2", [
+        "Nowy wybór wersji, ikonki profili (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client na pasku zadań",
+        "Launcher zamyka się do końca; gdy gra wyłączy się od razu, launcher pokaże dlaczego i sam naprawi zepsuty mod",
+    ]),
     ("0.9.1", [
         "Mod Zora Client działa na wszystkich wersjach od 1.20.1 do 1.21.11",
     ]),
@@ -362,6 +367,44 @@ def new_profile_id(name):
     while any(p["id"] == pid for p in profiles) or (INST_DIR / pid).exists():
         pid, n = f"{base}-{n}", n + 1
     return pid
+
+
+def mc_icon():
+    """Ikonka zwykłego Minecrafta (dla profili zrobionych w Zora Client) – z pobranej wersji gry."""
+    out = DATA_DIR / "mc_icon.png"
+    if out.exists():
+        return out
+    try:
+        jars = sorted((MC_DIR / "versions").glob("*/*.jar"), key=lambda f: f.stat().st_mtime, reverse=True)
+    except OSError:
+        jars = []
+    for jar in jars[:8]:
+        try:
+            with zipfile.ZipFile(jar) as z:
+                names = z.namelist()
+                pick = next((n for n in names if n.endswith("icon_128x128.png")), None) or \
+                    next((n for n in names if n.endswith("icon_32x32.png")), None) or \
+                    next((n for n in names if n.endswith("textures/block/grass_block_side.png")), None)
+                if pick:
+                    out.write_bytes(z.read(pick))
+                    return out
+        except Exception:
+            continue
+    return None
+
+
+def detect_profile_sources():
+    """Starsze przeniesione profile nie pamiętały, z którego launchera są – dopasowujemy po nazwie i wersji."""
+    todo = [p for p in profiles if "source" not in p]
+    if not todo:
+        return
+    try:
+        found = {(lp["name"], lp.get("version")): l["id"] for l in scan_launchers() for lp in l["profiles"]}
+    except Exception:
+        return
+    for p in todo:
+        p["source"] = found.get((p["name"], p["version"]), "")
+    save_profiles()
 
 
 def make_profile(name, version, loader="fabric", ram_mb=4096):
@@ -767,6 +810,8 @@ def do_import_launcher(d):
     task["kind"] = "import"                 # można anulować
     p = make_profile(d.get("name") or src["name"], d["version"], d.get("loader", src["loader"]),
                      d.get("ram_mb", src["ram_mb"]))
+    p["source"] = launcher["id"]            # ikonka launchera, z którego przyszedł profil
+    save_profiles()
     try:
         _import_launcher_files(launcher, src, p, d)
     except Cancelled:
@@ -981,11 +1026,19 @@ def do_play(pid):
     discord.update()
 
     def reader(pr):
+        tail = collections.deque(maxlen=600)
         for line in pr.stdout:
             line = line.rstrip()
             log(line)
+            tail.append(line)
             watch_log_line(line)
-        log(f"Gra zamknięta (kod {pr.wait()}).")
+        code = pr.wait()
+        log(f"Gra zamknięta (kod {code}).")
+        if code != 0 and time.time() - game["start"] < 120:
+            try:
+                diagnose_crash(p, list(tail))
+            except Exception as e:
+                log(f"Nie udało się sprawdzić, czemu gra się wyłączyła: {e}")
         try:
             gp = get_profile(game["profile"])
             gp["playtime"] = int(gp.get("playtime", 0)) + int(time.time()) - game["start"]
@@ -1058,6 +1111,53 @@ def do_play_official(pid):
             pass
     task["done"] = (f"Otwieram oficjalny launcher – wybierz profil „Zorza – {p['name']}” i kliknij Graj."
                     if opened else f"Gotowe! Otwórz oficjalny launcher Minecraft i wybierz profil „Zorza – {p['name']}”.")
+
+
+RE_FABRIC_MOD = re.compile(r"Mod '([^']+)' \(([^)]+)\)")
+
+
+def diagnose_crash(p, lines):
+    """Gra wyłączyła się zaraz po starcie – szukamy przyczyny w logu. Jeśli winny jest mod wbudowany,
+    wyłączamy go w tym profilu i uruchamiamy grę jeszcze raz (raz)."""
+    text = "\n".join(lines)
+    culprit = None           # (id moda, nazwa)
+    reason = ""
+    if "Incompatible mods found" in text or "Incompatible mod set" in text:
+        part = text[text.find("Incompatible mod"):]
+        m = RE_FABRIC_MOD.search(part)
+        if m:
+            culprit = (m.group(2), m.group(1))
+            reason = f"Mod {m.group(1)} nie pasuje do tej wersji gry albo do innego moda."
+    if not culprit:
+        m = re.search(r"Mixin apply(?: for mod \S+)? failed .*?from mod (\S+)", text) or \
+            re.search(r"from mod ([a-z0-9_\-]+)\] .*?(?:FAILED|failed)", text)
+        if m:
+            culprit = (m.group(1), m.group(1))
+            reason = f"Mod {m.group(1)} nie działa na tej wersji gry."
+    if not culprit:
+        if "UnsupportedClassVersionError" in text:
+            reason = "Któryś mod potrzebuje nowszej Javy niż ta wersja gry."
+        elif "OutOfMemoryError" in text or "Could not reserve enough space" in text:
+            reason = "Za mało pamięci RAM dla gry – zmień RAM w ustawieniach profilu."
+        else:
+            reason = "Gra wyłączyła się zaraz po starcie. Szczegóły są w konsoli launchera."
+    log(f"Diagnoza: {reason}")
+    mid = culprit[0].lower() if culprit else ""
+    slug = next((s for s, _ in MODY_WBUDOWANE if s == mid or MOD_ID.get(s) == mid or s.replace("-", "_") == mid), None)
+    bi = load_json(meta_path(p), {}).get("builtin", {})
+    if slug and slug in bi and not p.get("_auto_retry"):
+        f = profile_dir(p) / "mods" / bi[slug]["file"]
+        if f.exists():
+            f.rename(f.with_name(f.name + ".disabled"))
+            log(f"Wyłączam mod wbudowany {culprit[1]} w profilu {p['name']} i uruchamiam grę ponownie.")
+            login_message.update(text=f"{reason} Wyłączyłem go w tym profilu i uruchamiam grę jeszcze raz.", ok=False)
+            p["_auto_retry"] = True
+            try:
+                run_task(do_play, p["id"])
+            finally:
+                threading.Timer(120, lambda: p.pop("_auto_retry", None)).start()
+            return
+    login_message.update(text=reason, ok=False)
 
 
 def game_running():
@@ -2423,6 +2523,11 @@ class Handler(BaseHTTPRequestHandler):
                         p.suffix.lower(), "application/octet-stream")
                     return self.send(200, p.read_bytes(), ctype)
                 return self.send(404, {"error": "brak pliku"})
+            if u.path == "/api/mc_icon":
+                f = mc_icon()
+                if not f:
+                    return self.send(404, {"error": "brak ikonki"})
+                return self.send(200, f.read_bytes(), "image/png")
             if u.path == "/api/background":
                 f = bg_file(q.get("slot", "home"))
                 if not f:
@@ -2806,26 +2911,125 @@ def find_edge():
     return None
 
 
+EDGE_PROC = None
+APP_ID = "UwU.ZoraClient"
+
+
 def open_window():
+    global EDGE_PROC
     url = f"http://127.0.0.1:{PORT}/"
     edge = find_edge()
     if edge:
-        subprocess.Popen([edge, f"--app={url}", f"--user-data-dir={DATA_DIR / 'okno'}",
-                          "--window-size=1280,800", "--no-first-run",
-                          "--disable-background-timer-throttling"])
+        EDGE_PROC = subprocess.Popen([edge, f"--app={url}", f"--user-data-dir={DATA_DIR / 'okno'}",
+                                      "--window-size=1280,800", "--no-first-run", "--no-default-browser-check",
+                                      "--disable-background-timer-throttling", "--disable-background-mode",
+                                      "--disable-features=msEdgeStartupBoost"])
+        threading.Thread(target=set_window_identity, daemon=True).start()
     else:
         webbrowser.open(url)
 
 
+def set_window_identity():
+    """Pasek zadań: okno Edge dostaje ikonkę i nazwę Zora Client zamiast "Microsoft Edge" (prawy klik)."""
+    if os.name != "nt":
+        return
+    try:
+        import ctypes
+        import uuid
+        from ctypes import wintypes
+
+        class GUID(ctypes.Structure):
+            _fields_ = [("d1", ctypes.c_ulong), ("d2", ctypes.c_ushort), ("d3", ctypes.c_ushort), ("d4", ctypes.c_ubyte * 8)]
+
+        def guid(t):
+            u = uuid.UUID(t)
+            g = GUID(u.time_low, u.time_mid, u.time_hi_version)
+            g.d4[:] = list(u.bytes[8:])
+            return g
+
+        class PKEY(ctypes.Structure):
+            _fields_ = [("fmtid", GUID), ("pid", wintypes.DWORD)]
+
+        class PROPVARIANT(ctypes.Structure):
+            _fields_ = [("vt", ctypes.c_ushort), ("r1", ctypes.c_ushort), ("r2", ctypes.c_ushort), ("r3", ctypes.c_ushort),
+                        ("val", ctypes.c_void_p), ("pad", ctypes.c_void_p)]
+
+        user32, shell32 = ctypes.windll.user32, ctypes.windll.shell32
+        exe = sys.executable if getattr(sys, "frozen", False) else str(Path(sys.argv[0]).resolve())
+        ico = str(Path(exe).with_name("zorza.ico")) if not getattr(sys, "frozen", False) else exe
+        values = {2: f'"{exe}"', 3: f"{ico},0", 4: "Zora Client", 5: APP_ID}     # relaunch: polecenie, ikona, nazwa; na końcu ID
+        fmt = "9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"
+        iid = guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99")
+        HRESULT = ctypes.c_long
+        done = set()
+        deadline = time.time() + 40
+        while time.time() < deadline:
+            found = []
+
+            @ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+            def cb(hwnd, _):
+                if user32.IsWindowVisible(hwnd):
+                    buf = ctypes.create_unicode_buffer(256)
+                    user32.GetWindowTextW(hwnd, buf, 256)
+                    cls = ctypes.create_unicode_buffer(64)
+                    user32.GetClassNameW(hwnd, cls, 64)
+                    if buf.value.startswith(NAZWA_LAUNCHERA) and cls.value.startswith("Chrome_WidgetWin"):
+                        found.append(hwnd)
+                return True
+            user32.EnumWindows(cb, 0)
+            for hwnd in found:
+                if hwnd in done:
+                    continue
+                ps = ctypes.c_void_p()
+                if shell32.SHGetPropertyStoreForWindow(wintypes.HWND(hwnd), ctypes.byref(iid), ctypes.byref(ps)) != 0:
+                    continue
+                vt = ctypes.cast(ctypes.cast(ps, ctypes.POINTER(ctypes.c_void_p))[0], ctypes.POINTER(ctypes.c_void_p))
+                set_value = ctypes.WINFUNCTYPE(HRESULT, ctypes.c_void_p, ctypes.POINTER(PKEY), ctypes.POINTER(PROPVARIANT))(vt[6])
+                commit = ctypes.WINFUNCTYPE(HRESULT, ctypes.c_void_p)(vt[7])
+                release = ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p)(vt[2])
+                keep = []
+                for pid in (2, 3, 4, 5):
+                    sbuf = ctypes.create_unicode_buffer(values[pid])
+                    keep.append(sbuf)
+                    pv = PROPVARIANT(31, 0, 0, 0, ctypes.cast(sbuf, ctypes.c_void_p), None)    # VT_LPWSTR
+                    set_value(ps, ctypes.byref(PKEY(guid(fmt), pid)), ctypes.byref(pv))
+                commit(ps)
+                release(ps)
+                done.add(hwnd)
+                log("Okno: ustawiono ikonkę i nazwę Zora Client na pasku zadań")
+            if done:
+                return
+            time.sleep(0.5)
+    except Exception as e:
+        log(f"Nie udało się ustawić ikonki okna: {e}")
+
+
+def close_window_process():
+    """Zamyka proces okna (Edge z naszym profilem), żeby nic nie zostało w menedżerze zadań."""
+    try:
+        if EDGE_PROC and EDGE_PROC.poll() is None and os.name == "nt":
+            subprocess.run(["taskkill", "/F", "/T", "/PID", str(EDGE_PROC.pid)], capture_output=True,
+                           creationflags=0x08000000, timeout=5)
+    except Exception:
+        pass
+
+
+def quit_launcher():
+    close_window_process()
+    os._exit(0)
+
+
 def watchdog():
-    """Zamyka launcher, gdy okno jest zamknięte, a gra i pobieranie nie działają."""
+    """Zamyka launcher od razu po zamknięciu okna (chyba że trwa gra albo pobieranie)."""
     while True:
-        time.sleep(5)
+        time.sleep(1)
         busy = task["running"] or game_running()
-        closed = bye_at > last_ping and time.time() - bye_at > 6     # okno zamknięte (nie odświeżone)
-        if not busy and (closed or time.time() - last_ping > 150):
+        now = time.time()
+        closed = bye_at > last_ping and now - bye_at > 2.5                    # okno zamknięte (nie odświeżone)
+        edge_gone = EDGE_PROC is not None and EDGE_PROC.poll() is not None and now - last_ping > 3
+        if not busy and (closed or edge_gone or now - last_ping > 150):
             log("Okno zamknięte – kończę.")
-            os._exit(0)
+            quit_launcher()
 
 
 # ---------------------------------------------------------------------------
@@ -2925,6 +3129,7 @@ def main():
     skins_list()
     discord.update()
     threading.Thread(target=lambda: zorza_mod_versions(), daemon=True).start()   # lista wersji moda
+    threading.Thread(target=detect_profile_sources, daemon=True).start()
     threading.Thread(target=app_update_loop, daemon=True).start()
     if "--updated" in sys.argv:
         # po automatycznej aktualizacji stare okno samo się przeładuje – nowe otwieramy tylko, gdy go nie ma
