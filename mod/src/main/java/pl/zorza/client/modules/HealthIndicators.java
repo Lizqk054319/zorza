@@ -69,11 +69,20 @@ public class HealthIndicators extends Module {
     }
 
     /** Bufor + współrzędne tekstury jednego rodzaju serca. */
-    private record H(VertexConsumer vc, float[] uv) {}
+    private record H(VertexConsumer fixed, VertexConsumerProvider vcp, net.minecraft.client.render.RenderLayer layer, float[] uv) {
+        H(VertexConsumer vc, float[] uv) {
+            this(vc, null, null, uv);
+        }
+
+        /** Osobne tekstury (1.21.9+) – bufor bierzemy przy każdym sercu, bo zmiana warstwy zamyka poprzedni. */
+        VertexConsumer vc() {
+            return fixed != null ? fixed : vcp.getBuffer(layer);
+        }
+    }
 
     //#if MC >= 1.21.9
     //$$ private static H tex(VertexConsumerProvider vcp, String sprite) {
-    //$$     return new H(vcp.getBuffer(pl.zorza.client.compat.Gfx.textLayer(Ids.mc("textures/gui/sprites/" + sprite + ".png"))), new float[]{0f, 0f, 1f, 1f});
+    //$$     return new H(null, vcp, pl.zorza.client.compat.Gfx.textLayer(Ids.mc("textures/gui/sprites/" + sprite + ".png")), new float[]{0f, 0f, 1f, 1f});
     //$$ }
     //#endif
 

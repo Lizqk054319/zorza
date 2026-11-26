@@ -44,7 +44,10 @@ public abstract class CameraMixin {
     //#endif
 
     @Inject(method = "update", at = @At("TAIL"))
-    private void zorza$freelook(BlockView area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
+    // argumenty przez @Local – w 1.21.11 pierwszy parametr to World zamiast BlockView
+    private void zorza$freelook(CallbackInfo ci, @com.llamalad7.mixinextras.sugar.Local(argsOnly = true) Entity entity,
+                                @com.llamalad7.mixinextras.sugar.Local(argsOnly = true, ordinal = 0) boolean thirdPerson,
+                                @com.llamalad7.mixinextras.sugar.Local(argsOnly = true) float tickDelta) {
         if (Modules.FREELOOK == null || !Modules.FREELOOK.active || entity == null) return;
         setRotation(Modules.FREELOOK.yaw, Modules.FREELOOK.pitch);
         net.minecraft.util.math.Vec3d lp = entity.getLerpedPos(tickDelta);
