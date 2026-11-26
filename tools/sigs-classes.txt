@@ -60,3 +60,11 @@ net.minecraft.client.texture.GuiAtlasManager
 net.minecraft.client.gui.screen.Screen
 net.minecraft.client.gui.hud.PlayerListHud
 net.minecraft.scoreboard.ScoreboardObjective
+net.minecraft.client.render.entity.state.EntityHitbox
+net.minecraft.client.render.entity.state.EntityHitboxAndView
+net.minecraft.client.render.entity.state.EntityRenderState
+net.minecraft.client.render.entity.state.PlayerEntityRenderState
+net.minecraft.client.gui.screen.ConnectScreen
+net.minecraft.client.gui.screen.DirectConnectScreen
+net.minecraft.client.gui.screen.multiplayer.ConnectScreen
+net.minecraft.client.gui.widget.ButtonWidget

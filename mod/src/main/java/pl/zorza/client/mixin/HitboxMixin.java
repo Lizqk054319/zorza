@@ -1,3 +1,4 @@
+//#file-if MC < 1.21.5
 package pl.zorza.client.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
