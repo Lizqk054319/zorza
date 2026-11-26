@@ -47,10 +47,14 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.9.3"
+WERSJA_CLIENTA = "0.9.4"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.9.4", [
+        "Launcher ma własne okno (bez menu przeglądarki na pasku tytułu), nowy napis w Kontach",
+        "Usunięte granie przez oficjalny launcher",
+    ]),
     ("0.9.3", [
         "Poprawione ikonki profili i nazwa Zora Client na pasku zadań (także po aktualizacji)",
     ]),
@@ -2889,6 +2893,8 @@ class Handler(BaseHTTPRequestHandler):
                 if settings["skin"] == d["file"]:
                     settings["skin"] = "startowy.png"
                     save_settings()
+            elif path == "/api/show":
+                return self.send(200 if show_window() else 409, {"ok": True})
             elif path == "/api/quit":
                 # nowa wersja launchera prosi starą o zamknięcie (gdy gra nie działa)
                 if game_running() or task["running"]:
@@ -2923,6 +2929,46 @@ def find_edge():
 
 EDGE_PROC = None
 APP_ID = "UwU.ZoraClient"
+WEBVIEW = {"window": None, "closed": False}
+
+
+def run_webview():
+    """Własne okno launchera (WebView2 – ten sam silnik co Edge, ale bez menu przeglądarki na pasku tytułu).
+    Blokuje do zamknięcia okna. Zwraca False, gdy WebView2 nie działa na tym komputerze (wtedy Edge)."""
+    if os.name != "nt":
+        return False
+    try:
+        import webview
+    except Exception as e:
+        log(f"Okno: brak WebView2 ({e}) – otwieram w Edge")
+        return False
+    try:
+        win = webview.create_window(NAZWA_LAUNCHERA, f"http://127.0.0.1:{PORT}/", width=1280, height=800,
+                                    min_size=(1000, 640), background_color="#0e0e11")
+        WEBVIEW["window"] = win
+        win.events.closed += lambda: WEBVIEW.update(closed=True)
+        webview.start(gui="edgechromium", private_mode=False, storage_path=str(DATA_DIR / "okno2"))
+        WEBVIEW["closed"] = True
+        return True
+    except Exception as e:
+        log(f"Okno: WebView2 nie ruszył ({e}) – otwieram w Edge")
+        WEBVIEW["window"] = None
+        return False
+
+
+def show_window():
+    """Druga kopia launchera prosi pierwszą o pokazanie okna."""
+    w = WEBVIEW["window"]
+    if w is None or WEBVIEW["closed"]:
+        return False
+    try:
+        w.restore()
+        w.show()
+        w.on_top = True
+        w.on_top = False
+        return True
+    except Exception:
+        return False
 
 
 def open_window():
@@ -3042,6 +3088,7 @@ def watchdog():
         now = time.time()
         closed = bye_at > last_ping and now - bye_at > 2.5                    # okno zamknięte (nie odświeżone)
         edge_gone = EDGE_PROC is not None and EDGE_PROC.poll() is not None and now - last_ping > 3
+        closed = closed or WEBVIEW["closed"]
         if not busy and (closed or edge_gone or now - last_ping > 150):
             log("Okno zamknięte – kończę.")
             quit_launcher()
@@ -3134,6 +3181,11 @@ def main():
         if server is None:
             print("Launcher już działa (albo trwa gra/pobieranie) – otwieram jego okno.")
             print("Jeśli to stara wersja: zamknij wszystkie czarne okna launchera i uruchom ponownie.")
+            try:
+                if requests.post(f"http://127.0.0.1:{PORT}/api/show", json={}, timeout=3).status_code == 200:
+                    return
+            except Exception:
+                pass
             open_window()
             return
     log(f"{NAZWA_LAUNCHERA} – dane w {DATA_DIR}")
@@ -3147,17 +3199,17 @@ def main():
     threading.Thread(target=detect_profile_sources, daemon=True).start()
     threading.Thread(target=set_window_identity, daemon=True).start()      # pasek zadań: Zora Client, nie Edge
     threading.Thread(target=app_update_loop, daemon=True).start()
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    print("Nie zamykaj tego okna, dopóki używasz launchera.")
+    want = "--no-window" not in sys.argv
     if "--updated" in sys.argv:
         # po automatycznej aktualizacji stare okno samo się przeładuje – nowe otwieramy tylko, gdy go nie ma
-        def maybe_open():
-            time.sleep(7)
-            if time.time() - last_ping > 6:
-                open_window()
-        threading.Thread(target=maybe_open, daemon=True).start()
-    elif "--no-window" not in sys.argv:
+        time.sleep(7)
+        want = time.time() - last_ping > 6
+    if want and not run_webview():
         open_window()
-    print("Nie zamykaj tego okna, dopóki używasz launchera.")
-    server.serve_forever()
+    while True:                      # okno zamknięte – watchdog zakończy launcher (albo poczeka na grę)
+        time.sleep(3600)
 
 
 if __name__ == "__main__":

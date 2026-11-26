@@ -22,9 +22,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: python -m pip install pyinstaller -r requirements.txt
+        run: python -m pip install pyinstaller pywebview pythonnet -r requirements.txt
       - name: Build exe (PyInstaller)
-        run: pyinstaller --noconfirm --windowed --name "Zora Client" --icon packaging/zorza.ico --add-data "ui;ui" --collect-all minecraft_launcher_lib launcher.py
+        run: pyinstaller --noconfirm --windowed --name "Zora Client" --icon packaging/zorza.ico --add-data "ui;ui" --collect-all minecraft_launcher_lib --collect-all webview --hidden-import clr launcher.py
       - name: Smoke test (start without window, ask for state)
         shell: pwsh
         run: |
@@ -35,6 +35,16 @@ jobs:
           $h = Invoke-WebRequest -UseBasicParsing http://127.0.0.1:47615/
           if ($h.Content -notmatch "Zora") { throw "UI not served" }
           Stop-Process -Id $p.Id -Force
+      - name: Window test (WebView2)
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "dist\Zora Client\Zora Client.exe" -PassThru
+          Start-Sleep -Seconds 20
+          $r = Invoke-WebRequest -UseBasicParsing "http://127.0.0.1:47615/api/log?since=0"
+          $r.Content | Select-String -Pattern "Okno" -AllMatches | ForEach-Object { $_.Line.Substring(0, [Math]::Min(600, $_.Line.Length)) }
+          Get-Process | Where-Object { $_.MainWindowTitle -like "*Zora*" } | Format-Table ProcessName, MainWindowTitle
+          if ($r.Content -match "WebView2 nie ruszy|brak WebView2") { Write-Host "::warning::WebView2 nie ruszył – sprawdź log" }
+          Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
       - name: Build installer (Inno Setup)
         shell: pwsh
         run: |

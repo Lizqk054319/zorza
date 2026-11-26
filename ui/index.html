@@ -147,8 +147,11 @@ select.sort{height:58px;border-radius:16px;background:#1b1b1f;border:1px solid #
 #accounts.on{display:flex}
 .acl{position:relative;width:44%;min-width:420px;overflow:hidden}
 .acl .in{position:absolute;inset:0;padding:56px 56px}
-.brand{display:flex;align-items:center;gap:14px;font-weight:700;letter-spacing:3px;font-size:18px}
+.brand{display:flex;align-items:center;gap:16px}
 .brand svg{width:44px;height:44px}
+.brand span{display:flex;flex-direction:column;line-height:1.05}
+.brand span b{font-size:24px;font-weight:800;letter-spacing:5px;background:linear-gradient(90deg,#fff 30%,color-mix(in srgb,var(--blue) 55%,#fff));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand span i{font-style:normal;font-size:12px;font-weight:700;letter-spacing:6.5px;color:color-mix(in srgb,var(--blue) 40%,#9a9aa6);margin-top:3px}
 .acl .skin2{position:absolute;left:50%;top:16%;transform:translateX(-50%);height:48%;image-rendering:pixelated;filter:drop-shadow(0 20px 30px #000a)}
 .acl .bottom{position:absolute;left:56px;bottom:56px}
 .cap{font-size:14px;letter-spacing:2px;font-weight:700;color:#d8d8de}
@@ -573,7 +576,6 @@ select.inp:disabled{opacity:.6}
       <button class="mini" id="pBack" title="Wróć"><svg width="22" height="22"><use href="#i-back"/></svg></button>
       <button class="pswitch" id="pSwitch"><div class="picon" id="pIcon"></div><div><b id="pName"></b><small id="pVer"></small></div><svg width="22" height="22"><use href="#i-chev"/></svg></button>
       <div class="grow"></div>
-      <button class="btn" id="pOfficial" title="Graj przez oficjalny launcher"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Oficjalny launcher</button>
       <button class="bigplay" id="pPlay"><svg viewBox="0 0 24 24" width="20" height="20" fill="#fff"><path d="M6 4l14 8-14 8z"/></svg><span>GRAJ</span></button>
     </div>
     <div class="ptabs" id="ptabs">
@@ -637,7 +639,7 @@ select.inp:disabled{opacity:.6}
     <div class="acl">
       <div class="sky" id="sky2"></div>
       <div class="shade"></div>
-      <div class="in"><div class="brand"><svg><use href="#logo"/></svg><span id="brandName">ZORA CLIENT</span></div></div>
+      <div class="in"><div class="brand"><svg><use href="#logo"/></svg><span id="brandName"><b>ZORA</b><i>CLIENT</i></span></div></div>
       <button class="bgbtn" id="accBgBtn" title="Zmień tło" style="top:28px;right:28px"><svg width="20" height="20"><use href="#i-img"/></svg></button>
       <div class="scene" id="accScene"></div>
       <div class="bottom">
@@ -1213,6 +1215,9 @@ Trwa pobieranie...|Downloading...|Wird heruntergeladen...|Завантаженн
 Nowy wybór wersji, ikonki profili (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client na pasku zadań|New version picker, profile icons (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client on the taskbar|Neue Versionsauswahl, Profil-Icons (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client in der Taskleiste|Новий вибір версії, іконки профілів (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client на панелі завдань|Nuevo selector de versión, iconos de perfiles (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client en la barra de tareas
 Launcher zamyka się do końca; gdy gra wyłączy się od razu, launcher pokaże dlaczego i sam naprawi zepsuty mod|The launcher now closes completely; if the game closes right away, the launcher shows why and fixes the broken mod|Der Launcher schließt sich jetzt vollständig; schließt sich das Spiel sofort, zeigt der Launcher warum und repariert den Mod|Лаунчер тепер закривається повністю; якщо гра одразу закривається, лаунчер покаже чому і виправить мод|El launcher ahora se cierra por completo; si el juego se cierra al instante, el launcher muestra por qué y repara el mod
 Poprawione ikonki profili i nazwa Zora Client na pasku zadań (także po aktualizacji)|Fixed profile icons and the Zora Client name on the taskbar (also after updating)|Profil-Icons und der Name Zora Client in der Taskleiste behoben (auch nach Updates)|Виправлено іконки профілів і назву Zora Client на панелі завдань (і після оновлення)|Corregidos los iconos de perfiles y el nombre Zora Client en la barra de tareas (también tras actualizar)
+Nie masz jeszcze konta w Zora Client. Dodaj konto Microsoft, żeby zagrać.|You don't have an account in Zora Client yet. Add a Microsoft account to play.|Du hast noch kein Konto in Zora Client. Füge ein Microsoft-Konto hinzu, um zu spielen.|У Zora Client ще немає акаунта. Додай акаунт Microsoft, щоб грати.|Aún no tienes una cuenta en Zora Client. Añade una cuenta de Microsoft para jugar.
+Launcher ma własne okno (bez menu przeglądarki na pasku tytułu), nowy napis w Kontach|The launcher has its own window (no browser menu on the title bar), new heading in Accounts|Der Launcher hat ein eigenes Fenster (kein Browsermenü in der Titelleiste), neue Überschrift in Konten|Лаунчер має власне вікно (без меню браузера в заголовку), новий напис в Акаунтах|El launcher tiene su propia ventana (sin menú del navegador en la barra de título), nuevo título en Cuentas
+Usunięte granie przez oficjalny launcher|Removed playing through the official launcher|Spielen über den offiziellen Launcher entfernt|Видалено гру через офіційний лаунчер|Eliminado jugar con el launcher oficial
 Anuluj instalację|Cancel installation|Installation abbrechen|Скасувати встановлення|Cancelar instalación
 Czy na pewno chcesz anulować instalację?|Are you sure you want to cancel the installation?|Möchtest du die Installation wirklich abbrechen?|Ти точно хочеш скасувати встановлення?|¿Seguro que quieres cancelar la instalación?
 Niedokończony profil zostanie usunięty. Twój stary launcher zostaje bez zmian.|The unfinished profile will be removed. Your old launcher stays unchanged.|Das unfertige Profil wird gelöscht. Dein alter Launcher bleibt unverändert.|Незавершений профіль буде видалено. Твій старий лаунчер не зміниться.|El perfil sin terminar se eliminará. Tu launcher anterior no cambia.
@@ -1472,7 +1477,8 @@ async function refresh() {
   if (document.activeElement !== $("#logDays")) $("#logDays").value = String(S.log_days);
   const acc = S.accounts.find(a => a.uuid === S.active), P = S.profile;
   document.title = S.name;
-  $("#brandName").textContent = S.name.toUpperCase();
+  { const [a, ...b] = S.name.toUpperCase().split(" ");
+    $("#brandName").innerHTML = `<b>${esc(a)}</b><i>${esc(b.join(" "))}</i>`; }
   paintSky();
   const key = (acc ? acc.uuid : "-") + "|" + S.accounts.map(a => a.uuid).join();
   if (key !== lastAcc) {
@@ -1553,11 +1559,10 @@ function profileMenu(anchor, pos, withRepair) {
     h += `<button class="it ${p.id === S.profile.id ? "sel" : ""}" data-a="sel" data-v="${esc(p.id)}"><span class="picon mi">${profileIcon(p)}</span><span class="grow">${esc(p.name)}<small>Minecraft ${esc(p.version)} · ${loaderName(p.loader)}</small></span>${p.id === S.profile.id ? ic("i-check", 20) : ""}</button>`;
   h += `<hr><button class="it" data-a="add">${ic("i-plus", 20)}Dodaj profil</button>`;
   h += `<button class="it" data-a="edit">${ic("i-pen", 20)}Edytuj profil</button>`;
-  h += `<hr><button class="it" data-a="official"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Graj przez oficjalny launcher</button>`;
   if (withRepair) h += `<button class="it red" data-a="repair">Napraw instalację</button>`;
   menu(anchor, h, {
     sel: async id => { await api("/api/profiles/select", {id}); refresh(); },
-    add: () => addProfile(), edit: () => editProfile(S.profile.id), official: () => playOfficial(S.profile.id),
+    add: () => addProfile(), edit: () => editProfile(S.profile.id),
     repair: async () => { try { await api("/api/repair", {id:S.profile.id}); go("home"); toast("Sprawdzam i naprawiam pliki gry..."); } catch (e) { toast(e.message, true); } },
   }, pos);
 }
@@ -1572,10 +1577,8 @@ async function playOfficial(id) {
 }
 function noAccountModal(id) {
   openModal(mhead("Jak chcesz zagrać?") + `
-    <div class="hint" style="margin-top:0">Nie masz jeszcze konta w Zora Client. Dodaj konto Microsoft albo zagraj przez oficjalny launcher.</div>
-    <button class="opt" id="naOff"><div class="oi"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M26 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></div><div><b>Graj przez oficjalny launcher</b><span>Twoje konto, mody i ustawienia Zora Client. Klikasz Graj w oficjalnym launcherze.</span></div><div class="arr">${ic("i-arrow")}</div></button>
+    <div class="hint" style="margin-top:0">${t("Nie masz jeszcze konta w Zora Client. Dodaj konto Microsoft, żeby zagrać.")}</div>
     <button class="opt" id="naAcc"><div class="oi">${ic("i-plus", 26)}</div><div><b>Dodaj konto Microsoft</b><span>Granie prosto z Zora Client.</span></div><div class="arr">${ic("i-arrow")}</div></button>`);
-  $("#naOff").onclick = () => playOfficial(id);
   $("#naAcc").onclick = () => { closeModal(); go("accounts"); };
 }
 $("#goBtn").onclick = async () => {
@@ -1856,7 +1859,6 @@ $$("#ptabs button").forEach(b => b.onclick = () => { pTab = b.dataset.t; pFilter
 $("#pBack").onclick = () => go("profiles");
 $("#pSwitch").onclick = e => { e.stopPropagation(); profileMenu($("#pSwitch"), "down", false); };
 $("#pPlay").onclick = () => playProfile(S.profile.id);
-$("#pOfficial").onclick = () => playOfficial(S.profile.id);
 $("#pFolder").onclick = () => api("/api/open_folder", {profile:S.profile.id});
 $("#pShare").onclick = () => shareProfile(S.profile.id);
 async function shareProfile(id) {
@@ -2192,8 +2194,7 @@ function playServer(srv) {
     <div class="hint" style="margin-top:0">${t("Po uruchomieniu gra zapyta, czy połączyć cię z serwerem {0}.", "<b>" + esc(srv.address) + "</b>")}</div>
     <div class="fld"><label>${t("Profil")}</label><select class="inp" id="spProf">${profs.map(p => `<option value="${esc(p.id)}" ${p.id === start ? "selected" : ""}>${esc(p.name)} · ${esc(p.version)}</option>`).join("")}</select>
       <div class="hint" id="spHint"></div></div>
-    <button class="opt" id="spMs" ${msOk ? "" : "disabled"}><div class="oi">${ic("i-play", 26)}</div><div><b>${t("Logowanie przez Microsoft")}</b><span>${msOk ? t("Gra startuje prosto z Zora Client.") : t("Najpierw dodaj konto Microsoft w zakładce Konta.")}</span></div><div class="arr">${ic("i-arrow")}</div></button>
-    <button class="opt" id="spOff"><div class="oi"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></div><div><b>${t("Przez oficjalny launcher")}</b><span>${t("Klikasz Graj w oficjalnym launcherze, a gra zapyta o serwer.")}</span></div><div class="arr">${ic("i-arrow")}</div></button>`);
+    <button class="opt" id="spMs" ${msOk ? "" : "disabled"}><div class="oi">${ic("i-play", 26)}</div><div><b>${t("Logowanie przez Microsoft")}</b><span>${msOk ? t("Gra startuje prosto z Zora Client.") : t("Najpierw dodaj konto Microsoft w zakładce Konta.")}</span></div><div class="arr">${ic("i-arrow")}</div></button>`);
   const hint = () => { const p = profs.find(x => x.id === $("#spProf").value);
     $("#spHint").textContent = p && p.loader !== "vanilla" && (S.zorza_mod_versions || []).includes(p.version) ? "" : t("Automatyczne łączenie działa w profilach z Fabric na wersji {0}.", (S.zorza_mod_versions || ["1.21.4"]).join(", ")); };
   $("#spProf").onchange = hint; hint();
@@ -2202,7 +2203,6 @@ function playServer(srv) {
     catch (e) { toast(e.message, true); }
   };
   $("#spMs").onclick = () => msOk && go2("microsoft");
-  $("#spOff").onclick = () => go2("official");
 }
 
 /* ================= AUTOMATYCZNA AKTUALIZACJA ================= */
