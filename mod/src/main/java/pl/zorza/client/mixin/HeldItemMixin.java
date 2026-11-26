@@ -14,8 +14,14 @@ import pl.zorza.client.Modules;
 
 @Mixin(HeldItemRenderer.class)
 public class HeldItemMixin {
+    //#if MC >= 1.21.2
+    private static final String RENDER_ITEM = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V";
+    //#else
+    //$$ private static final String RENDER_ITEM = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V";
+    //#endif
+
     @Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V"))
+            target = RENDER_ITEM))
     private void zorza$viewModel(CallbackInfo ci, @Local(argsOnly = true) AbstractClientPlayerEntity player,
                                  @Local(argsOnly = true) Hand hand, @Local(argsOnly = true) MatrixStack matrices) {
         if (Modules.VIEW_MODEL == null || !Modules.VIEW_MODEL.enabled) return;
