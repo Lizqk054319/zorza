@@ -55,7 +55,7 @@ jobs:
           set -o pipefail
           gradle build --no-daemon --stacktrace 2>&1 | tee /tmp/build.log || { grep -A4 "error:" /tmp/build.log | grep -v "^--" > build/compile-errors.txt 2>/dev/null || { mkdir -p build; grep -A4 "error:" /tmp/build.log > build/compile-errors.txt; }; exit 1; }
       - name: Install virtual display
-        run: sudo apt-get update -q && sudo apt-get install -y -q xvfb mesa-utils libgl1-mesa-dri
+        run: for i in 1 2 3; do sudo apt-get update -q && sudo apt-get install -y -q xvfb mesa-utils libgl1-mesa-dri && break; sleep 15; done
       - name: Gametest (gra z modem)
         if: env.GT_FLAG == 'true'
         working-directory: mod

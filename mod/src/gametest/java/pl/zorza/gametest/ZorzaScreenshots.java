@@ -16,6 +16,7 @@ public class ZorzaScreenshots implements FabricClientGameTest {
         context.runOnClient(client -> {
             client.options.getViewDistance().setValue(2);
             client.options.getSimulationDistance().setValue(5);
+            client.options.getMaxFps().setValue(20);                 // ekran ładowania nie zjada procesora serwerowi
         });
         try (TestSingleplayerContext sp = context.worldBuilder().create()) {
             sp.getClientWorld().waitForChunksRender();
