@@ -46,10 +46,13 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.8.6"
+WERSJA_CLIENTA = "0.8.7"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.8.7", [
+        "Naprawione „Failed to fetch” po kliknięciu Graj",
+    ]),
     ("0.8.6", [
         "W grze: Armor Bar (chowa zbroję i głód), Motion Blur bez smug, lżejsze Ambient Particles",
         "Ustawienia modów typu CreamyKeys widoczne w Zora Mods, nowy wbudowany mod Fast IP Ping",
@@ -2290,6 +2293,17 @@ def state_json():
     }
 
 
+class Server(ThreadingHTTPServer):
+    # Domyślnie Python trzyma w kolejce tylko 5 połączeń. Gdy okno wysyła kilka zapytań naraz
+    # (stan, logi, serwery, ikonki), a launcher akurat jest zajęty, Windows odrzucał nadmiar
+    # i w oknie wyskakiwało "Failed to fetch".
+    request_queue_size = 256
+    daemon_threads = True
+
+    def handle_error(self, request, client_address):
+        pass                                   # zerwane połączenie z oknem to nie błąd launchera
+
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
@@ -2809,7 +2823,7 @@ def do_app_update():
 
 def main():
     try:
-        server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+        server = Server(("127.0.0.1", PORT), Handler)
     except OSError:
         # Działa inna (np. starsza) kopia launchera – poproś ją o zamknięcie i wystartuj tę.
         server = None
@@ -2820,7 +2834,7 @@ def main():
                 for _ in range(30):
                     time.sleep(0.2)
                     try:
-                        server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+                        server = Server(("127.0.0.1", PORT), Handler)
                         break
                     except OSError:
                         pass
