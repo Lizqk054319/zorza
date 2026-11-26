@@ -16,7 +16,7 @@ import java.nio.file.Path;
  * Gra startuje, wszystkie mixiny zostają sprawdzone, robimy zrzuty menu Zory i gra się zamyka.
  */
 public final class SmokeTest {
-    private static int ticks = 0, step = 0;
+    private static int ticks = 0, step = 0, wait = 0;
 
     private SmokeTest() {
     }
@@ -25,7 +25,10 @@ public final class SmokeTest {
         String dir = System.getProperty("zorza.smoke");
         if (dir == null) return;
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
-            if (step == 0 && !(mc.currentScreen instanceof TitleScreen)) return;
+            if (step == 0 && !(mc.currentScreen instanceof TitleScreen)) {
+                if (++wait > 200 && mc.getOverlay() == null) mc.setScreen(new TitleScreen());   // np. ekran powitalny przy 1. starcie
+                return;
+            }
             ticks++;
             try {
                 if (step == 0 && ticks > 60) {

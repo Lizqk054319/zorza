@@ -42,9 +42,13 @@ jobs:
           JAR=$(find ~/.gradle/caches/fabric-loom -path "*${{ matrix.mc }}*" -name "minecraft-client.jar" | head -1)
           [ -z "$JAR" ] && JAR=$(find ~/.gradle/caches/fabric-loom -name "minecraft-client.jar" | head -1)
           python3 tools/dark_gui.py "$JAR" mod/src/main/resources/resourcepacks/zora_dark_gui
+      - name: Sygnatury klas (do przenoszenia między wersjami)
+        run: tools/sigs.sh /tmp/shots/sigs || true
       - name: Build
         working-directory: mod
-        run: gradle build --no-daemon --stacktrace
+        run: |
+          set -o pipefail
+          gradle build --no-daemon --stacktrace 2>&1 | tee /tmp/build.log || { grep -A4 "error:" /tmp/build.log | grep -v "^--" > build/compile-errors.txt 2>/dev/null || { mkdir -p build; grep -A4 "error:" /tmp/build.log > build/compile-errors.txt; }; exit 1; }
       - name: Install virtual display
         run: sudo apt-get update -q && sudo apt-get install -y -q xvfb mesa-utils libgl1-mesa-dri
       - name: Gametest (gra z modem)
@@ -60,7 +64,8 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: "1"
         run: |
           mkdir -p run && echo "eula=true" > run/eula.txt
-          timeout 900 xvfb-run -a -s "-screen 0 1920x1080x24" gradle runClient -Psmoke --no-daemon --stacktrace || true
+          printf "onboardAccessibility:false\nnarrator:0\n" > run/options.txt
+          timeout 600 xvfb-run -a -s "-screen 0 1920x1080x24" gradle runClient -Psmoke --no-daemon --stacktrace || true
           cat build/smoke/result.txt
           grep -q "SMOKE OK" build/smoke/result.txt
       - name: Prepare jar
@@ -75,6 +80,7 @@ jobs:
         if: always()
         run: |
           mkdir -p /tmp/shots
+          cp mod/build/compile-errors.txt /tmp/shots/ 2>/dev/null || true
           cp -r mod/build/run/clientGameTest/screenshots/. /tmp/shots/ 2>/dev/null || true
           cp -r mod/build/smoke/. /tmp/shots/ 2>/dev/null || true
           cp mod/build/run/clientGameTest/logs/latest.log /tmp/shots/ 2>/dev/null || cp mod/run/logs/latest.log /tmp/shots/ 2>/dev/null || true
