@@ -51,9 +51,16 @@ public class CooldownsHud extends HudModule {
                 var inv = mc.player.getInventory();
                 for (int i = 0; i < inv.size(); i++) {
                     ItemStack st = inv.getStack(i);
+                    //#if MC >= 1.21.2
                     if (!st.isEmpty()) owned.putIfAbsent(mgr.getGroup(st), st);
+                    //#else
+                    //$$ if (!st.isEmpty()) owned.putIfAbsent(Registries.ITEM.getId(st.getItem()), st);
+                    //#endif
                 }
-                for (Map.Entry<Identifier, ?> e : cm.zorza$entries().entrySet()) {
+                for (Map.Entry<?, ?> raw : cm.zorza$entries().entrySet()) {
+                    // klucz: grupa (Identifier) od 1.21.2, wcześniej sam przedmiot
+                    Identifier key = raw.getKey() instanceof Item it ? Registries.ITEM.getId(it) : (Identifier) raw.getKey();
+                    var e = Map.entry(key, raw.getValue());
                     CooldownEntryAccessor en = (CooldownEntryAccessor) e.getValue();
                     float left = (en.zorza$end() - tick - delta) / 20f;
                     if (left <= 0) continue;

@@ -69,7 +69,7 @@ public class PotionEffectsHud extends HudModule {
         for (Line l : lines(mc)) {
             if (icons.value) {
                 var sprite = mc.getStatusEffectSpriteManager().getSprite(l.effect());
-                if (sprite != null) ctx.drawSpriteStretched(RenderLayer::getGuiTextured, sprite, 5, y + 2, 9, 9);
+                if (sprite != null) pl.zorza.client.compat.Gfx.spriteStretched(ctx, sprite, 5, y + 2, 9, 9);
             }
             int col = l.ending() && blink == 0 ? R.alpha(textColor.value, 0.55f) : textColor.value;
             if (shadow.value) R.shadowText(ctx, l.text(), textX(), y + 3, 9, col, R.MEDIUM);

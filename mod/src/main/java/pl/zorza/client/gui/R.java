@@ -72,7 +72,7 @@ public final class R {
     }
 
     public static void tex(DrawContext c, Identifier id, int x, int y, int w, int h, int color) {
-        c.drawTexture(RenderLayer::getGuiTextured, id, x, y, 0f, 0f, w, h, w, h, color);
+        pl.zorza.client.compat.Gfx.texture(c, id, x, y, 0f, 0f, w, h, w, h, color);
     }
 
     public static void icon(DrawContext c, String name, int x, int y, int size, int color) {

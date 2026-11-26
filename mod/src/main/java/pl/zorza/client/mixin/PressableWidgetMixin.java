@@ -18,6 +18,7 @@ import java.util.function.Function;
 
 @Mixin(PressableWidget.class)
 public abstract class PressableWidgetMixin {
+    //#if MC >= 1.21.2
     @Redirect(method = "renderWidget", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIIII)V"))
     private void zorza$background(DrawContext ctx, Function<Identifier, RenderLayer> layer, Identifier tex, int x, int y, int w, int h, int color) {
@@ -28,6 +29,18 @@ public abstract class PressableWidgetMixin {
         ClickableWidget self = (ClickableWidget) (Object) this;
         VanillaStyle.button(ctx, self, x, y, w, h, self.active, self.isSelected(), ((color >>> 24) & 255) / 255f);
     }
+    //#else
+    //$$ @Redirect(method = "renderWidget", at = @At(value = "INVOKE",
+    //$$         target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"))
+    //$$ private void zorza$background(DrawContext ctx, Identifier tex, int x, int y, int w, int h) {
+    //$$     if (!MenuSettings.styled()) {
+    //$$         ctx.drawGuiTexture(tex, x, y, w, h);
+    //$$         return;
+    //$$     }
+    //$$     ClickableWidget self = (ClickableWidget) (Object) this;
+    //$$     VanillaStyle.button(ctx, self, x, y, w, h, self.active, self.isSelected(), com.mojang.blaze3d.systems.RenderSystem.getShaderColor()[3]);
+    //$$ }
+    //#endif
 
     @Inject(method = "drawMessage", at = @At("HEAD"), cancellable = true)
     private void zorza$message(DrawContext ctx, TextRenderer tr, int color, CallbackInfo ci) {

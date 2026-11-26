@@ -1,5 +1,6 @@
 package pl.zorza.client.fx;
 
+//#if MC < 1.21.5
 //#if MC >= 1.21.2
 import com.mojang.blaze3d.systems.ProjectionType;
 import net.minecraft.client.gl.ShaderProgramKeys;
@@ -129,3 +130,12 @@ public final class MotionBlurRenderer {
         valid = true;
     }
 }
+//#else
+//$$ /** 1.21.5+: nowy system grafiki – wersja w przygotowaniu (na razie bez rozmycia). */
+//$$ public final class MotionBlurRenderer {
+//$$     private MotionBlurRenderer() {}
+//$$
+//$$     public static void afterWorld() {
+//$$     }
+//$$ }
+//#endif

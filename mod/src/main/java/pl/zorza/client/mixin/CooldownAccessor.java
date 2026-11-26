@@ -10,7 +10,7 @@ import java.util.Map;
 @Mixin(ItemCooldownManager.class)
 public interface CooldownAccessor {
     @Accessor("entries")
-    Map<Identifier, ?> zorza$entries();
+    Map<?, ?> zorza$entries();
 
     @Accessor("tick")
     int zorza$tick();

@@ -11,3 +11,7 @@ while read -r C; do
   javap -p -cp "$CP" "$C" > "$OUT/$C.txt" 2>&1
 done < tools/sigs-classes.txt
 unzip -l "$J" | grep -oE "net/minecraft/client/(gl|render|gui|texture)/[A-Za-z]+\.class|com/mojang/blaze3d/[A-Za-z/]+\.class" | sort > "$OUT/_classes.txt"
+# kod (bytecode) wybranych klas – żeby zobaczyć, jak Minecraft sam coś rysuje
+for C in net.minecraft.client.gl.Framebuffer net.minecraft.client.gl.RenderPipelines net.minecraft.client.render.RenderLayer; do
+  javap -c -p -cp "$CP" "$C" > "$OUT/code-$C.txt" 2>&1
+done

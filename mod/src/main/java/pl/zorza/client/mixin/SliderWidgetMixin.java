@@ -20,6 +20,7 @@ public abstract class SliderWidgetMixin {
     @Shadow
     protected double value;
 
+    //#if MC >= 1.21.2
     @Redirect(method = "renderWidget", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIIII)V"))
     private void zorza$parts(DrawContext ctx, Function<Identifier, RenderLayer> layer, Identifier tex, int x, int y, int w, int h, int color) {
@@ -27,6 +28,16 @@ public abstract class SliderWidgetMixin {
             ctx.drawGuiTexture(layer, tex, x, y, w, h, color);
             return;
         }
+    //#else
+    //$$ @Redirect(method = "renderWidget", at = @At(value = "INVOKE",
+    //$$         target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"))
+    //$$ private void zorza$parts(DrawContext ctx, Identifier tex, int x, int y, int w, int h) {
+    //$$     int color = ((int) (com.mojang.blaze3d.systems.RenderSystem.getShaderColor()[3] * 255) << 24) | 0xFFFFFF;
+    //$$     if (!MenuSettings.styled()) {
+    //$$         ctx.drawGuiTexture(tex, x, y, w, h);
+    //$$         return;
+    //$$     }
+    //#endif
         if (tex.getPath().contains("handle")) return;          // uchwyt rysujemy razem z tłem
         ClickableWidget self = (ClickableWidget) (Object) this;
         VanillaStyle.slider(ctx, self, self.getX(), self.getY(), self.getWidth(), self.getHeight(), value, self.active,

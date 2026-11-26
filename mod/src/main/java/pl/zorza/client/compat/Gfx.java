@@ -1,0 +1,65 @@
+package pl.zorza.client.compat;
+
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.util.Identifier;
+
+/**
+ * Rysowanie tekstur w GUI – w każdej wersji Minecrafta wygląda to trochę inaczej,
+ * więc cały mod woła tylko te metody, a różnice są tutaj.
+ */
+public final class Gfx {
+    private Gfx() {
+    }
+
+    /** Cała tekstura (albo jej fragment) z kolorem ARGB. */
+    public static void texture(DrawContext c, Identifier id, int x, int y, float u, float v, int w, int h, int texW, int texH, int color) {
+        //#if MC >= 1.21.2
+        c.drawTexture(net.minecraft.client.render.RenderLayer::getGuiTextured, id, x, y, u, v, w, h, texW, texH, color);
+        //#else
+        //$$ tint(c, color);
+        //$$ c.drawTexture(id, x, y, u, v, w, h, texW, texH);
+        //$$ untint(c);
+        //#endif
+    }
+
+    /** Sprite z atlasu GUI (np. "hud/heart/full"). */
+    public static void guiSprite(DrawContext c, Identifier id, int x, int y, int w, int h) {
+        //#if MC >= 1.21.2
+        c.drawGuiTexture(net.minecraft.client.render.RenderLayer::getGuiTextured, id, x, y, w, h);
+        //#else
+        //$$ com.mojang.blaze3d.systems.RenderSystem.enableBlend();
+        //$$ c.drawGuiTexture(id, x, y, w, h);
+        //#endif
+    }
+
+    public static void guiSprite(DrawContext c, Identifier id, int x, int y, int w, int h, int color) {
+        //#if MC >= 1.21.2
+        c.drawGuiTexture(net.minecraft.client.render.RenderLayer::getGuiTextured, id, x, y, w, h, color);
+        //#else
+        //$$ tint(c, color);
+        //$$ c.drawGuiTexture(id, x, y, w, h);
+        //$$ untint(c);
+        //#endif
+    }
+
+    /** Sprite rozciągnięty na prostokąt (np. ikonka efektu mikstury). */
+    public static void spriteStretched(DrawContext c, Sprite sprite, int x, int y, int w, int h) {
+        //#if MC >= 1.21.2
+        c.drawSpriteStretched(net.minecraft.client.render.RenderLayer::getGuiTextured, sprite, x, y, w, h);
+        //#else
+        //$$ c.drawSprite(x, y, 0, w, h, sprite);
+        //#endif
+    }
+
+    //#if MC < 1.21.2
+    //$$ private static void tint(DrawContext c, int color) {
+    //$$     com.mojang.blaze3d.systems.RenderSystem.enableBlend();
+    //$$     c.setShaderColor(((color >> 16) & 255) / 255f, ((color >> 8) & 255) / 255f, (color & 255) / 255f, ((color >>> 24) & 255) / 255f);
+    //$$ }
+    //$$
+    //$$ private static void untint(DrawContext c) {
+    //$$     c.setShaderColor(1f, 1f, 1f, 1f);
+    //$$ }
+    //#endif
+}
