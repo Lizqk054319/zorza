@@ -27,6 +27,7 @@ public abstract class PressableWidgetNewMixin {
         ClickableWidget self = (ClickableWidget) (Object) this;
         float a = ((color >>> 24) & 255) / 255f;
         VanillaStyle.button(ctx, self, x, y, w, h, self.active, self.isSelected(), a);
+        if (self.getClass().getName().contains("IconOnly") || self.getClass().getSimpleName().contains("IconOnly")) return;   // sama ikonka – bez napisu
         int tc = self.active ? 0xFFFFFF : 0xA0A0A0;
         VanillaStyle.label(ctx, self.getMessage().getString(), self.getX(), self.getY(), self.getWidth(), self.getHeight(),
                 ((int) (a * 255) << 24) | tc);
