@@ -46,12 +46,12 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.8.7"
+WERSJA_CLIENTA = "0.8.8"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
-    ("0.8.7", [
-        "Naprawione „Failed to fetch” po kliknięciu Graj",
+    ("0.8.8", [
+        "Naprawione „Failed to fetch” przy Graj i przenoszeniu z innego launchera",
     ]),
     ("0.8.6", [
         "W grze: Armor Bar (chowa zbroję i głód), Motion Blur bez smug, lżejsze Ambient Particles",

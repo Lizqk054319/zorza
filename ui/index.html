@@ -737,8 +737,8 @@ async function api(path, body) {
   for (let i = 0; ; i++) {
     try { r = await fetch(path, opt); break; }
     catch (e) {   // "Failed to fetch" – launcher chwilowo nie odebrał połączenia, próbujemy jeszcze raz
-      if (i >= 3) throw new Error(t("Launcher nie odpowiada. Spróbuj jeszcze raz."));
-      await new Promise(ok => setTimeout(ok, 250 * (i + 1)));
+      if (i >= 7) throw new Error(t("Launcher nie odpowiada. Spróbuj jeszcze raz."));
+      await new Promise(ok => setTimeout(ok, Math.min(1000, 200 * (i + 1))));
     }
   }
   const j = await r.json().catch(() => ({}));
@@ -1172,7 +1172,7 @@ Dostępna jest wersja {0}.|Version {0} is available.|Version {0} ist verfügbar.
 To najnowsza wersja.|This is the latest version.|Das ist die neueste Version.|Це найновіша версія.|Es la versión más reciente.
 Automatyczne aktualizacje działają w wersji z instalatora.|Automatic updates work in the installer version.|Automatische Updates funktionieren in der Installer-Version.|Автооновлення працюють у версії з інсталятора.|Las actualizaciones automáticas funcionan en la versión del instalador.
 Launcher nie odpowiada. Spróbuj jeszcze raz.|The launcher is not responding. Please try again.|Der Launcher antwortet nicht. Bitte versuche es erneut.|Лаунчер не відповідає. Спробуй ще раз.|El launcher no responde. Inténtalo de nuevo.
-Naprawione „Failed to fetch” po kliknięciu Graj|Fixed “Failed to fetch” after clicking Play|„Failed to fetch“ nach Klick auf Spielen behoben|Виправлено «Failed to fetch» після натискання Грати|Corregido «Failed to fetch» al pulsar Jugar
+Naprawione „Failed to fetch” przy Graj i przenoszeniu z innego launchera|Fixed “Failed to fetch” on Play and when importing from another launcher|„Failed to fetch“ bei Spielen und beim Import behoben|Виправлено «Failed to fetch» під час гри та імпорту|Corregido «Failed to fetch» al jugar y al importar
 W grze: Armor Bar (chowa zbroję i głód), Motion Blur bez smug, lżejsze Ambient Particles|In game: Armor Bar (hides armor and hunger), Motion Blur without smearing, lighter Ambient Particles|Im Spiel: Armor Bar (blendet Rüstung und Hunger aus), Motion Blur ohne Schlieren, leichtere Ambient Particles|У грі: Armor Bar (ховає броню і голод), Motion Blur без шлейфів, легші Ambient Particles|En el juego: Armor Bar (oculta armadura y hambre), Motion Blur sin estelas, Ambient Particles más ligeras
 Ustawienia modów typu CreamyKeys widoczne w Zora Mods, nowy wbudowany mod Fast IP Ping|Settings of mods like CreamyKeys now show in Zora Mods, new built-in mod Fast IP Ping|Einstellungen von Mods wie CreamyKeys jetzt in Zora Mods, neuer integrierter Mod Fast IP Ping|Налаштування модів на кшталт CreamyKeys тепер у Zora Mods, новий вбудований мод Fast IP Ping|Los ajustes de mods como CreamyKeys ya se ven en Zora Mods, nuevo mod integrado Fast IP Ping
 W grze: Custom Hitboxes, serca z Minecrafta w rzędach (strzałki ↑ ↓ zmieniają wysokość)|In game: Custom Hitboxes, Minecraft hearts in rows (↑ ↓ keys change the height)|Im Spiel: Custom Hitboxes, Minecraft-Herzen in Reihen (↑ ↓ ändern die Höhe)|У грі: Custom Hitboxes, серця Minecraft рядами (↑ ↓ змінюють висоту)|En el juego: Custom Hitboxes, corazones de Minecraft en filas (↑ ↓ cambian la altura)
