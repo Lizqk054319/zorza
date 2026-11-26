@@ -33,7 +33,7 @@ gametest = "true" if mcv >= (1, 21, 4) else "false"
 java = "17" if mcv < (1, 20, 5) else "21"
 # Nowsze wersje gry potrzebują nowszego Loom (i Gradle)
 loom, gradle = "1.10-SNAPSHOT", "8.12"
-if mcv >= (1, 21, 11):
+if mcv >= (1, 21, 9):
     try:
         lm = get("https://maven.fabricmc.net/fabric-loom/fabric-loom.gradle.plugin/maven-metadata.xml")
         snaps = [v for v in re.findall(r"<version>([^<]+)</version>", lm) if re.fullmatch(r"1\.\d+-SNAPSHOT", v)]
@@ -56,5 +56,6 @@ open(props, "w", encoding="utf-8").write(text + "\n")
 import os
 if os.environ.get("GITHUB_ENV"):
     with open(os.environ["GITHUB_ENV"], "a") as f:
-        f.write(f"GRADLE_VER={gradle}\nJAVA_VER={'25' if java == '25' else '21'}\n")
+        # nowy Loom sam wymaga Javy 25 do uruchomienia Gradle (kod moda dalej jest pod Javę 21)
+        f.write(f"GRADLE_VER={gradle}\nJAVA_VER={'25' if gradle == 'current' else '21'}\n")
 print(f"loom={loom} gradle={gradle} mc={mc} yarn={yarn} loader={loader} fabric-api={api} gametest={gametest} java={java}")
