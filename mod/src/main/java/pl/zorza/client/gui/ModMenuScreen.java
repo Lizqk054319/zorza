@@ -126,7 +126,11 @@ public class ModMenuScreen extends ZScreen {
         int[] u = userRect();
         R.bordered(ctx, u[0], u[1], u[2], u[3], 12, 1, R.alpha(0xF00C0C0F, a), R.alpha(0x1CFFFFFF, a));
         if (client.player != null) {
+            //#if MC >= 1.20.2
             PlayerSkinDrawer.draw(ctx, client.player.getSkinTextures(), u[0] + 14, u[1] + 12, 40);
+            //#else
+            //$$ PlayerSkinDrawer.draw(ctx, client.player.getSkinTexture(), u[0] + 14, u[1] + 12, 40);
+            //#endif
             R.text(ctx, client.player.getName().getString(), u[0] + 70, R.midY(u[1], 64, 17), 17, R.alpha(0xFFFFFFFF, a), R.SEMI);
         }
         squareButton(ctx, mx, my, folderRect(), "folder", "hdrFolder", a, false);

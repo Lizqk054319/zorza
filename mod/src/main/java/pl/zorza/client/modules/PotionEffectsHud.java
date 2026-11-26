@@ -21,7 +21,7 @@ public class PotionEffectsHud extends HudModule {
     private final Setting.Bool icons = add(new Setting.Bool("icons", "Show icons", true));
     private static final int ROW = 13;
 
-    private record Line(RegistryEntry<StatusEffect> effect, String text, boolean ending) {}
+    private record Line(Object effect, String text, boolean ending) {}   // RegistryEntry<StatusEffect> albo StatusEffect (stare wersje)
 
     public PotionEffectsHud() {
         super("potion_effects", "Potion Effects", "Active effects with icon and time left.", Category.HUD, false, 0.8, 0.4);
@@ -32,12 +32,22 @@ public class PotionEffectsHud extends HudModule {
     private List<Line> lines(MinecraftClient mc) {
         List<Line> out = new ArrayList<>();
         if (mc.player != null && mc.world != null) {
+            //#if MC >= 1.20.3
             float tickRate = mc.world.getTickManager().getTickRate();
+            //#endif
             for (StatusEffectInstance e : mc.player.getStatusEffects()) {
                 if (!e.shouldShowIcon() && !e.shouldShowParticles()) continue;
+                //#if MC >= 1.20.5
                 String name = e.getEffectType().value().getName().getString();
+                //#else
+                //$$ String name = e.getEffectType().getName().getString();
+                //#endif
                 if (e.getAmplifier() > 0) name += " " + roman(e.getAmplifier() + 1);
+                //#if MC >= 1.20.3
                 String time = StatusEffectUtil.getDurationText(e, 1.0f, tickRate).getString();
+                //#else
+                //$$ String time = StatusEffectUtil.getDurationText(e, 1.0f).getString();
+                //#endif
                 out.add(new Line(e.getEffectType(), name + "  " + time, !e.isInfinite() && e.getDuration() < 200));
             }
         }

@@ -61,27 +61,41 @@ public class HealthIndicators extends Module {
         }
     }
 
-    private static void quad(VertexConsumer vc, Matrix4f m, Sprite s, float x, float y, float size, int light) {
+    private static float[] uv(Sprite s) {
+        return new float[]{s.getMinU(), s.getMinV(), s.getMaxU(), s.getMaxV()};
+    }
+
+    private static float[] icon(int u) {
+        return new float[]{u / 256f, 0f, (u + 9) / 256f, 9 / 256f};
+    }
+
+    private static void quad(VertexConsumer vc, Matrix4f m, float[] s, float x, float y, float size, int light) {
         //#if MC >= 1.21
-        vc.vertex(m, x, y, 0).color(255, 255, 255, 255).texture(s.getMinU(), s.getMinV()).light(light);
-        vc.vertex(m, x, y + size, 0).color(255, 255, 255, 255).texture(s.getMinU(), s.getMaxV()).light(light);
-        vc.vertex(m, x + size, y + size, 0).color(255, 255, 255, 255).texture(s.getMaxU(), s.getMaxV()).light(light);
-        vc.vertex(m, x + size, y, 0).color(255, 255, 255, 255).texture(s.getMaxU(), s.getMinV()).light(light);
+        vc.vertex(m, x, y, 0).color(255, 255, 255, 255).texture(s[0], s[1]).light(light);
+        vc.vertex(m, x, y + size, 0).color(255, 255, 255, 255).texture(s[0], s[3]).light(light);
+        vc.vertex(m, x + size, y + size, 0).color(255, 255, 255, 255).texture(s[2], s[3]).light(light);
+        vc.vertex(m, x + size, y, 0).color(255, 255, 255, 255).texture(s[2], s[1]).light(light);
         //#else
-        //$$ vc.vertex(m, x, y, 0).color(255, 255, 255, 255).texture(s.getMinU(), s.getMinV()).light(light).next();
-        //$$ vc.vertex(m, x, y + size, 0).color(255, 255, 255, 255).texture(s.getMinU(), s.getMaxV()).light(light).next();
-        //$$ vc.vertex(m, x + size, y + size, 0).color(255, 255, 255, 255).texture(s.getMaxU(), s.getMaxV()).light(light).next();
-        //$$ vc.vertex(m, x + size, y, 0).color(255, 255, 255, 255).texture(s.getMaxU(), s.getMinV()).light(light).next();
+        //$$ vc.vertex(m, x, y, 0).color(255, 255, 255, 255).texture(s[0], s[1]).light(light).next();
+        //$$ vc.vertex(m, x, y + size, 0).color(255, 255, 255, 255).texture(s[0], s[3]).light(light).next();
+        //$$ vc.vertex(m, x + size, y + size, 0).color(255, 255, 255, 255).texture(s[2], s[3]).light(light).next();
+        //$$ vc.vertex(m, x + size, y, 0).color(255, 255, 255, 255).texture(s[2], s[1]).light(light).next();
         //#endif
     }
 
     /** Rysuje serca (od dołu w górę) – zwraca wysokość w pikselach. */
     private int drawHearts(VertexConsumerProvider vcp, Matrix4f m, LivingEntity e, int light) {
         MinecraftClient mc = MinecraftClient.getInstance();
+        //#if MC >= 1.20.2
         var atlas = mc.getGuiAtlasManager();
-        Sprite cont = atlas.getSprite(CONTAINER), full = atlas.getSprite(FULL), half = atlas.getSprite(HALF),
-                absF = atlas.getSprite(ABS_FULL), absH = atlas.getSprite(ABS_HALF);
-        VertexConsumer vc = vcp.getBuffer(RenderLayer.getText(full.getAtlasId()));
+        float[] cont = uv(atlas.getSprite(CONTAINER)), full = uv(atlas.getSprite(FULL)), half = uv(atlas.getSprite(HALF)),
+                absF = uv(atlas.getSprite(ABS_FULL)), absH = uv(atlas.getSprite(ABS_HALF));
+        VertexConsumer vc = vcp.getBuffer(RenderLayer.getText(atlas.getSprite(FULL).getAtlasId()));
+        //#else
+        //$$ // 1.20.1: serca są w textures/gui/icons.png (256x256)
+        //$$ float[] cont = icon(16), full = icon(52), half = icon(61), absF = icon(160), absH = icon(169);
+        //$$ VertexConsumer vc = vcp.getBuffer(RenderLayer.getText(Ids.mc("textures/gui/icons.png")));
+        //#endif
         int hp = (int) Math.ceil(Math.max(0, e.getHealth())), abs = (int) Math.ceil(e.getAbsorptionAmount());
         int maxHearts = (int) Math.ceil(Math.max(1, e.getMaxHealth()) / 2f);
         int absHearts = (int) Math.ceil(abs / 2f);

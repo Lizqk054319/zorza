@@ -50,7 +50,11 @@ public abstract class CameraMixin {
         net.minecraft.util.math.Vec3d lp = entity.getLerpedPos(tickDelta);
         setPos(lp.x, lp.y + MathHelper.lerp(tickDelta, lastCameraY, cameraY), lp.z);
         if (thirdPerson) {
+            //#if MC >= 1.20.5
             float scale = entity instanceof LivingEntity le ? le.getScale() : 1f;
+            //#else
+            //$$ float scale = 1f;
+            //#endif
             //#if MC >= 1.21
             moveBy(-clipToSpace(4f * scale), 0f, 0f);
             //#else

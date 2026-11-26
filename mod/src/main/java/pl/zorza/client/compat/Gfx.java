@@ -31,7 +31,7 @@ public final class Gfx {
         //$$ c.drawGuiTexture(net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED, id, x, y, w, h);
         //#elseif MC >= 1.21.2
         c.drawGuiTexture(net.minecraft.client.render.RenderLayer::getGuiTextured, id, x, y, w, h);
-        //#else
+        //#elseif MC >= 1.20.2
         //$$ com.mojang.blaze3d.systems.RenderSystem.enableBlend();
         //$$ c.drawGuiTexture(id, x, y, w, h);
         //#endif
@@ -42,7 +42,7 @@ public final class Gfx {
         //$$ c.drawGuiTexture(net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED, id, x, y, w, h, color);
         //#elseif MC >= 1.21.2
         c.drawGuiTexture(net.minecraft.client.render.RenderLayer::getGuiTextured, id, x, y, w, h, color);
-        //#else
+        //#elseif MC >= 1.20.2
         //$$ tint(c, color);
         //$$ c.drawGuiTexture(id, x, y, w, h);
         //$$ untint(c);
@@ -111,7 +111,13 @@ public final class Gfx {
     }
 
     /** Ikonka efektu mikstury. */
-    public static void effectIcon(DrawContext c, net.minecraft.registry.entry.RegistryEntry<net.minecraft.entity.effect.StatusEffect> effect, int x, int y, int size) {
+    @SuppressWarnings("unchecked")
+    public static void effectIcon(DrawContext c, Object effectObj, int x, int y, int size) {
+        //#if MC >= 1.20.5
+        var effect = (net.minecraft.registry.entry.RegistryEntry<net.minecraft.entity.effect.StatusEffect>) effectObj;
+        //#else
+        //$$ var effect = (net.minecraft.entity.effect.StatusEffect) effectObj;
+        //#endif
         //#if MC >= 1.21.6
         //$$ effect.getKey().ifPresent(k -> texture(c, Ids.of(k.getValue().getNamespace(), "textures/mob_effect/" + k.getValue().getPath() + ".png"),
         //$$         x, y, 0f, 0f, size, size, size, size, -1));

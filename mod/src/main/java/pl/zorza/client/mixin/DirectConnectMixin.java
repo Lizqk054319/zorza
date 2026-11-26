@@ -74,7 +74,11 @@ public abstract class DirectConnectMixin extends Screen {
 
     @Unique
     private void zorza$startPing(String address) {
+        //#if MC >= 1.20.2
         ServerInfo info = new ServerInfo(address, address, ServerInfo.ServerType.OTHER);
+        //#else
+        //$$ ServerInfo info = new ServerInfo(address, address, false);
+        //#endif
         info.label = Text.translatable("multiplayer.status.pinging").formatted(Formatting.DARK_GRAY);
         info.playerCountLabel = Text.empty();
         info.ping = -2;
@@ -83,7 +87,11 @@ public abstract class DirectConnectMixin extends Screen {
         zorza$iconBytes = null;
         Thread t = new Thread(() -> {
             try {
+                //#if MC >= 1.20.5
                 zorza$pinger.add(info, () -> {}, () -> {});
+                //#else
+                //$$ zorza$pinger.add(info, () -> {});
+                //#endif
             } catch (UnknownHostException e) {
                 info.ping = -1;
                 info.label = Text.translatable("multiplayer.status.cannot_resolve").formatted(Formatting.DARK_RED);

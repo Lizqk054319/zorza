@@ -130,8 +130,16 @@ public class AutoJoinScreen extends ZScreen {
     }
 
     private void connect() {
+        //#if MC >= 1.20.2
         ServerInfo info = new ServerInfo(data.name(), data.address(), ServerInfo.ServerType.OTHER);
+        //#else
+        //$$ ServerInfo info = new ServerInfo(data.name(), data.address(), false);
+        //#endif
+        //#if MC >= 1.20.5
         ConnectScreen.connect(parent, client, ServerAddress.parse(data.address()), info, false, null);
+        //#else
+        //$$ ConnectScreen.connect(parent, client, ServerAddress.parse(data.address()), info, false);
+        //#endif
     }
 
     @Override

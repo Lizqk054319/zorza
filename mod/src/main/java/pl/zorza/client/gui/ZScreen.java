@@ -135,10 +135,17 @@ public abstract class ZScreen extends Screen {
     }
     //#endif
 
+    //#if MC >= 1.20.2
     @Override
     public boolean mouseScrolled(double mx, double my, double h, double v) {
         return scroll(dx(mx), dy(my), v) || super.mouseScrolled(mx, my, h, v);
     }
+    //#else
+    //$$ @Override
+    //$$ public boolean mouseScrolled(double mx, double my, double v) {
+    //$$     return scroll(dx(mx), dy(my), v) || super.mouseScrolled(mx, my, v);
+    //$$ }
+    //#endif
 
     /** Klawisze i znaki – ekrany Zory nadpisują te metody (niezależnie od wersji gry). */
     protected boolean key(int key, int scan, int mods) { return false; }

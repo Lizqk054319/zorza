@@ -81,7 +81,11 @@ public class ZorzaClient implements ClientModInitializer {
             MinecraftClient mc = MinecraftClient.getInstance();
             if (mc.options.hudHidden || mc.player == null) return;
             if (mc.currentScreen instanceof HudEditorScreen) return;
+            //#if MC >= 1.20.2
             if (mc.getDebugHud().shouldShowDebugHud()) return;
+            //#else
+            //$$ if (mc.options.debugEnabled) return;
+            //#endif
             HudModule.FRAME++;
             for (Module m : Modules.ALL) {
                 if (m.enabled && m instanceof HudModule h) h.render(ctx, mc, false);

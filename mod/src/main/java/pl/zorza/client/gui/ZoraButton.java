@@ -22,7 +22,11 @@ public class ZoraButton extends ClickableWidget {
     }
 
     @Override
+    //#if MC >= 1.20.2
     protected void renderWidget(DrawContext ctx, int mx, int my, float delta) {
+    //#else
+    //$$ protected void renderButton(DrawContext ctx, int mx, int my, float delta) {
+    //#endif
         MinecraftClient mc = MinecraftClient.getInstance();
         hover = R.approach(hover, isHovered() || isFocused() ? 1f : 0f, 0.2f);
         float k = (float) mc.getWindow().getScaleFactor();

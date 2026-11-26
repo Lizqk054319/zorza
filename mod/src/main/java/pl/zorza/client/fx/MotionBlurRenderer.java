@@ -56,9 +56,16 @@ public final class MotionBlurRenderer {
         //#else
         //$$ RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0, w, 0, h, -1000, 1000), VertexSorter.BY_Z);
         //#endif
+        //#if MC >= 1.20.5
         Matrix4fStack mv = RenderSystem.getModelViewStack();
         mv.pushMatrix();
         mv.identity();
+        //#else
+        //$$ net.minecraft.client.util.math.MatrixStack mv = RenderSystem.getModelViewStack();
+        //$$ mv.push();
+        //$$ mv.loadIdentity();
+        //$$ RenderSystem.applyModelViewMatrix();
+        //#endif
         //#if MC >= 1.21
         BufferBuilder b = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
         b.vertex(0, 0, 0).texture(0, 0).color(1f, 1f, 1f, 1f);
@@ -75,7 +82,12 @@ public final class MotionBlurRenderer {
         //$$ b.vertex(0, h, 0).texture(0, 1).color(1f, 1f, 1f, 1f).next();
         //$$ BufferRenderer.drawWithGlobalProgram(b.end());
         //#endif
+        //#if MC >= 1.20.5
         mv.popMatrix();
+        //#else
+        //$$ mv.pop();
+        //$$ RenderSystem.applyModelViewMatrix();
+        //#endif
         RenderSystem.restoreProjectionMatrix();
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
