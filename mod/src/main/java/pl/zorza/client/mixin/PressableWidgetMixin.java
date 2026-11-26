@@ -40,12 +40,23 @@ public abstract class PressableWidgetMixin {
         ClickableWidget self = (ClickableWidget) (Object) this;
         VanillaStyle.button(ctx, self, x, y, w, h, self.active, self.isSelected(), ((color >>> 24) & 255) / 255f);
     }
-    //#else
+    //#elseif MC >= 1.20.2
     //$$ @Redirect(method = "renderWidget", at = @At(value = "INVOKE",
     //$$         target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"))
     //$$ private void zorza$background(DrawContext ctx, Identifier tex, int x, int y, int w, int h) {
     //$$     if (!MenuSettings.styled()) {
     //$$         ctx.drawGuiTexture(tex, x, y, w, h);
+    //$$         return;
+    //$$     }
+    //$$     ClickableWidget self = (ClickableWidget) (Object) this;
+    //$$     VanillaStyle.button(ctx, self, x, y, w, h, self.active, self.isSelected(), com.mojang.blaze3d.systems.RenderSystem.getShaderColor()[3]);
+    //$$ }
+    //#else
+    //$$ @Redirect(method = "renderButton", at = @At(value = "INVOKE",
+    //$$         target = "Lnet/minecraft/client/gui/DrawContext;drawNineSlicedTexture(Lnet/minecraft/util/Identifier;IIIIIIIIII)V"))
+    //$$ private void zorza$background(DrawContext ctx, Identifier tex, int x, int y, int w, int h, int a, int b, int c, int d, int e, int f) {
+    //$$     if (!MenuSettings.styled()) {
+    //$$         ctx.drawNineSlicedTexture(tex, x, y, w, h, a, b, c, d, e, f);
     //$$         return;
     //$$     }
     //$$     ClickableWidget self = (ClickableWidget) (Object) this;

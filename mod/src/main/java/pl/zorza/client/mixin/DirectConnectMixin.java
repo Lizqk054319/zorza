@@ -6,7 +6,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
+//#if MC >= 1.20.2
 import net.minecraft.client.gui.screen.multiplayer.DirectConnectScreen;
+//#else
+//$$ import net.minecraft.client.gui.screen.DirectConnectScreen;
+//#endif
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.MultiplayerServerListPinger;
