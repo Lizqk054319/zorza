@@ -1,5 +1,6 @@
 package pl.zorza.client.gui;
 
+import pl.zorza.client.compat.Gfx;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -33,7 +34,7 @@ public class AutoJoinScreen extends ZScreen {
         if (data.favicon() != null) {
             try {
                 NativeImage img = NativeImage.read(data.favicon());
-                MinecraftClient.getInstance().getTextureManager().registerTexture(ICON, pl.zorza.client.compat.Gfx.nativeTexture(img));
+                MinecraftClient.getInstance().getTextureManager().registerTexture(ICON, Gfx.nativeTexture(img));
                 hasIcon = true;
             } catch (Exception ignored) {
             }
