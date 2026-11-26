@@ -20,7 +20,15 @@ public abstract class SliderWidgetMixin {
     @Shadow
     protected double value;
 
-    //#if MC >= 1.21.2
+    //#if MC >= 1.21.6
+    //$$ @Redirect(method = "renderWidget", at = @At(value = "INVOKE",
+    //$$         target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/util/Identifier;IIIII)V"))
+    //$$ private void zorza$parts(DrawContext ctx, com.mojang.blaze3d.pipeline.RenderPipeline layer, Identifier tex, int x, int y, int w, int h, int color) {
+    //$$     if (!MenuSettings.styled()) {
+    //$$         ctx.drawGuiTexture(layer, tex, x, y, w, h, color);
+    //$$         return;
+    //$$     }
+    //#elseif MC >= 1.21.2
     @Redirect(method = "renderWidget", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIIII)V"))
     private void zorza$parts(DrawContext ctx, Function<Identifier, RenderLayer> layer, Identifier tex, int x, int y, int w, int h, int color) {

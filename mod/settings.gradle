@@ -4,5 +4,9 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+    // wersja Loom zależy od wersji Minecrafta (gradle.properties: loom_version)
+    plugins {
+        id 'fabric-loom' version "${loom_version}"
+    }
 }
 rootProject.name = 'zorza-client'
