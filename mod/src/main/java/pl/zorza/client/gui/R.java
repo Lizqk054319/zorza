@@ -1,5 +1,7 @@
 package pl.zorza.client.gui;
 
+import pl.zorza.client.compat.Ids;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
@@ -13,18 +15,18 @@ import net.minecraft.util.Identifier;
  * czcionka Inter zamiast pikselowej i wektorowe ikonki.
  */
 public final class R {
-    public static final Identifier LOGO = Identifier.of("zorza", "textures/gui/logo.png");
+    public static final Identifier LOGO = Ids.of("zorza", "textures/gui/logo.png");
     /** Grubość czcionki – właściwy plik (z odpowiednią rozdzielczością) wybiera R.font(). */
-    public static final Identifier MEDIUM = Identifier.of("zorza", "inter_medium");
-    public static final Identifier SEMI = Identifier.of("zorza", "inter_semibold");
-    public static final Identifier BOLD = Identifier.of("zorza", "inter_bold");
+    public static final Identifier MEDIUM = Ids.of("zorza", "inter_medium");
+    public static final Identifier SEMI = Ids.of("zorza", "inter_semibold");
+    public static final Identifier BOLD = Ids.of("zorza", "inter_bold");
     private static final int[] OVERSAMPLE = {2, 3, 4, 6, 8};
     /** Ile prawdziwych pikseli przypada na jednostkę, w której teraz rysujemy (ustawia ekran / HUD). */
     public static float pxPerUnit = 2f;
-    private static final Identifier TL = Identifier.of("zorza", "textures/gui/corner_tl.png");
-    private static final Identifier TR = Identifier.of("zorza", "textures/gui/corner_tr.png");
-    private static final Identifier BL = Identifier.of("zorza", "textures/gui/corner_bl.png");
-    private static final Identifier BR = Identifier.of("zorza", "textures/gui/corner_br.png");
+    private static final Identifier TL = Ids.of("zorza", "textures/gui/corner_tl.png");
+    private static final Identifier TR = Ids.of("zorza", "textures/gui/corner_tr.png");
+    private static final Identifier BL = Ids.of("zorza", "textures/gui/corner_bl.png");
+    private static final Identifier BR = Ids.of("zorza", "textures/gui/corner_br.png");
 
     public static int ACCENT = 0xFF2F6BFF;
 
@@ -76,7 +78,7 @@ public final class R {
     }
 
     public static void icon(DrawContext c, String name, int x, int y, int size, int color) {
-        tex(c, Identifier.of("zorza", "textures/gui/icons/" + name + ".png"), x, y, size, size, color);
+        tex(c, Ids.of("zorza", "textures/gui/icons/" + name + ".png"), x, y, size, size, color);
     }
 
     public static void logo(DrawContext c, int x, int y, int size, int color) {
@@ -99,7 +101,7 @@ public final class R {
                 break;
             }
         }
-        return Identifier.of("zorza", weight.getPath() + "_" + pick);
+        return Ids.of("zorza", weight.getPath() + "_" + pick);
     }
 
     /** Tekst o wysokości ~size jednostek; (x, y) to lewy górny róg. */
@@ -125,7 +127,7 @@ public final class R {
     }
 
     public static float width(String s, float size, Identifier font) {
-        return MinecraftClient.getInstance().textRenderer.getWidth(styled(s, Identifier.of("zorza", font.getPath() + "_4"))) * size / 11f;
+        return MinecraftClient.getInstance().textRenderer.getWidth(styled(s, Ids.of("zorza", font.getPath() + "_4"))) * size / 11f;
     }
 
     public static float width(String s, float size) {

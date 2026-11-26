@@ -59,12 +59,22 @@ public final class MotionBlurRenderer {
         Matrix4fStack mv = RenderSystem.getModelViewStack();
         mv.pushMatrix();
         mv.identity();
+        //#if MC >= 1.21
         BufferBuilder b = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
         b.vertex(0, 0, 0).texture(0, 0).color(1f, 1f, 1f, 1f);
         b.vertex(w, 0, 0).texture(1, 0).color(1f, 1f, 1f, 1f);
         b.vertex(w, h, 0).texture(1, 1).color(1f, 1f, 1f, 1f);
         b.vertex(0, h, 0).texture(0, 1).color(1f, 1f, 1f, 1f);
         BufferRenderer.drawWithGlobalProgram(b.end());
+        //#else
+        //$$ BufferBuilder b = Tessellator.getInstance().getBuffer();
+        //$$ b.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+        //$$ b.vertex(0, 0, 0).texture(0, 0).color(1f, 1f, 1f, 1f).next();
+        //$$ b.vertex(w, 0, 0).texture(1, 0).color(1f, 1f, 1f, 1f).next();
+        //$$ b.vertex(w, h, 0).texture(1, 1).color(1f, 1f, 1f, 1f).next();
+        //$$ b.vertex(0, h, 0).texture(0, 1).color(1f, 1f, 1f, 1f).next();
+        //$$ BufferRenderer.drawWithGlobalProgram(b.end());
+        //#endif
         mv.popMatrix();
         RenderSystem.restoreProjectionMatrix();
         RenderSystem.depthMask(true);

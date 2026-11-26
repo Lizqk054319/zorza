@@ -1,5 +1,7 @@
 package pl.zorza.client.mixin;
 
+import pl.zorza.client.compat.Ids;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
@@ -38,7 +40,7 @@ public abstract class DirectConnectMixin extends Screen {
     private ButtonWidget selectServerButton;
 
     @Unique
-    private static final Identifier ZORZA_ICON = Identifier.of("zorza", "direct_connect_icon");
+    private static final Identifier ZORZA_ICON = Ids.of("zorza", "direct_connect_icon");
     @Unique
     private static final int CARD_H = 40;
     @Unique
@@ -117,7 +119,7 @@ public abstract class DirectConnectMixin extends Screen {
                 zorza$hasIcon = false;
             }
         }
-        Identifier icon = zorza$hasIcon ? ZORZA_ICON : Identifier.ofVanilla("textures/misc/unknown_server.png");
+        Identifier icon = zorza$hasIcon ? ZORZA_ICON : Ids.mc("textures/misc/unknown_server.png");
         pl.zorza.client.compat.Gfx.texture(ctx, icon, x + 4, y + 4, 0, 0, 32, 32, 32, 32, -1);
 
         int tx = x + 41, right = x + w - 6;
@@ -126,7 +128,7 @@ public abstract class DirectConnectMixin extends Screen {
         String sprite = info.ping < 0 ? (info.ping == -2 ? "server_list/pinging_" + (1 + (int) (now / 100 % 5)) : "server_list/unreachable")
                 : info.ping < 150 ? "server_list/ping_5" : info.ping < 300 ? "server_list/ping_4"
                 : info.ping < 600 ? "server_list/ping_3" : info.ping < 1000 ? "server_list/ping_2" : "server_list/ping_1";
-        pl.zorza.client.compat.Gfx.guiSprite(ctx, Identifier.ofVanilla(sprite), right - 10, y + 5, 10, 8);
+        pl.zorza.client.compat.Gfx.guiSprite(ctx, Ids.mc(sprite), right - 10, y + 5, 10, 8);
         if (info.playerCountLabel != null && info.ping >= 0) {
             int pw = textRenderer.getWidth(info.playerCountLabel);
             ctx.drawText(textRenderer, info.playerCountLabel, right - 14 - pw, y + 5, 0xFF808080, false);

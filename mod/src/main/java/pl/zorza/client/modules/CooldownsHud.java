@@ -1,5 +1,7 @@
 package pl.zorza.client.modules;
 
+import pl.zorza.client.compat.Ids;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.Item;
@@ -45,7 +47,7 @@ public class CooldownsHud extends HudModule {
                 var mgr = mc.player.getItemCooldownManager();
                 CooldownAccessor cm = (CooldownAccessor) mgr;
                 int tick = cm.zorza$tick();
-                float delta = pl.zorza.client.compat.Gfx.tickDelta(mc.getRenderTickCounter());
+                float delta = pl.zorza.client.compat.Gfx.frameDelta(mc);
                 // prawdziwe przedmioty gracza – z teksturami z paczek zasobów (np. eventowe perły)
                 Map<Identifier, ItemStack> owned = new HashMap<>();
                 var inv = mc.player.getInventory();
@@ -92,8 +94,12 @@ public class CooldownsHud extends HudModule {
             out.add(new Cd(e.getKey(), st, name, act != null ? a[1] : 0f, act != null ? a[2] : 0f, a[0]));
         }
         if (out.isEmpty() && editor) {
-            out.add(new Cd(Identifier.ofVanilla("ender_pearl"), new ItemStack(Items.ENDER_PEARL), "Ender Pearl", 14.2f, 0.9f, 1f));
-            out.add(new Cd(Identifier.ofVanilla("wind_charge"), new ItemStack(Items.WIND_CHARGE), "Wind Charge", 0.5f, 0.1f, 1f));
+            out.add(new Cd(Ids.mc("ender_pearl"), new ItemStack(Items.ENDER_PEARL), "Ender Pearl", 14.2f, 0.9f, 1f));
+            //#if MC >= 1.20.5
+            out.add(new Cd(Ids.mc("wind_charge"), new ItemStack(Items.WIND_CHARGE), "Wind Charge", 0.5f, 0.1f, 1f));
+            //#else
+            //$$ out.add(new Cd(Ids.mc("chorus_fruit"), new ItemStack(Items.CHORUS_FRUIT), "Chorus Fruit", 0.5f, 0.1f, 1f));
+            //#endif
         }
         return out;
     }

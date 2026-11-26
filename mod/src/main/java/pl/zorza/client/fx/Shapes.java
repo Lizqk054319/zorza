@@ -19,7 +19,11 @@ public final class Shapes {
     }
 
     private static void v(VertexConsumer vc, Matrix4f m, float x, float y, int c) {
+        //#if MC >= 1.21
         vc.vertex(m, x, y, 0).color((c >> 16) & 255, (c >> 8) & 255, c & 255, c >>> 24);
+        //#else
+        //$$ vc.vertex(m, x, y, 0).color((c >> 16) & 255, (c >> 8) & 255, c & 255, c >>> 24).next();
+        //#endif
     }
 
     /** Wielokąt z punktów (wachlarz od środka). */

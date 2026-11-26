@@ -1,5 +1,7 @@
 package pl.zorza.client.gui;
 
+import pl.zorza.client.compat.Ids;
+
 import pl.zorza.client.compat.Gfx;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -19,7 +21,7 @@ import java.util.Locale;
 
 /** "Połączyć z serwerem?" – pokazywane po uruchomieniu gry z zakładki Serwery w launcherze. */
 public class AutoJoinScreen extends ZScreen {
-    private static final Identifier ICON = Identifier.of("zorza", "autojoin_icon");
+    private static final Identifier ICON = Ids.of("zorza", "autojoin_icon");
     private final Screen parent;
     private final AutoJoin.Data data;
     private boolean hasIcon = false;

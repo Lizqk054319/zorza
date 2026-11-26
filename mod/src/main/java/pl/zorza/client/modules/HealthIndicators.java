@@ -1,5 +1,7 @@
 package pl.zorza.client.modules;
 
+import pl.zorza.client.compat.Ids;
+
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -28,10 +30,10 @@ import java.util.Locale;
 
 /** Serca nad głowami graczy – prawdziwe serca z Minecrafta (także z paczek zasobów), po 10 w rzędzie, rzędy w górę. */
 public class HealthIndicators extends Module {
-    private static final Style VANILLA = Style.EMPTY.withFont(Identifier.of("zorza", "vanilla"));
-    private static final Identifier CONTAINER = Identifier.ofVanilla("hud/heart/container"),
-            FULL = Identifier.ofVanilla("hud/heart/full"), HALF = Identifier.ofVanilla("hud/heart/half"),
-            ABS_FULL = Identifier.ofVanilla("hud/heart/absorbing_full"), ABS_HALF = Identifier.ofVanilla("hud/heart/absorbing_half");
+    private static final Style VANILLA = Style.EMPTY.withFont(Ids.of("zorza", "vanilla"));
+    private static final Identifier CONTAINER = Ids.mc("hud/heart/container"),
+            FULL = Ids.mc("hud/heart/full"), HALF = Ids.mc("hud/heart/half"),
+            ABS_FULL = Ids.mc("hud/heart/absorbing_full"), ABS_HALF = Ids.mc("hud/heart/absorbing_half");
 
     public final Setting.Num offset = add(new Setting.Num("offset", "Height (↑ ↓ keys)", 0, 0, 30, 0.5));
     public final Setting.Bool mobs = add(new Setting.Bool("mobs", "Also show for mobs", false));
@@ -60,10 +62,17 @@ public class HealthIndicators extends Module {
     }
 
     private static void quad(VertexConsumer vc, Matrix4f m, Sprite s, float x, float y, float size, int light) {
+        //#if MC >= 1.21
         vc.vertex(m, x, y, 0).color(255, 255, 255, 255).texture(s.getMinU(), s.getMinV()).light(light);
         vc.vertex(m, x, y + size, 0).color(255, 255, 255, 255).texture(s.getMinU(), s.getMaxV()).light(light);
         vc.vertex(m, x + size, y + size, 0).color(255, 255, 255, 255).texture(s.getMaxU(), s.getMaxV()).light(light);
         vc.vertex(m, x + size, y, 0).color(255, 255, 255, 255).texture(s.getMaxU(), s.getMinV()).light(light);
+        //#else
+        //$$ vc.vertex(m, x, y, 0).color(255, 255, 255, 255).texture(s.getMinU(), s.getMinV()).light(light).next();
+        //$$ vc.vertex(m, x, y + size, 0).color(255, 255, 255, 255).texture(s.getMinU(), s.getMaxV()).light(light).next();
+        //$$ vc.vertex(m, x + size, y + size, 0).color(255, 255, 255, 255).texture(s.getMaxU(), s.getMaxV()).light(light).next();
+        //$$ vc.vertex(m, x + size, y, 0).color(255, 255, 255, 255).texture(s.getMaxU(), s.getMinV()).light(light).next();
+        //#endif
     }
 
     /** Rysuje serca (od dołu w górę) – zwraca wysokość w pikselach. */
@@ -103,7 +112,7 @@ public class HealthIndicators extends Module {
         if (mc.world == null || mc.player == null || mc.options.hudHidden) return;
         Camera cam = ctx.camera();
         Vec3d cp = cam.getPos();
-        float delta = pl.zorza.client.compat.Gfx.tickDelta(ctx.tickCounter());
+        float delta = pl.zorza.client.compat.Gfx.worldDelta(ctx);
         TextRenderer tr = mc.textRenderer;
         VertexConsumerProvider.Immediate vc = mc.getBufferBuilders().getEntityVertexConsumers();
         double maxD = distance.value * distance.value;

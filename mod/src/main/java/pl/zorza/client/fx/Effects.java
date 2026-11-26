@@ -146,7 +146,7 @@ public final class Effects {
         lastFrame = now;
         Camera cam = ctx.camera();
         Vec3d cp = cam.getPos();
-        float delta = pl.zorza.client.compat.Gfx.tickDelta(ctx.tickCounter());
+        float delta = pl.zorza.client.compat.Gfx.worldDelta(ctx);
 
         updateTrail(mc, delta);
         spawnAmbient(mc, cp, dt);
@@ -238,7 +238,11 @@ public final class Effects {
 
     private static void emit(VertexConsumer vc, Matrix4f m, int i) {
         int c = QC[i];
+        //#if MC >= 1.21
         vc.vertex(m, (float) QX[i], (float) QY[i], (float) QZ[i]).color((c >> 16) & 255, (c >> 8) & 255, c & 255, c >>> 24);
+        //#else
+        //$$ vc.vertex(m, (float) QX[i], (float) QY[i], (float) QZ[i]).color((c >> 16) & 255, (c >> 8) & 255, c & 255, c >>> 24).next();
+        //#endif
     }
 
     // ---------- kręgi przy skoku ----------

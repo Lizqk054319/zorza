@@ -40,9 +40,15 @@ public class HitboxMixin {
             float eye = entity.getStandingEyeHeight();
             MatrixStack.Entry e = matrices.peek();
             Vec3d n = look.normalize();
+            //#if MC >= 1.21
             vertices.vertex(e, 0, eye, 0).color(0f, 0f, 1f, 1f).normal(e, (float) n.x, (float) n.y, (float) n.z);
             vertices.vertex(e, (float) look.x, eye + (float) look.y, (float) look.z).color(0f, 0f, 1f, 1f)
                     .normal(e, (float) n.x, (float) n.y, (float) n.z);
+            //#else
+            //$$ vertices.vertex(e.getPositionMatrix(), 0, eye, 0).color(0f, 0f, 1f, 1f).normal(e.getNormalMatrix(), (float) n.x, (float) n.y, (float) n.z).next();
+            //$$ vertices.vertex(e.getPositionMatrix(), (float) look.x, eye + (float) look.y, (float) look.z).color(0f, 0f, 1f, 1f)
+            //$$         .normal(e.getNormalMatrix(), (float) n.x, (float) n.y, (float) n.z).next();
+            //#endif
         }
     }
 }

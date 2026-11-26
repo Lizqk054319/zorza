@@ -2,7 +2,6 @@ package pl.zorza.client.mixin;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,7 +12,7 @@ import pl.zorza.client.Modules;
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
-    private void zorza$crosshair(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+    private void zorza$crosshair(CallbackInfo ci, @com.llamalad7.mixinextras.sugar.Local(argsOnly = true) DrawContext context) {
         if (Modules.CROSSHAIR != null && Modules.CROSSHAIR.enabled) {
             ci.cancel();
             Modules.CROSSHAIR.drawCrosshair(context);

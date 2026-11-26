@@ -1,5 +1,7 @@
 package pl.zorza.client;
 
+import pl.zorza.client.compat.Ids;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
@@ -194,7 +196,7 @@ public final class ModList {
                 if (p.isPresent()) {
                     try (InputStream in = Files.newInputStream(p.get())) {
                         NativeImage img = NativeImage.read(in);
-                        out = Identifier.of("zorza", "modicon/" + id.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_.-]", "_"));
+                        out = Ids.of("zorza", "modicon/" + id.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_.-]", "_"));
                         MinecraftClient.getInstance().getTextureManager().registerTexture(out, pl.zorza.client.compat.Gfx.nativeTexture(img));
                     }
                 }
@@ -243,7 +245,11 @@ public final class ModList {
         Function<Screen, Screen> f = configScreens.get(modId);
         if (f == null && Set.of("sodium", "sodium-extra", "reeses-sodium-options", "iris", "immediatelyfast", "entityculling", "moreculling").contains(modId)) {
             // te mody podpinają swoje ustawienia pod ekran "Grafika"
+            //#if MC >= 1.21
             f = parent -> new net.minecraft.client.gui.screen.option.VideoOptionsScreen(parent, MinecraftClient.getInstance(), MinecraftClient.getInstance().options);
+            //#else
+            //$$ f = parent -> new net.minecraft.client.gui.screen.option.VideoOptionsScreen(parent, MinecraftClient.getInstance().options);
+            //#endif
         }
         return f;
     }

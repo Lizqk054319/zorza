@@ -1,5 +1,7 @@
 package pl.zorza.client.mixin;
 
+import pl.zorza.client.compat.Ids;
+
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Style;
@@ -12,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 /** Liczby na przedmiotach (np. 25 mięsa) zostają zwykłą, pikselową czcionką Minecrafta. */
 @Mixin(DrawContext.class)
 public abstract class ItemCountMixin {
-    private static final Identifier VANILLA = Identifier.of("zorza", "vanilla");
+    private static final Identifier VANILLA = Ids.of("zorza", "vanilla");
 
     //#if MC >= 1.21.2
     private static final String COUNT = "drawStackCount";

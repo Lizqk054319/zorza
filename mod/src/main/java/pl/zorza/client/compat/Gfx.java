@@ -72,12 +72,25 @@ public final class Gfx {
         //#endif
     }
 
-    /** Ułamek ticka do płynnej animacji. */
-    public static float tickDelta(net.minecraft.client.render.RenderTickCounter t) {
+    /** Ułamek ticka do płynnej animacji (w świecie). */
+    public static float worldDelta(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext ctx) {
         //#if MC >= 1.21.5
-        //$$ return t.getTickProgress(true);
+        //$$ return ctx.tickCounter().getTickProgress(true);
+        //#elseif MC >= 1.21
+        return ctx.tickCounter().getTickDelta(true);
         //#else
-        return t.getTickDelta(true);
+        //$$ return ctx.tickDelta();
+        //#endif
+    }
+
+    /** Ułamek ticka do płynnej animacji (HUD). */
+    public static float frameDelta(net.minecraft.client.MinecraftClient mc) {
+        //#if MC >= 1.21.5
+        //$$ return mc.getRenderTickCounter().getTickProgress(true);
+        //#elseif MC >= 1.21
+        return mc.getRenderTickCounter().getTickDelta(true);
+        //#else
+        //$$ return mc.getTickDelta();
         //#endif
     }
 
