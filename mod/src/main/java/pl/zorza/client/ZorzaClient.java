@@ -45,6 +45,9 @@ public class ZorzaClient implements ClientModInitializer {
         Config.load();
         CustomSounds.init();
         AutoJoin.register();
+        //#if MC < 1.21.4
+        //$$ SmokeTest.init();
+        //#endif
         // gładka czcionka Inter w całej grze (można wyłączyć w Resource Packs)
         net.fabricmc.loader.api.FabricLoader.getInstance().getModContainer("zorza").ifPresent(mod ->
                 net.fabricmc.fabric.api.resource.ResourceManagerHelper.registerBuiltinResourcePack(

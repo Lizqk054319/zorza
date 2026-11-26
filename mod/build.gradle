@@ -18,28 +18,43 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "mc", project.minecraft_version
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version, "mc": project.minecraft_version, "java": project.findProperty("java_version") ?: "21"
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
+    it.options.release = (project.findProperty("java_version") ?: "21") as int
     it.options.encoding = "UTF-8"
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    def jv = JavaVersion.toVersion(project.findProperty("java_version") ?: "21")
+    sourceCompatibility = jv
+    targetCompatibility = jv
 }
 
 // Testy z prawdziwym Minecraftem w CI – robią zrzuty ekranu menu Zorzy
-fabricApi {
+if ((project.findProperty("gametest") ?: "true") == "true") fabricApi {
     configureTests {
         createSourceSet = true
         modId = "zorza-gametest"
         enableGameTests = false
         enableClientGameTests = true
         eula = true
+    }
+}
+
+// Starsze wersje (bez klientowych gametestów Fabric API): krótki test dymny –
+// gra startuje, mod sprawdza wszystkie mixiny, robi zrzuty i sama się zamyka.
+loom {
+    runs {
+        client {
+            if (project.hasProperty("smoke")) {
+                vmArg "-Dzorza.smoke=" + file("build/smoke").absolutePath
+                programArgs "--width", "1920", "--height", "1080"
+            }
+        }
     }
 }

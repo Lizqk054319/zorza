@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "mod/**"
+      - "tools/preprocess.py"
+      - "tools/resolve_versions.py"
       - ".github/workflows/mod.yml"
   workflow_dispatch:
 
@@ -11,7 +13,13 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  # Osobny plik moda na każdą wersję Minecrafta. Każda wersja musi się zbudować
+  # i uruchomić w prawdziwej grze (gametest albo test dymny), inaczej nie trafia do wydania.
+  mod:
+    strategy:
+      fail-fast: false
+      matrix:
+        mc: ["1.21.4", "1.21.5", "1.21.3", "1.21.1"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,89 +30,80 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.12"
+      - name: Wersje dla Minecraft ${{ matrix.mc }}
+        run: |
+          python3 tools/resolve_versions.py "${{ matrix.mc }}" mod/gradle.properties
+          python3 tools/preprocess.py "${{ matrix.mc }}" mod/src
+          grep -E "gametest=" mod/gradle.properties | sed 's/^/GT_/; s/gametest/FLAG/' >> "$GITHUB_ENV"
       - name: Dark GUI pack (z tekstur Minecrafta)
         run: |
           pip install --quiet pillow
           (cd mod && gradle --no-daemon -q help > /dev/null)
-          JAR=$(find ~/.gradle/caches/fabric-loom -name "minecraft-client.jar" | head -1)
+          JAR=$(find ~/.gradle/caches/fabric-loom -path "*${{ matrix.mc }}*" -name "minecraft-client.jar" | head -1)
+          [ -z "$JAR" ] && JAR=$(find ~/.gradle/caches/fabric-loom -name "minecraft-client.jar" | head -1)
           python3 tools/dark_gui.py "$JAR" mod/src/main/resources/resourcepacks/zora_dark_gui
       - name: Build
         working-directory: mod
         run: gradle build --no-daemon --stacktrace
-      - name: Prepare jar
-        run: |
-          VER=$(grep '^mod_version=' mod/gradle.properties | cut -d= -f2)
-          MC=$(grep '^minecraft_version=' mod/gradle.properties | cut -d= -f2)
-          cp "mod/build/libs/zorza-client-${VER}.jar" "zorza-client-${MC}.jar"
-          echo "JAR=zorza-client-${MC}.jar" >> "$GITHUB_ENV"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: zorza-client
-          path: ${{ env.JAR }}
-
-  screenshots:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: "8.12"
-      - name: Dark GUI pack (z tekstur Minecrafta)
-        run: |
-          pip install --quiet pillow
-          (cd mod && gradle --no-daemon -q help > /dev/null)
-          JAR=$(find ~/.gradle/caches/fabric-loom -name "minecraft-client.jar" | head -1)
-          python3 tools/dark_gui.py "$JAR" mod/src/main/resources/resourcepacks/zora_dark_gui
       - name: Install virtual display
-        run: sudo apt-get update && sudo apt-get install -y xvfb mesa-utils libgl1-mesa-dri
-      - name: Run Minecraft and take screenshots
+        run: sudo apt-get update -q && sudo apt-get install -y -q xvfb mesa-utils libgl1-mesa-dri
+      - name: Gametest (gra z modem)
+        if: env.GT_FLAG == 'true'
         working-directory: mod
         env:
           LIBGL_ALWAYS_SOFTWARE: "1"
         run: xvfb-run -a -s "-screen 0 1920x1080x24" gradle runClientGameTest --no-daemon --stacktrace
-      - name: Push screenshots to branch ci-screenshots
+      - name: Test dymny (gra z modem)
+        if: env.GT_FLAG != 'true'
+        working-directory: mod
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          mkdir -p run && echo "eula=true" > run/eula.txt
+          timeout 900 xvfb-run -a -s "-screen 0 1920x1080x24" gradle runClient -Psmoke --no-daemon --stacktrace || true
+          cat build/smoke/result.txt
+          grep -q "SMOKE OK" build/smoke/result.txt
+      - name: Prepare jar
+        run: |
+          VER=$(grep '^mod_version=' mod/gradle.properties | cut -d= -f2)
+          cp "mod/build/libs/zorza-client-${VER}.jar" "zorza-client-${{ matrix.mc }}.jar"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jar-${{ matrix.mc }}
+          path: zorza-client-${{ matrix.mc }}.jar
+      - name: Zrzuty ekranu na gałąź ci-screenshots
         if: always()
         run: |
           mkdir -p /tmp/shots
-          find ~/.gradle/caches/fabric-loom mod/.gradle -name "*.jar" 2>/dev/null | grep -i "minecraft-" | grep -iv "sources\|intermediary\|official" | head -20 > /tmp/shots/jars.txt || true
-          J=$(grep -i "yarn\|named" /tmp/shots/jars.txt | grep -i "client\|merged" | head -1)
-          if [ -n "$J" ]; then for C in net.minecraft.client.render.entity.EntityRenderDispatcher net.minecraft.client.render.WorldRenderer net.minecraft.entity.player.ItemCooldownManager net.minecraft.client.texture.GuiAtlasManager net.minecraft.client.texture.Sprite net.minecraft.client.render.VertexRendering; do echo "== $C"; javap -p -cp "$J" "$C" 2>/dev/null | grep -iE "class|hitbox|drawBox|getGroup|getSprite|getAtlasId|getMinU|getMaxU|getMinV|getMaxV|renderHitbox|shouldRenderHitboxes|setRenderHitboxes|static void" ; done > /tmp/shots/sigs3.txt; javap -p -cp "$J" net.minecraft.client.render.RenderLayer | grep -iE "getText\(|getTextSeeThrough|getEntityTranslucent\(|getGuiTextured|getLines" >> /tmp/shots/sigs3.txt; javap -p -cp "$J" net.minecraft.client.MinecraftClient | grep -iE "AtlasManager" >> /tmp/shots/sigs3.txt; fi
           cp -r mod/build/run/clientGameTest/screenshots/. /tmp/shots/ 2>/dev/null || true
-          cp -r mod/run/screenshots/. /tmp/shots/ 2>/dev/null || true
+          cp -r mod/build/smoke/. /tmp/shots/ 2>/dev/null || true
           cp mod/build/run/clientGameTest/logs/latest.log /tmp/shots/ 2>/dev/null || cp mod/run/logs/latest.log /tmp/shots/ 2>/dev/null || true
-          cd /tmp/shots && git init -q -b ci-screenshots && git add -A
+          B=ci-screenshots; [ "${{ matrix.mc }}" != "1.21.4" ] && B="ci-screenshots-${{ matrix.mc }}"
+          cd /tmp/shots && git init -q -b "$B" && git add -A
           git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -q -m "screenshots ${GITHUB_SHA}" || exit 0
-          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" ci-screenshots
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: screenshots
-          path: |
-            mod/build/run/clientGameTest/screenshots/
-            mod/run/screenshots/
-            mod/build/run/clientGameTest/logs/latest.log
-            mod/run/logs/latest.log
-          if-no-files-found: warn
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" "$B"
 
-  # Wydanie tylko wtedy, gdy gra uruchomiła się z modem bez błędów
+  # Wydanie: nowe pliki dla wersji, które przeszły test; dla pozostałych zostaje poprzedni działający plik
   publish:
-    needs: [build, screenshots]
-    if: github.ref == 'refs/heads/main'
+    needs: [mod]
+    if: always() && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: zorza-client
+          pattern: jar-*
+          merge-multiple: true
+          path: new
       - name: Publish release "mod-latest"
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          JAR=$(ls zorza-client-*.jar | head -1)
+          ls new || true
+          [ -n "$(ls new 2>/dev/null)" ] || { echo "Żadna wersja nie przeszła testu"; exit 1; }
+          mkdir -p old && gh release download mod-latest -D old -p "zorza-client-*.jar" || true
+          for f in old/*.jar; do [ -e "$f" ] && [ ! -e "new/$(basename "$f")" ] && cp "$f" new/; done
+          ls -la new
           gh release delete mod-latest --yes --cleanup-tag || true
-          gh release create mod-latest "$JAR" --title "Zora Client mod (najnowszy)" \
-            --notes "Automatycznie zbudowany mod Zora Client. Launcher pobiera go sam." --target "$GITHUB_SHA"
+          gh release create mod-latest new/*.jar --title "Zora Client mod (najnowszy)" \
+            --notes "Automatycznie zbudowany mod Zora Client – osobny plik na każdą wersję Minecrafta. Launcher pobiera go sam." --target "$GITHUB_SHA"

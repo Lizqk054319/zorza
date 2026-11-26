@@ -111,9 +111,10 @@ MOD_ID = {"fast-ip-ping": "fastipping", "ferrite-core": "ferritecore", "dynamic-
 MICROSOFT_WKROTCE = False
 
 # Mod Zora Client (budowany automatycznie na GitHubie) – wersja gry -> adres pliku
-ZORZA_MOD = {
-    "1.21.4": "https://github.com/Lizqk054319/zorza/releases/download/mod-latest/zorza-client-1.21.4.jar",
-}
+# Mod Zora Client ma osobny plik na każdą wersję gry (zorza-client-<wersja>.jar w wydaniu mod-latest).
+# Lista wersji bierze się z wydania na GitHubie, więc nowe wersje dochodzą bez aktualizacji launchera.
+ZORZA_MOD_URL = "https://github.com/Lizqk054319/zorza/releases/download/mod-latest/zorza-client-{}.jar"
+ZORZA_MOD_ZNANE = ["1.21.4"]
 
 # Mody wbudowane (slug z Modrinth, nazwa) – instalują się same w profilach z Fabric
 MODY_WBUDOWANE = [
@@ -1268,8 +1269,8 @@ def list_content(p, kind):
                               "icon": builtin_icons.get(slug), "source": "builtin", "pending": True,
                               "enabled": p["loader"] == "fabric", "size": 0})
         has_z = (folder / "zorza-client.jar").exists() or (folder / "zorza-client.jar.disabled").exists()
-        if not has_z and p["version"] in ZORZA_MOD:
-            items.insert(0, {"file": "", "name": "Zora Client", "author": "Zorza", "version": "",
+        if not has_z and p["version"] in zorza_mod_versions(cached_only=True):
+            items.insert(0, {"file": "", "name": "Zora Client", "author": "UwU_Lizaczek", "version": "",
                              "icon": "/assets/zorza-logo.png", "source": "builtin", "pending": True,
                              "enabled": p["loader"] == "fabric", "size": 0})
     return items
@@ -1412,9 +1413,29 @@ def zorza_mod_release():
     return _mod_release["assets"]
 
 
+def ver_key(v):
+    return tuple(int(x) for x in re.findall(r"\d+", v))
+
+
+def zorza_mod_versions(cached_only=False):
+    """Wersje Minecrafta, na które jest gotowy mod Zora Client."""
+    path = DATA_DIR / "zorza_mod_versions.json"
+    if not cached_only or _mod_release["assets"]:
+        try:
+            assets = _mod_release["assets"] if cached_only else zorza_mod_release()
+            vs = sorted({m.group(1) for n in assets if (m := re.fullmatch(r"zorza-client-(.+)\.jar", n))}, key=ver_key)
+            if vs:
+                if vs != load_json(path, []):
+                    save_json(path, vs)
+                return set(vs)
+        except Exception:
+            pass
+    return set(load_json(path, ZORZA_MOD_ZNANE))
+
+
 def ensure_zorza_mod(p):
     """Mod Zora Client – przy każdym uruchomieniu sprawdza, czy na GitHubie jest nowsza wersja (dla każdego profilu)."""
-    url = ZORZA_MOD.get(p["version"])
+    url = ZORZA_MOD_URL.format(p["version"]) if p["version"] in zorza_mod_versions() else None
     d = profile_dir(p) / "mods"
     d.mkdir(parents=True, exist_ok=True)
     dest, off = d / "zorza-client.jar", d / "zorza-client.jar.disabled"
@@ -2326,7 +2347,7 @@ def state_json():
         "builtin_names": [t for _, t in MODY_WBUDOWANE],
         "microsoft_soon": MICROSOFT_WKROTCE,
         "app_update": app_update,
-        "zorza_mod_versions": sorted(ZORZA_MOD),
+        "zorza_mod_versions": sorted(zorza_mod_versions(cached_only=True), key=ver_key),
         "lang": settings["lang"],
         "accent": settings["accent"],
         "log_days": settings["log_days"],
@@ -2897,6 +2918,7 @@ def main():
     threading.Thread(target=fetch_builtin_icons, daemon=True).start()
     skins_list()
     discord.update()
+    threading.Thread(target=lambda: zorza_mod_versions(), daemon=True).start()   # lista wersji moda
     threading.Thread(target=app_update_loop, daemon=True).start()
     if "--updated" in sys.argv:
         # po automatycznej aktualizacji stare okno samo się przeładuje – nowe otwieramy tylko, gdy go nie ma
