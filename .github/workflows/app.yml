@@ -43,6 +43,7 @@ jobs:
           $r = Invoke-WebRequest -UseBasicParsing "http://127.0.0.1:47615/api/log?since=0"
           $r.Content | Select-String -Pattern "Okno" -AllMatches | ForEach-Object { $_.Line.Substring(0, [Math]::Min(600, $_.Line.Length)) }
           Get-Process | Where-Object { $_.MainWindowTitle -like "*Zora*" } | Format-Table ProcessName, MainWindowTitle
+          if (-not (Invoke-WebRequest -UseBasicParsing http://127.0.0.1:47615/api/state).Content) { throw "launcher nie odpowiada po otwarciu okna" }
           if ($r.Content -match "WebView2 nie ruszy|brak WebView2") { Write-Host "::warning::WebView2 nie ruszył – sprawdź log" }
           Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
       - name: Build installer (Inno Setup)

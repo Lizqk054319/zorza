@@ -47,10 +47,13 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.9.4"
+WERSJA_CLIENTA = "0.9.5"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.9.5", [
+        "Bez menu Windows po kliknięciu prawym przyciskiem na pasek tytułu",
+    ]),
     ("0.9.4", [
         "Launcher ma własne okno (bez menu przeglądarki na pasku tytułu), nowy napis w Kontach",
         "Usunięte granie przez oficjalny launcher",
@@ -2947,6 +2950,13 @@ def run_webview():
                                     min_size=(1000, 640), background_color="#0e0e11")
         WEBVIEW["window"] = win
         win.events.closed += lambda: WEBVIEW.update(closed=True)
+
+        def on_shown():
+            try:
+                block_system_menu(int(win.native.Handle.ToInt64()))
+            except Exception as e:
+                log(f"Okno: brak uchwytu okna ({e})")
+        win.events.shown += on_shown
         webview.start(gui="edgechromium", private_mode=False, storage_path=str(DATA_DIR / "okno2"))
         WEBVIEW["closed"] = True
         return True
@@ -2954,6 +2964,38 @@ def run_webview():
         log(f"Okno: WebView2 nie ruszył ({e}) – otwieram w Edge")
         WEBVIEW["window"] = None
         return False
+
+
+_WNDPROC_KEEP = []
+
+
+def block_system_menu(hwnd):
+    """Bez menu Windows na pasku tytułu (prawy klik, klik w ikonkę, Alt+Spacja). Przyciski okna zostają."""
+    try:
+        from ctypes import wintypes
+        user32 = ctypes.windll.user32
+        LRESULT = ctypes.c_ssize_t
+        WNDPROC = ctypes.WINFUNCTYPE(LRESULT, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM)
+        user32.SetWindowLongPtrW.restype = ctypes.c_void_p
+        user32.SetWindowLongPtrW.argtypes = [wintypes.HWND, ctypes.c_int, ctypes.c_void_p]
+        user32.CallWindowProcW.restype = LRESULT
+        user32.CallWindowProcW.argtypes = [ctypes.c_void_p, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM]
+        old = [None]
+
+        def proc(h, msg, wp, lp):
+            if msg in (0x007B, 0x00A4, 0x00A5):                  # WM_CONTEXTMENU, WM_NCRBUTTONDOWN/UP
+                return 0
+            if msg == 0x0112 and (wp & 0xFFF0) in (0xF100, 0xF090):   # SC_KEYMENU (Alt+Spacja), SC_MOUSEMENU
+                return 0
+            if msg in (0x00A1, 0x00A3) and wp == 3:              # klik / dwuklik w ikonkę okna (HTSYSMENU)
+                return 0
+            return user32.CallWindowProcW(old[0], h, msg, wp, lp)
+        cb = WNDPROC(proc)
+        _WNDPROC_KEEP.append(cb)
+        old[0] = user32.SetWindowLongPtrW(hwnd, -4, ctypes.cast(cb, ctypes.c_void_p))     # GWLP_WNDPROC
+        log("Okno: wyłączono menu Windows na pasku tytułu")
+    except Exception as e:
+        log(f"Okno: nie udało się wyłączyć menu Windows ({e})")
 
 
 def show_window():
