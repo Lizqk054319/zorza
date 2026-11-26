@@ -58,6 +58,9 @@ main{position:fixed;left:78px;top:0;right:0;bottom:0}
 .play:hover{filter:brightness(1.08)}
 .play.busy .go{font-size:20px}
 .play .bar{position:absolute;left:0;bottom:0;height:5px;background:#fff;opacity:.85;transition:width .3s}
+.cancelTask[hidden]{display:none}
+.cancelTask{margin-top:10px;background:#1c1c21e6;border:1px solid #ff5a5a66;color:#ffb3b3}
+.cancelTask:hover{background:#3a1d20;color:#fff}
 .status{margin-top:14px;color:#cfd3e0;font-size:15px;min-height:20px;text-shadow:0 2px 8px #000}
 
 .skin{position:absolute;right:9%;bottom:16%;display:flex;flex-direction:column;align-items:center;gap:16px}
@@ -522,6 +525,7 @@ select.inp:disabled{opacity:.6}
         <div class="bar" id="bar" style="width:0"></div>
       </div>
       <div class="status" id="status"></div>
+      <button class="btn cancelTask" id="cancelTask" hidden>Anuluj instalację</button>
     </div>
     <input type="file" id="bgIn" accept=".jpg,.jpeg,.png,.webp,.gif" hidden>
   </section>
@@ -1171,6 +1175,12 @@ Nie udało się sprawdzić aktualizacji (brak internetu?).|Couldn't check for up
 Dostępna jest wersja {0}.|Version {0} is available.|Version {0} ist verfügbar.|Доступна версія {0}.|La versión {0} está disponible.
 To najnowsza wersja.|This is the latest version.|Das ist die neueste Version.|Це найновіша версія.|Es la versión más reciente.
 Automatyczne aktualizacje działają w wersji z instalatora.|Automatic updates work in the installer version.|Automatische Updates funktionieren in der Installer-Version.|Автооновлення працюють у версії з інсталятора.|Las actualizaciones automáticas funcionan en la versión del instalador.
+Anuluj instalację|Cancel installation|Installation abbrechen|Скасувати встановлення|Cancelar instalación
+Czy na pewno chcesz anulować instalację?|Are you sure you want to cancel the installation?|Möchtest du die Installation wirklich abbrechen?|Ти точно хочеш скасувати встановлення?|¿Seguro que quieres cancelar la instalación?
+Niedokończony profil zostanie usunięty. Twój stary launcher zostaje bez zmian.|The unfinished profile will be removed. Your old launcher stays unchanged.|Das unfertige Profil wird gelöscht. Dein alter Launcher bleibt unverändert.|Незавершений профіль буде видалено. Твій старий лаунчер не зміниться.|El perfil sin terminar se eliminará. Tu launcher anterior no cambia.
+Anulowanie...|Cancelling...|Wird abgebrochen...|Скасування...|Cancelando...
+Anulowano instalację|Installation cancelled|Installation abgebrochen|Встановлення скасовано|Instalación cancelada
+Przy przenoszeniu z innego launchera jest przycisk Anuluj instalację|Importing from another launcher now has a Cancel installation button|Beim Import aus einem anderen Launcher gibt es jetzt Installation abbrechen|Під час перенесення з іншого лаунчера є кнопка Скасувати встановлення|Al importar de otro launcher hay un botón Cancelar instalación
 Launcher nie odpowiada. Spróbuj jeszcze raz.|The launcher is not responding. Please try again.|Der Launcher antwortet nicht. Bitte versuche es erneut.|Лаунчер не відповідає. Спробуй ще раз.|El launcher no responde. Inténtalo de nuevo.
 Naprawione „Failed to fetch” przy Graj i przenoszeniu z innego launchera|Fixed “Failed to fetch” on Play and when importing from another launcher|„Failed to fetch“ bei Spielen und beim Import behoben|Виправлено «Failed to fetch» під час гри та імпорту|Corregido «Failed to fetch» al jugar y al importar
 W grze: Armor Bar (chowa zbroję i głód), Motion Blur bez smug, lżejsze Ambient Particles|In game: Armor Bar (hides armor and hunger), Motion Blur without smearing, lighter Ambient Particles|Im Spiel: Armor Bar (blendet Rüstung und Hunger aus), Motion Blur ohne Schlieren, leichtere Ambient Particles|У грі: Armor Bar (ховає броню і голод), Motion Blur без шлейфів, легші Ambient Particles|En el juego: Armor Bar (oculta armadura y hambre), Motion Blur sin estelas, Ambient Particles más ligeras
@@ -1455,6 +1465,7 @@ async function refresh() {
     $("#bar").style.width = "0";
   }
   $("#status").textContent = tk.running && tk.max ? `${tk.progress} / ${tk.max}` : "";
+  $("#cancelTask").hidden = !(tk.running && tk.kind === "import" && !tk.cancel);
   if (tk.error) { toast(tk.error, true); api("/api/clear_error", {}); if (page === "modrinth") markInstalled(); }
   else if (tk.done && !tk.running) {
     toast(tk.done); api("/api/clear_error", {});
@@ -1469,6 +1480,20 @@ async function refresh() {
   if (refresh._wasRunning && !tk.running) { if (page === "profile") renderProfilePage(); if (page === "modrinth") markInstalled(); if (page === "skins") renderSkinsPage(); }
   refresh._wasRunning = tk.running;
 }
+$("#cancelTask").onclick = () => {
+  openModal(mhead(t("Anuluj instalację")) + `
+    <div style="font-size:18px;line-height:1.5">${t("Czy na pewno chcesz anulować instalację?")}</div>
+    <div class="hint">${t("Niedokończony profil zostanie usunięty. Twój stary launcher zostaje bez zmian.")}</div>
+    <div class="mfoot">
+      <button class="btn primary" id="cnYes">${t("Tak")}</button>
+      <button class="btn" id="cnNo">${t("Nie")}</button>
+    </div>`);
+  $("#cnNo").onclick = () => closeModal();
+  $("#cnYes").onclick = async () => {
+    closeModal();
+    try { await api("/api/task/cancel", {}); refresh(); } catch (e) { toast(e.message, true); }
+  };
+};
 setInterval(refresh, 1000); refresh();
 
 /* ================= MENU (profile, tło) ================= */

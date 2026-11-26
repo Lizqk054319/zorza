@@ -46,11 +46,12 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.8.8"
+WERSJA_CLIENTA = "0.8.9"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
-    ("0.8.8", [
+    ("0.8.9", [
+        "Przy przenoszeniu z innego launchera jest przycisk Anuluj instalację",
         "Naprawione „Failed to fetch” przy Graj i przenoszeniu z innego launchera",
     ]),
     ("0.8.6", [
@@ -199,7 +200,17 @@ MODRINTH = "https://api.modrinth.com/v2"
 lock = threading.RLock()
 log_lines = deque(maxlen=3000)
 log_counter = 0
-task = {"running": False, "status": "", "progress": 0, "max": 0, "error": "", "done": "", "after": ""}
+task = {"running": False, "status": "", "progress": 0, "max": 0, "error": "", "done": "", "after": "",
+        "kind": "", "cancel": False}
+
+
+class Cancelled(Exception):
+    """Użytkownik kliknął "Anuluj instalację"."""
+
+
+def check_cancel():
+    if task.get("cancel"):
+        raise Cancelled()
 game = {"proc": None, "profile": None, "where": "", "start": 0}
 last_ping = time.time()
 bye_at = 0.0          # okno zgłosiło zamknięcie
@@ -697,6 +708,7 @@ def copy_tree(src, dst):
         shutil.copy2(src, dst)
         return 1
     for f in src.rglob("*"):
+        check_cancel()
         if f.is_file():
             t = dst / f.relative_to(src)
             t.parent.mkdir(parents=True, exist_ok=True)
@@ -722,6 +734,7 @@ def copy_mod_settings(gd, dst):
         if not src.is_dir():
             continue
         for f in src.rglob("*"):
+            check_cancel()
             rel = f.relative_to(src)
             if not f.is_file() or any(RE_SECRET.search(part) for part in rel.parts):
                 continue
@@ -744,8 +757,29 @@ def do_import_launcher(d):
     src = next((p for p in launcher["profiles"] if p["key"] == d["key"]), None)
     if not src:
         raise RuntimeError("Nie znaleziono tego profilu.")
+    task["kind"] = "import"                 # można anulować
     p = make_profile(d.get("name") or src["name"], d["version"], d.get("loader", src["loader"]),
                      d.get("ram_mb", src["ram_mb"]))
+    try:
+        _import_launcher_files(launcher, src, p, d)
+    except Cancelled:
+        drop_profile(p)
+        task["done"] = "Anulowano instalację"
+        log(f"Import z {launcher['name']} anulowany – usunięto niedokończony profil")
+
+
+def drop_profile(p):
+    """Usuwa niedokończony profil (po anulowaniu)."""
+    if p in profiles:
+        profiles.remove(p)
+    if settings.get("active_profile") == p["id"] and profiles:
+        settings["active_profile"] = profiles[0]["id"]
+    save_profiles()
+    save_settings()
+    shutil.rmtree(INST_DIR / p["id"], ignore_errors=True)
+
+
+def _import_launcher_files(launcher, src, p, d):
     dst = profile_dir(p)
     gd = Path(src["path"])
     c = d.get("copy", {})
@@ -755,6 +789,7 @@ def do_import_launcher(d):
         skip = set(src.get("skip_mods") or [])
         if msrc.is_dir():
             for f in msrc.iterdir():
+                check_cancel()
                 if f.is_file() and f.suffix in (".jar", ".disabled") and f.name not in skip:
                     shutil.copy2(f, dst / "mods" / f.name)
     if c.get("mods") or c.get("settings"):
@@ -771,11 +806,16 @@ def do_import_launcher(d):
         copy_tree(gd / "servers.dat", dst / "servers.dat")
     if c.get("saves"):
         copy_tree(gd / "saves", dst / "saves")
+    check_cancel()
     if p.get("loader") != "vanilla":
         try:
             ensure_builtins(p)          # mody wbudowane (Fabric API, Sodium...) od razu w profilu
+        except Cancelled:
+            raise
         except Exception as e:
             log(f"Mody wbudowane pobiorą się przy pierwszym uruchomieniu: {e}")
+    check_cancel()
+    task["kind"] = ""
     task["done"] = f"Zaimportowano profil {p['name']}"
     task["after"] = "check_mods"
     log(f"Import z {launcher['name']} ({src['name']}) zakończony")
@@ -843,7 +883,8 @@ def refresh_account(acc):
 def run_task(fn, *args):
     if task["running"]:
         return False
-    task.update(running=True, status="Przygotowanie...", progress=0, max=0, error="", done="", after="")
+    task.update(running=True, status="Przygotowanie...", progress=0, max=0, error="", done="", after="",
+                kind="", cancel=False)
 
     def worker():
         try:
@@ -852,7 +893,7 @@ def run_task(fn, *args):
             task["error"] = friendly_error(e)
             log("BŁĄD: " + "".join(traceback.format_exception(e)))
         finally:
-            task.update(running=False, status="")
+            task.update(running=False, status="", kind="", cancel=False)
     threading.Thread(target=worker, daemon=True).start()
     return True
 
@@ -1634,6 +1675,7 @@ def ensure_builtins(p):
     dup_slugs = {slug for slug, _ in builtin_dups(p).values()}
     now = int(time.time())
     for i, (slug, title) in enumerate(MODY_WBUDOWANE):
+        check_cancel()
         m = bi.get(slug)
         present = m and ((d / m["file"]).exists() or (d / (m["file"] + ".disabled")).exists())
         if slug in dup_slugs:
@@ -2609,6 +2651,9 @@ class Handler(BaseHTTPRequestHandler):
                     return self.send(400, {"error": f"Ten profil jest na wersji {data['v']}, której launcher nie obsługuje."})
                 if not run_task(do_import_code, data):
                     return self.send(400, busy)
+            elif path == "/api/task/cancel":
+                if task["running"] and task.get("kind") == "import":
+                    task.update(cancel=True, status="Anulowanie...")
             elif path == "/api/import/run":
                 if d.get("version") not in get_versions():
                     return self.send(400, {"error": "Wybierz wersję gry z listy."})
