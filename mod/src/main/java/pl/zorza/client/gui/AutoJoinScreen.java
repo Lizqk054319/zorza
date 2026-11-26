@@ -7,7 +7,7 @@ import pl.zorza.client.compat.M;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-//#if MC >= 1.20.2
+//#if MC >= 1.20.3
 import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 //#else
 //$$ import net.minecraft.client.gui.screen.ConnectScreen;

@@ -22,7 +22,7 @@ public class ZoraButton extends ClickableWidget {
     }
 
     @Override
-    //#if MC >= 1.20.2
+    //#if MC >= 1.20.3
     protected void renderWidget(DrawContext ctx, int mx, int my, float delta) {
     //#else
     //$$ protected void renderButton(DrawContext ctx, int mx, int my, float delta) {

@@ -18,6 +18,12 @@ import java.util.function.Function;
 
 @Mixin(PressableWidget.class)
 public abstract class PressableWidgetMixin {
+    //#if MC >= 1.20.3
+    private static final String WIDGET = "renderWidget";
+    //#else
+    //$$ private static final String WIDGET = "renderButton";
+    //#endif
+
     //#if MC >= 1.21.6
     //$$ @Redirect(method = "renderWidget", at = @At(value = "INVOKE",
     //$$         target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/util/Identifier;IIIII)V"))
@@ -41,7 +47,7 @@ public abstract class PressableWidgetMixin {
         VanillaStyle.button(ctx, self, x, y, w, h, self.active, self.isSelected(), ((color >>> 24) & 255) / 255f);
     }
     //#elseif MC >= 1.20.2
-    //$$ @Redirect(method = "renderWidget", at = @At(value = "INVOKE",
+    //$$ @Redirect(method = WIDGET, at = @At(value = "INVOKE",
     //$$         target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"))
     //$$ private void zorza$background(DrawContext ctx, Identifier tex, int x, int y, int w, int h) {
     //$$     if (!MenuSettings.styled()) {

@@ -14,7 +14,10 @@ import pl.zorza.client.Modules;
 
 @Mixin(HeldItemRenderer.class)
 public class HeldItemMixin {
-    //#if MC >= 1.21.5
+    //#if MC >= 1.21.9
+    //$$ // 1.21.9+: renderItem rysuje przez kolejkę poleceń – wystarczy nazwa metody (wołana jest tylko jedna wersja)
+    //$$ private static final String RENDER_ITEM = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem";
+    //#elseif MC >= 1.21.5
     //$$ private static final String RENDER_ITEM = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemDisplayContext;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V";
     //#elseif MC >= 1.21.2
     private static final String RENDER_ITEM = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V";

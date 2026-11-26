@@ -80,7 +80,7 @@ public final class Gfx {
         //#endif
     }
 
-    //#if MC < 1.21.9
+    //#if MC < 1.21.10
     /** Ułamek ticka do płynnej animacji (w świecie). */
     public static float worldDelta(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext ctx) {
         //#if MC >= 1.21.5
@@ -144,6 +144,54 @@ public final class Gfx {
         //$$ return cam.getCameraPos();
         //#else
         return cam.getPos();
+        //#endif
+    }
+
+    public static net.minecraft.client.render.RenderLayer debugQuads() {
+        //#if MC >= 1.21.11
+        //$$ return net.minecraft.client.render.RenderLayers.debugQuads();
+        //#else
+        return net.minecraft.client.render.RenderLayer.getDebugQuads();
+        //#endif
+    }
+
+    public static net.minecraft.client.render.RenderLayer textLayer(Identifier tex) {
+        //#if MC >= 1.21.11
+        //$$ return net.minecraft.client.render.RenderLayers.text(tex);
+        //#else
+        return net.minecraft.client.render.RenderLayer.getText(tex);
+        //#endif
+    }
+
+    public static net.minecraft.client.sound.PositionedSoundInstance uiSound(net.minecraft.sound.SoundEvent ev, float pitch, float volume) {
+        //#if MC >= 1.21.11
+        //$$ return net.minecraft.client.sound.PositionedSoundInstance.ui(ev, pitch, volume);
+        //#else
+        return net.minecraft.client.sound.PositionedSoundInstance.master(ev, pitch, volume);
+        //#endif
+    }
+
+    /** Ping serwera (od 1.21.11 metoda chce jeszcze "backend" sieci – bierzemy go przez refleksję). */
+    public static void ping(net.minecraft.client.network.MultiplayerServerListPinger pinger, net.minecraft.client.network.ServerInfo info) throws Exception {
+        //#if MC >= 1.21.11
+        //$$ for (java.lang.reflect.Method m : pinger.getClass().getMethods()) {
+        //$$     if (!m.getName().equals("add") || m.getParameterCount() != 4) continue;
+        //$$     Class<?> nb = m.getParameterTypes()[3];
+        //$$     Object backend = null;
+        //$$     for (java.lang.reflect.Field f : nb.getFields())
+        //$$         if (java.lang.reflect.Modifier.isStatic(f.getModifiers()) && nb.isAssignableFrom(f.getType())) { backend = f.get(null); break; }
+        //$$     if (backend == null) for (java.lang.reflect.Method f : nb.getMethods())
+        //$$         if (java.lang.reflect.Modifier.isStatic(f.getModifiers()) && nb.isAssignableFrom(f.getReturnType())) {
+        //$$             if (f.getParameterCount() == 0) { backend = f.invoke(null); break; }
+        //$$             if (f.getParameterCount() == 1 && f.getParameterTypes()[0] == boolean.class) { backend = f.invoke(null, false); break; }
+        //$$         }
+        //$$     m.invoke(pinger, info, (Runnable) () -> {}, (Runnable) () -> {}, backend);
+        //$$     return;
+        //$$ }
+        //#elseif MC >= 1.20.5
+        pinger.add(info, () -> {}, () -> {});
+        //#else
+        //$$ pinger.add(info, () -> {});
         //#endif
     }
 }

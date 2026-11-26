@@ -20,7 +20,7 @@ public abstract class SliderWidgetMixin {
     @Shadow
     protected double value;
 
-    //#if MC >= 1.20.2
+    //#if MC >= 1.20.3
     private static final String WIDGET = "renderWidget";
     //#else
     //$$ private static final String WIDGET = "renderButton";
@@ -43,7 +43,7 @@ public abstract class SliderWidgetMixin {
             return;
         }
     //#elseif MC >= 1.20.2
-    //$$ @Redirect(method = "renderWidget", at = @At(value = "INVOKE",
+    //$$ @Redirect(method = WIDGET, at = @At(value = "INVOKE",
     //$$         target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"))
     //$$ private void zorza$parts(DrawContext ctx, Identifier tex, int x, int y, int w, int h) {
     //$$     int color = ((int) (com.mojang.blaze3d.systems.RenderSystem.getShaderColor()[3] * 255) << 24) | 0xFFFFFF;

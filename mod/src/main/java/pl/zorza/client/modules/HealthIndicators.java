@@ -73,7 +73,7 @@ public class HealthIndicators extends Module {
 
     //#if MC >= 1.21.9
     //$$ private static H tex(VertexConsumerProvider vcp, String sprite) {
-    //$$     return new H(vcp.getBuffer(RenderLayer.getText(Ids.mc("textures/gui/sprites/" + sprite + ".png"))), new float[]{0f, 0f, 1f, 1f});
+    //$$     return new H(vcp.getBuffer(pl.zorza.client.compat.Gfx.textLayer(Ids.mc("textures/gui/sprites/" + sprite + ".png"))), new float[]{0f, 0f, 1f, 1f});
     //$$ }
     //#endif
 
@@ -102,12 +102,12 @@ public class HealthIndicators extends Module {
         //$$         absF = tex(vcp, "hud/heart/absorbing_full"), absH = tex(vcp, "hud/heart/absorbing_half");
         //#elseif MC >= 1.20.2
         var atlas = mc.getGuiAtlasManager();
-        VertexConsumer vc = vcp.getBuffer(RenderLayer.getText(atlas.getSprite(FULL).getAtlasId()));
+        VertexConsumer vc = vcp.getBuffer(pl.zorza.client.compat.Gfx.textLayer(atlas.getSprite(FULL).getAtlasId()));
         H cont = new H(vc, uv(atlas.getSprite(CONTAINER))), full = new H(vc, uv(atlas.getSprite(FULL))), half = new H(vc, uv(atlas.getSprite(HALF))),
                 absF = new H(vc, uv(atlas.getSprite(ABS_FULL))), absH = new H(vc, uv(atlas.getSprite(ABS_HALF)));
         //#else
         //$$ // 1.20.1: serca są w textures/gui/icons.png (256x256)
-        //$$ VertexConsumer vc = vcp.getBuffer(RenderLayer.getText(Ids.mc("textures/gui/icons.png")));
+        //$$ VertexConsumer vc = vcp.getBuffer(pl.zorza.client.compat.Gfx.textLayer(Ids.mc("textures/gui/icons.png")));
         //$$ H cont = new H(vc, icon(16)), full = new H(vc, icon(52)), half = new H(vc, icon(61)), absF = new H(vc, icon(160)), absH = new H(vc, icon(169));
         //#endif
         int hp = (int) Math.ceil(Math.max(0, e.getHealth())), abs = (int) Math.ceil(e.getAbsorptionAmount());

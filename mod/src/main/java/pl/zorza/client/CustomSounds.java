@@ -104,7 +104,7 @@ public final class CustomSounds {
         SoundEvent ev = builtins.get(name);
         if (ev != null || name == null) {
             if (ev == null) ev = builtins.values().iterator().next();
-            mc.getSoundManager().play(PositionedSoundInstance.master(ev, pitch, volume));
+            mc.getSoundManager().play(pl.zorza.client.compat.Gfx.uiSound(ev, pitch, volume));
             return;
         }
         try {

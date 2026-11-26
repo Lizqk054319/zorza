@@ -79,7 +79,7 @@ public class ZorzaClient implements ClientModInitializer {
                 "key.zorza.health_down", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_DOWN, CATEGORY));
 
         ClientTickEvents.END_CLIENT_TICK.register(ZorzaClient::tick);
-        //#if MC >= 1.21.9
+        //#if MC >= 1.21.10
         //$$ net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents.AFTER_ENTITIES.register(c -> {
         //$$     MinecraftClient mc = MinecraftClient.getInstance();
         //$$     var w = new pl.zorza.client.compat.WorldCtx(mc.gameRenderer.getCamera(), pl.zorza.client.compat.Gfx.frameDelta(mc));

@@ -153,11 +153,11 @@ public final class Effects {
         if (!any) return;
 
         VertexConsumerProvider.Immediate imm = mc.getBufferBuilders().getEntityVertexConsumers();
-        VertexConsumer vc = imm.getBuffer(RenderLayer.getDebugQuads());
+        VertexConsumer vc = imm.getBuffer(pl.zorza.client.compat.Gfx.debugQuads());
         drawTrail(vc, cp, cam);
         drawCircles(vc, cp);
         drawParticles(vc, cp, cam, dt);
-        imm.draw(RenderLayer.getDebugQuads());
+        imm.draw(pl.zorza.client.compat.Gfx.debugQuads());
     }
 
     // ---------- ślad ----------

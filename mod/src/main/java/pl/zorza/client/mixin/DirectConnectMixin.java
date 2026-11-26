@@ -6,7 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-//#if MC >= 1.20.2
+//#if MC >= 1.20.3
 import net.minecraft.client.gui.screen.multiplayer.DirectConnectScreen;
 //#else
 //$$ import net.minecraft.client.gui.screen.DirectConnectScreen;
@@ -87,11 +87,7 @@ public abstract class DirectConnectMixin extends Screen {
         zorza$iconBytes = null;
         Thread t = new Thread(() -> {
             try {
-                //#if MC >= 1.20.5
-                zorza$pinger.add(info, () -> {}, () -> {});
-                //#else
-                //$$ zorza$pinger.add(info, () -> {});
-                //#endif
+                pl.zorza.client.compat.Gfx.ping(zorza$pinger, info);
             } catch (UnknownHostException e) {
                 info.ping = -1;
                 info.label = Text.translatable("multiplayer.status.cannot_resolve").formatted(Formatting.DARK_RED);
