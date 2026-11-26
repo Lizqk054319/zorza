@@ -53,12 +53,12 @@ public class ZorzaClient implements ClientModInitializer {
         // gładka czcionka Inter w całej grze (można wyłączyć w Resource Packs)
         net.fabricmc.loader.api.FabricLoader.getInstance().getModContainer("zorza").ifPresent(mod ->
                 net.fabricmc.fabric.api.resource.ResourceManagerHelper.registerBuiltinResourcePack(
-                        net.minecraft.util.Ids.of("zorza", "zora_font"), mod,
+                        Ids.of("zorza", "zora_font"), mod,
                         net.minecraft.text.Text.literal("Zora Font"),
                         net.fabricmc.fabric.api.resource.ResourcePackActivationType.DEFAULT_ENABLED));
         net.fabricmc.loader.api.FabricLoader.getInstance().getModContainer("zorza").ifPresent(mod ->
                 net.fabricmc.fabric.api.resource.ResourceManagerHelper.registerBuiltinResourcePack(
-                        net.minecraft.util.Ids.of("zorza", "zora_dark_gui"), mod,
+                        Ids.of("zorza", "zora_dark_gui"), mod,
                         net.minecraft.text.Text.literal("Zora Dark GUI"),
                         net.fabricmc.fabric.api.resource.ResourcePackActivationType.DEFAULT_ENABLED));
         MENU_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
