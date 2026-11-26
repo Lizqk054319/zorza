@@ -30,7 +30,8 @@
     "ScoreboardScaleMixin",
     "BossBarScaleMixin",
     "GameRendererBlurMixin",
-    "HitboxMixin"
+    "HitboxMixin",
+    "HitboxStateMixin"
   ],
   "injectors": {
     "defaultRequire": 1
