@@ -212,17 +212,17 @@ public class ZoraModsScreen extends ZScreen {
     }
 
     @Override
-    public boolean charTyped(char chr, int modifiers) {
+    protected boolean typed(char chr, int modifiers) {
         if (searchFocus && search.length() < 24 && chr >= 32) {
             search += chr;
             scrollTarget = scroll = 0;
             return true;
         }
-        return super.charTyped(chr, modifiers);
+        return false;
     }
 
     @Override
-    public boolean keyPressed(int key, int scan, int mods) {
+    protected boolean key(int key, int scan, int mods) {
         if (searchFocus) {
             if (key == GLFW.GLFW_KEY_BACKSPACE && !search.isEmpty()) {
                 search = search.substring(0, search.length() - 1);
@@ -236,7 +236,7 @@ public class ZoraModsScreen extends ZScreen {
             searchFocus = true;
             return true;
         }
-        return super.keyPressed(key, scan, mods);
+        return false;
     }
 
     @Override

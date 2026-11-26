@@ -121,12 +121,12 @@ public class AutoJoinScreen extends ZScreen {
     }
 
     @Override
-    public boolean keyPressed(int key, int scan, int mods) {
+    protected boolean key(int key, int scan, int mods) {
         if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) {
             connect();
             return true;
         }
-        return super.keyPressed(key, scan, mods);
+        return false;
     }
 
     private void connect() {

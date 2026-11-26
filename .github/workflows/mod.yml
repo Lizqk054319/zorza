@@ -12,6 +12,11 @@ on:
 permissions:
   contents: write
 
+# jedno budowanie naraz – żeby dwa wydania się nie nadpisywały
+concurrency:
+  group: mod-build
+  cancel-in-progress: false
+
 jobs:
   # Osobny plik moda na każdą wersję Minecrafta. Każda wersja musi się zbudować
   # i uruchomić w prawdziwej grze (gametest albo test dymny), inaczej nie trafia do wydania.

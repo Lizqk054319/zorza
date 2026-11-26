@@ -80,7 +80,34 @@ public abstract class ZScreen extends Screen {
         return v;
     }
 
-    // przeliczanie myszy na jednostki projektu
+    // przeliczanie myszy na jednostki projektu (od 1.21.9 Minecraft podaje kliknięcia jako obiekty)
+    //#if MC >= 1.21.9
+    //$$ @Override
+    //$$ public boolean mouseClicked(net.minecraft.client.gui.Click c, boolean doubled) {
+    //$$     updateScale();
+    //$$     return click(dx(c.x()), dy(c.y()), c.button()) || super.mouseClicked(c, doubled);
+    //$$ }
+    //$$
+    //$$ @Override
+    //$$ public boolean mouseDragged(net.minecraft.client.gui.Click c, double ddx, double ddy) {
+    //$$     return drag(dx(c.x()), dy(c.y()), c.button()) || super.mouseDragged(c, ddx, ddy);
+    //$$ }
+    //$$
+    //$$ @Override
+    //$$ public boolean mouseReleased(net.minecraft.client.gui.Click c) {
+    //$$     return release(dx(c.x()), dy(c.y()), c.button()) || super.mouseReleased(c);
+    //$$ }
+    //$$
+    //$$ @Override
+    //$$ public boolean keyPressed(net.minecraft.client.input.KeyInput in) {
+    //$$     return key(in.key(), in.scancode(), in.modifiers()) || super.keyPressed(in);
+    //$$ }
+    //$$
+    //$$ @Override
+    //$$ public boolean charTyped(net.minecraft.client.input.CharInput in) {
+    //$$     return typed((char) in.codepoint(), in.modifiers()) || super.charTyped(in);
+    //$$ }
+    //#else
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
         updateScale();
@@ -98,9 +125,25 @@ public abstract class ZScreen extends Screen {
     }
 
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return key(keyCode, scanCode, modifiers) || super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        return typed(chr, modifiers) || super.charTyped(chr, modifiers);
+    }
+    //#endif
+
+    @Override
     public boolean mouseScrolled(double mx, double my, double h, double v) {
         return scroll(dx(mx), dy(my), v) || super.mouseScrolled(mx, my, h, v);
     }
+
+    /** Klawisze i znaki – ekrany Zory nadpisują te metody (niezależnie od wersji gry). */
+    protected boolean key(int key, int scan, int mods) { return false; }
+
+    protected boolean typed(char chr, int modifiers) { return false; }
 
     protected boolean click(double mx, double my, int button) { return false; }
 
