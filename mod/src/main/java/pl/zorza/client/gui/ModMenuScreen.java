@@ -126,7 +126,9 @@ public class ModMenuScreen extends ZScreen {
         int[] u = userRect();
         R.bordered(ctx, u[0], u[1], u[2], u[3], 12, 1, R.alpha(0xF00C0C0F, a), R.alpha(0x1CFFFFFF, a));
         if (client.player != null) {
-            //#if MC >= 1.20.2
+            //#if MC >= 1.21.9
+            //$$ PlayerSkinDrawer.draw(ctx, client.player.getSkin(), u[0] + 14, u[1] + 12, 40);
+            //#elseif MC >= 1.20.2
             PlayerSkinDrawer.draw(ctx, client.player.getSkinTextures(), u[0] + 14, u[1] + 12, 40);
             //#else
             //$$ PlayerSkinDrawer.draw(ctx, client.player.getSkinTexture(), u[0] + 14, u[1] + 12, 40);

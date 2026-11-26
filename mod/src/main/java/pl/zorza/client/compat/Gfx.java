@@ -80,6 +80,7 @@ public final class Gfx {
         //#endif
     }
 
+    //#if MC < 1.21.9
     /** Ułamek ticka do płynnej animacji (w świecie). */
     public static float worldDelta(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext ctx) {
         //#if MC >= 1.21.5
@@ -90,6 +91,7 @@ public final class Gfx {
         //$$ return ctx.tickDelta();
         //#endif
     }
+    //#endif
 
     /** Ułamek ticka do płynnej animacji (HUD). */
     public static float frameDelta(net.minecraft.client.MinecraftClient mc) {
@@ -124,6 +126,15 @@ public final class Gfx {
         //#else
         Sprite sprite = net.minecraft.client.MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(effect);
         if (sprite != null) spriteStretched(c, sprite, x, y, size, size);
+        //#endif
+    }
+
+    /** Styl z daną czcionką (od 1.21.9 czcionka to StyleSpriteSource). */
+    public static net.minecraft.text.Style font(net.minecraft.text.Style st, Identifier font) {
+        //#if MC >= 1.21.9
+        //$$ return st.withFont(new net.minecraft.text.StyleSpriteSource.Font(font));
+        //#else
+        return st.withFont(font);
         //#endif
     }
 }

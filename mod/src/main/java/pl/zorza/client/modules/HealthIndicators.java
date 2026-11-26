@@ -2,7 +2,6 @@ package pl.zorza.client.modules;
 
 import pl.zorza.client.compat.Ids;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Camera;
@@ -30,7 +29,7 @@ import java.util.Locale;
 
 /** Serca nad głowami graczy – prawdziwe serca z Minecrafta (także z paczek zasobów), po 10 w rzędzie, rzędy w górę. */
 public class HealthIndicators extends Module {
-    private static final Style VANILLA = Style.EMPTY.withFont(Ids.of("zorza", "vanilla"));
+    private static final Style VANILLA = pl.zorza.client.compat.Gfx.font(Style.EMPTY, Ids.of("zorza", "vanilla"));
     private static final Identifier CONTAINER = Ids.mc("hud/heart/container"),
             FULL = Ids.mc("hud/heart/full"), HALF = Ids.mc("hud/heart/half"),
             ABS_FULL = Ids.mc("hud/heart/absorbing_full"), ABS_HALF = Ids.mc("hud/heart/absorbing_half");
@@ -69,7 +68,18 @@ public class HealthIndicators extends Module {
         return new float[]{u / 256f, 0f, (u + 9) / 256f, 9 / 256f};
     }
 
-    private static void quad(VertexConsumer vc, Matrix4f m, float[] s, float x, float y, float size, int light) {
+    /** Bufor + współrzędne tekstury jednego rodzaju serca. */
+    private record H(VertexConsumer vc, float[] uv) {}
+
+    //#if MC >= 1.21.9
+    //$$ private static H tex(VertexConsumerProvider vcp, String sprite) {
+    //$$     return new H(vcp.getBuffer(RenderLayer.getText(Ids.mc("textures/gui/sprites/" + sprite + ".png"))), new float[]{0f, 0f, 1f, 1f});
+    //$$ }
+    //#endif
+
+    private static void quad(H h, Matrix4f m, float x, float y, float size, int light) {
+        VertexConsumer vc = h.vc();
+        float[] s = h.uv();
         //#if MC >= 1.21
         vc.vertex(m, x, y, 0).color(255, 255, 255, 255).texture(s[0], s[1]).light(light);
         vc.vertex(m, x, y + size, 0).color(255, 255, 255, 255).texture(s[0], s[3]).light(light);
@@ -86,15 +96,19 @@ public class HealthIndicators extends Module {
     /** Rysuje serca (od dołu w górę) – zwraca wysokość w pikselach. */
     private int drawHearts(VertexConsumerProvider vcp, Matrix4f m, LivingEntity e, int light) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        //#if MC >= 1.20.2
+        //#if MC >= 1.21.9
+        //$$ // 1.21.9+: każde serce to osobny plik tekstury (z paczek zasobów też)
+        //$$ H cont = tex(vcp, "hud/heart/container"), full = tex(vcp, "hud/heart/full"), half = tex(vcp, "hud/heart/half"),
+        //$$         absF = tex(vcp, "hud/heart/absorbing_full"), absH = tex(vcp, "hud/heart/absorbing_half");
+        //#elseif MC >= 1.20.2
         var atlas = mc.getGuiAtlasManager();
-        float[] cont = uv(atlas.getSprite(CONTAINER)), full = uv(atlas.getSprite(FULL)), half = uv(atlas.getSprite(HALF)),
-                absF = uv(atlas.getSprite(ABS_FULL)), absH = uv(atlas.getSprite(ABS_HALF));
         VertexConsumer vc = vcp.getBuffer(RenderLayer.getText(atlas.getSprite(FULL).getAtlasId()));
+        H cont = new H(vc, uv(atlas.getSprite(CONTAINER))), full = new H(vc, uv(atlas.getSprite(FULL))), half = new H(vc, uv(atlas.getSprite(HALF))),
+                absF = new H(vc, uv(atlas.getSprite(ABS_FULL))), absH = new H(vc, uv(atlas.getSprite(ABS_HALF)));
         //#else
         //$$ // 1.20.1: serca są w textures/gui/icons.png (256x256)
-        //$$ float[] cont = icon(16), full = icon(52), half = icon(61), absF = icon(160), absH = icon(169);
         //$$ VertexConsumer vc = vcp.getBuffer(RenderLayer.getText(Ids.mc("textures/gui/icons.png")));
+        //$$ H cont = new H(vc, icon(16)), full = new H(vc, icon(52)), half = new H(vc, icon(61)), absF = new H(vc, icon(160)), absH = new H(vc, icon(169));
         //#endif
         int hp = (int) Math.ceil(Math.max(0, e.getHealth())), abs = (int) Math.ceil(e.getAbsorptionAmount());
         int maxHearts = (int) Math.ceil(Math.max(1, e.getMaxHealth()) / 2f);
@@ -107,26 +121,26 @@ public class HealthIndicators extends Module {
             float x = -(inRow * 8 + 1) / 2f + col * 8;
             float y = -row * 10f;                                    // kolejne rzędy w górę
             if (i < maxHearts) {
-                quad(vc, m, cont, x, y, 9, light);
+                quad(cont, m, x, y, 9, light);
                 int v = hp - i * 2;
-                if (v >= 2) quad(vc, m, full, x, y, 9, light);
-                else if (v == 1) quad(vc, m, half, x, y, 9, light);
+                if (v >= 2) quad(full, m, x, y, 9, light);
+                else if (v == 1) quad(half, m, x, y, 9, light);
             } else {
                 int v = abs - (i - maxHearts) * 2;
-                quad(vc, m, cont, x, y, 9, light);
-                quad(vc, m, v >= 2 ? absF : absH, x, y, 9, light);
+                quad(cont, m, x, y, 9, light);
+                quad(v >= 2 ? absF : absH, m, x, y, 9, light);
             }
         }
         return rows * 10;
     }
 
-    public void render(WorldRenderContext ctx) {
+    public void render(pl.zorza.client.compat.WorldCtx ctx) {
         if (!enabled) return;
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.world == null || mc.player == null || mc.options.hudHidden) return;
         Camera cam = ctx.camera();
         Vec3d cp = cam.getPos();
-        float delta = pl.zorza.client.compat.Gfx.worldDelta(ctx);
+        float delta = ctx.delta();
         TextRenderer tr = mc.textRenderer;
         VertexConsumerProvider.Immediate vc = mc.getBufferBuilders().getEntityVertexConsumers();
         double maxD = distance.value * distance.value;

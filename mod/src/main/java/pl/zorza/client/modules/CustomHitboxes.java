@@ -19,6 +19,7 @@ public class CustomHitboxes extends Module {
 
     public String icon() { return "m_hitbox"; }
 
+    //#if MC < 1.21.9
     @Override
     public void onTick(MinecraftClient mc) {
         if (mc.getEntityRenderDispatcher() == null) return;
@@ -35,4 +36,5 @@ public class CustomHitboxes extends Module {
         if (turnedOn && mc.getEntityRenderDispatcher() != null) mc.getEntityRenderDispatcher().setRenderHitboxes(false);
         turnedOn = false;
     }
+    //#endif
 }

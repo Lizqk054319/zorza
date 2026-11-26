@@ -1,6 +1,5 @@
 package pl.zorza.client.fx;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.Camera;
@@ -76,7 +75,7 @@ public final class Effects {
             return;
         }
         boolean on = p.isOnGround();
-        if (wasOnGround && !on && p.getVelocity().y > 0.2 && !p.isSwimming() && !p.getAbilities().flying) onJump(p.getPos());
+        if (wasOnGround && !on && p.getVelocity().y > 0.2 && !p.isSwimming() && !p.getAbilities().flying) onJump(new Vec3d(p.getX(), p.getY(), p.getZ()));
         wasOnGround = on;
     }
 
@@ -138,7 +137,7 @@ public final class Effects {
     }
 
     /** Co klatkę (płynnie, niezależnie od TPS). */
-    public static void render(WorldRenderContext ctx) {
+    public static void render(pl.zorza.client.compat.WorldCtx ctx) {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.world == null || mc.player == null) return;
         long now = System.nanoTime();
@@ -146,7 +145,7 @@ public final class Effects {
         lastFrame = now;
         Camera cam = ctx.camera();
         Vec3d cp = cam.getPos();
-        float delta = pl.zorza.client.compat.Gfx.worldDelta(ctx);
+        float delta = ctx.delta();
 
         updateTrail(mc, delta);
         spawnAmbient(mc, cp, dt);

@@ -23,7 +23,7 @@ public abstract class ItemCountMixin {
     //#endif
 
     private static Text zorza$v(String s) {
-        return Text.literal(s).setStyle(Style.EMPTY.withFont(VANILLA));
+        return Text.literal(s).setStyle(pl.zorza.client.compat.Gfx.font(Style.EMPTY, VANILLA));
     }
 
     //#if MC >= 1.21.6

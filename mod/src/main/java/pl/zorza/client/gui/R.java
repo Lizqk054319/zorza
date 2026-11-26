@@ -88,7 +88,7 @@ public final class R {
     // ---------------------------------------------------------------- tekst (Inter)
 
     public static Text styled(String s, Identifier font) {
-        return Text.literal(s).setStyle(Style.EMPTY.withFont(font));
+        return Text.literal(s).setStyle(pl.zorza.client.compat.Gfx.font(Style.EMPTY, font));
     }
 
     /** Wybiera wariant czcionki rasteryzowany mniej więcej w docelowym rozmiarze – bez "zjadania" liter. */

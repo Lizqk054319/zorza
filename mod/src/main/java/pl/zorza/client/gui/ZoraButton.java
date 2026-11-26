@@ -64,10 +64,17 @@ public class ZoraButton extends ClickableWidget {
         R.pxPerUnit = old;
     }
 
+    //#if MC >= 1.21.9
+    //$$ @Override
+    //$$ public void onClick(net.minecraft.client.gui.Click click, boolean doubled) {
+    //$$     action.run();
+    //$$ }
+    //#else
     @Override
     public void onClick(double mouseX, double mouseY) {
         action.run();
     }
+    //#endif
 
     @Override
     protected void appendClickableNarrations(NarrationMessageBuilder builder) {

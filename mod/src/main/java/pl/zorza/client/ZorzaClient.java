@@ -41,6 +41,12 @@ public class ZorzaClient implements ClientModInitializer {
     private static double zoom = 1.0;
     private static long lastFrame = System.nanoTime();
 
+    //#if MC >= 1.21.9
+    //$$ private static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(pl.zorza.client.compat.Ids.of("zorza", "main"));
+    //#else
+    private static final String CATEGORY = "category.zorza";
+    //#endif
+
     @Override
     public void onInitializeClient() {
         Modules.init();
@@ -62,21 +68,31 @@ public class ZorzaClient implements ClientModInitializer {
                         net.minecraft.text.Text.literal("Zora Dark GUI"),
                         net.fabricmc.fabric.api.resource.ResourcePackActivationType.DEFAULT_ENABLED));
         MENU_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.zorza.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT, "category.zorza"));
+                "key.zorza.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT, CATEGORY));
         ZOOM_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.zorza.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C, "category.zorza"));
+                "key.zorza.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY));
         FREELOOK_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.zorza.freelook", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "category.zorza"));
+                "key.zorza.freelook", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, CATEGORY));
         HEALTH_UP_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.zorza.health_up", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_UP, "category.zorza"));
+                "key.zorza.health_up", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_UP, CATEGORY));
         HEALTH_DOWN_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.zorza.health_down", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_DOWN, "category.zorza"));
+                "key.zorza.health_down", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_DOWN, CATEGORY));
 
         ClientTickEvents.END_CLIENT_TICK.register(ZorzaClient::tick);
+        //#if MC >= 1.21.9
+        //$$ net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents.AFTER_ENTITIES.register(c -> {
+        //$$     MinecraftClient mc = MinecraftClient.getInstance();
+        //$$     var w = new pl.zorza.client.compat.WorldCtx(mc.gameRenderer.getCamera(), pl.zorza.client.compat.Gfx.frameDelta(mc));
+        //$$     Modules.HEALTH.render(w);
+        //$$     pl.zorza.client.fx.Effects.render(w);
+        //$$ });
+        //#else
         net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents.AFTER_ENTITIES.register(c -> {
-            Modules.HEALTH.render(c);
-            pl.zorza.client.fx.Effects.render(c);
+            var w = new pl.zorza.client.compat.WorldCtx(c.camera(), pl.zorza.client.compat.Gfx.worldDelta(c));
+            Modules.HEALTH.render(w);
+            pl.zorza.client.fx.Effects.render(w);
         });
+        //#endif
                 HudRenderCallback.EVENT.register((ctx, tickCounter) -> {
             MinecraftClient mc = MinecraftClient.getInstance();
             if (mc.options.hudHidden || mc.player == null) return;
@@ -92,7 +108,11 @@ public class ZorzaClient implements ClientModInitializer {
             }
         });
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hit) -> {
+            //#if MC >= 1.21.9
+            //$$ if (world.isClient()) {
+            //#else
             if (world.isClient) {
+            //#endif
                 Vec3d eye = player.getEyePos();
                 Box b = entity.getBoundingBox();
                 double x = MathHelper.clamp(eye.x, b.minX, b.maxX);
