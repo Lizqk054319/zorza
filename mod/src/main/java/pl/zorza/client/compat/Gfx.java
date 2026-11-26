@@ -62,4 +62,30 @@ public final class Gfx {
     //$$     c.setShaderColor(1f, 1f, 1f, 1f);
     //$$ }
     //#endif
+
+    /** Tekstura z obrazka w pamięci (ikonki serwerów, modów). */
+    public static net.minecraft.client.texture.NativeImageBackedTexture nativeTexture(net.minecraft.client.texture.NativeImage img) {
+        //#if MC >= 1.21.5
+        //$$ return new net.minecraft.client.texture.NativeImageBackedTexture(() -> "zorza", img);
+        //#else
+        return new net.minecraft.client.texture.NativeImageBackedTexture(img);
+        //#endif
+    }
+
+    /** Ułamek ticka do płynnej animacji. */
+    public static float tickDelta(net.minecraft.client.render.RenderTickCounter t) {
+        //#if MC >= 1.21.5
+        //$$ return t.getTickProgress(true);
+        //#else
+        return t.getTickDelta(true);
+        //#endif
+    }
+
+    public static float lastBodyYaw(net.minecraft.entity.LivingEntity e) {
+        //#if MC >= 1.21.5
+        //$$ return e.lastBodyYaw;
+        //#else
+        return e.prevBodyYaw;
+        //#endif
+    }
 }

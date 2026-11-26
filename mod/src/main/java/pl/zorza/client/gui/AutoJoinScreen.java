@@ -33,7 +33,7 @@ public class AutoJoinScreen extends ZScreen {
         if (data.favicon() != null) {
             try {
                 NativeImage img = NativeImage.read(data.favicon());
-                MinecraftClient.getInstance().getTextureManager().registerTexture(ICON, new NativeImageBackedTexture(img));
+                MinecraftClient.getInstance().getTextureManager().registerTexture(ICON, pl.zorza.client.compat.Gfx.nativeTexture(img));
                 hasIcon = true;
             } catch (Exception ignored) {
             }

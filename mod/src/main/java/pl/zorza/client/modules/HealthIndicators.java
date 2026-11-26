@@ -103,7 +103,7 @@ public class HealthIndicators extends Module {
         if (mc.world == null || mc.player == null || mc.options.hudHidden) return;
         Camera cam = ctx.camera();
         Vec3d cp = cam.getPos();
-        float delta = ctx.tickCounter().getTickDelta(true);
+        float delta = pl.zorza.client.compat.Gfx.tickDelta(ctx.tickCounter());
         TextRenderer tr = mc.textRenderer;
         VertexConsumerProvider.Immediate vc = mc.getBufferBuilders().getEntityVertexConsumers();
         double maxD = distance.value * distance.value;

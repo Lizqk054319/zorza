@@ -45,7 +45,7 @@ public class CooldownsHud extends HudModule {
                 var mgr = mc.player.getItemCooldownManager();
                 CooldownAccessor cm = (CooldownAccessor) mgr;
                 int tick = cm.zorza$tick();
-                float delta = mc.getRenderTickCounter().getTickDelta(true);
+                float delta = pl.zorza.client.compat.Gfx.tickDelta(mc.getRenderTickCounter());
                 // prawdziwe przedmioty gracza – z teksturami z paczek zasobów (np. eventowe perły)
                 Map<Identifier, ItemStack> owned = new HashMap<>();
                 var inv = mc.player.getInventory();

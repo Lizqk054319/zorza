@@ -195,7 +195,7 @@ public final class ModList {
                     try (InputStream in = Files.newInputStream(p.get())) {
                         NativeImage img = NativeImage.read(in);
                         out = Identifier.of("zorza", "modicon/" + id.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_.-]", "_"));
-                        MinecraftClient.getInstance().getTextureManager().registerTexture(out, new NativeImageBackedTexture(img));
+                        MinecraftClient.getInstance().getTextureManager().registerTexture(out, pl.zorza.client.compat.Gfx.nativeTexture(img));
                     }
                 }
             }

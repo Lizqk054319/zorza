@@ -111,7 +111,7 @@ public abstract class DirectConnectMixin extends Screen {
         if (fav != null && !Arrays.equals(fav, zorza$iconBytes)) {
             zorza$iconBytes = fav;
             try {
-                MinecraftClient.getInstance().getTextureManager().registerTexture(ZORZA_ICON, new NativeImageBackedTexture(NativeImage.read(fav)));
+                MinecraftClient.getInstance().getTextureManager().registerTexture(ZORZA_ICON, pl.zorza.client.compat.Gfx.nativeTexture(NativeImage.read(fav)));
                 zorza$hasIcon = true;
             } catch (Exception e) {
                 zorza$hasIcon = false;

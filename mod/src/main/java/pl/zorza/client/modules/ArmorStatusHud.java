@@ -31,8 +31,10 @@ public class ArmorStatusHud extends HudModule {
     private List<ItemStack> items(MinecraftClient mc, boolean editor) {
         List<ItemStack> out = new ArrayList<>();
         if (mc.player != null) {
-            for (int i = 3; i >= 0; i--) {
-                ItemStack s = mc.player.getInventory().armor.get(i);
+            for (net.minecraft.entity.EquipmentSlot slot : new net.minecraft.entity.EquipmentSlot[]{
+                    net.minecraft.entity.EquipmentSlot.HEAD, net.minecraft.entity.EquipmentSlot.CHEST,
+                    net.minecraft.entity.EquipmentSlot.LEGS, net.minecraft.entity.EquipmentSlot.FEET}) {
+                ItemStack s = mc.player.getEquippedStack(slot);
                 if (!s.isEmpty()) out.add(s);
             }
             if (hand.value && !mc.player.getMainHandStack().isEmpty()) out.add(mc.player.getMainHandStack());

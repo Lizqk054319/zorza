@@ -146,7 +146,7 @@ public final class Effects {
         lastFrame = now;
         Camera cam = ctx.camera();
         Vec3d cp = cam.getPos();
-        float delta = ctx.tickCounter().getTickDelta(true);
+        float delta = pl.zorza.client.compat.Gfx.tickDelta(ctx.tickCounter());
 
         updateTrail(mc, delta);
         spawnAmbient(mc, cp, dt);
@@ -172,7 +172,7 @@ public final class Effects {
         long life = (long) (t.length.value * 1000);
         while (!TRAIL.isEmpty() && ms - TRAIL.peekFirst().time() > life) TRAIL.pollFirst();
         // punkt na plecach: trochę za postacią (zgodnie z obrotem ciała)
-        float body = MathHelper.lerpAngleDegrees(delta, mc.player.prevBodyYaw, mc.player.bodyYaw) * MathHelper.RADIANS_PER_DEGREE;
+        float body = MathHelper.lerpAngleDegrees(delta, pl.zorza.client.compat.Gfx.lastBodyYaw(mc.player), mc.player.bodyYaw) * MathHelper.RADIANS_PER_DEGREE;
         double back = t.height.value > 0.6 ? 0.3 : 0;
         Vec3d p = mc.player.getLerpedPos(delta).add(MathHelper.sin(body) * back, t.height.value, -MathHelper.cos(body) * back);
         if (TRAIL.isEmpty() || TRAIL.peekLast().pos().squaredDistanceTo(p) > 0.0009) TRAIL.addLast(new TrailPoint(p, ms));

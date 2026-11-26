@@ -39,9 +39,8 @@ public abstract class CameraMixin {
     private void zorza$freelook(BlockView area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         if (Modules.FREELOOK == null || !Modules.FREELOOK.active || entity == null) return;
         setRotation(Modules.FREELOOK.yaw, Modules.FREELOOK.pitch);
-        setPos(MathHelper.lerp(tickDelta, entity.prevX, entity.getX()),
-                MathHelper.lerp(tickDelta, entity.prevY, entity.getY()) + MathHelper.lerp(tickDelta, lastCameraY, cameraY),
-                MathHelper.lerp(tickDelta, entity.prevZ, entity.getZ()));
+        net.minecraft.util.math.Vec3d lp = entity.getLerpedPos(tickDelta);
+        setPos(lp.x, lp.y + MathHelper.lerp(tickDelta, lastCameraY, cameraY), lp.z);
         if (thirdPerson) {
             float scale = entity instanceof LivingEntity le ? le.getScale() : 1f;
             moveBy(-clipToSpace(4f * scale), 0f, 0f);
