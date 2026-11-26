@@ -80,7 +80,7 @@ public final class Gfx {
         //#endif
     }
 
-    //#if MC < 1.21.10
+    //#if MC < 1.21.9
     /** Ułamek ticka do płynnej animacji (w świecie). */
     public static float worldDelta(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext ctx) {
         //#if MC >= 1.21.5

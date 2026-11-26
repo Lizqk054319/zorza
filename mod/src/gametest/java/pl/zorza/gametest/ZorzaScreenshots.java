@@ -12,6 +12,11 @@ import pl.zorza.client.module.Module;
 public class ZorzaScreenshots implements FabricClientGameTest {
     @Override
     public void runTest(ClientGameTestContext context) {
+        // mała odległość renderowania – w CI (programowe OpenGL) świat ładuje się wtedy szybciej
+        context.runOnClient(client -> {
+            client.options.getViewDistance().setValue(2);
+            client.options.getSimulationDistance().setValue(5);
+        });
         try (TestSingleplayerContext sp = context.worldBuilder().create()) {
             sp.getClientWorld().waitForChunksRender();
             context.runOnClient(client -> {

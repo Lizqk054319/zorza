@@ -31,7 +31,10 @@
     "BossBarScaleMixin",
     "GameRendererBlurMixin",
     "HitboxMixin",
-    "HitboxStateMixin"
+    "HitboxStateMixin",
+    "PressableWidgetNewMixin",
+    "SliderWidgetNewMixin",
+    "ClickableWidgetNewInvoker"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -86,6 +86,8 @@ public class ZorzaClient implements ClientModInitializer {
         //$$     Modules.HEALTH.render(w);
         //$$     pl.zorza.client.fx.Effects.render(w);
         //$$ });
+        //#elseif MC >= 1.21.9
+        //$$ // 1.21.9: Fabric API nie ma tu zdarzeń rysowania świata – efekty w świecie są od 1.21.10
         //#else
         net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents.AFTER_ENTITIES.register(c -> {
             var w = new pl.zorza.client.compat.WorldCtx(c.camera(), pl.zorza.client.compat.Gfx.worldDelta(c));
