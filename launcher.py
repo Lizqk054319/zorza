@@ -47,10 +47,13 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.9.2"
+WERSJA_CLIENTA = "0.9.3"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.9.3", [
+        "Poprawione ikonki profili i nazwa Zora Client na pasku zadań (także po aktualizacji)",
+    ]),
     ("0.9.2", [
         "Nowy wybór wersji, ikonki profili (Ogulniega, Lunar, Modrinth, Minecraft), Zora Client na pasku zadań",
         "Launcher zamyka się do końca; gdy gra wyłączy się od razu, launcher pokaże dlaczego i sam naprawi zepsuty mod",
@@ -2516,6 +2519,11 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(403, {"error": "zabronione"})
             if u.path in ("/", "/index.html"):
                 return self.send(200, (UI_DIR / "index.html").read_bytes(), "text/html; charset=utf-8")
+            if u.path.startswith("/assets/launchers/"):
+                p = safe_child(UI_DIR / "assets" / "launchers", u.path[len("/assets/launchers/"):])
+                if p.exists():
+                    return self.send(200, p.read_bytes(), "image/png")
+                return self.send(404, {"error": "brak pliku"})
             if u.path.startswith("/assets/"):
                 p = safe_child(UI_DIR / "assets", u.path[len("/assets/"):])
                 if p.exists():
@@ -2629,7 +2637,8 @@ class Handler(BaseHTTPRequestHandler):
                                  "text/html; charset=utf-8")
             self.send(404, {"error": "nie znaleziono"})
         except Exception as e:
-            log(f"Błąd ({u.path}): {e}")
+            if not isinstance(e, (ConnectionError, BrokenPipeError)):
+                log(f"Błąd ({u.path}): {e}")
             self.send(500, {"error": friendly_error(e)})
 
     def do_POST(self):
@@ -2896,7 +2905,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(404, {"error": "nie znaleziono"})
             self.send(200, {"ok": True})
         except Exception as e:
-            log(f"Błąd ({u.path}): {e}")
+            if not isinstance(e, (ConnectionError, BrokenPipeError)):
+                log(f"Błąd ({u.path}): {e}")
             self.send(500 if not isinstance(e, (ValueError, RuntimeError)) else 400,
                       {"error": friendly_error(e)})
 
@@ -2924,7 +2934,6 @@ def open_window():
                                       "--window-size=1280,800", "--no-first-run", "--no-default-browser-check",
                                       "--disable-background-timer-throttling", "--disable-background-mode",
                                       "--disable-features=msEdgeStartupBoost"])
-        threading.Thread(target=set_window_identity, daemon=True).start()
     else:
         webbrowser.open(url)
 
@@ -2962,8 +2971,12 @@ def set_window_identity():
         iid = guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99")
         HRESULT = ctypes.c_long
         done = set()
-        deadline = time.time() + 40
-        while time.time() < deadline:
+        start = time.time()
+        warned = False
+        while True:                      # sprawdzamy dalej – okno mogło zostać otwarte ponownie
+            if not done and not warned and time.time() - start > 40:
+                log("Okno: nie znaleziono okna Zora Client do ustawienia ikonki na pasku zadań")
+                warned = True
             found = []
 
             @ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
@@ -2981,7 +2994,10 @@ def set_window_identity():
                 if hwnd in done:
                     continue
                 ps = ctypes.c_void_p()
-                if shell32.SHGetPropertyStoreForWindow(wintypes.HWND(hwnd), ctypes.byref(iid), ctypes.byref(ps)) != 0:
+                hr = shell32.SHGetPropertyStoreForWindow(wintypes.HWND(hwnd), ctypes.byref(iid), ctypes.byref(ps))
+                if hr != 0:
+                    log(f"Okno: Windows nie pozwolił zmienić ikonki (kod {hr & 0xFFFFFFFF:#x})")
+                    done.add(hwnd)
                     continue
                 vt = ctypes.cast(ctypes.cast(ps, ctypes.POINTER(ctypes.c_void_p))[0], ctypes.POINTER(ctypes.c_void_p))
                 set_value = ctypes.WINFUNCTYPE(HRESULT, ctypes.c_void_p, ctypes.POINTER(PKEY), ctypes.POINTER(PROPVARIANT))(vt[6])
@@ -2997,9 +3013,8 @@ def set_window_identity():
                 release(ps)
                 done.add(hwnd)
                 log("Okno: ustawiono ikonkę i nazwę Zora Client na pasku zadań")
-            if done:
-                return
-            time.sleep(0.5)
+            done &= {h for h in found}           # zamknięte okna zapominamy
+            time.sleep(0.5 if not done else 3)
     except Exception as e:
         log(f"Nie udało się ustawić ikonki okna: {e}")
 
@@ -3130,6 +3145,7 @@ def main():
     discord.update()
     threading.Thread(target=lambda: zorza_mod_versions(), daemon=True).start()   # lista wersji moda
     threading.Thread(target=detect_profile_sources, daemon=True).start()
+    threading.Thread(target=set_window_identity, daemon=True).start()      # pasek zadań: Zora Client, nie Edge
     threading.Thread(target=app_update_loop, daemon=True).start()
     if "--updated" in sys.argv:
         # po automatycznej aktualizacji stare okno samo się przeładuje – nowe otwieramy tylko, gdy go nie ma
