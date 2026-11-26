@@ -140,8 +140,95 @@ public final class MotionBlurRenderer {
         valid = true;
     }
 }
+//#elseif MC < 1.21.6
+//$$ import com.mojang.blaze3d.pipeline.BlendFunction;
+//$$ import com.mojang.blaze3d.pipeline.RenderPipeline;
+//$$ import com.mojang.blaze3d.platform.DepthTestFunction;
+//$$ import com.mojang.blaze3d.platform.DestFactor;
+//$$ import com.mojang.blaze3d.platform.SourceFactor;
+//$$ import com.mojang.blaze3d.systems.RenderPass;
+//$$ import com.mojang.blaze3d.systems.RenderSystem;
+//$$ import com.mojang.blaze3d.vertex.VertexFormat;
+//$$ import net.minecraft.client.MinecraftClient;
+//$$ import net.minecraft.client.gl.Framebuffer;
+//$$ import net.minecraft.client.gl.SimpleFramebuffer;
+//$$ import net.minecraft.client.render.VertexFormats;
+//$$ import org.lwjgl.opengl.GL14;
+//$$ import pl.zorza.client.Modules;
+//$$ import pl.zorza.client.compat.Ids;
+//$$
+//$$ import java.util.OptionalInt;
+//$$
+//$$ /** Motion blur dla nowego systemu grafiki (1.21.5): poprzednia klatka nakładana ze stałą przezroczystością. */
+//$$ public final class MotionBlurRenderer {
+//$$     private static Framebuffer prev;
+//$$     private static boolean valid = false;
+//$$     private static long last = System.nanoTime();
+//$$     private static float histAge = 0;
+//$$     private static float lastYaw, lastPitch;
+//$$     private static RenderPipeline pipeline;
+//$$
+//$$     private MotionBlurRenderer() {}
+//$$
+//$$     private static RenderPipeline pipeline() {
+//$$         if (pipeline == null) pipeline = RenderPipeline.builder()
+//$$                 .withLocation(Ids.of("zorza", "pipeline/motion_blur"))
+//$$                 .withVertexShader("core/blit_screen").withFragmentShader("core/blit_screen").withSampler("InSampler")
+//$$                 .withBlend(new BlendFunction(SourceFactor.CONSTANT_ALPHA, DestFactor.ONE_MINUS_CONSTANT_ALPHA))
+//$$                 .withDepthWrite(false).withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST).withColorWrite(true, false)
+//$$                 .withVertexFormat(VertexFormats.POSITION, VertexFormat.DrawMode.QUADS).build();
+//$$         return pipeline;
+//$$     }
+//$$
+//$$     private static void blend(Framebuffer src, Framebuffer dst, float a) {
+//$$         RenderSystem.ShapeIndexBuffer idx = RenderSystem.getSequentialBuffer(VertexFormat.DrawMode.QUADS);
+//$$         GL14.glBlendColor(0f, 0f, 0f, a);
+//$$         try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(dst.getColorAttachment(), OptionalInt.empty())) {
+//$$             pass.setPipeline(pipeline());
+//$$             pass.setVertexBuffer(0, RenderSystem.getQuadVertexBuffer());
+//$$             pass.setIndexBuffer(idx.getIndexBuffer(6), idx.getIndexType());
+//$$             pass.bindSampler("InSampler", src.getColorAttachment());
+//$$             pass.drawIndexed(0, 6);
+//$$         }
+//$$         GL14.glBlendColor(0f, 0f, 0f, 0f);
+//$$     }
+//$$
+//$$     public static void afterWorld() {
+//$$         MinecraftClient mc = MinecraftClient.getInstance();
+//$$         long now = System.nanoTime();
+//$$         float dt = Math.min(0.1f, (now - last) / 1e9f);
+//$$         last = now;
+//$$         if (Modules.MOTION_BLUR == null || !Modules.MOTION_BLUR.enabled || mc.world == null || mc.player == null) {
+//$$             valid = false;
+//$$             return;
+//$$         }
+//$$         Framebuffer main = mc.getFramebuffer();
+//$$         int w = main.textureWidth, h = main.textureHeight;
+//$$         if (prev == null) prev = new SimpleFramebuffer("zorza_motion_blur", w, h, false);
+//$$         if (prev.textureWidth != w || prev.textureHeight != h) {
+//$$             prev.resize(w, h);
+//$$             valid = false;
+//$$         }
+//$$         float strength = (float) Modules.MOTION_BLUR.strength.value / 100f;
+//$$         float yaw = mc.gameRenderer.getCamera().getYaw(), pitch = mc.gameRenderer.getCamera().getPitch();
+//$$         float dYaw = Math.abs(net.minecraft.util.math.MathHelper.wrapDegrees(yaw - lastYaw)), dPitch = Math.abs(pitch - lastPitch);
+//$$         lastYaw = yaw;
+//$$         lastPitch = pitch;
+//$$         float speed = dt > 0 ? (dYaw + dPitch) / dt : 0;
+//$$         if (speed > 4000) valid = false;
+//$$         float motion = Math.min(1f, speed / 180f);
+//$$         float a = 0.62f * strength * (0.25f + 0.75f * motion);
+//$$         if (valid && a > 0.02f) blend(prev, main, a);
+//$$         histAge += dt;
+//$$         if (!valid || histAge >= 1f / 60f) {
+//$$             RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(main.getColorAttachment(), prev.getColorAttachment(), 0, 0, 0, 0, 0, w, h);
+//$$             histAge = 0;
+//$$         }
+//$$         valid = true;
+//$$     }
+//$$ }
 //#else
-//$$ /** 1.21.5+: nowy system grafiki – wersja w przygotowaniu (na razie bez rozmycia). */
+//$$ /** 1.21.6+: nowy system grafiki – wersja w przygotowaniu (na razie bez rozmycia). */
 //$$ public final class MotionBlurRenderer {
 //$$     private MotionBlurRenderer() {}
 //$$

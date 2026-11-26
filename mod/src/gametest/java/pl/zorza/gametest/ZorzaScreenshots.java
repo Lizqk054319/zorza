@@ -94,7 +94,11 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             context.runOnClient(client -> {
                 Modules.FREELOOK.active = false;
                 client.options.setPerspective(net.minecraft.client.option.Perspective.FIRST_PERSON);
+                //#if MC >= 1.21.5
+                //$$ client.player.getInventory().setSelectedSlot(1);
+                //#else
                 client.player.getInventory().selectedSlot = 1;
+                //#endif
                 Modules.VIEW_MODEL.enabled = true;
                 for (var st : Modules.VIEW_MODEL.settings) {
                     if (st.id.equals("main_ry") && st instanceof pl.zorza.client.module.Setting.Num n) n.value = -25;

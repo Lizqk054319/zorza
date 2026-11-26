@@ -29,11 +29,19 @@ public abstract class CameraMixin {
     @Shadow
     protected abstract void setPos(double x, double y, double z);
 
+    //#if MC >= 1.21
     @Shadow
     protected abstract void moveBy(float x, float y, float z);
 
     @Shadow
     protected abstract float clipToSpace(float distance);
+    //#else
+    //$$ @Shadow
+    //$$ protected abstract void moveBy(double x, double y, double z);
+    //$$
+    //$$ @Shadow
+    //$$ protected abstract double clipToSpace(double distance);
+    //#endif
 
     @Inject(method = "update", at = @At("TAIL"))
     private void zorza$freelook(BlockView area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
@@ -43,7 +51,11 @@ public abstract class CameraMixin {
         setPos(lp.x, lp.y + MathHelper.lerp(tickDelta, lastCameraY, cameraY), lp.z);
         if (thirdPerson) {
             float scale = entity instanceof LivingEntity le ? le.getScale() : 1f;
+            //#if MC >= 1.21
             moveBy(-clipToSpace(4f * scale), 0f, 0f);
+            //#else
+            //$$ moveBy(-clipToSpace(4.0 * scale), 0.0, 0.0);
+            //#endif
         }
     }
 }
