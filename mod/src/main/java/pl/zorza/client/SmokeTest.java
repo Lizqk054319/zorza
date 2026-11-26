@@ -25,6 +25,7 @@ public final class SmokeTest {
         String dir = System.getProperty("zorza.smoke");
         if (dir == null) return;
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
+            if (mc.getOverlay() != null) return;                          // jeszcze ładuje zasoby
             if (step == 0 && !(mc.currentScreen instanceof TitleScreen)) {
                 if (++wait > 200 && mc.getOverlay() == null) mc.setScreen(new TitleScreen());   // np. ekran powitalny przy 1. starcie
                 return;
