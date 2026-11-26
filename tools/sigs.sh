@@ -15,3 +15,9 @@ unzip -l "$J" | grep -oE "net/minecraft/client/(gl|render|gui|texture)/[A-Za-z]+
 for C in net.minecraft.client.gl.Framebuffer net.minecraft.client.gl.RenderPipelines net.minecraft.client.render.RenderLayer; do
   javap -c -p -cp "$CP" "$C" > "$OUT/code-$C.txt" 2>&1
 done
+# klasy Fabric API związane z rysowaniem świata i HUD (zmieniają się między wersjami)
+for FJ in $(find ~/.gradle/caches -name "fabric-rendering-v1-*.jar" -o -name "fabric-key-binding-api-v1-*.jar" 2>/dev/null | grep -v sources | head -4); do
+  for C in $(unzip -l "$FJ" | grep -oE "net/fabricmc/fabric/api/[A-Za-z0-9/]+\.class" | grep -iE "WorldRender|HudRender|HudElement|KeyBinding" | sed 's/\.class$//; s#/#.#g'); do
+    javap -p -cp "$FJ:$CP" "$C" > "$OUT/fabric-$C.txt" 2>&1
+  done
+done
