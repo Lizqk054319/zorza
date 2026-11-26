@@ -46,10 +46,13 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.9.0"
+WERSJA_CLIENTA = "0.9.1"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.9.1", [
+        "Mod Zora Client działa na wszystkich wersjach od 1.20.1 do 1.21.11",
+    ]),
     ("0.9.0", [
         "Mod Zora Client działa też na 1.21.3 (kolejne wersje dochodzą same, bez aktualizacji launchera)",
     ]),
