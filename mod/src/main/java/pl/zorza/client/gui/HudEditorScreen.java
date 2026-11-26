@@ -1,5 +1,6 @@
 package pl.zorza.client.gui;
 
+import pl.zorza.client.compat.M;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.util.Util;
@@ -84,10 +85,10 @@ public class HudEditorScreen extends ZScreen {
         if (!showMenu) return;
         int cx = cx(), cy = cy();
         float s = 0.9f + 0.1f * a;
-        ctx.getMatrices().push();
-        ctx.getMatrices().translate(cx, cy + (1 - a) * 20, 0);
-        ctx.getMatrices().scale(s, s, 1);
-        ctx.getMatrices().translate(-cx, -cy, 0);
+        M.push(ctx);
+        M.translate(ctx, cx, cy + (1 - a) * 20);
+        M.scale(ctx, s, s);
+        M.translate(ctx, -cx, -cy);
 
         R.logo(ctx, cx - 52, cy - 134, 104, R.alpha(0xFFFFFFFF, a));
         int[] b = btn();
@@ -105,7 +106,7 @@ public class HudEditorScreen extends ZScreen {
             R.icon(ctx, ICONS[i], r[0] + 14, yy + 14, 26, R.alpha(0xFFFFFFFF, ai));
             if (h > 0.05f) R.centered(ctx, TIPS[i], r[0] + 27, yy + 66, 14, R.alpha(0xFFD0D0D8, h), R.MEDIUM);
         }
-        ctx.getMatrices().pop();
+        M.pop(ctx);
     }
 
     @Override

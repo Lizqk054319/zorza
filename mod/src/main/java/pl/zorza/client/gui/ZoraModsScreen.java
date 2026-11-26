@@ -1,5 +1,6 @@
 package pl.zorza.client.gui;
 
+import pl.zorza.client.compat.M;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.glfw.GLFW;
@@ -56,8 +57,8 @@ public class ZoraModsScreen extends ZScreen {
         layout();
         float a = R.ease(opened, 380);
         scroll = smoothTo(scroll, scrollTarget);
-        ctx.getMatrices().push();
-        ctx.getMatrices().translate(0, (1 - a) * 24, 0);
+        M.push(ctx);
+        M.translate(ctx, 0, (1 - a) * 24);
 
         R.logo(ctx, px, y0 + 2, 60, R.alpha(0xFFFFFFFF, a));
         R.text(ctx, "ZORA MODS", px + 78, R.midY(y0, 64, 25), 25, R.alpha(0xFFFFFFFF, a), R.BOLD);
@@ -99,7 +100,7 @@ public class ZoraModsScreen extends ZScreen {
         }
         if (list.isEmpty()) R.centered(ctx, "No mods found", px + pw / 2f, ly + 40, 17, R.alpha(0xFF8C8C96, a), R.SEMI);
         endScissor(ctx);
-        ctx.getMatrices().pop();
+        M.pop(ctx);
     }
 
     private final java.util.Map<String, java.util.Optional<java.nio.file.Path>> files = new java.util.HashMap<>();

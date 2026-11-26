@@ -1,5 +1,6 @@
 package pl.zorza.client.module;
 
+import pl.zorza.client.compat.M;
 import com.google.gson.JsonObject;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -51,26 +52,26 @@ public abstract class HudModule extends Module {
 
     public void render(DrawContext ctx, MinecraftClient mc, boolean editor) {
         int[] r = rect(mc, ctx.getScaledWindowWidth(), ctx.getScaledWindowHeight());
-        ctx.getMatrices().push();
-        ctx.getMatrices().translate(r[0], r[1], 0);
+        M.push(ctx);
+        M.translate(ctx, r[0], r[1]);
         float sc = (float) scale();
-        ctx.getMatrices().scale(sc, sc, 1f);
+        M.scale(ctx, sc, sc);
         float k = (float) (mc.getWindow().getScaleFactor() * sc);     // fizyczne piksele na jednostkę
         R.pxPerUnit = k;
         if (background.value || (editor && highlight > 0.01f)) {
             // tło rysowane w prawdziwych pikselach – gładkie rogi i cienka ramka
-            ctx.getMatrices().push();
-            ctx.getMatrices().scale(1f / k, 1f / k, 1f);
+            M.push(ctx);
+            M.scale(ctx, 1f / k, 1f / k);
             int w = Math.round(width(mc) * k), h = Math.round(height(mc) * k);
             int rad = Math.round(Math.min(6 * k, Math.min(w, h) / 2f));
             int border = highlight > 0.01f ? R.mix(0x22FFFFFF, R.ACCENT, highlight) : 0x1EFFFFFF;
             int fill = background.value ? 0xB30C0C10 : R.alpha(0x660C0C10, highlight);
             int bw = highlight > 0.5f ? Math.max(2, Math.round(k * 0.6f)) : Math.max(1, Math.round(k * 0.34f));
             R.bordered(ctx, 0, 0, w, h, rad, bw, fill, border);
-            ctx.getMatrices().pop();
+            M.pop(ctx);
         }
         draw(ctx, mc, editor);
-        ctx.getMatrices().pop();
+        M.pop(ctx);
     }
 
     public void resetPosition() {

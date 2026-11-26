@@ -1,5 +1,6 @@
 package pl.zorza.client.gui;
 
+import pl.zorza.client.compat.M;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 
@@ -19,8 +20,8 @@ public final class ZoraHotbar {
     /** Zwraca false, gdy to nie jest element paska (wtedy rysuje Minecraft). */
     public static boolean draw(DrawContext ctx, String path, int x, int y, int w, int h) {
         float k = (float) MinecraftClient.getInstance().getWindow().getScaleFactor();
-        ctx.getMatrices().push();
-        ctx.getMatrices().scale(1f / k, 1f / k, 1f);
+        M.push(ctx);
+        M.scale(ctx, 1f / k, 1f / k);
         boolean handled = true;
         switch (path) {
             case "hud/hotbar" -> {
@@ -41,7 +42,7 @@ public final class ZoraHotbar {
             case "hud/hotbar_offhand_right" -> slot(ctx, k, x + 9, y + 3, false);
             default -> handled = false;
         }
-        ctx.getMatrices().pop();
+        M.pop(ctx);
         return handled;
     }
 }

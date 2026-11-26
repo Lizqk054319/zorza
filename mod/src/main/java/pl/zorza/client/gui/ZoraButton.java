@@ -1,5 +1,6 @@
 package pl.zorza.client.gui;
 
+import pl.zorza.client.compat.M;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -27,8 +28,8 @@ public class ZoraButton extends ClickableWidget {
         float k = (float) mc.getWindow().getScaleFactor();
         float old = R.pxPerUnit;
         R.pxPerUnit = 1f;
-        ctx.getMatrices().push();
-        ctx.getMatrices().scale(1f / k, 1f / k, 1f);
+        M.push(ctx);
+        M.scale(ctx, 1f / k, 1f / k);
         int x = Math.round(getX() * k), y = Math.round(getY() * k), w = Math.round(getWidth() * k), h = Math.round(getHeight() * k);
         int rad = Math.round(h * 0.28f);
         R.bordered(ctx, x, y, w, h, rad, Math.max(1, Math.round(k / 2f)),
@@ -44,7 +45,7 @@ public class ZoraButton extends ClickableWidget {
             float tw = R.width(label, ts, R.SEMI);
             if ("".equals(icon)) {                                   // sam napis
                 R.text(ctx, label, x + (w - tw) / 2f, R.midY(y, h, ts), ts, 0xFFFFFFFF, R.SEMI);
-                ctx.getMatrices().pop();
+                M.pop(ctx);
                 R.pxPerUnit = old;
                 return;
             }
@@ -55,7 +56,7 @@ public class ZoraButton extends ClickableWidget {
             else R.icon(ctx, icon, Math.round(sx), iy, is, 0xFFFFFFFF);
             R.text(ctx, label, sx + is + h * 0.25f, R.midY(y, h, ts), ts, 0xFFFFFFFF, R.SEMI);
         }
-        ctx.getMatrices().pop();
+        M.pop(ctx);
         R.pxPerUnit = old;
     }
 

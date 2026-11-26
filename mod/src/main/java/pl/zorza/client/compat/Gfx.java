@@ -14,7 +14,9 @@ public final class Gfx {
 
     /** Cała tekstura (albo jej fragment) z kolorem ARGB. */
     public static void texture(DrawContext c, Identifier id, int x, int y, float u, float v, int w, int h, int texW, int texH, int color) {
-        //#if MC >= 1.21.2
+        //#if MC >= 1.21.6
+        //$$ c.drawTexture(net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED, id, x, y, u, v, w, h, texW, texH, color);
+        //#elseif MC >= 1.21.2
         c.drawTexture(net.minecraft.client.render.RenderLayer::getGuiTextured, id, x, y, u, v, w, h, texW, texH, color);
         //#else
         //$$ tint(c, color);
@@ -25,7 +27,9 @@ public final class Gfx {
 
     /** Sprite z atlasu GUI (np. "hud/heart/full"). */
     public static void guiSprite(DrawContext c, Identifier id, int x, int y, int w, int h) {
-        //#if MC >= 1.21.2
+        //#if MC >= 1.21.6
+        //$$ c.drawGuiTexture(net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED, id, x, y, w, h);
+        //#elseif MC >= 1.21.2
         c.drawGuiTexture(net.minecraft.client.render.RenderLayer::getGuiTextured, id, x, y, w, h);
         //#else
         //$$ com.mojang.blaze3d.systems.RenderSystem.enableBlend();
@@ -34,7 +38,9 @@ public final class Gfx {
     }
 
     public static void guiSprite(DrawContext c, Identifier id, int x, int y, int w, int h, int color) {
-        //#if MC >= 1.21.2
+        //#if MC >= 1.21.6
+        //$$ c.drawGuiTexture(net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED, id, x, y, w, h, color);
+        //#elseif MC >= 1.21.2
         c.drawGuiTexture(net.minecraft.client.render.RenderLayer::getGuiTextured, id, x, y, w, h, color);
         //#else
         //$$ tint(c, color);
@@ -45,7 +51,9 @@ public final class Gfx {
 
     /** Sprite rozciągnięty na prostokąt (np. ikonka efektu mikstury). */
     public static void spriteStretched(DrawContext c, Sprite sprite, int x, int y, int w, int h) {
-        //#if MC >= 1.21.2
+        //#if MC >= 1.21.6
+        //$$ c.drawSpriteStretched(net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED, sprite, x, y, w, h);
+        //#elseif MC >= 1.21.2
         c.drawSpriteStretched(net.minecraft.client.render.RenderLayer::getGuiTextured, sprite, x, y, w, h);
         //#else
         //$$ c.drawSprite(x, y, 0, w, h, sprite);
@@ -99,6 +107,17 @@ public final class Gfx {
         //$$ return e.lastBodyYaw;
         //#else
         return e.prevBodyYaw;
+        //#endif
+    }
+
+    /** Ikonka efektu mikstury. */
+    public static void effectIcon(DrawContext c, net.minecraft.registry.entry.RegistryEntry<net.minecraft.entity.effect.StatusEffect> effect, int x, int y, int size) {
+        //#if MC >= 1.21.6
+        //$$ effect.getKey().ifPresent(k -> texture(c, Ids.of(k.getValue().getNamespace(), "textures/mob_effect/" + k.getValue().getPath() + ".png"),
+        //$$         x, y, 0f, 0f, size, size, size, size, -1));
+        //#else
+        Sprite sprite = net.minecraft.client.MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(effect);
+        if (sprite != null) spriteStretched(c, sprite, x, y, size, size);
         //#endif
     }
 }

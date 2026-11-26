@@ -107,13 +107,12 @@ public final class R {
     /** Tekst o wysokości ~size jednostek; (x, y) to lewy górny róg. */
     public static void text(DrawContext c, String s, float x, float y, float size, int color, Identifier font) {
         if ((color >>> 24) < 5) return;
-        MatrixStack m = c.getMatrices();
-        m.push();
-        m.translate(x, y, 0);
+        pl.zorza.client.compat.M.push(c);
+        pl.zorza.client.compat.M.translate(c, x, y);
         float k = size / 11f;
-        m.scale(k, k, 1f);
+        pl.zorza.client.compat.M.scale(c, k, k);
         c.drawText(MinecraftClient.getInstance().textRenderer, styled(s, font(font, size)), 0, 0, color, false);
-        m.pop();
+        pl.zorza.client.compat.M.pop(c);
     }
 
     public static void text(DrawContext c, String s, float x, float y, float size, int color) {

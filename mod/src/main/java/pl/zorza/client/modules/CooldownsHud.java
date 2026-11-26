@@ -1,5 +1,6 @@
 package pl.zorza.client.modules;
 
+import pl.zorza.client.compat.M;
 import pl.zorza.client.compat.Ids;
 
 import net.minecraft.client.MinecraftClient;
@@ -120,18 +121,18 @@ public class CooldownsHud extends HudModule {
         int y = HEAD;
         for (Cd c : list(mc, editor)) {
             float al = c.alpha();
-            ctx.getMatrices().push();
-            ctx.getMatrices().translate((1 - al) * 12, 0, 0);          // wjazd z boku
+            M.push(ctx);
+            M.translate(ctx, (1 - al) * 12, 0);          // wjazd z boku
             R.round(ctx, 4, y, W - 8, ROW - 2, 4, R.alpha(0x55000000, al));
             // pasek postępu w tle wiersza
             int pw = Math.round((W - 8) * Math.min(1, c.progress()));
             if (pw > 2) R.round(ctx, 4, y, pw, ROW - 2, 4, R.alpha(R.ACCENT, 0.18f * al));
             if (!c.stack().isEmpty()) {
-                ctx.getMatrices().push();
-                ctx.getMatrices().translate(6, y + 1, 0);
-                ctx.getMatrices().scale(0.875f, 0.875f, 1f);
+                M.push(ctx);
+                M.translate(ctx, 6, y + 1);
+                M.scale(ctx, 0.875f, 0.875f);
                 ctx.drawItem(c.stack(), 0, 0);
-                ctx.getMatrices().pop();
+                M.pop(ctx);
             }
             String name = c.name();
             while (name.length() > 3 && R.width(name, 8.5f, R.MEDIUM) > W - 72) name = name.substring(0, name.length() - 2);
@@ -140,7 +141,7 @@ public class CooldownsHud extends HudModule {
             float tw = R.width(t, 8, R.BOLD) + 10;
             R.round(ctx, (int) (W - 8 - tw), y + 2, (int) tw, ROW - 6, 6, R.alpha(R.ACCENT, al));
             R.text(ctx, t, W - 8 - tw + 5, y + 4.5f, 8, R.alpha(R.onAccent(), al), R.BOLD);
-            ctx.getMatrices().pop();
+            M.pop(ctx);
             y += Math.round(ROW * Math.min(1f, al * 1.5f));
         }
     }

@@ -1,5 +1,6 @@
 package pl.zorza.client.gui;
 
+import pl.zorza.client.compat.M;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 
@@ -23,21 +24,21 @@ public final class VanillaStyle {
     public static void button(DrawContext ctx, Object widget, int x, int y, int w, int h, boolean active, boolean hovered, float alpha) {
         float t = hover(widget, hovered && active);
         float k = k();
-        ctx.getMatrices().push();
-        ctx.getMatrices().scale(1f / k, 1f / k, 1f);
+        M.push(ctx);
+        M.scale(ctx, 1f / k, 1f / k);
         int X = Math.round(x * k), Y = Math.round(y * k), W = Math.round(w * k), H = Math.round(h * k);
         int fill = active ? R.mix(0xE6111116, 0xF0202029, t) : 0xC00C0C10;
         int border = active ? R.mix(0x2EFFFFFF, R.ACCENT, t) : 0x14FFFFFF;
         R.bordered(ctx, X, Y, W, H, Math.round(Math.min(H * 0.28f, 7 * k)), Math.max(1, Math.round(k / 2f)),
                 R.alpha(fill, alpha), R.alpha(border, alpha));
-        ctx.getMatrices().pop();
+        M.pop(ctx);
     }
 
     public static void slider(DrawContext ctx, Object widget, int x, int y, int w, int h, double value, boolean active, boolean hovered, float alpha) {
         button(ctx, widget, x, y, w, h, active, hovered, alpha);
         float k = k();
-        ctx.getMatrices().push();
-        ctx.getMatrices().scale(1f / k, 1f / k, 1f);
+        M.push(ctx);
+        M.scale(ctx, 1f / k, 1f / k);
         int X = Math.round(x * k), Y = Math.round(y * k), W = Math.round(w * k), H = Math.round(h * k);
         int pad = Math.round(3 * k);
         float v = (float) Math.max(0, Math.min(1, value));
@@ -52,7 +53,7 @@ public final class VanillaStyle {
         if (fw > 0) R.round(ctx, X + pad * 2, by, fw, bh, bh / 2, R.alpha(active ? R.ACCENT : 0xFF5A5A64, alpha));
         int d = Math.round(3.4f * k);
         R.round(ctx, X + pad * 2 + fw - d / 2, by + bh / 2 - d / 2, d, d, d / 2, R.alpha(active ? 0xFFFFFFFF : 0xFF8C8C96, alpha));
-        ctx.getMatrices().pop();
+        M.pop(ctx);
     }
 
     /** Napis na środku przycisku (Inter); długi napis jest pomniejszany, żeby się zmieścił. */
@@ -60,8 +61,8 @@ public final class VanillaStyle {
         float k = k();
         float old = R.pxPerUnit;
         R.pxPerUnit = 1f;
-        ctx.getMatrices().push();
-        ctx.getMatrices().scale(1f / k, 1f / k, 1f);
+        M.push(ctx);
+        M.scale(ctx, 1f / k, 1f / k);
         float X = x * k, Y = y * k, W = w * k, H = h * k;
         float size = Math.min(H * 0.42f, 8.4f * k);
         float tw = R.width(text, size, R.SEMI);
@@ -72,7 +73,7 @@ public final class VanillaStyle {
         }
         int c = (color & 0x00FFFFFF) == 0xFFFFFF ? color : (color & 0xFF000000) | 0x8C8C96;
         R.text(ctx, text, X + (W - tw) / 2f, R.midY(Y, H, size), size, c, R.SEMI);
-        ctx.getMatrices().pop();
+        M.pop(ctx);
         R.pxPerUnit = old;
     }
 }

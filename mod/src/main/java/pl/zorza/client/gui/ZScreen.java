@@ -1,5 +1,6 @@
 package pl.zorza.client.gui;
 
+import pl.zorza.client.compat.M;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -48,11 +49,11 @@ public abstract class ZScreen extends Screen {
         R.pxPerUnit = gs;
         renderGui(ctx, mx, my, delta);
         R.pxPerUnit = k;
-        ctx.getMatrices().push();
+        M.push(ctx);
         float s = k / gs;
-        ctx.getMatrices().scale(s, s, 1f);
+        M.scale(ctx, s, s);
         draw(ctx, dx(mx), dy(my), delta);
-        ctx.getMatrices().pop();
+        M.pop(ctx);
     }
 
     /** Rysowanie w zwykłych współrzędnych GUI (np. elementy HUD-a). */
@@ -61,10 +62,10 @@ public abstract class ZScreen extends Screen {
     protected abstract void draw(DrawContext ctx, double mx, double my, float delta);
 
     protected void scissor(DrawContext ctx, int x, int y, int w, int h) {
-        ctx.getMatrices().push();
-        ctx.getMatrices().loadIdentity();
+        M.push(ctx);
+        M.identity(ctx);
         ctx.enableScissor(gui(x), gui(y), gui(x + w), gui(y + h));
-        ctx.getMatrices().pop();
+        M.pop(ctx);
     }
 
     protected void endScissor(DrawContext ctx) {

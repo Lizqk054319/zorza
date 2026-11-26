@@ -3,6 +3,7 @@ package pl.zorza.client.gui;
 import pl.zorza.client.compat.Ids;
 
 import pl.zorza.client.compat.Gfx;
+import pl.zorza.client.compat.M;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -80,14 +81,13 @@ public class AutoJoinScreen extends ZScreen {
             String p = nf.format(Math.max(0, data.players())) + "/" + nf.format(data.max());
             R.text(ctx, p, cx + cw - 48 - R.width(p, 16, R.SEMI), iy + 3, 16, R.alpha(0xFFB8B8C2, a), R.SEMI);
         }
-        MatrixStack m = ctx.getMatrices();
         int ly = iy + 30;
         for (int i = 0; i < Math.min(2, data.motd().size()); i++) {
-            m.push();
-            m.translate(tx, ly + i * 20, 0);
-            m.scale(2f, 2f, 1f);
+            M.push(ctx);
+            M.translate(ctx, tx, ly + i * 20);
+            M.scale(ctx, 2f, 2f);
             ctx.drawText(textRenderer, data.motd().get(i), 0, 0, 0xFFAAAAAA, false);
-            m.pop();
+            M.pop(ctx);
         }
         R.text(ctx, s("Adres: ", "Address: ") + data.address(), cx + 32, ry + rh + 18, 15, R.alpha(0xFF8C8C96, a), R.MEDIUM);
 

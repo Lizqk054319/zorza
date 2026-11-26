@@ -1,5 +1,6 @@
 package pl.zorza.client.gui;
 
+import pl.zorza.client.compat.M;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.PlayerSkinDrawer;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
@@ -87,8 +88,8 @@ public class ModMenuScreen extends ZScreen {
         layout();
         float a = MenuSettings.anim(opened, 420);
         scroll = smoothTo(scroll, scrollTarget);
-        ctx.getMatrices().push();
-        ctx.getMatrices().translate(0, (1 - a) * 24, 0);
+        M.push(ctx);
+        M.translate(ctx, 0, (1 - a) * 24);
 
         header(ctx, mx, my, a);
         tabs(ctx, mx, my, a);
@@ -100,7 +101,7 @@ public class ModMenuScreen extends ZScreen {
             settings(ctx, mx, my);
         }
         themePill(ctx, mx, my, a);
-        ctx.getMatrices().pop();
+        M.pop(ctx);
     }
 
     private int[] userRect() {
