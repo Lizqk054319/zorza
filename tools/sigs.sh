@@ -21,3 +21,7 @@ for FJ in $(find ~/.gradle/caches -name "fabric-rendering-v1-*.jar" -o -name "fa
     javap -p -cp "$FJ:$CP" "$C" > "$OUT/fabric-$C.txt" 2>&1
   done
 done
+# wszystkie klasy z "Hitbox" w nazwie (hitboxy przeniesiono w 1.21.9+)
+for C in $(unzip -l "$J" | grep -oE "net/minecraft/[A-Za-z0-9/$]*Hitbox[A-Za-z0-9$]*\.class" | sed 's/\.class$//; s#/#.#g' | sort -u); do
+  javap -p -cp "$CP" "$C" > "$OUT/hb-$C.txt" 2>&1
+done

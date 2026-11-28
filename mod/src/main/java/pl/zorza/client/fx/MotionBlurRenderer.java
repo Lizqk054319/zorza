@@ -152,7 +152,7 @@ public final class MotionBlurRenderer {
         valid = true;
     }
 }
-//#elseif MC < 1.21.6
+//#else
 //$$ import com.mojang.blaze3d.pipeline.BlendFunction;
 //$$ import com.mojang.blaze3d.pipeline.RenderPipeline;
 //$$ import com.mojang.blaze3d.platform.DepthTestFunction;
@@ -171,7 +171,7 @@ public final class MotionBlurRenderer {
 //$$
 //$$ import java.util.OptionalInt;
 //$$
-//$$ /** Motion blur dla nowego systemu grafiki (1.21.5): poprzednia klatka nakładana ze stałą przezroczystością. */
+//$$ /** Motion blur dla nowego systemu grafiki (1.21.5+): poprzednia klatka nakładana ze stałą przezroczystością. */
 //$$ public final class MotionBlurRenderer {
 //$$     private static Framebuffer prev;
 //$$     private static boolean valid = false;
@@ -195,12 +195,24 @@ public final class MotionBlurRenderer {
 //$$     private static void blend(Framebuffer src, Framebuffer dst, float a) {
 //$$         RenderSystem.ShapeIndexBuffer idx = RenderSystem.getSequentialBuffer(VertexFormat.DrawMode.QUADS);
 //$$         GL14.glBlendColor(0f, 0f, 0f, a);
+//#if MC >= 1.21.6
+//$$         try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "zorza motion blur", dst.getColorAttachmentView(), OptionalInt.empty())) {
+//#else
 //$$         try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(dst.getColorAttachment(), OptionalInt.empty())) {
+//#endif
 //$$             pass.setPipeline(pipeline());
 //$$             pass.setVertexBuffer(0, RenderSystem.getQuadVertexBuffer());
 //$$             pass.setIndexBuffer(idx.getIndexBuffer(6), idx.getIndexType());
+//#if MC >= 1.21.6
+//$$             pass.bindSampler("InSampler", src.getColorAttachmentView());
+//#else
 //$$             pass.bindSampler("InSampler", src.getColorAttachment());
+//#endif
+//#if MC >= 1.21.6
+//$$             pass.drawIndexed(0, 0, 6, 1);
+//#else
 //$$             pass.drawIndexed(0, 6);
+//#endif
 //$$         }
 //$$         GL14.glBlendColor(0f, 0f, 0f, 0f);
 //$$     }
@@ -237,14 +249,6 @@ public final class MotionBlurRenderer {
 //$$             histAge = 0;
 //$$         }
 //$$         valid = true;
-//$$     }
-//$$ }
-//#else
-//$$ /** 1.21.6+: nowy system grafiki – wersja w przygotowaniu (na razie bez rozmycia). */
-//$$ public final class MotionBlurRenderer {
-//$$     private MotionBlurRenderer() {}
-//$$
-//$$     public static void afterWorld() {
 //$$     }
 //$$ }
 //#endif
