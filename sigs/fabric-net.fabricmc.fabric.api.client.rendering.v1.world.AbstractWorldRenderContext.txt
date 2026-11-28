@@ -1,0 +1,6 @@
+Compiled from "AbstractWorldRenderContext.java"
+public interface net.fabricmc.fabric.api.client.rendering.v1.world.AbstractWorldRenderContext {
+  public abstract net.minecraft.class_757 gameRenderer();
+  public abstract net.minecraft.class_761 worldRenderer();
+  public abstract net.minecraft.class_11658 worldState();
+}

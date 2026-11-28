@@ -1,0 +1,6 @@
+Compiled from "VertexRendering.java"
+public class net.minecraft.client.render.VertexRendering {
+  public net.minecraft.client.render.VertexRendering();
+  public static void drawOutline(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, net.minecraft.util.shape.VoxelShape, double, double, double, int, float);
+  private static void method_62299(net.minecraft.client.render.VertexConsumer, net.minecraft.client.util.math.MatrixStack$Entry, double, double, double, int, float, double, double, double, double, double, double);
+}

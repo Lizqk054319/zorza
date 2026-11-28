@@ -1,0 +1,29 @@
+Compiled from "ClientWorld.java"
+public class net.minecraft.client.world.ClientWorld$Properties implements net.minecraft.world.MutableWorldProperties {
+  private final boolean hardcore;
+  private final boolean flatWorld;
+  private net.minecraft.world.WorldProperties$SpawnPoint position;
+  private long time;
+  private long timeOfDay;
+  private boolean raining;
+  private net.minecraft.world.Difficulty difficulty;
+  private boolean difficultyLocked;
+  public net.minecraft.client.world.ClientWorld$Properties(net.minecraft.world.Difficulty, boolean, boolean);
+  public net.minecraft.world.WorldProperties$SpawnPoint getSpawnPoint();
+  public long getTime();
+  public long getTimeOfDay();
+  public void setTime(long);
+  public void setTimeOfDay(long);
+  public void setSpawnPoint(net.minecraft.world.WorldProperties$SpawnPoint);
+  public boolean isThundering();
+  public boolean isRaining();
+  public void setRaining(boolean);
+  public boolean isHardcore();
+  public net.minecraft.world.Difficulty getDifficulty();
+  public boolean isDifficultyLocked();
+  public void populateCrashReport(net.minecraft.util.crash.CrashReportSection, net.minecraft.world.HeightLimitView);
+  public void setDifficulty(net.minecraft.world.Difficulty);
+  public void setDifficultyLocked(boolean);
+  public double getSkyDarknessHeight(net.minecraft.world.HeightLimitView);
+  public float getVoidDarknessRange();
+}

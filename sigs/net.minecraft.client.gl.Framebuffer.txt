@@ -1,0 +1,27 @@
+Compiled from "Framebuffer.java"
+public abstract class net.minecraft.client.gl.Framebuffer {
+  private static int index;
+  public int textureWidth;
+  public int textureHeight;
+  protected final java.lang.String name;
+  public final boolean useDepthAttachment;
+  protected com.mojang.blaze3d.textures.GpuTexture colorAttachment;
+  protected com.mojang.blaze3d.textures.GpuTextureView colorAttachmentView;
+  protected com.mojang.blaze3d.textures.GpuTexture depthAttachment;
+  protected com.mojang.blaze3d.textures.GpuTextureView depthAttachmentView;
+  public net.minecraft.client.gl.Framebuffer(java.lang.String, boolean);
+  public void resize(int, int);
+  public void delete();
+  public void copyDepthFrom(net.minecraft.client.gl.Framebuffer);
+  public void initFbo(int, int);
+  public void blitToScreen();
+  public void drawBlit(com.mojang.blaze3d.textures.GpuTextureView);
+  public com.mojang.blaze3d.textures.GpuTexture getColorAttachment();
+  public com.mojang.blaze3d.textures.GpuTextureView getColorAttachmentView();
+  public com.mojang.blaze3d.textures.GpuTexture getDepthAttachment();
+  public com.mojang.blaze3d.textures.GpuTextureView getDepthAttachmentView();
+  private static java.lang.String method_71167();
+  private java.lang.String method_67768();
+  private java.lang.String method_67767();
+  static {};
+}

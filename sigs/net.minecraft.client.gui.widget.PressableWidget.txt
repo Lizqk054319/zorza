@@ -1,0 +1,16 @@
+Compiled from "PressableWidget.java"
+public abstract class net.minecraft.client.gui.widget.PressableWidget extends net.minecraft.client.gui.widget.ClickableWidget$InactivityIndicatingWidget {
+  protected static final int field_43050;
+  private static final net.minecraft.client.gui.screen.ButtonTextures TEXTURES;
+  private java.util.function.Supplier<java.lang.Boolean> focusOverride;
+  public net.minecraft.client.gui.widget.PressableWidget(int, int, int, int, net.minecraft.text.Text);
+  public abstract void onPress(net.minecraft.client.input.AbstractInput);
+  protected final void renderWidget(net.minecraft.client.gui.DrawContext, int, int, float);
+  protected abstract void drawIcon(net.minecraft.client.gui.DrawContext, int, int, float);
+  protected void drawLabel(net.minecraft.client.font.DrawnTextConsumer);
+  protected final void drawButton(net.minecraft.client.gui.DrawContext);
+  public void onClick(net.minecraft.client.gui.Click, boolean);
+  public boolean keyPressed(net.minecraft.client.input.KeyInput);
+  public void setFocusOverride(java.util.function.Supplier<java.lang.Boolean>);
+  static {};
+}

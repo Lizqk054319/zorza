@@ -1,0 +1,11 @@
+Compiled from "DebugRenderer.java"
+public class net.minecraft.client.render.debug.DebugRenderer {
+  private final java.util.List<net.minecraft.client.render.debug.DebugRenderer$Renderer> renderers;
+  private long currentVersion;
+  public net.minecraft.client.render.debug.DebugRenderer();
+  public void initRenderers();
+  public void render(net.minecraft.client.render.Frustum, double, double, double, float);
+  public static java.util.Optional<net.minecraft.entity.Entity> getTargetedEntity(net.minecraft.entity.Entity, int);
+  private static net.minecraft.util.math.Vec3d hueToRgb(float);
+  private static net.minecraft.util.math.Vec3d shiftHue(float, float, float, float);
+}

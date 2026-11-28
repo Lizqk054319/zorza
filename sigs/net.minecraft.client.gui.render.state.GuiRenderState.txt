@@ -1,0 +1,37 @@
+Compiled from "GuiRenderState.java"
+public class net.minecraft.client.gui.render.state.GuiRenderState {
+  private static final int field_60454;
+  private final java.util.List<net.minecraft.client.gui.render.state.GuiRenderState$Layer> rootLayers;
+  private int blurLayer;
+  private net.minecraft.client.gui.render.state.GuiRenderState$Layer currentLayer;
+  private final java.util.Set<java.lang.Object> itemModelKeys;
+  private net.minecraft.client.gui.ScreenRect currentLayerBounds;
+  public net.minecraft.client.gui.render.state.GuiRenderState();
+  public void createNewRootLayer();
+  public void applyBlur();
+  public void goUpLayer();
+  public void addItem(net.minecraft.client.gui.render.state.ItemGuiElementRenderState);
+  public void addText(net.minecraft.client.gui.render.state.TextGuiElementRenderState);
+  public void addSpecialElement(net.minecraft.client.gui.render.state.special.SpecialGuiElementRenderState);
+  public void addSimpleElement(net.minecraft.client.gui.render.state.SimpleGuiElementRenderState);
+  private void onElementAdded(net.minecraft.client.gui.ScreenRect);
+  private boolean findAndGoToLayerToAdd(net.minecraft.client.gui.render.state.GuiElementRenderState);
+  private void findAndGoToLayerIntersecting(net.minecraft.client.gui.ScreenRect);
+  private boolean anyIntersect(net.minecraft.client.gui.ScreenRect, java.util.List<? extends net.minecraft.client.gui.render.state.GuiElementRenderState>);
+  public void addSimpleElementToCurrentLayer(net.minecraft.client.gui.render.state.TexturedQuadGuiElementRenderState);
+  public void addPreparedTextElement(net.minecraft.client.gui.render.state.SimpleGuiElementRenderState);
+  public java.util.Set<java.lang.Object> getItemModelKeys();
+  public void forEachSimpleElement(java.util.function.Consumer<net.minecraft.client.gui.render.state.SimpleGuiElementRenderState>, net.minecraft.client.gui.render.state.GuiRenderState$LayerFilter);
+  public void forEachItemElement(java.util.function.Consumer<net.minecraft.client.gui.render.state.ItemGuiElementRenderState>);
+  public void forEachTextElement(java.util.function.Consumer<net.minecraft.client.gui.render.state.TextGuiElementRenderState>);
+  public void forEachSpecialElement(java.util.function.Consumer<net.minecraft.client.gui.render.state.special.SpecialGuiElementRenderState>);
+  public void sortSimpleElements(java.util.Comparator<net.minecraft.client.gui.render.state.SimpleGuiElementRenderState>);
+  private void forEachLayer(java.util.function.Consumer<net.minecraft.client.gui.render.state.GuiRenderState$Layer>, net.minecraft.client.gui.render.state.GuiRenderState$LayerFilter);
+  private void traverseLayers(net.minecraft.client.gui.render.state.GuiRenderState$Layer, java.util.function.Consumer<net.minecraft.client.gui.render.state.GuiRenderState$Layer>);
+  public void clear();
+  private static void method_71063(java.util.Comparator, net.minecraft.client.gui.render.state.GuiRenderState$Layer);
+  private void method_71065(java.util.function.Consumer, net.minecraft.client.gui.render.state.GuiRenderState$Layer);
+  private void method_71069(java.util.function.Consumer, net.minecraft.client.gui.render.state.GuiRenderState$Layer);
+  private void method_71072(java.util.function.Consumer, net.minecraft.client.gui.render.state.GuiRenderState$Layer);
+  private static void method_71066(java.util.function.Consumer, net.minecraft.client.gui.render.state.GuiRenderState$Layer);
+}

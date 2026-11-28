@@ -1,0 +1,8 @@
+Compiled from "EntityHitboxDebugRenderer.java"
+public class net.minecraft.client.render.debug.EntityHitboxDebugRenderer implements net.minecraft.client.render.debug.DebugRenderer$Renderer {
+  final net.minecraft.client.MinecraftClient client;
+  public net.minecraft.client.render.debug.EntityHitboxDebugRenderer(net.minecraft.client.MinecraftClient);
+  public void render(double, double, double, net.minecraft.world.debug.DebugDataStore, net.minecraft.client.render.Frustum, float);
+  private net.minecraft.entity.Entity getLocalServerEntity(net.minecraft.entity.Entity);
+  private void drawHitbox(net.minecraft.entity.Entity, float, boolean);
+}

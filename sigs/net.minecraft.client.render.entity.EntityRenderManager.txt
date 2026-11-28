@@ -1,0 +1,34 @@
+Compiled from "EntityRenderManager.java"
+public class net.minecraft.client.render.entity.EntityRenderManager implements net.minecraft.resource.SynchronousResourceReloader {
+  private java.util.Map<net.minecraft.entity.EntityType<?>, net.minecraft.client.render.entity.EntityRenderer<?, ?>> renderers;
+  private java.util.Map<net.minecraft.entity.player.PlayerSkinType, net.minecraft.client.render.entity.PlayerEntityRenderer<net.minecraft.client.network.AbstractClientPlayerEntity>> playerRenderers;
+  private java.util.Map<net.minecraft.entity.player.PlayerSkinType, net.minecraft.client.render.entity.PlayerEntityRenderer<net.minecraft.client.network.ClientMannequinEntity>> mannequinRenderers;
+  public final net.minecraft.client.texture.TextureManager textureManager;
+  public net.minecraft.client.render.Camera camera;
+  public net.minecraft.entity.Entity targetedEntity;
+  private final net.minecraft.client.item.ItemModelManager itemModelManager;
+  private final net.minecraft.client.render.MapRenderer mapRenderer;
+  private final net.minecraft.client.render.block.BlockRenderManager blockRenderManager;
+  private final net.minecraft.client.render.item.HeldItemRenderer heldItemRenderer;
+  private final net.minecraft.client.texture.AtlasManager atlasManager;
+  private final net.minecraft.client.font.TextRenderer textRenderer;
+  public final net.minecraft.client.option.GameOptions gameOptions;
+  private final java.util.function.Supplier<net.minecraft.client.render.entity.model.LoadedEntityModels> entityModelsGetter;
+  private final net.minecraft.client.render.entity.equipment.EquipmentModelLoader equipmentModelLoader;
+  private final net.minecraft.client.texture.PlayerSkinCache skinCache;
+  public <E extends net.minecraft.entity.Entity> int getLight(E, float);
+  public net.minecraft.client.render.entity.EntityRenderManager(net.minecraft.client.MinecraftClient, net.minecraft.client.texture.TextureManager, net.minecraft.client.item.ItemModelManager, net.minecraft.client.render.MapRenderer, net.minecraft.client.render.block.BlockRenderManager, net.minecraft.client.texture.AtlasManager, net.minecraft.client.font.TextRenderer, net.minecraft.client.option.GameOptions, java.util.function.Supplier<net.minecraft.client.render.entity.model.LoadedEntityModels>, net.minecraft.client.render.entity.equipment.EquipmentModelLoader, net.minecraft.client.texture.PlayerSkinCache);
+  public <T extends net.minecraft.entity.Entity> net.minecraft.client.render.entity.EntityRenderer<? super T, ?> getRenderer(T);
+  public net.minecraft.client.render.entity.PlayerEntityRenderer<net.minecraft.client.network.AbstractClientPlayerEntity> getPlayerRenderer(net.minecraft.client.network.AbstractClientPlayerEntity);
+  private <T extends net.minecraft.entity.PlayerLikeEntity & net.minecraft.client.network.ClientPlayerLikeEntity> net.minecraft.client.render.entity.PlayerEntityRenderer<T> getPlayerRenderer(java.util.Map<net.minecraft.entity.player.PlayerSkinType, net.minecraft.client.render.entity.PlayerEntityRenderer<T>>, T);
+  public <S extends net.minecraft.client.render.entity.state.EntityRenderState> net.minecraft.client.render.entity.EntityRenderer<?, ? super S> getRenderer(S);
+  public void configure(net.minecraft.client.render.Camera, net.minecraft.entity.Entity);
+  public <E extends net.minecraft.entity.Entity> boolean shouldRender(E, net.minecraft.client.render.Frustum, double, double, double);
+  public <E extends net.minecraft.entity.Entity> net.minecraft.client.render.entity.state.EntityRenderState getAndUpdateRenderState(E, float);
+  public <S extends net.minecraft.client.render.entity.state.EntityRenderState> void render(S, net.minecraft.client.render.state.CameraRenderState, double, double, double, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.command.OrderedRenderCommandQueue);
+  private <S extends net.minecraft.client.render.entity.state.EntityRenderState> net.minecraft.util.crash.CrashReportSection addRendererDetails(net.minecraft.client.render.entity.EntityRenderer<?, S>, net.minecraft.util.crash.CrashReport);
+  public void clearCamera();
+  public double getSquaredDistanceToCamera(net.minecraft.entity.Entity);
+  public net.minecraft.client.render.item.HeldItemRenderer getHeldItemRenderer();
+  public void reload(net.minecraft.resource.ResourceManager);
+}
