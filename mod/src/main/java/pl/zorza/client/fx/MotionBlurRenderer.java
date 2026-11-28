@@ -211,7 +211,12 @@ public final class MotionBlurRenderer {
 //#if MC >= 1.21.9
 //$$             // 1.21.9+: pełnoekranowy trójkąt bez bufora wierzchołków (jak Minecraft w drawBlit)
 //$$             RenderSystem.bindDefaultUniforms(pass);
+//#if MC >= 1.21.11
+//$$             pass.bindTexture("InSampler", src.getColorAttachmentView(),
+//$$                     RenderSystem.getSamplerCache().get(com.mojang.blaze3d.textures.FilterMode.LINEAR));
+//#else
 //$$             pass.bindSampler("InSampler", src.getColorAttachmentView());
+//#endif
 //$$             pass.draw(0, 3);
 //#else
 //$$             RenderSystem.ShapeIndexBuffer idx = RenderSystem.getSequentialBuffer(VertexFormat.DrawMode.QUADS);

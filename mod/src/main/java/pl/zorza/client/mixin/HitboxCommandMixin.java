@@ -1,4 +1,4 @@
-//#file-if MC >= 1.21.9
+//#file-if MC >= 1.21.9 && MC < 1.21.11
 package pl.zorza.client.mixin;
 
 import net.minecraft.client.render.VertexConsumer;
