@@ -23,7 +23,7 @@ public class ArmorStatusHud extends HudModule {
             new ItemStack(Items.DIAMOND_LEGGINGS), new ItemStack(Items.DIAMOND_BOOTS)};
 
     public ArmorStatusHud() {
-        super("armor_status", "Armor Status", "Armor durability in percent.", Category.HUD, true, 0.01, 0.80);
+        super("armor_status", "Armor Status", "Armor durability in percent.", Category.HUD, true, 0.01, 0.81);
     }
 
     public String icon() { return "m_armor"; }

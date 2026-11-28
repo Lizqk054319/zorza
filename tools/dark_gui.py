@@ -3,6 +3,7 @@ Użycie: python dark_gui.py <minecraft-client.jar> <folder-paczki>"""
 import io
 import re
 import sys
+import json
 import zipfile
 from pathlib import Path
 
@@ -53,8 +54,30 @@ def main(jar, out):
             if mcmeta in z.namelist():
                 (out / mcmeta).write_bytes(z.read(mcmeta))
             n += 1
-    (out / "pack.mcmeta").write_text('{"pack": {"pack_format": 46, "description": "Zora Client – ciemny ekwipunek"}}')
+    fmt = pack_format(jar)
+    (out / "pack.mcmeta").write_text('{"pack": {"pack_format": %d, "description": "Zora Client – ciemny ekwipunek"}}' % fmt)
+    # paczka z czcionką też musi mieć format tej wersji gry, inaczej starsze wersje uznają ją za niepasującą
+    font = out.parent / "zora_font" / "pack.mcmeta"
+    if font.exists():
+        font.write_text('{"pack": {"pack_format": %d, "description": "Zora Client – gładka czcionka Inter w całej grze"}}' % fmt)
+    print("pack_format", fmt)
     print(f"Ciemne tekstury: {n}")
+
+
+
+
+def pack_format(jar):
+    """Numer formatu paczek zasobów tej wersji gry (z version.json w jarze Minecrafta)."""
+    try:
+        with zipfile.ZipFile(jar) as z:
+            v = json.loads(z.read("version.json"))
+        pv = v.get("pack_version")
+        if isinstance(pv, dict):
+            pv = pv.get("resource", pv.get("resource_major", 46))
+        return int(float(pv))
+    except Exception as e:
+        print("pack_format: nie udało się odczytać –", e)
+        return 46
 
 
 if __name__ == "__main__":

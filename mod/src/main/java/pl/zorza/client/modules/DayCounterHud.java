@@ -7,7 +7,7 @@ import pl.zorza.client.module.TextHud;
 
 public class DayCounterHud extends TextHud {
     public DayCounterHud() {
-        super("day_counter", "Day Counter", "Shows which in-game day it is.", Category.HUD, false, 0.01, 0.40);
+        super("day_counter", "Day Counter", "Shows which in-game day it is.", Category.HUD, false, 0.01, 0.41);
     }
 
     public String icon() { return "m_clock"; }

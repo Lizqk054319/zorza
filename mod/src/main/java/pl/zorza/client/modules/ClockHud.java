@@ -12,7 +12,7 @@ public class ClockHud extends TextHud {
     private final Setting.Bool h12 = add(new Setting.Bool("h12", "12-hour format", false));
 
     public ClockHud() {
-        super("clock", "Clock", "Real-world time.", Category.HUD, false, 0.01, 0.36);
+        super("clock", "Clock", "Real-world time.", Category.HUD, false, 0.01, 0.33);
     }
 
     public String icon() { return "m_clock"; }

@@ -8,7 +8,7 @@ import pl.zorza.client.module.TextHud;
 /** Pokazuje odległość ostatniego uderzenia (tylko wyświetlanie, nic nie zmienia). */
 public class ReachDisplayHud extends TextHud {
     public ReachDisplayHud() {
-        super("reach_display", "Reach Display", "Distance of your last hit.", Category.COMBAT, false, 0.01, 0.62);
+        super("reach_display", "Reach Display", "Distance of your last hit.", Category.COMBAT, false, 0.01, 0.65);
     }
 
     public String icon() { return "m_reach"; }

@@ -7,7 +7,7 @@ import pl.zorza.client.module.TextHud;
 
 public class ComboCounterHud extends TextHud {
     public ComboCounterHud() {
-        super("combo_counter", "Combo Counter", "Hits in a row without taking damage.", Category.COMBAT, false, 0.01, 0.7);
+        super("combo_counter", "Combo Counter", "Hits in a row without taking damage.", Category.COMBAT, false, 0.01, 0.73);
     }
 
     public String icon() { return "3x"; }

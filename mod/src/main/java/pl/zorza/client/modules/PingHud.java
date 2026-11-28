@@ -7,7 +7,7 @@ import pl.zorza.client.module.TextHud;
 
 public class PingHud extends TextHud {
     public PingHud() {
-        super("ping", "Ping", "Connection latency to the server.", Category.HUD, false, 0.01, 0.44);
+        super("ping", "Ping", "Connection latency to the server.", Category.HUD, false, 0.01, 0.49);
     }
 
     public String icon() { return "m_ping"; }
