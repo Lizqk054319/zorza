@@ -1,0 +1,15 @@
+Compiled from "EntityHitboxAndView.java"
+public final class net.minecraft.client.render.entity.state.EntityHitboxAndView extends java.lang.Record {
+  private final double viewX;
+  private final double viewY;
+  private final double viewZ;
+  private final com.google.common.collect.ImmutableList<net.minecraft.client.render.entity.state.EntityHitbox> hitboxes;
+  public net.minecraft.client.render.entity.state.EntityHitboxAndView(double, double, double, com.google.common.collect.ImmutableList<net.minecraft.client.render.entity.state.EntityHitbox>);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public double viewX();
+  public double viewY();
+  public double viewZ();
+  public com.google.common.collect.ImmutableList<net.minecraft.client.render.entity.state.EntityHitbox> hitboxes();
+}

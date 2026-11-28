@@ -1,0 +1,7 @@
+Compiled from "DebugHitboxCommandRenderer.java"
+public class net.minecraft.client.render.command.DebugHitboxCommandRenderer {
+  public net.minecraft.client.render.command.DebugHitboxCommandRenderer();
+  public void render(net.minecraft.client.render.command.BatchingRenderCommandQueue, net.minecraft.client.render.VertexConsumerProvider$Immediate);
+  private static void renderDebugHitbox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.entity.state.EntityHitboxAndView, net.minecraft.client.render.VertexConsumer, float);
+  private static void renderHitbox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, net.minecraft.client.render.entity.state.EntityHitbox);
+}

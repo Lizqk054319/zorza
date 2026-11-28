@@ -1,0 +1,8 @@
+Compiled from "StyleSpriteSource.java"
+public interface net.minecraft.text.StyleSpriteSource {
+  public static final com.mojang.serialization.Codec<net.minecraft.text.StyleSpriteSource> FONT_CODEC;
+  public static final net.minecraft.text.StyleSpriteSource$Font DEFAULT;
+  private static com.mojang.serialization.DataResult method_73172(net.minecraft.text.StyleSpriteSource);
+  private static java.lang.String method_73173(net.minecraft.text.StyleSpriteSource);
+  static {};
+}

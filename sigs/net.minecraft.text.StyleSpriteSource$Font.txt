@@ -1,0 +1,9 @@
+Compiled from "StyleSpriteSource.java"
+public final class net.minecraft.text.StyleSpriteSource$Font extends java.lang.Record implements net.minecraft.text.StyleSpriteSource {
+  private final net.minecraft.util.Identifier id;
+  public net.minecraft.text.StyleSpriteSource$Font(net.minecraft.util.Identifier);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.util.Identifier id();
+}

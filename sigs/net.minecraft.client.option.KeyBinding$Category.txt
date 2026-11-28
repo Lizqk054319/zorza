@@ -1,0 +1,21 @@
+Compiled from "KeyBinding.java"
+public final class net.minecraft.client.option.KeyBinding$Category extends java.lang.Record {
+  private final net.minecraft.util.Identifier id;
+  static final java.util.List<net.minecraft.client.option.KeyBinding$Category> CATEGORIES;
+  public static final net.minecraft.client.option.KeyBinding$Category MOVEMENT;
+  public static final net.minecraft.client.option.KeyBinding$Category MISC;
+  public static final net.minecraft.client.option.KeyBinding$Category MULTIPLAYER;
+  public static final net.minecraft.client.option.KeyBinding$Category GAMEPLAY;
+  public static final net.minecraft.client.option.KeyBinding$Category INVENTORY;
+  public static final net.minecraft.client.option.KeyBinding$Category CREATIVE;
+  public static final net.minecraft.client.option.KeyBinding$Category SPECTATOR;
+  public net.minecraft.client.option.KeyBinding$Category(net.minecraft.util.Identifier);
+  private static net.minecraft.client.option.KeyBinding$Category create(java.lang.String);
+  public static net.minecraft.client.option.KeyBinding$Category create(net.minecraft.util.Identifier);
+  public net.minecraft.text.Text getLabel();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.util.Identifier id();
+  static {};
+}

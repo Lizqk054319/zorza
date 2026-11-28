@@ -1,0 +1,29 @@
+Compiled from "EntityRenderState.java"
+public class net.minecraft.client.render.entity.state.EntityRenderState {
+  public static final int NO_OUTLINE;
+  public net.minecraft.entity.EntityType<?> entityType;
+  public double x;
+  public double y;
+  public double z;
+  public float age;
+  public float width;
+  public float height;
+  public float standingEyeHeight;
+  public double squaredDistanceToCamera;
+  public boolean invisible;
+  public boolean sneaking;
+  public boolean onFire;
+  public int light;
+  public int outlineColor;
+  public net.minecraft.util.math.Vec3d positionOffset;
+  public net.minecraft.text.Text displayName;
+  public net.minecraft.util.math.Vec3d nameLabelPos;
+  public java.util.List<net.minecraft.client.render.entity.state.EntityRenderState$LeashData> leashDatas;
+  public net.minecraft.client.render.entity.state.EntityHitboxAndView hitbox;
+  public net.minecraft.client.render.entity.state.EntityDebugInfo debugInfo;
+  public float shadowRadius;
+  public final java.util.List<net.minecraft.client.render.entity.state.EntityRenderState$ShadowPiece> shadowPieces;
+  public net.minecraft.client.render.entity.state.EntityRenderState();
+  public boolean hasOutline();
+  public void addCrashReportDetails(net.minecraft.util.crash.CrashReportSection);
+}

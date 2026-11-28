@@ -1,0 +1,1 @@
+jar: /home/runner/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/minecraft-merged/1.21.9-net.fabricmc.yarn.1_21_9.1.21.9+build.1-v2/minecraft-merged-1.21.9-net.fabricmc.yarn.1_21_9.1.21.9+build.1-v2.jar

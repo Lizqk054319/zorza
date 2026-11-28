@@ -1,0 +1,35 @@
+Compiled from "EntityRenderer.java"
+public abstract class net.minecraft.client.render.entity.EntityRenderer<T extends net.minecraft.entity.Entity, S extends net.minecraft.client.render.entity.state.EntityRenderState> {
+  private static final float field_61797;
+  private static final float field_61798;
+  public static final float field_32921;
+  protected final net.minecraft.client.render.entity.EntityRenderManager dispatcher;
+  private final net.minecraft.client.font.TextRenderer textRenderer;
+  protected float shadowRadius;
+  protected float shadowOpacity;
+  protected net.minecraft.client.render.entity.EntityRenderer(net.minecraft.client.render.entity.EntityRendererFactory$Context);
+  public final int getLight(T, float);
+  protected int getSkyLight(T, net.minecraft.util.math.BlockPos);
+  protected int getBlockLight(T, net.minecraft.util.math.BlockPos);
+  public boolean shouldRender(T, net.minecraft.client.render.Frustum, double, double, double);
+  protected net.minecraft.util.math.Box getBoundingBox(T);
+  protected boolean canBeCulled(T);
+  public net.minecraft.util.math.Vec3d getPositionOffset(S);
+  public void render(S, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.command.OrderedRenderCommandQueue, net.minecraft.client.render.state.CameraRenderState);
+  protected boolean hasLabel(T, double);
+  public net.minecraft.client.font.TextRenderer getTextRenderer();
+  protected void renderLabelIfPresent(S, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.command.OrderedRenderCommandQueue, net.minecraft.client.render.state.CameraRenderState);
+  protected net.minecraft.text.Text getDisplayName(T);
+  protected float getShadowRadius(S);
+  protected float getShadowOpacity(S);
+  public abstract S createRenderState();
+  public final S getAndUpdateRenderState(T, float);
+  public void updateRenderState(T, S, float);
+  protected void updateShadow(T, S);
+  private void updateShadow(S, net.minecraft.client.MinecraftClient, net.minecraft.world.World);
+  private void addShadowPiece(S, net.minecraft.world.World, float, net.minecraft.util.math.BlockPos$Mutable, net.minecraft.world.chunk.Chunk);
+  private void updateDebugState(T, S, float);
+  private net.minecraft.client.render.entity.state.EntityHitboxAndView createHitbox(T, float, boolean);
+  protected void appendHitboxes(T, com.google.common.collect.ImmutableList$Builder<net.minecraft.client.render.entity.state.EntityHitbox>, float);
+  private static net.minecraft.entity.Entity getServerEntity(net.minecraft.entity.Entity);
+}

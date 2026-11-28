@@ -1,0 +1,1835 @@
+Compiled from "RenderLayer.java"
+public abstract class net.minecraft.client.render.RenderLayer extends net.minecraft.client.render.RenderPhase {
+  private static final int field_32777;
+
+  public static final int SOLID_BUFFER_SIZE;
+
+  public static final int CUTOUT_BUFFER_SIZE;
+
+  public static final int DEFAULT_BUFFER_SIZE;
+
+  private static final net.minecraft.client.render.RenderLayer SOLID;
+
+  private static final net.minecraft.client.render.RenderLayer CUTOUT_MIPPED;
+
+  private static final net.minecraft.client.render.RenderLayer CUTOUT;
+
+  private static final net.minecraft.client.render.RenderLayer TRANSLUCENT_MOVING_BLOCK;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ARMOR_CUTOUT_NO_CULL;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ARMOR_TRANSLUCENT;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ENTITY_SOLID;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ENTITY_SOLID_Z_OFFSET_FORWARD;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ENTITY_CUTOUT;
+
+  private static final java.util.function.BiFunction<net.minecraft.util.Identifier, java.lang.Boolean, net.minecraft.client.render.RenderLayer> ENTITY_CUTOUT_NO_CULL;
+
+  private static final java.util.function.BiFunction<net.minecraft.util.Identifier, java.lang.Boolean, net.minecraft.client.render.RenderLayer> ENTITY_CUTOUT_NO_CULL_Z_OFFSET;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ITEM_ENTITY_TRANSLUCENT_CULL;
+
+  private static final java.util.function.BiFunction<net.minecraft.util.Identifier, java.lang.Boolean, net.minecraft.client.render.RenderLayer> ENTITY_TRANSLUCENT;
+
+  private static final java.util.function.BiFunction<net.minecraft.util.Identifier, java.lang.Boolean, net.minecraft.client.render.RenderLayer> ENTITY_TRANSLUCENT_EMISSIVE;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ENTITY_SMOOTH_CUTOUT;
+
+  private static final java.util.function.BiFunction<net.minecraft.util.Identifier, java.lang.Boolean, net.minecraft.client.render.RenderLayer> BEACON_BEAM;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ENTITY_DECAL;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ENTITY_NO_OUTLINE;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ENTITY_SHADOW;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> ENTITY_ALPHA;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> EYES;
+
+  private static final net.minecraft.client.render.RenderLayer LEASH;
+
+  private static final net.minecraft.client.render.RenderLayer WATER_MASK;
+
+  private static final net.minecraft.client.render.RenderLayer ARMOR_ENTITY_GLINT;
+
+  private static final net.minecraft.client.render.RenderLayer GLINT_TRANSLUCENT;
+
+  private static final net.minecraft.client.render.RenderLayer GLINT;
+
+  private static final net.minecraft.client.render.RenderLayer ENTITY_GLINT;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> CRUMBLING;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> TEXT;
+
+  private static final net.minecraft.client.render.RenderLayer TEXT_BACKGROUND;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> TEXT_INTENSITY;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> TEXT_POLYGON_OFFSET;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> TEXT_INTENSITY_POLYGON_OFFSET;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> TEXT_SEE_THROUGH;
+
+  private static final net.minecraft.client.render.RenderLayer TEXT_BACKGROUND_SEE_THROUGH;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> TEXT_INTENSITY_SEE_THROUGH;
+
+  private static final net.minecraft.client.render.RenderLayer LIGHTNING;
+
+  private static final net.minecraft.client.render.RenderLayer DRAGON_RAYS;
+
+  private static final net.minecraft.client.render.RenderLayer DRAGON_RAYS_DEPTH;
+
+  private static final net.minecraft.client.render.RenderLayer TRIPWIRE;
+
+  private static final net.minecraft.client.render.RenderLayer END_PORTAL;
+
+  private static final net.minecraft.client.render.RenderLayer END_GATEWAY;
+
+  public static final net.minecraft.client.render.RenderLayer$MultiPhase LINES;
+
+  public static final net.minecraft.client.render.RenderLayer$MultiPhase SECONDARY_BLOCK_OUTLINE;
+
+  public static final net.minecraft.client.render.RenderLayer$MultiPhase LINE_STRIP;
+
+  private static final java.util.function.Function<java.lang.Double, net.minecraft.client.render.RenderLayer$MultiPhase> DEBUG_LINE_STRIP;
+
+  private static final net.minecraft.client.render.RenderLayer$MultiPhase DEBUG_FILLED_BOX;
+
+  private static final net.minecraft.client.render.RenderLayer$MultiPhase DEBUG_QUADS;
+
+  private static final net.minecraft.client.render.RenderLayer$MultiPhase DEBUG_TRIANGLE_FAN;
+
+  private static final net.minecraft.client.render.RenderLayer$MultiPhase DEBUG_STRUCTURE_QUADS;
+
+  private static final net.minecraft.client.render.RenderLayer$MultiPhase DEBUG_SECTION_QUADS;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> WEATHER_ALL_MASK;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> WEATHER_COLOR_MASK;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> BLOCK_SCREEN_EFFECT;
+
+  private static final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> FIRE_SCREEN_EFFECT;
+
+  private final int expectedBufferSize;
+
+  private final boolean hasCrumbling;
+
+  private final boolean translucent;
+
+  public static net.minecraft.client.render.RenderLayer getSolid();
+    Code:
+         0: getstatic     #142                // Field SOLID:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getCutoutMipped();
+    Code:
+         0: getstatic     #145                // Field CUTOUT_MIPPED:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getCutout();
+    Code:
+         0: getstatic     #148                // Field CUTOUT:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getTranslucentMovingBlock();
+    Code:
+         0: getstatic     #151                // Field TRANSLUCENT_MOVING_BLOCK:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getArmorCutoutNoCull(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #156                // Field ARMOR_CUTOUT_NO_CULL:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer createArmorDecalCutoutNoCull(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+        30: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        33: iconst_1
+        34: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        37: astore_1
+        38: ldc           #205                // String armor_decal_cutout_no_cull
+        40: sipush        1536
+        43: iconst_1
+        44: iconst_0
+        45: getstatic     #211                // Field net/minecraft/client/gl/RenderPipelines.ARMOR_DECAL_CUTOUT_NO_CULL:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        48: aload_1
+        49: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        52: areturn
+
+  public static net.minecraft.client.render.RenderLayer createArmorTranslucent(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #220                // Field ARMOR_TRANSLUCENT:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntitySolid(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #223                // Field ENTITY_SOLID:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntitySolidZOffsetForward(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #226                // Field ENTITY_SOLID_Z_OFFSET_FORWARD:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityCutout(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #229                // Field ENTITY_CUTOUT:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityCutoutNoCull(net.minecraft.util.Identifier, boolean);
+    Code:
+         0: getstatic     #234                // Field ENTITY_CUTOUT_NO_CULL:Ljava/util/function/BiFunction;
+         3: aload_0
+         4: iload_1
+         5: invokestatic  #240                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         8: invokeinterface #245,  3          // InterfaceMethod java/util/function/BiFunction.apply:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        13: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        16: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityCutoutNoCull(net.minecraft.util.Identifier);
+    Code:
+         0: aload_0
+         1: iconst_1
+         2: invokestatic  #247                // Method getEntityCutoutNoCull:(Lnet/minecraft/util/Identifier;Z)Lnet/minecraft/client/render/RenderLayer;
+         5: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityCutoutNoCullZOffset(net.minecraft.util.Identifier, boolean);
+    Code:
+         0: getstatic     #250                // Field ENTITY_CUTOUT_NO_CULL_Z_OFFSET:Ljava/util/function/BiFunction;
+         3: aload_0
+         4: iload_1
+         5: invokestatic  #240                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         8: invokeinterface #245,  3          // InterfaceMethod java/util/function/BiFunction.apply:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        13: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        16: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityCutoutNoCullZOffset(net.minecraft.util.Identifier);
+    Code:
+         0: aload_0
+         1: iconst_1
+         2: invokestatic  #252                // Method getEntityCutoutNoCullZOffset:(Lnet/minecraft/util/Identifier;Z)Lnet/minecraft/client/render/RenderLayer;
+         5: areturn
+
+  public static net.minecraft.client.render.RenderLayer getItemEntityTranslucentCull(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #255                // Field ITEM_ENTITY_TRANSLUCENT_CULL:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityTranslucent(net.minecraft.util.Identifier, boolean);
+    Code:
+         0: getstatic     #258                // Field ENTITY_TRANSLUCENT:Ljava/util/function/BiFunction;
+         3: aload_0
+         4: iload_1
+         5: invokestatic  #240                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         8: invokeinterface #245,  3          // InterfaceMethod java/util/function/BiFunction.apply:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        13: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        16: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityTranslucent(net.minecraft.util.Identifier);
+    Code:
+         0: aload_0
+         1: iconst_1
+         2: invokestatic  #260                // Method getEntityTranslucent:(Lnet/minecraft/util/Identifier;Z)Lnet/minecraft/client/render/RenderLayer;
+         5: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityTranslucentEmissive(net.minecraft.util.Identifier, boolean);
+    Code:
+         0: getstatic     #263                // Field ENTITY_TRANSLUCENT_EMISSIVE:Ljava/util/function/BiFunction;
+         3: aload_0
+         4: iload_1
+         5: invokestatic  #240                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         8: invokeinterface #245,  3          // InterfaceMethod java/util/function/BiFunction.apply:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        13: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        16: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityTranslucentEmissive(net.minecraft.util.Identifier);
+    Code:
+         0: aload_0
+         1: iconst_1
+         2: invokestatic  #265                // Method getEntityTranslucentEmissive:(Lnet/minecraft/util/Identifier;Z)Lnet/minecraft/client/render/RenderLayer;
+         5: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntitySmoothCutout(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #268                // Field ENTITY_SMOOTH_CUTOUT:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getBeaconBeam(net.minecraft.util.Identifier, boolean);
+    Code:
+         0: getstatic     #271                // Field BEACON_BEAM:Ljava/util/function/BiFunction;
+         3: aload_0
+         4: iload_1
+         5: invokestatic  #240                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         8: invokeinterface #245,  3          // InterfaceMethod java/util/function/BiFunction.apply:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        13: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        16: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityDecal(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #274                // Field ENTITY_DECAL:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityNoOutline(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #277                // Field ENTITY_NO_OUTLINE:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityShadow(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #280                // Field ENTITY_SHADOW:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityAlpha(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #283                // Field ENTITY_ALPHA:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEyes(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #286                // Field EYES:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityTranslucentEmissiveNoOutline(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #263                // Field ENTITY_TRANSLUCENT_EMISSIVE:Ljava/util/function/BiFunction;
+         3: aload_0
+         4: iconst_0
+         5: invokestatic  #240                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         8: invokeinterface #245,  3          // InterfaceMethod java/util/function/BiFunction.apply:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        13: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        16: areturn
+
+  public static net.minecraft.client.render.RenderLayer getBreezeWind(net.minecraft.util.Identifier, float, float);
+    Code:
+         0: ldc_w         #293                // String breeze_wind
+         3: sipush        1536
+         6: iconst_0
+         7: iconst_1
+         8: getstatic     #296                // Field net/minecraft/client/gl/RenderPipelines.BREEZE_WIND:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        11: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        14: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        17: dup
+        18: aload_0
+        19: iconst_0
+        20: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        23: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        26: new           #37                 // class net/minecraft/client/render/RenderPhase$OffsetTexturing
+        29: dup
+        30: fload_1
+        31: fload_2
+        32: invokespecial #299                // Method net/minecraft/client/render/RenderPhase$OffsetTexturing."<init>":(FF)V
+        35: invokevirtual #303                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texturing:(Lnet/minecraft/client/render/RenderPhase$Texturing;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        38: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        41: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        44: getstatic     #306                // Field DISABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        47: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        50: iconst_0
+        51: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        54: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        57: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEnergySwirl(net.minecraft.util.Identifier, float, float);
+    Code:
+         0: ldc_w         #310                // String energy_swirl
+         3: sipush        1536
+         6: iconst_0
+         7: iconst_1
+         8: getstatic     #313                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_ENERGY_SWIRL:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        11: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        14: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        17: dup
+        18: aload_0
+        19: iconst_0
+        20: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        23: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        26: new           #37                 // class net/minecraft/client/render/RenderPhase$OffsetTexturing
+        29: dup
+        30: fload_1
+        31: fload_2
+        32: invokespecial #299                // Method net/minecraft/client/render/RenderPhase$OffsetTexturing."<init>":(FF)V
+        35: invokevirtual #303                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texturing:(Lnet/minecraft/client/render/RenderPhase$Texturing;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        38: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        41: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        44: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        47: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        50: iconst_0
+        51: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        54: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        57: areturn
+
+  public static net.minecraft.client.render.RenderLayer getLeash();
+    Code:
+         0: getstatic     #316                // Field LEASH:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getWaterMask();
+    Code:
+         0: getstatic     #319                // Field WATER_MASK:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getOutline(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #323                // Field net/minecraft/client/render/RenderLayer$MultiPhase.CULLING_LAYERS:Ljava/util/function/BiFunction;
+         3: aload_0
+         4: iconst_0
+         5: invokestatic  #240                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         8: invokeinterface #245,  3          // InterfaceMethod java/util/function/BiFunction.apply:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        13: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        16: areturn
+
+  public static net.minecraft.client.render.RenderLayer getArmorEntityGlint();
+    Code:
+         0: getstatic     #326                // Field ARMOR_ENTITY_GLINT:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getGlintTranslucent();
+    Code:
+         0: getstatic     #329                // Field GLINT_TRANSLUCENT:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getGlint();
+    Code:
+         0: getstatic     #332                // Field GLINT:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEntityGlint();
+    Code:
+         0: getstatic     #335                // Field ENTITY_GLINT:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getBlockBreaking(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #338                // Field CRUMBLING:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getText(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #341                // Field TEXT:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getTextBackground();
+    Code:
+         0: getstatic     #344                // Field TEXT_BACKGROUND:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getTextIntensity(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #347                // Field TEXT_INTENSITY:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getTextPolygonOffset(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #350                // Field TEXT_POLYGON_OFFSET:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getTextIntensityPolygonOffset(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #353                // Field TEXT_INTENSITY_POLYGON_OFFSET:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getTextSeeThrough(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #356                // Field TEXT_SEE_THROUGH:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getTextBackgroundSeeThrough();
+    Code:
+         0: getstatic     #359                // Field TEXT_BACKGROUND_SEE_THROUGH:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getTextIntensitySeeThrough(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #362                // Field TEXT_INTENSITY_SEE_THROUGH:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getLightning();
+    Code:
+         0: getstatic     #365                // Field LIGHTNING:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getDragonRays();
+    Code:
+         0: getstatic     #368                // Field DRAGON_RAYS:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getDragonRaysDepth();
+    Code:
+         0: getstatic     #371                // Field DRAGON_RAYS_DEPTH:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getTripwire();
+    Code:
+         0: getstatic     #374                // Field TRIPWIRE:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEndPortal();
+    Code:
+         0: getstatic     #377                // Field END_PORTAL:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getEndGateway();
+    Code:
+         0: getstatic     #380                // Field END_GATEWAY:Lnet/minecraft/client/render/RenderLayer;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getLines();
+    Code:
+         0: getstatic     #383                // Field LINES:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getSecondaryBlockOutline();
+    Code:
+         0: getstatic     #386                // Field SECONDARY_BLOCK_OUTLINE:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getLineStrip();
+    Code:
+         0: getstatic     #389                // Field LINE_STRIP:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getDebugLineStrip(double);
+    Code:
+         0: getstatic     #394                // Field DEBUG_LINE_STRIP:Ljava/util/function/Function;
+         3: dload_0
+         4: invokestatic  #399                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+        12: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        15: areturn
+
+  public static net.minecraft.client.render.RenderLayer getDebugFilledBox();
+    Code:
+         0: getstatic     #403                // Field DEBUG_FILLED_BOX:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getDebugQuads();
+    Code:
+         0: getstatic     #406                // Field DEBUG_QUADS:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getDebugTriangleFan();
+    Code:
+         0: getstatic     #409                // Field DEBUG_TRIANGLE_FAN:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getDebugStructureQuads();
+    Code:
+         0: getstatic     #412                // Field DEBUG_STRUCTURE_QUADS:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+         3: areturn
+
+  public static net.minecraft.client.render.RenderLayer getDebugSectionQuads();
+    Code:
+         0: getstatic     #415                // Field DEBUG_SECTION_QUADS:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+         3: areturn
+
+  private static java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.render.RenderLayer> createWeather(com.mojang.blaze3d.pipeline.RenderPipeline);
+    Code:
+         0: aload_0
+         1: invokedynamic #435,  0            // InvokeDynamic #0:apply:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Ljava/util/function/Function;
+         6: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+         9: areturn
+
+  public static net.minecraft.client.render.RenderLayer getWeather(net.minecraft.util.Identifier, boolean);
+    Code:
+         0: iload_1
+         1: ifeq          10
+         4: getstatic     #445                // Field WEATHER_ALL_MASK:Ljava/util/function/Function;
+         7: goto          13
+        10: getstatic     #447                // Field WEATHER_COLOR_MASK:Ljava/util/function/Function;
+        13: aload_0
+        14: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+        19: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        22: areturn
+
+  public static net.minecraft.client.render.RenderLayer getBlockScreenEffect(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #450                // Field BLOCK_SCREEN_EFFECT:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public static net.minecraft.client.render.RenderLayer getFireScreenEffect(net.minecraft.util.Identifier);
+    Code:
+         0: getstatic     #453                // Field FIRE_SCREEN_EFFECT:Ljava/util/function/Function;
+         3: aload_0
+         4: invokeinterface #162,  2          // InterfaceMethod java/util/function/Function.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+         9: checkcast     #2                  // class net/minecraft/client/render/RenderLayer
+        12: areturn
+
+  public net.minecraft.client.render.RenderLayer(java.lang.String, int, boolean, boolean, java.lang.Runnable, java.lang.Runnable);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload         5
+         4: aload         6
+         6: invokespecial #461                // Method net/minecraft/client/render/RenderPhase."<init>":(Ljava/lang/String;Ljava/lang/Runnable;Ljava/lang/Runnable;)V
+         9: aload_0
+        10: iload_2
+        11: putfield      #463                // Field expectedBufferSize:I
+        14: aload_0
+        15: iload_3
+        16: putfield      #465                // Field hasCrumbling:Z
+        19: aload_0
+        20: iload         4
+        22: putfield      #467                // Field translucent:Z
+        25: return
+
+  static net.minecraft.client.render.RenderLayer$MultiPhase of(java.lang.String, int, com.mojang.blaze3d.pipeline.RenderPipeline, net.minecraft.client.render.RenderLayer$MultiPhaseParameters);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: iconst_0
+         3: iconst_0
+         4: aload_2
+         5: aload_3
+         6: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+         9: areturn
+
+  private static net.minecraft.client.render.RenderLayer$MultiPhase of(java.lang.String, int, boolean, boolean, com.mojang.blaze3d.pipeline.RenderPipeline, net.minecraft.client.render.RenderLayer$MultiPhaseParameters);
+    Code:
+         0: new           #11                 // class net/minecraft/client/render/RenderLayer$MultiPhase
+         3: dup
+         4: aload_0
+         5: iload_1
+         6: iload_2
+         7: iload_3
+         8: aload         4
+        10: aload         5
+        12: invokespecial #475                // Method net/minecraft/client/render/RenderLayer$MultiPhase."<init>":(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)V
+        15: areturn
+
+  public abstract void draw(net.minecraft.client.render.BuiltBuffer);
+
+  public int getExpectedBufferSize();
+    Code:
+         0: aload_0
+         1: getfield      #463                // Field expectedBufferSize:I
+         4: ireturn
+
+  public abstract com.mojang.blaze3d.vertex.VertexFormat getVertexFormat();
+
+  public abstract com.mojang.blaze3d.vertex.VertexFormat$DrawMode getDrawMode();
+
+  public java.util.Optional<net.minecraft.client.render.RenderLayer> getAffectedOutline();
+    Code:
+         0: invokestatic  #492                // Method java/util/Optional.empty:()Ljava/util/Optional;
+         3: areturn
+
+  public boolean isOutline();
+    Code:
+         0: iconst_0
+         1: ireturn
+
+  public abstract com.mojang.blaze3d.pipeline.RenderPipeline getRenderPipeline();
+
+  public boolean hasCrumbling();
+    Code:
+         0: aload_0
+         1: getfield      #465                // Field hasCrumbling:Z
+         4: ireturn
+
+  public boolean areVerticesNotShared();
+    Code:
+         0: aload_0
+         1: invokevirtual #499                // Method getDrawMode:()Lcom/mojang/blaze3d/vertex/VertexFormat$DrawMode;
+         4: getfield      #502                // Field com/mojang/blaze3d/vertex/VertexFormat$DrawMode.shareVertices:Z
+         7: ifne          14
+        10: iconst_1
+        11: goto          15
+        14: iconst_0
+        15: ireturn
+
+  public boolean isTranslucent();
+    Code:
+         0: aload_0
+         1: getfield      #467                // Field translucent:Z
+         4: ireturn
+
+  private static net.minecraft.client.render.RenderLayer method_67899(net.minecraft.util.Identifier);
+    Code:
+         0: ldc_w         #506                // String fire_screen_effect
+         3: sipush        1536
+         6: iconst_0
+         7: iconst_0
+         8: getstatic     #508                // Field net/minecraft/client/gl/RenderPipelines.FIRE_SCREEN_EFFECT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        11: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        14: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        17: dup
+        18: aload_0
+        19: iconst_0
+        20: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        23: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        26: iconst_0
+        27: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        30: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        33: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_67901(net.minecraft.util.Identifier);
+    Code:
+         0: ldc_w         #511                // String block_screen_effect
+         3: sipush        1536
+         6: iconst_0
+         7: iconst_0
+         8: getstatic     #513                // Field net/minecraft/client/gl/RenderPipelines.BLOCK_SCREEN_EFFECT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        11: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        14: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        17: dup
+        18: aload_0
+        19: iconst_0
+        20: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        23: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        26: iconst_0
+        27: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        30: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        33: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_65228(com.mojang.blaze3d.pipeline.RenderPipeline, net.minecraft.util.Identifier);
+    Code:
+         0: ldc_w         #516                // String weather
+         3: sipush        1536
+         6: iconst_0
+         7: iconst_0
+         8: aload_0
+         9: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        12: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        15: dup
+        16: aload_1
+        17: iconst_0
+        18: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        21: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        24: getstatic     #520                // Field WEATHER_TARGET:Lnet/minecraft/client/render/RenderPhase$Target;
+        27: invokevirtual #524                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.target:(Lnet/minecraft/client/render/RenderPhase$Target;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        30: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        33: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        36: iconst_0
+        37: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        40: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        43: areturn
+
+  private static net.minecraft.client.render.RenderLayer$MultiPhase method_49044(java.lang.Double);
+    Code:
+         0: ldc_w         #528                // String debug_line_strip
+         3: sipush        1536
+         6: getstatic     #530                // Field net/minecraft/client/gl/RenderPipelines.DEBUG_LINE_STRIP:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+         9: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        12: new           #51                 // class net/minecraft/client/render/RenderPhase$LineWidth
+        15: dup
+        16: aload_0
+        17: invokevirtual #534                // Method java/lang/Double.doubleValue:()D
+        20: invokestatic  #539                // Method java/util/OptionalDouble.of:(D)Ljava/util/OptionalDouble;
+        23: invokespecial #542                // Method net/minecraft/client/render/RenderPhase$LineWidth."<init>":(Ljava/util/OptionalDouble;)V
+        26: invokevirtual #545                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lineWidth:(Lnet/minecraft/client/render/RenderPhase$LineWidth;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        29: iconst_0
+        30: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        33: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        36: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_37347(net.minecraft.util.Identifier);
+    Code:
+         0: ldc_w         #551                // String text_intensity_see_through
+         3: sipush        1536
+         6: iconst_0
+         7: iconst_1
+         8: getstatic     #554                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_TEXT_INTENSITY_SEETHROUGH:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        11: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        14: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        17: dup
+        18: aload_0
+        19: iconst_0
+        20: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        23: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        26: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        29: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        32: iconst_0
+        33: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        36: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        39: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_37348(net.minecraft.util.Identifier);
+    Code:
+         0: ldc_w         #557                // String text_see_through
+         3: sipush        1536
+         6: iconst_0
+         7: iconst_0
+         8: getstatic     #560                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_TEXT_SEETHROUGH:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        11: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        14: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        17: dup
+        18: aload_0
+        19: iconst_0
+        20: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        23: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        26: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        29: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        32: iconst_0
+        33: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        36: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        39: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_36436(net.minecraft.util.Identifier);
+    Code:
+         0: ldc_w         #563                // String text_intensity_polygon_offset
+         3: sipush        1536
+         6: iconst_0
+         7: iconst_1
+         8: getstatic     #566                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_TEXT_INTENSITY:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        11: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        14: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        17: dup
+        18: aload_0
+        19: iconst_0
+        20: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        23: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        26: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        29: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        32: iconst_0
+        33: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        36: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        39: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_36437(net.minecraft.util.Identifier);
+    Code:
+         0: ldc_w         #569                // String text_polygon_offset
+         3: sipush        1536
+         6: iconst_0
+         7: iconst_1
+         8: getstatic     #572                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_TEXT_POLYGON_OFFSET:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        11: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        14: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        17: dup
+        18: aload_0
+        19: iconst_0
+        20: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        23: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        26: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        29: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        32: iconst_0
+        33: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        36: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        39: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34833(net.minecraft.util.Identifier);
+    Code:
+         0: ldc_w         #575                // String text_intensity
+         3: ldc           #70                 // int 786432
+         5: iconst_0
+         6: iconst_0
+         7: getstatic     #566                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_TEXT_INTENSITY:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        10: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        13: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        16: dup
+        17: aload_0
+        18: iconst_0
+        19: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        22: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        25: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        28: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        31: iconst_0
+        32: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        35: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        38: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34834(net.minecraft.util.Identifier);
+    Code:
+         0: ldc_w         #578                // String text
+         3: ldc           #70                 // int 786432
+         5: iconst_0
+         6: iconst_0
+         7: getstatic     #581                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_TEXT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        10: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        13: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+        16: dup
+        17: aload_0
+        18: iconst_0
+        19: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        22: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        25: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        28: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        31: iconst_0
+        32: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        35: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        38: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34835(net.minecraft.util.Identifier);
+    Code:
+         0: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         3: dup
+         4: aload_0
+         5: iconst_0
+         6: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+         9: astore_1
+        10: ldc_w         #584                // String crumbling
+        13: sipush        1536
+        16: iconst_0
+        17: iconst_1
+        18: getstatic     #587                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_CRUMBLING:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        21: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        24: aload_1
+        25: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        28: iconst_0
+        29: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        32: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        35: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_67905(net.minecraft.util.Identifier);
+    Code:
+         0: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         3: dup
+         4: aload_0
+         5: iconst_0
+         6: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+         9: astore_1
+        10: ldc_w         #592                // String eyes
+        13: sipush        1536
+        16: iconst_0
+        17: iconst_1
+        18: getstatic     #595                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_EYES:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        21: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        24: aload_1
+        25: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        28: iconst_0
+        29: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        32: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        35: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34837(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: iconst_1
+        16: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        19: astore_1
+        20: ldc_w         #598                // String entity_alpha
+        23: sipush        1536
+        26: getstatic     #601                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_ENTITY_ALPHA:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        29: aload_1
+        30: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        33: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34838(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+        30: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        33: iconst_0
+        34: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        37: astore_1
+        38: ldc_w         #604                // String entity_shadow
+        41: sipush        1536
+        44: iconst_0
+        45: iconst_0
+        46: getstatic     #607                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_ENTITY_SHADOW:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        49: aload_1
+        50: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        53: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34839(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: iconst_0
+        28: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        31: astore_1
+        32: ldc_w         #610                // String entity_no_outline
+        35: sipush        1536
+        38: iconst_0
+        39: iconst_1
+        40: getstatic     #612                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_NO_OUTLINE:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        43: aload_1
+        44: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        47: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34840(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: iconst_0
+        28: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        31: astore_1
+        32: ldc_w         #615                // String entity_decal
+        35: sipush        1536
+        38: getstatic     #618                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_ENTITY_DECAL:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        41: aload_1
+        42: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        45: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34829(net.minecraft.util.Identifier, java.lang.Boolean);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: iconst_0
+        16: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        19: astore_2
+        20: ldc_w         #622                // String beacon_beam
+        23: sipush        1536
+        26: iconst_0
+        27: iconst_1
+        28: aload_1
+        29: invokevirtual #625                // Method java/lang/Boolean.booleanValue:()Z
+        32: ifeq          41
+        35: getstatic     #628                // Field net/minecraft/client/gl/RenderPipelines.BEACON_BEAM_TRANSLUCENT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        38: goto          44
+        41: getstatic     #633                // Field net/minecraft/client/gl/RenderPipelines.BEACON_BEAM_OPAQUE:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        44: aload_2
+        45: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        48: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34822(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: iconst_1
+        28: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        31: astore_1
+        32: ldc_w         #639                // String entity_smooth_cutout
+        35: sipush        1536
+        38: getstatic     #641                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_SMOOTH_CUTOUT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        41: aload_1
+        42: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        45: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_42598(net.minecraft.util.Identifier, java.lang.Boolean);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        18: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: aload_1
+        22: invokevirtual #625                // Method java/lang/Boolean.booleanValue:()Z
+        25: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        28: astore_2
+        29: ldc_w         #644                // String entity_translucent_emissive
+        32: sipush        1536
+        35: iconst_1
+        36: iconst_1
+        37: getstatic     #646                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        40: aload_2
+        41: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        44: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34830(net.minecraft.util.Identifier, java.lang.Boolean);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: aload_1
+        28: invokevirtual #625                // Method java/lang/Boolean.booleanValue:()Z
+        31: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        34: astore_2
+        35: ldc_w         #649                // String entity_translucent
+        38: sipush        1536
+        41: iconst_1
+        42: iconst_1
+        43: getstatic     #651                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_TRANSLUCENT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        46: aload_2
+        47: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        50: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34824(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #655                // Field ITEM_ENTITY_TARGET:Lnet/minecraft/client/render/RenderPhase$Target;
+        18: invokevirtual #524                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.target:(Lnet/minecraft/client/render/RenderPhase$Target;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        24: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        30: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        33: iconst_1
+        34: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        37: astore_1
+        38: ldc_w         #657                // String item_entity_translucent_cull
+        41: sipush        1536
+        44: iconst_1
+        45: iconst_1
+        46: getstatic     #660                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_ITEM_ENTITY_TRANSLUCENT_CULL:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        49: aload_1
+        50: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        53: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34831(net.minecraft.util.Identifier, java.lang.Boolean);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+        30: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        33: aload_1
+        34: invokevirtual #625                // Method java/lang/Boolean.booleanValue:()Z
+        37: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        40: astore_2
+        41: ldc_w         #663                // String entity_cutout_no_cull_z_offset
+        44: sipush        1536
+        47: iconst_1
+        48: iconst_0
+        49: getstatic     #665                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_CUTOUT_NO_CULL_Z_OFFSET:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        52: aload_2
+        53: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        56: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34832(net.minecraft.util.Identifier, java.lang.Boolean);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: aload_1
+        28: invokevirtual #625                // Method java/lang/Boolean.booleanValue:()Z
+        31: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        34: astore_2
+        35: ldc_w         #668                // String entity_cutout_no_cull
+        38: sipush        1536
+        41: iconst_1
+        42: iconst_0
+        43: getstatic     #670                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_CUTOUT_NO_CULL:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        46: aload_2
+        47: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        50: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_62288(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: iconst_1
+        28: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        31: astore_1
+        32: ldc_w         #673                // String entity_cutout
+        35: sipush        1536
+        38: iconst_1
+        39: iconst_0
+        40: getstatic     #675                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_CUTOUT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        43: aload_1
+        44: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        47: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_62289(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: getstatic     #679                // Field VIEW_OFFSET_Z_LAYERING_FORWARD:Lnet/minecraft/client/render/RenderPhase$Layering;
+        30: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        33: iconst_1
+        34: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        37: astore_1
+        38: ldc_w         #681                // String entity_solid_z_offset_forward
+        41: sipush        1536
+        44: iconst_1
+        45: iconst_0
+        46: getstatic     #684                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_SOLID_OFFSET_FORWARD:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        49: aload_1
+        50: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        53: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_34826(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: iconst_1
+        28: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        31: astore_1
+        32: ldc_w         #687                // String entity_solid
+        35: sipush        1536
+        38: iconst_1
+        39: iconst_0
+        40: getstatic     #689                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_SOLID:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        43: aload_1
+        44: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        47: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_65051(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+        30: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        33: iconst_1
+        34: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        37: astore_1
+        38: ldc_w         #692                // String armor_translucent
+        41: sipush        1536
+        44: iconst_1
+        45: iconst_1
+        46: getstatic     #694                // Field net/minecraft/client/gl/RenderPipelines.ARMOR_TRANSLUCENT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        49: aload_1
+        50: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        53: areturn
+
+  private static net.minecraft.client.render.RenderLayer method_67906(net.minecraft.util.Identifier);
+    Code:
+         0: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+         3: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+         6: dup
+         7: aload_0
+         8: iconst_0
+         9: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+        12: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        15: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        18: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        21: getstatic     #187                // Field ENABLE_OVERLAY_COLOR:Lnet/minecraft/client/render/RenderPhase$Overlay;
+        24: invokevirtual #191                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.overlay:(Lnet/minecraft/client/render/RenderPhase$Overlay;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        27: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+        30: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        33: iconst_1
+        34: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        37: astore_1
+        38: ldc_w         #697                // String armor_cutout_no_cull
+        41: sipush        1536
+        44: iconst_1
+        45: iconst_0
+        46: getstatic     #699                // Field net/minecraft/client/gl/RenderPipelines.ARMOR_CUTOUT_NO_CULL:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        49: aload_1
+        50: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        53: areturn
+
+  static {};
+    Code:
+         0: ldc_w         #703                // String solid
+         3: sipush        1536
+         6: iconst_1
+         7: iconst_0
+         8: getstatic     #705                // Field net/minecraft/client/gl/RenderPipelines.SOLID:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        11: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        14: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        17: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        20: getstatic     #708                // Field MIPMAP_BLOCK_ATLAS_TEXTURE:Lnet/minecraft/client/render/RenderPhase$Texture;
+        23: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        26: iconst_1
+        27: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        30: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        33: putstatic     #142                // Field SOLID:Lnet/minecraft/client/render/RenderLayer;
+        36: ldc_w         #710                // String cutout_mipped
+        39: sipush        1536
+        42: iconst_1
+        43: iconst_0
+        44: getstatic     #712                // Field net/minecraft/client/gl/RenderPipelines.CUTOUT_MIPPED:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        47: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        50: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        53: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        56: getstatic     #708                // Field MIPMAP_BLOCK_ATLAS_TEXTURE:Lnet/minecraft/client/render/RenderPhase$Texture;
+        59: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        62: iconst_1
+        63: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+        66: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+        69: putstatic     #145                // Field CUTOUT_MIPPED:Lnet/minecraft/client/render/RenderLayer;
+        72: ldc_w         #714                // String cutout
+        75: sipush        1536
+        78: iconst_1
+        79: iconst_0
+        80: getstatic     #716                // Field net/minecraft/client/gl/RenderPipelines.CUTOUT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+        83: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        86: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+        89: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        92: getstatic     #719                // Field BLOCK_ATLAS_TEXTURE:Lnet/minecraft/client/render/RenderPhase$Texture;
+        95: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+        98: iconst_1
+        99: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       102: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       105: putstatic     #148                // Field CUTOUT:Lnet/minecraft/client/render/RenderLayer;
+       108: ldc_w         #721                // String translucent_moving_block
+       111: ldc           #70                 // int 786432
+       113: iconst_0
+       114: iconst_1
+       115: getstatic     #724                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_TRANSLUCENT_MOVING_BLOCK:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       118: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       121: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+       124: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       127: getstatic     #708                // Field MIPMAP_BLOCK_ATLAS_TEXTURE:Lnet/minecraft/client/render/RenderPhase$Texture;
+       130: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       133: getstatic     #655                // Field ITEM_ENTITY_TARGET:Lnet/minecraft/client/render/RenderPhase$Target;
+       136: invokevirtual #524                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.target:(Lnet/minecraft/client/render/RenderPhase$Target;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       139: iconst_1
+       140: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       143: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       146: putstatic     #151                // Field TRANSLUCENT_MOVING_BLOCK:Lnet/minecraft/client/render/RenderLayer;
+       149: invokedynamic #730,  0            // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+       154: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       157: putstatic     #156                // Field ARMOR_CUTOUT_NO_CULL:Ljava/util/function/Function;
+       160: invokedynamic #734,  0            // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+       165: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       168: putstatic     #220                // Field ARMOR_TRANSLUCENT:Ljava/util/function/Function;
+       171: invokedynamic #738,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+       176: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       179: putstatic     #223                // Field ENTITY_SOLID:Ljava/util/function/Function;
+       182: invokedynamic #742,  0            // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+       187: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       190: putstatic     #226                // Field ENTITY_SOLID_Z_OFFSET_FORWARD:Ljava/util/function/Function;
+       193: invokedynamic #746,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+       198: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       201: putstatic     #229                // Field ENTITY_CUTOUT:Ljava/util/function/Function;
+       204: invokedynamic #754,  0            // InvokeDynamic #6:apply:()Ljava/util/function/BiFunction;
+       209: invokestatic  #757                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/BiFunction;)Ljava/util/function/BiFunction;
+       212: putstatic     #234                // Field ENTITY_CUTOUT_NO_CULL:Ljava/util/function/BiFunction;
+       215: invokedynamic #761,  0            // InvokeDynamic #7:apply:()Ljava/util/function/BiFunction;
+       220: invokestatic  #757                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/BiFunction;)Ljava/util/function/BiFunction;
+       223: putstatic     #250                // Field ENTITY_CUTOUT_NO_CULL_Z_OFFSET:Ljava/util/function/BiFunction;
+       226: invokedynamic #765,  0            // InvokeDynamic #8:apply:()Ljava/util/function/Function;
+       231: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       234: putstatic     #255                // Field ITEM_ENTITY_TRANSLUCENT_CULL:Ljava/util/function/Function;
+       237: invokedynamic #769,  0            // InvokeDynamic #9:apply:()Ljava/util/function/BiFunction;
+       242: invokestatic  #757                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/BiFunction;)Ljava/util/function/BiFunction;
+       245: putstatic     #258                // Field ENTITY_TRANSLUCENT:Ljava/util/function/BiFunction;
+       248: invokedynamic #773,  0            // InvokeDynamic #10:apply:()Ljava/util/function/BiFunction;
+       253: invokestatic  #757                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/BiFunction;)Ljava/util/function/BiFunction;
+       256: putstatic     #263                // Field ENTITY_TRANSLUCENT_EMISSIVE:Ljava/util/function/BiFunction;
+       259: invokedynamic #777,  0            // InvokeDynamic #11:apply:()Ljava/util/function/Function;
+       264: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       267: putstatic     #268                // Field ENTITY_SMOOTH_CUTOUT:Ljava/util/function/Function;
+       270: invokedynamic #781,  0            // InvokeDynamic #12:apply:()Ljava/util/function/BiFunction;
+       275: invokestatic  #757                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/BiFunction;)Ljava/util/function/BiFunction;
+       278: putstatic     #271                // Field BEACON_BEAM:Ljava/util/function/BiFunction;
+       281: invokedynamic #785,  0            // InvokeDynamic #13:apply:()Ljava/util/function/Function;
+       286: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       289: putstatic     #274                // Field ENTITY_DECAL:Ljava/util/function/Function;
+       292: invokedynamic #789,  0            // InvokeDynamic #14:apply:()Ljava/util/function/Function;
+       297: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       300: putstatic     #277                // Field ENTITY_NO_OUTLINE:Ljava/util/function/Function;
+       303: invokedynamic #793,  0            // InvokeDynamic #15:apply:()Ljava/util/function/Function;
+       308: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       311: putstatic     #280                // Field ENTITY_SHADOW:Ljava/util/function/Function;
+       314: invokedynamic #797,  0            // InvokeDynamic #16:apply:()Ljava/util/function/Function;
+       319: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       322: putstatic     #283                // Field ENTITY_ALPHA:Ljava/util/function/Function;
+       325: invokedynamic #801,  0            // InvokeDynamic #17:apply:()Ljava/util/function/Function;
+       330: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       333: putstatic     #286                // Field EYES:Ljava/util/function/Function;
+       336: ldc_w         #803                // String leash
+       339: sipush        1536
+       342: getstatic     #806                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_LEASH:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       345: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       348: getstatic     #810                // Field NO_TEXTURE:Lnet/minecraft/client/render/RenderPhase$TextureBase;
+       351: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       354: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+       357: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       360: iconst_0
+       361: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       364: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       367: putstatic     #316                // Field LEASH:Lnet/minecraft/client/render/RenderLayer;
+       370: ldc_w         #812                // String water_mask
+       373: sipush        1536
+       376: getstatic     #815                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_WATER_MASK:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       379: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       382: getstatic     #810                // Field NO_TEXTURE:Lnet/minecraft/client/render/RenderPhase$TextureBase;
+       385: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       388: iconst_0
+       389: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       392: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       395: putstatic     #319                // Field WATER_MASK:Lnet/minecraft/client/render/RenderLayer;
+       398: ldc_w         #817                // String armor_entity_glint
+       401: sipush        1536
+       404: getstatic     #819                // Field net/minecraft/client/gl/RenderPipelines.GLINT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       407: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       410: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+       413: dup
+       414: getstatic     #824                // Field net/minecraft/client/render/item/ItemRenderer.ENTITY_ENCHANTMENT_GLINT:Lnet/minecraft/util/Identifier;
+       417: iconst_0
+       418: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+       421: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       424: getstatic     #828                // Field ARMOR_ENTITY_GLINT_TEXTURING:Lnet/minecraft/client/render/RenderPhase$Texturing;
+       427: invokevirtual #303                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texturing:(Lnet/minecraft/client/render/RenderPhase$Texturing;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       430: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+       433: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       436: iconst_0
+       437: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       440: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       443: putstatic     #326                // Field ARMOR_ENTITY_GLINT:Lnet/minecraft/client/render/RenderLayer;
+       446: ldc_w         #830                // String glint_translucent
+       449: sipush        1536
+       452: getstatic     #819                // Field net/minecraft/client/gl/RenderPipelines.GLINT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       455: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       458: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+       461: dup
+       462: getstatic     #833                // Field net/minecraft/client/render/item/ItemRenderer.ITEM_ENCHANTMENT_GLINT:Lnet/minecraft/util/Identifier;
+       465: iconst_0
+       466: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+       469: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       472: getstatic     #836                // Field GLINT_TEXTURING:Lnet/minecraft/client/render/RenderPhase$Texturing;
+       475: invokevirtual #303                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texturing:(Lnet/minecraft/client/render/RenderPhase$Texturing;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       478: getstatic     #655                // Field ITEM_ENTITY_TARGET:Lnet/minecraft/client/render/RenderPhase$Target;
+       481: invokevirtual #524                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.target:(Lnet/minecraft/client/render/RenderPhase$Target;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       484: iconst_0
+       485: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       488: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       491: putstatic     #329                // Field GLINT_TRANSLUCENT:Lnet/minecraft/client/render/RenderLayer;
+       494: ldc_w         #838                // String glint
+       497: sipush        1536
+       500: getstatic     #819                // Field net/minecraft/client/gl/RenderPipelines.GLINT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       503: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       506: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+       509: dup
+       510: getstatic     #833                // Field net/minecraft/client/render/item/ItemRenderer.ITEM_ENCHANTMENT_GLINT:Lnet/minecraft/util/Identifier;
+       513: iconst_0
+       514: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+       517: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       520: getstatic     #836                // Field GLINT_TEXTURING:Lnet/minecraft/client/render/RenderPhase$Texturing;
+       523: invokevirtual #303                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texturing:(Lnet/minecraft/client/render/RenderPhase$Texturing;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       526: iconst_0
+       527: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       530: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       533: putstatic     #332                // Field GLINT:Lnet/minecraft/client/render/RenderLayer;
+       536: ldc_w         #840                // String entity_glint
+       539: sipush        1536
+       542: getstatic     #819                // Field net/minecraft/client/gl/RenderPipelines.GLINT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       545: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       548: new           #21                 // class net/minecraft/client/render/RenderPhase$Texture
+       551: dup
+       552: getstatic     #833                // Field net/minecraft/client/render/item/ItemRenderer.ITEM_ENCHANTMENT_GLINT:Lnet/minecraft/util/Identifier;
+       555: iconst_0
+       556: invokespecial #172                // Method net/minecraft/client/render/RenderPhase$Texture."<init>":(Lnet/minecraft/util/Identifier;Z)V
+       559: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       562: getstatic     #843                // Field ENTITY_GLINT_TEXTURING:Lnet/minecraft/client/render/RenderPhase$Texturing;
+       565: invokevirtual #303                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texturing:(Lnet/minecraft/client/render/RenderPhase$Texturing;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       568: iconst_0
+       569: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       572: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       575: putstatic     #335                // Field ENTITY_GLINT:Lnet/minecraft/client/render/RenderLayer;
+       578: invokedynamic #847,  0            // InvokeDynamic #18:apply:()Ljava/util/function/Function;
+       583: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       586: putstatic     #338                // Field CRUMBLING:Ljava/util/function/Function;
+       589: invokedynamic #851,  0            // InvokeDynamic #19:apply:()Ljava/util/function/Function;
+       594: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       597: putstatic     #341                // Field TEXT:Ljava/util/function/Function;
+       600: ldc_w         #853                // String text_background
+       603: sipush        1536
+       606: iconst_0
+       607: iconst_1
+       608: getstatic     #856                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_TEXT_BG:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       611: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       614: getstatic     #810                // Field NO_TEXTURE:Lnet/minecraft/client/render/RenderPhase$TextureBase;
+       617: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       620: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+       623: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       626: iconst_0
+       627: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       630: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       633: putstatic     #344                // Field TEXT_BACKGROUND:Lnet/minecraft/client/render/RenderLayer;
+       636: invokedynamic #860,  0            // InvokeDynamic #20:apply:()Ljava/util/function/Function;
+       641: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       644: putstatic     #347                // Field TEXT_INTENSITY:Ljava/util/function/Function;
+       647: invokedynamic #864,  0            // InvokeDynamic #21:apply:()Ljava/util/function/Function;
+       652: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       655: putstatic     #350                // Field TEXT_POLYGON_OFFSET:Ljava/util/function/Function;
+       658: invokedynamic #868,  0            // InvokeDynamic #22:apply:()Ljava/util/function/Function;
+       663: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       666: putstatic     #353                // Field TEXT_INTENSITY_POLYGON_OFFSET:Ljava/util/function/Function;
+       669: invokedynamic #872,  0            // InvokeDynamic #23:apply:()Ljava/util/function/Function;
+       674: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       677: putstatic     #356                // Field TEXT_SEE_THROUGH:Ljava/util/function/Function;
+       680: ldc_w         #874                // String text_background_see_through
+       683: sipush        1536
+       686: iconst_0
+       687: iconst_1
+       688: getstatic     #877                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_TEXT_BG_SEETHROUGH:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       691: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       694: getstatic     #810                // Field NO_TEXTURE:Lnet/minecraft/client/render/RenderPhase$TextureBase;
+       697: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       700: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+       703: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       706: iconst_0
+       707: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       710: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       713: putstatic     #359                // Field TEXT_BACKGROUND_SEE_THROUGH:Lnet/minecraft/client/render/RenderLayer;
+       716: invokedynamic #881,  0            // InvokeDynamic #24:apply:()Ljava/util/function/Function;
+       721: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+       724: putstatic     #362                // Field TEXT_INTENSITY_SEE_THROUGH:Ljava/util/function/Function;
+       727: ldc_w         #883                // String lightning
+       730: sipush        1536
+       733: iconst_0
+       734: iconst_1
+       735: getstatic     #886                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_LIGHTNING:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       738: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       741: getstatic     #520                // Field WEATHER_TARGET:Lnet/minecraft/client/render/RenderPhase$Target;
+       744: invokevirtual #524                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.target:(Lnet/minecraft/client/render/RenderPhase$Target;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       747: iconst_0
+       748: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       751: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       754: putstatic     #365                // Field LIGHTNING:Lnet/minecraft/client/render/RenderLayer;
+       757: ldc_w         #888                // String dragon_rays
+       760: sipush        1536
+       763: iconst_0
+       764: iconst_0
+       765: getstatic     #891                // Field net/minecraft/client/gl/RenderPipelines.RENDERTYPE_LIGHTNING_DRAGON_RAYS:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       768: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       771: iconst_0
+       772: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       775: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       778: putstatic     #368                // Field DRAGON_RAYS:Lnet/minecraft/client/render/RenderLayer;
+       781: ldc_w         #893                // String dragon_rays_depth
+       784: sipush        1536
+       787: iconst_0
+       788: iconst_0
+       789: getstatic     #896                // Field net/minecraft/client/gl/RenderPipelines.POSITION_DRAGON_RAYS_DEPTH:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       792: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       795: iconst_0
+       796: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       799: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       802: putstatic     #371                // Field DRAGON_RAYS_DEPTH:Lnet/minecraft/client/render/RenderLayer;
+       805: ldc_w         #898                // String tripwire
+       808: sipush        1536
+       811: iconst_1
+       812: iconst_1
+       813: getstatic     #900                // Field net/minecraft/client/gl/RenderPipelines.TRIPWIRE:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       816: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       819: getstatic     #179                // Field ENABLE_LIGHTMAP:Lnet/minecraft/client/render/RenderPhase$Lightmap;
+       822: invokevirtual #183                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lightmap:(Lnet/minecraft/client/render/RenderPhase$Lightmap;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       825: getstatic     #708                // Field MIPMAP_BLOCK_ATLAS_TEXTURE:Lnet/minecraft/client/render/RenderPhase$Texture;
+       828: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       831: getstatic     #520                // Field WEATHER_TARGET:Lnet/minecraft/client/render/RenderPhase$Target;
+       834: invokevirtual #524                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.target:(Lnet/minecraft/client/render/RenderPhase$Target;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       837: iconst_1
+       838: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       841: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       844: putstatic     #374                // Field TRIPWIRE:Lnet/minecraft/client/render/RenderLayer;
+       847: ldc_w         #902                // String end_portal
+       850: sipush        1536
+       853: iconst_0
+       854: iconst_0
+       855: getstatic     #904                // Field net/minecraft/client/gl/RenderPipelines.END_PORTAL:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       858: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       861: invokestatic  #908                // Method net/minecraft/client/render/RenderPhase$Textures.create:()Lnet/minecraft/client/render/RenderPhase$Textures$Builder;
+       864: getstatic     #913                // Field net/minecraft/client/render/block/entity/AbstractEndPortalBlockEntityRenderer.SKY_TEXTURE:Lnet/minecraft/util/Identifier;
+       867: iconst_0
+       868: invokevirtual #917                // Method net/minecraft/client/render/RenderPhase$Textures$Builder.add:(Lnet/minecraft/util/Identifier;Z)Lnet/minecraft/client/render/RenderPhase$Textures$Builder;
+       871: getstatic     #920                // Field net/minecraft/client/render/block/entity/AbstractEndPortalBlockEntityRenderer.PORTAL_TEXTURE:Lnet/minecraft/util/Identifier;
+       874: iconst_0
+       875: invokevirtual #917                // Method net/minecraft/client/render/RenderPhase$Textures$Builder.add:(Lnet/minecraft/util/Identifier;Z)Lnet/minecraft/client/render/RenderPhase$Textures$Builder;
+       878: invokevirtual #923                // Method net/minecraft/client/render/RenderPhase$Textures$Builder.build:()Lnet/minecraft/client/render/RenderPhase$Textures;
+       881: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       884: iconst_0
+       885: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       888: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       891: putstatic     #377                // Field END_PORTAL:Lnet/minecraft/client/render/RenderLayer;
+       894: ldc_w         #925                // String end_gateway
+       897: sipush        1536
+       900: iconst_0
+       901: iconst_0
+       902: getstatic     #927                // Field net/minecraft/client/gl/RenderPipelines.END_GATEWAY:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       905: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       908: invokestatic  #908                // Method net/minecraft/client/render/RenderPhase$Textures.create:()Lnet/minecraft/client/render/RenderPhase$Textures$Builder;
+       911: getstatic     #913                // Field net/minecraft/client/render/block/entity/AbstractEndPortalBlockEntityRenderer.SKY_TEXTURE:Lnet/minecraft/util/Identifier;
+       914: iconst_0
+       915: invokevirtual #917                // Method net/minecraft/client/render/RenderPhase$Textures$Builder.add:(Lnet/minecraft/util/Identifier;Z)Lnet/minecraft/client/render/RenderPhase$Textures$Builder;
+       918: getstatic     #920                // Field net/minecraft/client/render/block/entity/AbstractEndPortalBlockEntityRenderer.PORTAL_TEXTURE:Lnet/minecraft/util/Identifier;
+       921: iconst_0
+       922: invokevirtual #917                // Method net/minecraft/client/render/RenderPhase$Textures$Builder.add:(Lnet/minecraft/util/Identifier;Z)Lnet/minecraft/client/render/RenderPhase$Textures$Builder;
+       925: invokevirtual #923                // Method net/minecraft/client/render/RenderPhase$Textures$Builder.build:()Lnet/minecraft/client/render/RenderPhase$Textures;
+       928: invokevirtual #175                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.texture:(Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       931: iconst_0
+       932: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       935: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       938: putstatic     #380                // Field END_GATEWAY:Lnet/minecraft/client/render/RenderLayer;
+       941: ldc_w         #929                // String lines
+       944: sipush        1536
+       947: getstatic     #931                // Field net/minecraft/client/gl/RenderPipelines.LINES:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       950: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       953: new           #51                 // class net/minecraft/client/render/RenderPhase$LineWidth
+       956: dup
+       957: invokestatic  #934                // Method java/util/OptionalDouble.empty:()Ljava/util/OptionalDouble;
+       960: invokespecial #542                // Method net/minecraft/client/render/RenderPhase$LineWidth."<init>":(Ljava/util/OptionalDouble;)V
+       963: invokevirtual #545                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lineWidth:(Lnet/minecraft/client/render/RenderPhase$LineWidth;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       966: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+       969: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       972: getstatic     #655                // Field ITEM_ENTITY_TARGET:Lnet/minecraft/client/render/RenderPhase$Target;
+       975: invokevirtual #524                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.target:(Lnet/minecraft/client/render/RenderPhase$Target;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+       978: iconst_0
+       979: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+       982: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       985: putstatic     #383                // Field LINES:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+       988: ldc_w         #936                // String secondary_block_outline
+       991: sipush        1536
+       994: getstatic     #939                // Field net/minecraft/client/gl/RenderPipelines.SECOND_BLOCK_OUTLINE:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+       997: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1000: new           #51                 // class net/minecraft/client/render/RenderPhase$LineWidth
+      1003: dup
+      1004: ldc2_w        #940                // double 7.0d
+      1007: invokestatic  #539                // Method java/util/OptionalDouble.of:(D)Ljava/util/OptionalDouble;
+      1010: invokespecial #542                // Method net/minecraft/client/render/RenderPhase$LineWidth."<init>":(Ljava/util/OptionalDouble;)V
+      1013: invokevirtual #545                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lineWidth:(Lnet/minecraft/client/render/RenderPhase$LineWidth;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1016: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+      1019: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1022: getstatic     #655                // Field ITEM_ENTITY_TARGET:Lnet/minecraft/client/render/RenderPhase$Target;
+      1025: invokevirtual #524                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.target:(Lnet/minecraft/client/render/RenderPhase$Target;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1028: iconst_0
+      1029: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+      1032: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1035: putstatic     #386                // Field SECONDARY_BLOCK_OUTLINE:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1038: ldc_w         #943                // String line_strip
+      1041: sipush        1536
+      1044: getstatic     #945                // Field net/minecraft/client/gl/RenderPipelines.LINE_STRIP:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      1047: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1050: new           #51                 // class net/minecraft/client/render/RenderPhase$LineWidth
+      1053: dup
+      1054: invokestatic  #934                // Method java/util/OptionalDouble.empty:()Ljava/util/OptionalDouble;
+      1057: invokespecial #542                // Method net/minecraft/client/render/RenderPhase$LineWidth."<init>":(Ljava/util/OptionalDouble;)V
+      1060: invokevirtual #545                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.lineWidth:(Lnet/minecraft/client/render/RenderPhase$LineWidth;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1063: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+      1066: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1069: getstatic     #655                // Field ITEM_ENTITY_TARGET:Lnet/minecraft/client/render/RenderPhase$Target;
+      1072: invokevirtual #524                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.target:(Lnet/minecraft/client/render/RenderPhase$Target;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1075: iconst_0
+      1076: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+      1079: invokestatic  #547                // Method of:(Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1082: putstatic     #389                // Field LINE_STRIP:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1085: invokedynamic #950,  0            // InvokeDynamic #25:apply:()Ljava/util/function/Function;
+      1090: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+      1093: putstatic     #394                // Field DEBUG_LINE_STRIP:Ljava/util/function/Function;
+      1096: ldc_w         #952                // String debug_filled_box
+      1099: sipush        1536
+      1102: iconst_0
+      1103: iconst_1
+      1104: getstatic     #954                // Field net/minecraft/client/gl/RenderPipelines.DEBUG_FILLED_BOX:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      1107: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1110: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+      1113: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1116: iconst_0
+      1117: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+      1120: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1123: putstatic     #403                // Field DEBUG_FILLED_BOX:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1126: ldc_w         #956                // String debug_quads
+      1129: sipush        1536
+      1132: iconst_0
+      1133: iconst_1
+      1134: getstatic     #958                // Field net/minecraft/client/gl/RenderPipelines.DEBUG_QUADS:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      1137: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1140: iconst_0
+      1141: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+      1144: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1147: putstatic     #406                // Field DEBUG_QUADS:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1150: ldc_w         #960                // String debug_triangle_fan
+      1153: sipush        1536
+      1156: iconst_0
+      1157: iconst_1
+      1158: getstatic     #962                // Field net/minecraft/client/gl/RenderPipelines.DEBUG_TRIANGLE_FAN:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      1161: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1164: iconst_0
+      1165: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+      1168: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1171: putstatic     #409                // Field DEBUG_TRIANGLE_FAN:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1174: ldc_w         #964                // String debug_structure_quads
+      1177: sipush        1536
+      1180: iconst_0
+      1181: iconst_1
+      1182: getstatic     #966                // Field net/minecraft/client/gl/RenderPipelines.DEBUG_STRUCTURE_QUADS:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      1185: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1188: iconst_0
+      1189: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+      1192: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1195: putstatic     #412                // Field DEBUG_STRUCTURE_QUADS:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1198: ldc_w         #968                // String debug_section_quads
+      1201: sipush        1536
+      1204: iconst_0
+      1205: iconst_1
+      1206: getstatic     #970                // Field net/minecraft/client/gl/RenderPipelines.DEBUG_SECTION_QUADS:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      1209: invokestatic  #168                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters.builder:()Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1212: getstatic     #195                // Field VIEW_OFFSET_Z_LAYERING:Lnet/minecraft/client/render/RenderPhase$Layering;
+      1215: invokevirtual #199                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.layering:(Lnet/minecraft/client/render/RenderPhase$Layering;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
+      1218: iconst_0
+      1219: invokevirtual #203                // Method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder.build:(Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+      1222: invokestatic  #215                // Method of:(Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1225: putstatic     #415                // Field DEBUG_SECTION_QUADS:Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+      1228: getstatic     #973                // Field net/minecraft/client/gl/RenderPipelines.WEATHER_DEPTH:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      1231: invokestatic  #975                // Method createWeather:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Ljava/util/function/Function;
+      1234: putstatic     #445                // Field WEATHER_ALL_MASK:Ljava/util/function/Function;
+      1237: getstatic     #978                // Field net/minecraft/client/gl/RenderPipelines.WEATHER_NO_DEPTH:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      1240: invokestatic  #975                // Method createWeather:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Ljava/util/function/Function;
+      1243: putstatic     #447                // Field WEATHER_COLOR_MASK:Ljava/util/function/Function;
+      1246: invokedynamic #982,  0            // InvokeDynamic #26:apply:()Ljava/util/function/Function;
+      1251: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+      1254: putstatic     #450                // Field BLOCK_SCREEN_EFFECT:Ljava/util/function/Function;
+      1257: invokedynamic #986,  0            // InvokeDynamic #27:apply:()Ljava/util/function/Function;
+      1262: invokestatic  #441                // Method net/minecraft/util/Util.memoize:(Ljava/util/function/Function;)Ljava/util/function/Function;
+      1265: putstatic     #453                // Field FIRE_SCREEN_EFFECT:Ljava/util/function/Function;
+      1268: return
+}

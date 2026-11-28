@@ -1,0 +1,24 @@
+Compiled from "DebugRenderer.java"
+public class net.minecraft.client.render.debug.DebugRenderer {
+  private final java.util.List<net.minecraft.client.render.debug.DebugRenderer$Renderer> debugRenderers;
+  private final java.util.List<net.minecraft.client.render.debug.DebugRenderer$Renderer> lateDebugRenderers;
+  private long currentVersion;
+  public net.minecraft.client.render.debug.DebugRenderer();
+  public void initRenderers();
+  public void render(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.Frustum, net.minecraft.client.render.VertexConsumerProvider$Immediate, double, double, double, boolean);
+  public static java.util.Optional<net.minecraft.entity.Entity> getTargetedEntity(net.minecraft.entity.Entity, int);
+  public static void drawBlockBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.util.math.BlockPos, float, float, float, float);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.util.math.BlockPos, net.minecraft.util.math.BlockPos, float, float, float, float);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.util.math.BlockPos, float, float, float, float, float);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.util.math.Box, float, float, float, float);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, double, double, double, double, double, double, float, float, float, float);
+  public static void drawFloatingText(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, java.lang.String, net.minecraft.util.math.BlockPos, int, int, float);
+  public static void drawLargeFloatingText(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.entity.Entity, int, java.lang.String, int, float);
+  public static void drawString(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, java.lang.String, int, int, int, int);
+  public static void drawString(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, java.lang.String, double, double, double, int);
+  public static void drawString(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, java.lang.String, double, double, double, int, float);
+  public static void drawString(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, java.lang.String, double, double, double, int, float, boolean, float, boolean);
+  private static net.minecraft.util.math.Vec3d hueToRgb(float);
+  private static net.minecraft.util.math.Vec3d shiftHue(float, float, float, float);
+  public static void drawVoxelShapeOutlines(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, net.minecraft.util.shape.VoxelShape, double, double, double, float, float, float, float, boolean);
+}

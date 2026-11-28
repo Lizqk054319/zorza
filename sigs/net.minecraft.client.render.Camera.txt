@@ -1,0 +1,48 @@
+Compiled from "Camera.java"
+public class net.minecraft.client.render.Camera implements net.minecraft.world.waypoint.TrackedWaypoint$YawProvider {
+  private static final float BASE_CAMERA_DISTANCE;
+  private static final org.joml.Vector3f HORIZONTAL;
+  private static final org.joml.Vector3f VERTICAL;
+  private static final org.joml.Vector3f DIAGONAL;
+  private boolean ready;
+  private net.minecraft.world.BlockView area;
+  private net.minecraft.entity.Entity focusedEntity;
+  private net.minecraft.util.math.Vec3d pos;
+  private final net.minecraft.util.math.BlockPos$Mutable blockPos;
+  private final org.joml.Vector3f horizontalPlane;
+  private final org.joml.Vector3f verticalPlane;
+  private final org.joml.Vector3f diagonalPlane;
+  private float pitch;
+  private float yaw;
+  private final org.joml.Quaternionf rotation;
+  private boolean thirdPerson;
+  private float cameraY;
+  private float lastCameraY;
+  private float lastTickProgress;
+  public net.minecraft.client.render.Camera();
+  public void update(net.minecraft.world.BlockView, net.minecraft.entity.Entity, boolean, boolean, float);
+  public void updateEyeHeight();
+  private float clipToSpace(float);
+  protected void moveBy(float, float, float);
+  protected void setRotation(float, float);
+  protected void setPos(double, double, double);
+  protected void setPos(net.minecraft.util.math.Vec3d);
+  public net.minecraft.util.math.Vec3d getPos();
+  public net.minecraft.util.math.BlockPos getBlockPos();
+  public float getPitch();
+  public float getYaw();
+  public org.joml.Quaternionf getRotation();
+  public net.minecraft.entity.Entity getFocusedEntity();
+  public boolean isReady();
+  public boolean isThirdPerson();
+  public net.minecraft.client.render.Camera$Projection getProjection();
+  public net.minecraft.block.enums.CameraSubmersionType getSubmersionType();
+  public final org.joml.Vector3f getHorizontalPlane();
+  public final org.joml.Vector3f getVerticalPlane();
+  public final org.joml.Vector3f getDiagonalPlane();
+  public void reset();
+  public float getLastTickProgress();
+  public float getCameraYaw();
+  public net.minecraft.util.math.Vec3d getCameraPos();
+  static {};
+}

@@ -1,0 +1,23 @@
+Compiled from "DirectConnectScreen.java"
+public class net.minecraft.client.gui.screen.multiplayer.DirectConnectScreen extends net.minecraft.client.gui.screen.Screen {
+  private static final net.minecraft.text.Text ENTER_IP_TEXT;
+  private net.minecraft.client.gui.widget.ButtonWidget selectServerButton;
+  private final net.minecraft.client.network.ServerInfo serverEntry;
+  private net.minecraft.client.gui.widget.TextFieldWidget addressField;
+  private final it.unimi.dsi.fastutil.booleans.BooleanConsumer callback;
+  private final net.minecraft.client.gui.screen.Screen parent;
+  public net.minecraft.client.gui.screen.multiplayer.DirectConnectScreen(net.minecraft.client.gui.screen.Screen, it.unimi.dsi.fastutil.booleans.BooleanConsumer, net.minecraft.client.network.ServerInfo);
+  public boolean keyPressed(net.minecraft.client.input.KeyInput);
+  protected void init();
+  protected void setInitialFocus();
+  public void resize(net.minecraft.client.MinecraftClient, int, int);
+  private void saveAndClose();
+  public void close();
+  public void removed();
+  private void onAddressFieldChanged();
+  public void render(net.minecraft.client.gui.DrawContext, int, int, float);
+  private void method_19812(net.minecraft.client.gui.widget.ButtonWidget);
+  private void method_19813(net.minecraft.client.gui.widget.ButtonWidget);
+  private void method_19376(java.lang.String);
+  static {};
+}
