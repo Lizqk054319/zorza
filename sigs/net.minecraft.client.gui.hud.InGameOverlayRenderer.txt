@@ -1,0 +1,22 @@
+Compiled from "InGameOverlayRenderer.java"
+public class net.minecraft.client.gui.hud.InGameOverlayRenderer {
+  private static final net.minecraft.util.Identifier UNDERWATER_TEXTURE;
+  private final net.minecraft.client.MinecraftClient client;
+  private final net.minecraft.client.render.VertexConsumerProvider vertexConsumers;
+  public static final int field_59969;
+  private net.minecraft.item.ItemStack floatingItem;
+  private int floatingItemTimer;
+  private float floatingItemOffsetX;
+  private float floatingItemOffsetY;
+  public net.minecraft.client.gui.hud.InGameOverlayRenderer(net.minecraft.client.MinecraftClient, net.minecraft.client.render.VertexConsumerProvider);
+  public void tickFloatingItemTimer();
+  public void renderOverlays(boolean, float);
+  private void renderFloatingItem(net.minecraft.client.util.math.MatrixStack, float);
+  public void clearFloatingItem();
+  public void setFloatingItem(net.minecraft.item.ItemStack, net.minecraft.util.math.random.Random);
+  private static net.minecraft.block.BlockState getInWallBlockState(net.minecraft.entity.player.PlayerEntity);
+  private static void renderInWallOverlay(net.minecraft.client.texture.Sprite, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider);
+  private static void renderUnderwaterOverlay(net.minecraft.client.MinecraftClient, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider);
+  private static void renderFireOverlay(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider);
+  static {};
+}

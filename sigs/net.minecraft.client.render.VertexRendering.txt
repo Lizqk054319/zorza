@@ -1,0 +1,13 @@
+Compiled from "VertexRendering.java"
+public class net.minecraft.client.render.VertexRendering {
+  public net.minecraft.client.render.VertexRendering();
+  public static void drawOutline(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, net.minecraft.util.shape.VoxelShape, double, double, double, int);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, net.minecraft.util.math.Box, float, float, float, float);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, double, double, double, double, double, double, float, float, float, float);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, double, double, double, double, double, double, float, float, float, float, float, float, float);
+  public static void drawFilledBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, double, double, double, double, double, double, float, float, float, float);
+  public static void drawFilledBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, float, float, float, float, float, float, float, float, float, float);
+  public static void drawSide(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, net.minecraft.util.math.Direction, float, float, float, float, float, float, float, float, float, float);
+  public static void drawVector(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, org.joml.Vector3f, net.minecraft.util.math.Vec3d, int);
+  private static void method_62299(net.minecraft.client.render.VertexConsumer, net.minecraft.client.util.math.MatrixStack$Entry, double, double, double, int, double, double, double, double, double, double);
+}

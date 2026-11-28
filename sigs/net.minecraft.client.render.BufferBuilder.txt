@@ -1,0 +1,42 @@
+Compiled from "BufferBuilder.java"
+public class net.minecraft.client.render.BufferBuilder implements net.minecraft.client.render.VertexConsumer {
+  private static final int field_61051;
+  private static final long field_52068;
+  private static final long field_52069;
+  private static final boolean LITTLE_ENDIAN;
+  private final net.minecraft.client.util.BufferAllocator allocator;
+  private long vertexPointer;
+  private int vertexCount;
+  private final com.mojang.blaze3d.vertex.VertexFormat vertexFormat;
+  private final com.mojang.blaze3d.vertex.VertexFormat$DrawMode drawMode;
+  private final boolean canSkipElementChecks;
+  private final boolean hasOverlay;
+  private final int vertexSizeByte;
+  private final int requiredMask;
+  private final int[] offsetsByElementId;
+  private int currentMask;
+  private boolean building;
+  public net.minecraft.client.render.BufferBuilder(net.minecraft.client.util.BufferAllocator, com.mojang.blaze3d.vertex.VertexFormat$DrawMode, com.mojang.blaze3d.vertex.VertexFormat);
+  public net.minecraft.client.render.BuiltBuffer endNullable();
+  public net.minecraft.client.render.BuiltBuffer end();
+  private void ensureBuilding();
+  private net.minecraft.client.render.BuiltBuffer build();
+  private long beginVertex();
+  private long beginElement(com.mojang.blaze3d.vertex.VertexFormatElement);
+  private void endVertex();
+  private static void putColor(long, int);
+  private static void putInt(long, int);
+  public net.minecraft.client.render.VertexConsumer vertex(float, float, float);
+  public net.minecraft.client.render.VertexConsumer color(int, int, int, int);
+  public net.minecraft.client.render.VertexConsumer color(int);
+  public net.minecraft.client.render.VertexConsumer texture(float, float);
+  public net.minecraft.client.render.VertexConsumer overlay(int, int);
+  public net.minecraft.client.render.VertexConsumer overlay(int);
+  public net.minecraft.client.render.VertexConsumer light(int, int);
+  public net.minecraft.client.render.VertexConsumer light(int);
+  private net.minecraft.client.render.VertexConsumer uv(short, short, com.mojang.blaze3d.vertex.VertexFormatElement);
+  public net.minecraft.client.render.VertexConsumer normal(float, float, float);
+  private static byte floatToByte(float);
+  public void vertex(float, float, float, int, float, float, int, int, float, float, float);
+  static {};
+}
