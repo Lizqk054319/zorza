@@ -1,0 +1,18 @@
+Compiled from "WorldRenderContext.java"
+public interface net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext {
+  public abstract net.minecraft.class_761 worldRenderer();
+  public abstract net.minecraft.class_4587 matrixStack();
+  public abstract float tickDelta();
+  public abstract long limitTime();
+  public abstract boolean blockOutlines();
+  public abstract net.minecraft.class_4184 camera();
+  public abstract net.minecraft.class_757 gameRenderer();
+  public abstract net.minecraft.class_765 lightmapTextureManager();
+  public abstract org.joml.Matrix4f projectionMatrix();
+  public abstract org.joml.Matrix4f positionMatrix();
+  public abstract net.minecraft.class_638 world();
+  public abstract net.minecraft.class_3695 profiler();
+  public abstract boolean advancedTranslucency();
+  public abstract net.minecraft.class_4597 consumers();
+  public abstract net.minecraft.class_4604 frustum();
+}
