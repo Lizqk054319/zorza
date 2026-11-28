@@ -1,0 +1,9 @@
+Compiled from "RenderTickCounter.java"
+public class net.minecraft.client.render.RenderTickCounter {
+  public float tickDelta;
+  public float lastFrameDuration;
+  private long prevTimeMillis;
+  private final float tickTime;
+  public net.minecraft.client.render.RenderTickCounter(float, long);
+  public int beginRenderTick(long);
+}

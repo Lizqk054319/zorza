@@ -1,0 +1,24 @@
+Compiled from "ScreenshotRecorder.java"
+public class net.minecraft.client.util.ScreenshotRecorder {
+  private static final org.slf4j.Logger LOGGER;
+  public static final java.lang.String SCREENSHOTS_DIRECTORY;
+  private int unitHeight;
+  private final java.io.DataOutputStream stream;
+  private final byte[] buffer;
+  private final int width;
+  private final int height;
+  private java.io.File file;
+  public static void saveScreenshot(java.io.File, net.minecraft.client.gl.Framebuffer, java.util.function.Consumer<net.minecraft.text.Text>);
+  public static void saveScreenshot(java.io.File, java.lang.String, net.minecraft.client.gl.Framebuffer, java.util.function.Consumer<net.minecraft.text.Text>);
+  private static void saveScreenshotInner(java.io.File, java.lang.String, net.minecraft.client.gl.Framebuffer, java.util.function.Consumer<net.minecraft.text.Text>);
+  public static net.minecraft.client.texture.NativeImage takeScreenshot(net.minecraft.client.gl.Framebuffer);
+  private static java.io.File getScreenshotFilename(java.io.File);
+  public net.minecraft.client.util.ScreenshotRecorder(java.io.File, int, int, int) throws java.io.IOException;
+  public void getIntoBuffer(java.nio.ByteBuffer, int, int, int, int);
+  public void writeToStream() throws java.io.IOException;
+  public java.io.File finish() throws java.io.IOException;
+  private static void method_1661(net.minecraft.client.texture.NativeImage, java.io.File, java.util.function.Consumer);
+  private static net.minecraft.text.Style method_1664(java.io.File, net.minecraft.text.Style);
+  private static void method_22691(java.io.File, java.lang.String, net.minecraft.client.gl.Framebuffer, java.util.function.Consumer);
+  static {};
+}

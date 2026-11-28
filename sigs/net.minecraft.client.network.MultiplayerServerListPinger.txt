@@ -1,0 +1,16 @@
+Compiled from "MultiplayerServerListPinger.java"
+public class net.minecraft.client.network.MultiplayerServerListPinger {
+  static final com.google.common.base.Splitter ZERO_SPLITTER;
+  private static final org.slf4j.Logger LOGGER;
+  private static final net.minecraft.text.Text CANNOT_CONNECT_TEXT;
+  private final java.util.List<net.minecraft.network.ClientConnection> clientConnections;
+  public net.minecraft.client.network.MultiplayerServerListPinger();
+  public void add(net.minecraft.client.network.ServerInfo, java.lang.Runnable) throws java.net.UnknownHostException;
+  void showError(net.minecraft.text.Text, net.minecraft.client.network.ServerInfo);
+  void ping(java.net.InetSocketAddress, net.minecraft.client.network.ServerInfo);
+  static net.minecraft.text.Text createPlayerCountText(int, int);
+  public void tick();
+  public void cancel();
+  private static net.minecraft.text.Style method_48297(net.minecraft.text.Style);
+  static {};
+}

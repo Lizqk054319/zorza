@@ -1,0 +1,27 @@
+Compiled from "InventoryScreen.java"
+public class net.minecraft.client.gui.screen.ingame.InventoryScreen extends net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen<net.minecraft.screen.PlayerScreenHandler> implements net.minecraft.client.gui.screen.recipebook.RecipeBookProvider {
+  private static final net.minecraft.util.Identifier RECIPE_BUTTON_TEXTURE;
+  private float mouseX;
+  private float mouseY;
+  private final net.minecraft.client.gui.screen.recipebook.RecipeBookWidget recipeBook;
+  private boolean narrow;
+  private boolean mouseDown;
+  public net.minecraft.client.gui.screen.ingame.InventoryScreen(net.minecraft.entity.player.PlayerEntity);
+  public void handledScreenTick();
+  protected void init();
+  protected void drawForeground(net.minecraft.client.gui.DrawContext, int, int);
+  public void render(net.minecraft.client.gui.DrawContext, int, int, float);
+  protected void drawBackground(net.minecraft.client.gui.DrawContext, float, int, int);
+  public static void drawEntity(net.minecraft.client.gui.DrawContext, int, int, int, float, float, net.minecraft.entity.LivingEntity);
+  public static void drawEntity(net.minecraft.client.gui.DrawContext, int, int, int, org.joml.Quaternionf, org.joml.Quaternionf, net.minecraft.entity.LivingEntity);
+  protected boolean isPointWithinBounds(int, int, int, int, double, double);
+  public boolean mouseClicked(double, double, int);
+  public boolean mouseReleased(double, double, int);
+  protected boolean isClickOutsideBounds(double, double, int, int, int);
+  protected void onMouseClick(net.minecraft.screen.slot.Slot, int, int, net.minecraft.screen.slot.SlotActionType);
+  public void refreshRecipeBook();
+  public net.minecraft.client.gui.screen.recipebook.RecipeBookWidget getRecipeBookWidget();
+  private static void method_29977(net.minecraft.client.render.entity.EntityRenderDispatcher, net.minecraft.entity.LivingEntity, net.minecraft.client.gui.DrawContext);
+  private void method_19891(net.minecraft.client.gui.widget.ButtonWidget);
+  static {};
+}

@@ -1,0 +1,13 @@
+Compiled from "Tessellator.java"
+public class net.minecraft.client.render.Tessellator {
+  private static final int field_32051;
+  private static final int DEFAULT_BUFFER_CAPACITY;
+  private final net.minecraft.client.render.BufferBuilder buffer;
+  private static final net.minecraft.client.render.Tessellator INSTANCE;
+  public static net.minecraft.client.render.Tessellator getInstance();
+  public net.minecraft.client.render.Tessellator(int);
+  public net.minecraft.client.render.Tessellator();
+  public void draw();
+  public net.minecraft.client.render.BufferBuilder getBuffer();
+  static {};
+}

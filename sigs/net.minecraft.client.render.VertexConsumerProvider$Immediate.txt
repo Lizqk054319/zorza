@@ -1,0 +1,14 @@
+Compiled from "VertexConsumerProvider.java"
+public class net.minecraft.client.render.VertexConsumerProvider$Immediate implements net.minecraft.client.render.VertexConsumerProvider {
+  protected final net.minecraft.client.render.BufferBuilder fallbackBuffer;
+  protected final java.util.Map<net.minecraft.client.render.RenderLayer, net.minecraft.client.render.BufferBuilder> layerBuffers;
+  protected java.util.Optional<net.minecraft.client.render.RenderLayer> currentLayer;
+  protected final java.util.Set<net.minecraft.client.render.BufferBuilder> activeConsumers;
+  protected net.minecraft.client.render.VertexConsumerProvider$Immediate(net.minecraft.client.render.BufferBuilder, java.util.Map<net.minecraft.client.render.RenderLayer, net.minecraft.client.render.BufferBuilder>);
+  public net.minecraft.client.render.VertexConsumer getBuffer(net.minecraft.client.render.RenderLayer);
+  private net.minecraft.client.render.BufferBuilder getBufferInternal(net.minecraft.client.render.RenderLayer);
+  public void drawCurrentLayer();
+  public void draw();
+  public void draw(net.minecraft.client.render.RenderLayer);
+  private void method_24213(net.minecraft.client.render.RenderLayer);
+}

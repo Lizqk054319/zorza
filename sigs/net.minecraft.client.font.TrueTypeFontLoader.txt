@@ -1,0 +1,27 @@
+Compiled from "TrueTypeFontLoader.java"
+public final class net.minecraft.client.font.TrueTypeFontLoader extends java.lang.Record implements net.minecraft.client.font.FontLoader {
+  private final net.minecraft.util.Identifier location;
+  private final float size;
+  private final float oversample;
+  private final net.minecraft.client.font.TrueTypeFontLoader$Shift shift;
+  private final java.lang.String skip;
+  private static final com.mojang.serialization.Codec<java.lang.String> SKIP_CODEC;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.client.font.TrueTypeFontLoader> CODEC;
+  public net.minecraft.client.font.TrueTypeFontLoader(net.minecraft.util.Identifier, float, float, net.minecraft.client.font.TrueTypeFontLoader$Shift, java.lang.String);
+  public net.minecraft.client.font.FontType getType();
+  public com.mojang.datafixers.util.Either<net.minecraft.client.font.FontLoader$Loadable, net.minecraft.client.font.FontLoader$Reference> build();
+  private net.minecraft.client.font.Font load(net.minecraft.resource.ResourceManager) throws java.io.IOException;
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.util.Identifier location();
+  public float size();
+  public float oversample();
+  public net.minecraft.client.font.TrueTypeFontLoader$Shift shift();
+  public java.lang.String skip();
+  private static com.mojang.datafixers.kinds.App method_51761(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static java.lang.String method_51760(com.mojang.datafixers.util.Either);
+  private static java.lang.String method_51763(java.util.List);
+  private static java.lang.String method_51762(java.lang.String);
+  static {};
+}

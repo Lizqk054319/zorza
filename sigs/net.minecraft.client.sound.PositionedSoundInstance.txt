@@ -1,0 +1,15 @@
+Compiled from "PositionedSoundInstance.java"
+public class net.minecraft.client.sound.PositionedSoundInstance extends net.minecraft.client.sound.AbstractSoundInstance {
+  public net.minecraft.client.sound.PositionedSoundInstance(net.minecraft.sound.SoundEvent, net.minecraft.sound.SoundCategory, float, float, net.minecraft.util.math.random.Random, net.minecraft.util.math.BlockPos);
+  public static net.minecraft.client.sound.PositionedSoundInstance master(net.minecraft.sound.SoundEvent, float);
+  public static net.minecraft.client.sound.PositionedSoundInstance master(net.minecraft.registry.entry.RegistryEntry<net.minecraft.sound.SoundEvent>, float);
+  public static net.minecraft.client.sound.PositionedSoundInstance master(net.minecraft.sound.SoundEvent, float, float);
+  public static net.minecraft.client.sound.PositionedSoundInstance music(net.minecraft.sound.SoundEvent);
+  public static net.minecraft.client.sound.PositionedSoundInstance record(net.minecraft.sound.SoundEvent, net.minecraft.util.math.Vec3d);
+  public static net.minecraft.client.sound.PositionedSoundInstance ambient(net.minecraft.sound.SoundEvent, float, float);
+  public static net.minecraft.client.sound.PositionedSoundInstance ambient(net.minecraft.sound.SoundEvent);
+  public static net.minecraft.client.sound.PositionedSoundInstance ambient(net.minecraft.sound.SoundEvent, net.minecraft.util.math.random.Random, double, double, double);
+  public net.minecraft.client.sound.PositionedSoundInstance(net.minecraft.sound.SoundEvent, net.minecraft.sound.SoundCategory, float, float, net.minecraft.util.math.random.Random, double, double, double);
+  private net.minecraft.client.sound.PositionedSoundInstance(net.minecraft.sound.SoundEvent, net.minecraft.sound.SoundCategory, float, float, net.minecraft.util.math.random.Random, boolean, int, net.minecraft.client.sound.SoundInstance$AttenuationType, double, double, double);
+  public net.minecraft.client.sound.PositionedSoundInstance(net.minecraft.util.Identifier, net.minecraft.sound.SoundCategory, float, float, net.minecraft.util.math.random.Random, boolean, int, net.minecraft.client.sound.SoundInstance$AttenuationType, double, double, double, boolean);
+}

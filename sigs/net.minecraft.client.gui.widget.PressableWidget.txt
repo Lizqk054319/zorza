@@ -1,0 +1,16 @@
+Compiled from "PressableWidget.java"
+public abstract class net.minecraft.client.gui.widget.PressableWidget extends net.minecraft.client.gui.widget.ClickableWidget {
+  protected static final int field_43046;
+  protected static final int field_43047;
+  protected static final int field_43048;
+  protected static final int field_43100;
+  protected static final int field_43101;
+  protected static final int field_43050;
+  public net.minecraft.client.gui.widget.PressableWidget(int, int, int, int, net.minecraft.text.Text);
+  public abstract void onPress();
+  protected void renderButton(net.minecraft.client.gui.DrawContext, int, int, float);
+  public void drawMessage(net.minecraft.client.gui.DrawContext, net.minecraft.client.font.TextRenderer, int);
+  private int getTextureY();
+  public void onClick(double, double);
+  public boolean keyPressed(int, int, int);
+}

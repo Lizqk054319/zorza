@@ -1,0 +1,33 @@
+Compiled from "ScrollableWidget.java"
+public abstract class net.minecraft.client.gui.widget.ScrollableWidget extends net.minecraft.client.gui.widget.ClickableWidget implements net.minecraft.client.gui.Drawable,net.minecraft.client.gui.Element {
+  private static final int FOCUSED_BORDER_COLOR;
+  private static final int UNFOCUSED_BORDER_COLOR;
+  private static final int BOX_COLOR;
+  private static final int PADDING;
+  private double scrollY;
+  private boolean scrollbarDragged;
+  public net.minecraft.client.gui.widget.ScrollableWidget(int, int, int, int, net.minecraft.text.Text);
+  public boolean mouseClicked(double, double, int);
+  public boolean mouseReleased(double, double, int);
+  public boolean mouseDragged(double, double, int, double, double);
+  public boolean mouseScrolled(double, double, double);
+  public boolean keyPressed(int, int, int);
+  public void renderButton(net.minecraft.client.gui.DrawContext, int, int, float);
+  private int getScrollbarThumbHeight();
+  protected void renderOverlay(net.minecraft.client.gui.DrawContext);
+  protected int getPadding();
+  protected int getPaddingDoubled();
+  protected double getScrollY();
+  protected void setScrollY(double);
+  protected int getMaxScrollY();
+  private int getContentsHeightWithPadding();
+  protected void drawBox(net.minecraft.client.gui.DrawContext);
+  protected void drawBox(net.minecraft.client.gui.DrawContext, int, int, int, int);
+  private void drawScrollbar(net.minecraft.client.gui.DrawContext);
+  protected boolean isVisible(int, int);
+  protected boolean isWithinBounds(double, double);
+  protected boolean overflows();
+  protected abstract int getContentsHeight();
+  protected abstract double getDeltaYPerScroll();
+  protected abstract void renderContents(net.minecraft.client.gui.DrawContext, int, int, float);
+}

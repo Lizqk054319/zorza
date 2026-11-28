@@ -1,0 +1,26 @@
+Compiled from "AbstractClientPlayerEntity.java"
+public abstract class net.minecraft.client.network.AbstractClientPlayerEntity extends net.minecraft.entity.player.PlayerEntity {
+  private static final java.lang.String SKIN_URL;
+  private net.minecraft.client.network.PlayerListEntry playerListEntry;
+  protected net.minecraft.util.math.Vec3d lastVelocity;
+  public float elytraPitch;
+  public float elytraYaw;
+  public float elytraRoll;
+  public final net.minecraft.client.world.ClientWorld clientWorld;
+  public net.minecraft.client.network.AbstractClientPlayerEntity(net.minecraft.client.world.ClientWorld, com.mojang.authlib.GameProfile);
+  public boolean isSpectator();
+  public boolean isCreative();
+  public boolean canRenderCapeTexture();
+  protected net.minecraft.client.network.PlayerListEntry getPlayerListEntry();
+  public void tick();
+  public net.minecraft.util.math.Vec3d lerpVelocity(float);
+  public boolean hasSkinTexture();
+  public net.minecraft.util.Identifier getSkinTexture();
+  public net.minecraft.util.Identifier getCapeTexture();
+  public boolean canRenderElytraTexture();
+  public net.minecraft.util.Identifier getElytraTexture();
+  public static void loadSkin(net.minecraft.util.Identifier, java.lang.String);
+  public static net.minecraft.util.Identifier getSkinId(java.lang.String);
+  public java.lang.String getModel();
+  public float getFovMultiplier();
+}
