@@ -1,0 +1,40 @@
+Compiled from "Camera.java"
+public class net.minecraft.client.render.Camera {
+  private boolean ready;
+  private net.minecraft.world.BlockView area;
+  private net.minecraft.entity.Entity focusedEntity;
+  private net.minecraft.util.math.Vec3d pos;
+  private final net.minecraft.util.math.BlockPos$Mutable blockPos;
+  private final org.joml.Vector3f horizontalPlane;
+  private final org.joml.Vector3f verticalPlane;
+  private final org.joml.Vector3f diagonalPlane;
+  private float pitch;
+  private float yaw;
+  private final org.joml.Quaternionf rotation;
+  private boolean thirdPerson;
+  private float cameraY;
+  private float lastCameraY;
+  public static final float field_32133;
+  public net.minecraft.client.render.Camera();
+  public void update(net.minecraft.world.BlockView, net.minecraft.entity.Entity, boolean, boolean, float);
+  public void updateEyeHeight();
+  private double clipToSpace(double);
+  protected void moveBy(double, double, double);
+  protected void setRotation(float, float);
+  protected void setPos(double, double, double);
+  protected void setPos(net.minecraft.util.math.Vec3d);
+  public net.minecraft.util.math.Vec3d getPos();
+  public net.minecraft.util.math.BlockPos getBlockPos();
+  public float getPitch();
+  public float getYaw();
+  public org.joml.Quaternionf getRotation();
+  public net.minecraft.entity.Entity getFocusedEntity();
+  public boolean isReady();
+  public boolean isThirdPerson();
+  public net.minecraft.client.render.Camera$Projection getProjection();
+  public net.minecraft.client.render.CameraSubmersionType getSubmersionType();
+  public final org.joml.Vector3f getHorizontalPlane();
+  public final org.joml.Vector3f getVerticalPlane();
+  public final org.joml.Vector3f getDiagonalPlane();
+  public void reset();
+}

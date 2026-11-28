@@ -1,0 +1,38 @@
+Compiled from "DebugRenderer.java"
+public class net.minecraft.client.render.debug.DebugRenderer {
+  public final net.minecraft.client.render.debug.PathfindingDebugRenderer pathfindingDebugRenderer;
+  public final net.minecraft.client.render.debug.DebugRenderer$Renderer waterDebugRenderer;
+  public final net.minecraft.client.render.debug.DebugRenderer$Renderer chunkBorderDebugRenderer;
+  public final net.minecraft.client.render.debug.DebugRenderer$Renderer heightmapDebugRenderer;
+  public final net.minecraft.client.render.debug.DebugRenderer$Renderer collisionDebugRenderer;
+  public final net.minecraft.client.render.debug.DebugRenderer$Renderer supportingBlockDebugRenderer;
+  public final net.minecraft.client.render.debug.DebugRenderer$Renderer neighborUpdateDebugRenderer;
+  public final net.minecraft.client.render.debug.StructureDebugRenderer structureDebugRenderer;
+  public final net.minecraft.client.render.debug.DebugRenderer$Renderer skyLightDebugRenderer;
+  public final net.minecraft.client.render.debug.DebugRenderer$Renderer worldGenAttemptDebugRenderer;
+  public final net.minecraft.client.render.debug.DebugRenderer$Renderer blockOutlineDebugRenderer;
+  public final net.minecraft.client.render.debug.DebugRenderer$Renderer chunkLoadingDebugRenderer;
+  public final net.minecraft.client.render.debug.VillageDebugRenderer villageDebugRenderer;
+  public final net.minecraft.client.render.debug.VillageSectionsDebugRenderer villageSectionsDebugRenderer;
+  public final net.minecraft.client.render.debug.BeeDebugRenderer beeDebugRenderer;
+  public final net.minecraft.client.render.debug.RaidCenterDebugRenderer raidCenterDebugRenderer;
+  public final net.minecraft.client.render.debug.GoalSelectorDebugRenderer goalSelectorDebugRenderer;
+  public final net.minecraft.client.render.debug.GameTestDebugRenderer gameTestDebugRenderer;
+  public final net.minecraft.client.render.debug.GameEventDebugRenderer gameEventDebugRenderer;
+  public final net.minecraft.client.render.debug.LightDebugRenderer lightDebugRenderer;
+  private boolean showChunkBorder;
+  public net.minecraft.client.render.debug.DebugRenderer(net.minecraft.client.MinecraftClient);
+  public void reset();
+  public boolean toggleShowChunkBorder();
+  public void render(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider$Immediate, double, double, double);
+  public static java.util.Optional<net.minecraft.entity.Entity> getTargetedEntity(net.minecraft.entity.Entity, int);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.util.math.BlockPos, net.minecraft.util.math.BlockPos, float, float, float, float);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.util.math.BlockPos, float, float, float, float, float);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.util.math.Box, float, float, float, float);
+  public static void drawBox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, double, double, double, double, double, double, float, float, float, float);
+  public static void drawString(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, java.lang.String, int, int, int, int);
+  public static void drawString(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, java.lang.String, double, double, double, int);
+  public static void drawString(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, java.lang.String, double, double, double, int, float);
+  public static void drawString(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, java.lang.String, double, double, double, int, float, boolean, float, boolean);
+  private static boolean method_23100(net.minecraft.entity.Entity);
+}
