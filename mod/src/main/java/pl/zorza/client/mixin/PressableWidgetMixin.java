@@ -75,7 +75,7 @@ public abstract class PressableWidgetMixin {
     private void zorza$message(DrawContext ctx, TextRenderer tr, int color, CallbackInfo ci) {
         if (!MenuSettings.styled()) return;
         ClickableWidget self = (ClickableWidget) (Object) this;
-        VanillaStyle.label(ctx, self.getMessage().getString(), self.getX(), self.getY(), self.getWidth(), self.getHeight(), color);
+        VanillaStyle.label(ctx, self.getMessage(), self.getX(), self.getY(), self.getWidth(), self.getHeight(), color);
         ci.cancel();
     }
 }

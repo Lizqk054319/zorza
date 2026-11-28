@@ -79,6 +79,16 @@ public class ZorzaScreenshots implements FabricClientGameTest {
             context.takeScreenshot("22-motion-blur");
             context.waitTicks(30);                                   // kamera stoi – obraz ma być ostry, bez smug
             context.takeScreenshot("23-motion-blur-still");
+            // wszystkie funkcje Zory naraz – nic nie może się wywalić
+            context.runOnClient(client -> {
+                for (Module m : Modules.ALL) m.setEnabled(true);
+            });
+            context.waitTicks(60);
+            context.takeScreenshot("30-all-modules");
+            context.runOnClient(client -> {
+                for (Module m : Modules.ALL) m.setEnabled(false);
+            });
+            context.waitTicks(5);
             context.runOnClient(client -> {
                 Modules.CUSTOM_HITBOXES.enabled = true;
                 Modules.CUSTOM_HITBOXES.color.value = 0xFF22C55E;

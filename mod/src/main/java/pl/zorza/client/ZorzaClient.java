@@ -53,6 +53,15 @@ public class ZorzaClient implements ClientModInitializer {
         Config.load();
         CustomSounds.init();
         AutoJoin.register();
+        // okno gry od razu zmaksymalizowane (nie pełny ekran) – chyba że gracz ma włączony pełny ekran
+        net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents.CLIENT_STARTED.register(mc -> {
+            try {
+                if (!mc.getWindow().isFullscreen() && System.getProperty("zorza.smoke") == null && System.getProperty("fabric.client.gametest") == null)
+                    org.lwjgl.glfw.GLFW.glfwMaximizeWindow(mc.getWindow().getHandle());
+            } catch (Throwable t) {
+                LOG.warn("Nie udało się zmaksymalizować okna", t);
+            }
+        });
         //#if MC < 1.21.4
         //$$ SmokeTest.init();
         //#endif

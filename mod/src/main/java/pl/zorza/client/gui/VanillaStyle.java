@@ -57,6 +57,21 @@ public final class VanillaStyle {
     }
 
     /** Napis na środku przycisku (Inter); długi napis jest pomniejszany, żeby się zmieścił. */
+    /**
+     * Napis przycisku. Gdy serwer używa własnych czcionek (banery, ikonki), kolorów albo nietypowych znaków,
+     * rysujemy oryginalny tekst Minecrafta – inaczej zamiast banerów byłyby puste przyciski i kwadraciki.
+     */
+    public static void label(DrawContext ctx, net.minecraft.text.Text text, int x, int y, int w, int h, int color) {
+        if (pl.zorza.client.compat.Gfx.special(text)) {
+            var tr = net.minecraft.client.MinecraftClient.getInstance().textRenderer;
+            int a = color >>> 24;
+            int c = (a << 24) | ((color & 0xFFFFFF) == 0xFFFFFF ? 0xFFFFFF : 0xA0A0A0);
+            ctx.drawCenteredTextWithShadow(tr, text, x + w / 2, y + (h - 8) / 2, c);
+            return;
+        }
+        label(ctx, text.getString(), x, y, w, h, color);
+    }
+
     public static void label(DrawContext ctx, String text, int x, int y, int w, int h, int color) {
         float k = k();
         float old = R.pxPerUnit;

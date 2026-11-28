@@ -76,6 +76,6 @@ public abstract class SliderWidgetMixin {
             ((ClickableWidgetInvoker) self).zorza$drawScrollableText(ctx, tr, margin, color);
             return;
         }
-        VanillaStyle.label(ctx, self.getMessage().getString(), self.getX(), self.getY(), self.getWidth(), self.getHeight(), color);
+        VanillaStyle.label(ctx, self.getMessage(), self.getX(), self.getY(), self.getWidth(), self.getHeight(), color);
     }
 }

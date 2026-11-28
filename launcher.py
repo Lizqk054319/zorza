@@ -993,6 +993,22 @@ JVM_WYDAJNOSC = ["-XX:+UseG1GC", "-XX:+ParallelRefProcEnabled", "-XX:MaxGCPauseM
                  "-XX:+UseStringDeduplication"]
 
 
+def work_area():
+    """Rozmiar ekranu bez paska zadań (Windows)."""
+    if os.name != "nt":
+        return None
+    try:
+        from ctypes import wintypes
+        r = wintypes.RECT()
+        if ctypes.windll.user32.SystemParametersInfoW(0x0030, 0, ctypes.byref(r), 0):   # SPI_GETWORKAREA
+            w, h = r.right - r.left, r.bottom - r.top - 32          # miejsce na pasek tytułu okna
+            if w >= 800 and h >= 480:
+                return w, h
+    except Exception:
+        pass
+    return None
+
+
 def jvm_args(p):
     ram = int(p["ram_mb"])
     user = settings["jvm_args"].split()
@@ -1023,6 +1039,10 @@ def do_play(pid):
         "launcherName": NAZWA_LAUNCHERA,
         "launcherVersion": WERSJA_CLIENTA,
     }
+    # gra od razu w dużym oknie (bez modu Zora – rozmiar ekranu; z modem okno jest dodatkowo maksymalizowane)
+    wa = work_area()
+    if wa:
+        options.update(customResolution=True, resolutionWidth=str(wa[0]), resolutionHeight=str(wa[1]))
     cmd = mll.command.get_minecraft_command(launch_id, str(MC_DIR), options)
     task.update(status="Uruchamianie gry...")
     log(f"Uruchamiam {launch_id} ({p['name']}) jako {acc['name']}")

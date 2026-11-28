@@ -47,6 +47,41 @@ public final class SmokeTest {
                     next();
                 } else if (step == 3 && ticks > 30) {
                     shot(mc, "04-hud-editor");
+                    mc.options.pauseOnLostFocus = false;
+                    net.minecraft.client.gui.screen.world.CreateWorldScreen.create(mc, new TitleScreen());
+                    next();
+                } else if (step == 4 && ticks > 60) {
+                    // przycisk "Utwórz nowy świat"
+                    boolean pressed = false;
+                    if (mc.currentScreen != null) for (var el : mc.currentScreen.children()) {
+                        if (el instanceof net.minecraft.client.gui.widget.ButtonWidget b && b.getMessage().getContent() instanceof net.minecraft.text.TranslatableTextContent tc
+                                && tc.getKey().equals("selectWorld.create")) {
+                            b.onPress();
+                            pressed = true;
+                            break;
+                        }
+                    }
+                    if (!pressed) throw new IllegalStateException("Nie znaleziono przycisku tworzenia świata");
+                    next();
+                } else if (step == 5) {
+                    if (mc.world != null && mc.player != null && mc.currentScreen == null && ticks > 100) {
+                        for (var m : Modules.ALL) m.setEnabled(true);          // wszystkie funkcje Zory naraz
+                        next();
+                    } else if (ticks > 3000) throw new IllegalStateException("Świat się nie załadował");
+                } else if (step == 6 && ticks == 80) {
+                    mc.player.setYaw(mc.player.getYaw() + 40f);
+                } else if (step == 6 && ticks > 120) {
+                    shot(mc, "05-world-all-modules");
+                    mc.setScreen(new net.minecraft.client.gui.screen.ingame.InventoryScreen(mc.player));
+                    next();
+                } else if (step == 7 && ticks > 30) {
+                    shot(mc, "06-inventory");
+                    mc.setScreen(null);
+                    mc.player.jump();
+                    next();
+                } else if (step == 8 && ticks > 40) {
+                    shot(mc, "07-jump");
+                    for (var m : Modules.ALL) m.setEnabled(false);
                     Files.writeString(Path.of(dir, "result.txt"), "SMOKE OK");
                     ZorzaClient.LOG.info("SMOKE OK");
                     mc.scheduleStop();

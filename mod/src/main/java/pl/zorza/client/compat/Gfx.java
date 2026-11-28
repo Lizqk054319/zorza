@@ -194,4 +194,29 @@ public final class Gfx {
         //$$ pinger.add(info, () -> {});
         //#endif
     }
+
+    /** Czy tekst ma coś, czego nasza czcionka nie odda: własna czcionka serwera, kolory, znaki spoza alfabetu łacińskiego. */
+    public static boolean special(net.minecraft.text.Text text) {
+        java.util.Optional<Boolean> r = text.visit((style, str) -> {
+            if (style.getColor() != null || style.isObfuscated()) return java.util.Optional.of(true);
+            if (customFont(style)) return java.util.Optional.of(true);
+            for (int i = 0; i < str.length(); ) {
+                int cp = str.codePointAt(i);
+                i += Character.charCount(cp);
+                if (cp > 0x024F && !(cp >= 0x2000 && cp <= 0x206F) && cp != 0x20AC) return java.util.Optional.of(true);
+            }
+            return java.util.Optional.empty();
+        }, net.minecraft.text.Style.EMPTY);
+        return r.isPresent();
+    }
+
+    private static boolean customFont(net.minecraft.text.Style style) {
+        //#if MC >= 1.21.9
+        //$$ var f = style.getFont();
+        //$$ return f != null && !(f instanceof net.minecraft.text.StyleSpriteSource.Font ff && ff.id().equals(Ids.mc("default")));
+        //#else
+        Identifier f = style.getFont();
+        return f != null && !f.equals(Ids.mc("default"));
+        //#endif
+    }
 }
