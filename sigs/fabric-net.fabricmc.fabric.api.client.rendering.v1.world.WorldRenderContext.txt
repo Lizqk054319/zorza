@@ -1,0 +1,6 @@
+Compiled from "WorldRenderContext.java"
+public interface net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext extends net.fabricmc.fabric.api.client.rendering.v1.world.WorldTerrainRenderContext {
+  public abstract net.minecraft.class_11659 commandQueue();
+  public abstract net.minecraft.class_4587 matrices();
+  public abstract net.minecraft.class_4597 consumers();
+}
