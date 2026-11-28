@@ -1,0 +1,16 @@
+Compiled from "RenderLayers.java"
+public class net.minecraft.client.render.RenderLayers {
+  private static final java.util.Map<net.minecraft.block.Block, net.minecraft.client.render.RenderLayer> BLOCKS;
+  private static final java.util.Map<net.minecraft.fluid.Fluid, net.minecraft.client.render.RenderLayer> FLUIDS;
+  private static boolean fancyGraphicsOrBetter;
+  public net.minecraft.client.render.RenderLayers();
+  public static net.minecraft.client.render.RenderLayer getBlockLayer(net.minecraft.block.BlockState);
+  public static net.minecraft.client.render.RenderLayer getMovingBlockLayer(net.minecraft.block.BlockState);
+  public static net.minecraft.client.render.RenderLayer getEntityBlockLayer(net.minecraft.block.BlockState);
+  public static net.minecraft.client.render.RenderLayer getItemLayer(net.minecraft.item.ItemStack);
+  public static net.minecraft.client.render.RenderLayer getFluidLayer(net.minecraft.fluid.FluidState);
+  public static void setFancyGraphicsOrBetter(boolean);
+  private static void method_23681(java.util.HashMap);
+  private static void method_23685(java.util.HashMap);
+  static {};
+}
