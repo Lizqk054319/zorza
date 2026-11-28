@@ -1,0 +1,11 @@
+Compiled from "InGameOverlayRenderer.java"
+public class net.minecraft.client.gui.hud.InGameOverlayRenderer {
+  private static final net.minecraft.util.Identifier UNDERWATER_TEXTURE;
+  public net.minecraft.client.gui.hud.InGameOverlayRenderer();
+  public static void renderOverlays(net.minecraft.client.MinecraftClient, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider);
+  private static net.minecraft.block.BlockState getInWallBlockState(net.minecraft.entity.player.PlayerEntity);
+  private static void renderInWallOverlay(net.minecraft.client.texture.Sprite, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider);
+  private static void renderUnderwaterOverlay(net.minecraft.client.MinecraftClient, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider);
+  private static void renderFireOverlay(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider);
+  static {};
+}

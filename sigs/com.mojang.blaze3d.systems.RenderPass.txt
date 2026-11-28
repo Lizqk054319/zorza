@@ -1,0 +1,17 @@
+Compiled from "RenderPass.java"
+public interface com.mojang.blaze3d.systems.RenderPass extends java.lang.AutoCloseable {
+  public abstract void setPipeline(com.mojang.blaze3d.pipeline.RenderPipeline);
+  public abstract void bindSampler(java.lang.String, com.mojang.blaze3d.textures.GpuTexture);
+  public abstract void setUniform(java.lang.String, int...);
+  public abstract void setUniform(java.lang.String, float...);
+  public abstract void setUniform(java.lang.String, org.joml.Matrix4f);
+  public abstract void enableScissor(com.mojang.blaze3d.systems.ScissorState);
+  public abstract void enableScissor(int, int, int, int);
+  public abstract void disableScissor();
+  public abstract void setVertexBuffer(int, com.mojang.blaze3d.buffers.GpuBuffer);
+  public abstract void setIndexBuffer(com.mojang.blaze3d.buffers.GpuBuffer, com.mojang.blaze3d.vertex.VertexFormat$IndexType);
+  public abstract void drawIndexed(int, int);
+  public abstract void drawMultipleIndexed(java.util.Collection<com.mojang.blaze3d.systems.RenderPass$RenderObject>, com.mojang.blaze3d.buffers.GpuBuffer, com.mojang.blaze3d.vertex.VertexFormat$IndexType);
+  public abstract void draw(int, int);
+  public abstract void close();
+}
