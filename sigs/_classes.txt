@@ -1,0 +1,5 @@
+com/mojang/blaze3d/platform/GLX.class
+com/mojang/blaze3d/platform/GlConst.class
+com/mojang/blaze3d/platform/GlStateManager.class
+com/mojang/blaze3d/platform/TextureUtil.class
+com/mojang/blaze3d/systems/RenderSystem.class

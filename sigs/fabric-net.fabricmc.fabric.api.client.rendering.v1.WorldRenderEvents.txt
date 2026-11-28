@@ -1,0 +1,45 @@
+Compiled from "WorldRenderEvents.java"
+public final class net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$Start> START;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterSetup> AFTER_SETUP;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BeforeEntities> BEFORE_ENTITIES;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterEntities> AFTER_ENTITIES;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BeforeBlockOutline> BEFORE_BLOCK_OUTLINE;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BlockOutline> BLOCK_OUTLINE;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$DebugRender> BEFORE_DEBUG_RENDER;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterTranslucent> AFTER_TRANSLUCENT;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$Last> LAST;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$End> END;
+  private net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents();
+  private static net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$End lambda$static$29(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$End[]);
+  private static void lambda$static$28(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$End[], net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static void lambda$static$27(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$Last lambda$static$26(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$Last[]);
+  private static void lambda$static$25(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$Last[], net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static void lambda$static$24(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterTranslucent lambda$static$23(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterTranslucent[]);
+  private static void lambda$static$22(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterTranslucent[], net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static void lambda$static$21(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$DebugRender lambda$static$20(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$DebugRender[]);
+  private static void lambda$static$19(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$DebugRender[], net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static void lambda$static$18(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BlockOutline lambda$static$17(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BlockOutline[]);
+  private static boolean lambda$static$16(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BlockOutline[], net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext, net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext$BlockOutlineContext);
+  private static boolean lambda$static$15(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext, net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext$BlockOutlineContext);
+  private static net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BeforeBlockOutline lambda$static$14(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BeforeBlockOutline[]);
+  private static boolean lambda$static$13(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BeforeBlockOutline[], net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext, net.minecraft.class_239);
+  private static boolean lambda$static$12(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext, net.minecraft.class_239);
+  private static net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterEntities lambda$static$11(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterEntities[]);
+  private static void lambda$static$10(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterEntities[], net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static void lambda$static$9(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BeforeEntities lambda$static$8(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BeforeEntities[]);
+  private static void lambda$static$7(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$BeforeEntities[], net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static void lambda$static$6(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterSetup lambda$static$5(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterSetup[]);
+  private static void lambda$static$4(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$AfterSetup[], net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static void lambda$static$3(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$Start lambda$static$2(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$Start[]);
+  private static void lambda$static$1(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents$Start[], net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  private static void lambda$static$0(net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext);
+  static {};
+}
