@@ -1,0 +1,41 @@
+Compiled from "GameMenuScreen.java"
+public class net.minecraft.client.gui.screen.GameMenuScreen extends net.minecraft.client.gui.screen.Screen {
+  private static final net.minecraft.util.Identifier DRAFT_REPORT_ICON_TEXTURE;
+  private static final int GRID_COLUMNS;
+  private static final int BUTTONS_TOP_MARGIN;
+  private static final int GRID_MARGIN;
+  private static final int WIDE_BUTTON_WIDTH;
+  private static final int NORMAL_BUTTON_WIDTH;
+  private static final net.minecraft.text.Text RETURN_TO_GAME_TEXT;
+  private static final net.minecraft.text.Text ADVANCEMENTS_TEXT;
+  private static final net.minecraft.text.Text STATS_TEXT;
+  private static final net.minecraft.text.Text SEND_FEEDBACK_TEXT;
+  private static final net.minecraft.text.Text REPORT_BUGS_TEXT;
+  private static final net.minecraft.text.Text OPTIONS_TEXT;
+  private static final net.minecraft.text.Text SHARE_TO_LAN_TEXT;
+  private static final net.minecraft.text.Text PLAYER_REPORTING_TEXT;
+  private static final net.minecraft.text.Text RETURN_TO_MENU_TEXT;
+  private static final net.minecraft.text.Text SAVING_LEVEL_TEXT;
+  private static final net.minecraft.text.Text GAME_TEXT;
+  private static final net.minecraft.text.Text PAUSED_TEXT;
+  private final boolean showMenu;
+  private net.minecraft.client.gui.widget.ButtonWidget exitButton;
+  public net.minecraft.client.gui.screen.GameMenuScreen(boolean);
+  public boolean shouldShowMenu();
+  protected void init();
+  private void initWidgets();
+  private void disconnect();
+  public void tick();
+  public void render(net.minecraft.client.gui.DrawContext, int, int, float);
+  public void renderBackground(net.minecraft.client.gui.DrawContext, int, int, float);
+  private net.minecraft.client.gui.widget.ButtonWidget createButton(net.minecraft.text.Text, java.util.function.Supplier<net.minecraft.client.gui.screen.Screen>);
+  private net.minecraft.client.gui.widget.ButtonWidget createUrlButton(net.minecraft.text.Text, java.lang.String);
+  private void method_47898(java.util.function.Supplier, net.minecraft.client.gui.widget.ButtonWidget);
+  private void method_19836(net.minecraft.client.gui.widget.ButtonWidget);
+  private net.minecraft.client.gui.screen.Screen method_47902();
+  private net.minecraft.client.gui.screen.Screen method_47903();
+  private net.minecraft.client.gui.screen.Screen method_47904();
+  private net.minecraft.client.gui.screen.Screen method_47896();
+  private void method_19845(net.minecraft.client.gui.widget.ButtonWidget);
+  static {};
+}

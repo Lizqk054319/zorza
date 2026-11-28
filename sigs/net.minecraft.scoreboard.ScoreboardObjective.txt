@@ -1,0 +1,27 @@
+Compiled from "ScoreboardObjective.java"
+public class net.minecraft.scoreboard.ScoreboardObjective {
+  private final net.minecraft.scoreboard.Scoreboard scoreboard;
+  private final java.lang.String name;
+  private final net.minecraft.scoreboard.ScoreboardCriterion criterion;
+  private net.minecraft.text.Text displayName;
+  private net.minecraft.text.Text bracketedDisplayName;
+  private net.minecraft.scoreboard.ScoreboardCriterion$RenderType renderType;
+  private boolean displayAutoUpdate;
+  private net.minecraft.scoreboard.number.NumberFormat numberFormat;
+  public net.minecraft.scoreboard.ScoreboardObjective(net.minecraft.scoreboard.Scoreboard, java.lang.String, net.minecraft.scoreboard.ScoreboardCriterion, net.minecraft.text.Text, net.minecraft.scoreboard.ScoreboardCriterion$RenderType, boolean, net.minecraft.scoreboard.number.NumberFormat);
+  public net.minecraft.scoreboard.Scoreboard getScoreboard();
+  public java.lang.String getName();
+  public net.minecraft.scoreboard.ScoreboardCriterion getCriterion();
+  public net.minecraft.text.Text getDisplayName();
+  public boolean shouldDisplayAutoUpdate();
+  public net.minecraft.scoreboard.number.NumberFormat getNumberFormat();
+  public net.minecraft.scoreboard.number.NumberFormat getNumberFormatOr(net.minecraft.scoreboard.number.NumberFormat);
+  private net.minecraft.text.Text generateBracketedDisplayName();
+  public net.minecraft.text.Text toHoverableText();
+  public void setDisplayName(net.minecraft.text.Text);
+  public net.minecraft.scoreboard.ScoreboardCriterion$RenderType getRenderType();
+  public void setRenderType(net.minecraft.scoreboard.ScoreboardCriterion$RenderType);
+  public void setDisplayAutoUpdate(boolean);
+  public void setNumberFormat(net.minecraft.scoreboard.number.NumberFormat);
+  private net.minecraft.text.Style method_1119(net.minecraft.text.Style);
+}

@@ -1,0 +1,39 @@
+Compiled from "TextRenderer.java"
+public class net.minecraft.client.font.TextRenderer {
+  private static final float Z_INDEX;
+  private static final org.joml.Vector3f FORWARD_SHIFT;
+  public static final int ARABIC_SHAPING_LETTERS_SHAPE;
+  public final int fontHeight;
+  public final net.minecraft.util.math.random.Random random;
+  private final java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.font.FontStorage> fontStorageAccessor;
+  final boolean validateAdvance;
+  private final net.minecraft.client.font.TextHandler handler;
+  public net.minecraft.client.font.TextRenderer(java.util.function.Function<net.minecraft.util.Identifier, net.minecraft.client.font.FontStorage>, boolean);
+  net.minecraft.client.font.FontStorage getFontStorage(net.minecraft.util.Identifier);
+  public java.lang.String mirror(java.lang.String);
+  public int draw(java.lang.String, float, float, int, boolean, org.joml.Matrix4f, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.client.font.TextRenderer$TextLayerType, int, int);
+  public int draw(java.lang.String, float, float, int, boolean, org.joml.Matrix4f, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.client.font.TextRenderer$TextLayerType, int, int, boolean);
+  public int draw(net.minecraft.text.Text, float, float, int, boolean, org.joml.Matrix4f, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.client.font.TextRenderer$TextLayerType, int, int);
+  public int draw(net.minecraft.text.OrderedText, float, float, int, boolean, org.joml.Matrix4f, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.client.font.TextRenderer$TextLayerType, int, int);
+  public void drawWithOutline(net.minecraft.text.OrderedText, float, float, int, int, org.joml.Matrix4f, net.minecraft.client.render.VertexConsumerProvider, int);
+  private static int tweakTransparency(int);
+  private int drawInternal(java.lang.String, float, float, int, boolean, org.joml.Matrix4f, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.client.font.TextRenderer$TextLayerType, int, int, boolean);
+  private int drawInternal(net.minecraft.text.OrderedText, float, float, int, boolean, org.joml.Matrix4f, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.client.font.TextRenderer$TextLayerType, int, int);
+  private float drawLayer(java.lang.String, float, float, int, boolean, org.joml.Matrix4f, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.client.font.TextRenderer$TextLayerType, int, int);
+  private float drawLayer(net.minecraft.text.OrderedText, float, float, int, boolean, org.joml.Matrix4f, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.client.font.TextRenderer$TextLayerType, int, int);
+  void drawGlyph(net.minecraft.client.font.GlyphRenderer, boolean, boolean, float, float, float, org.joml.Matrix4f, net.minecraft.client.render.VertexConsumer, float, float, float, float, int);
+  public int getWidth(java.lang.String);
+  public int getWidth(net.minecraft.text.StringVisitable);
+  public int getWidth(net.minecraft.text.OrderedText);
+  public java.lang.String trimToWidth(java.lang.String, int, boolean);
+  public java.lang.String trimToWidth(java.lang.String, int);
+  public net.minecraft.text.StringVisitable trimToWidth(net.minecraft.text.StringVisitable, int);
+  public int getWrappedLinesHeight(java.lang.String, int);
+  public int getWrappedLinesHeight(net.minecraft.text.StringVisitable, int);
+  public java.util.List<net.minecraft.text.OrderedText> wrapLines(net.minecraft.text.StringVisitable, int);
+  public boolean isRightToLeft();
+  public net.minecraft.client.font.TextHandler getTextHandler();
+  private boolean method_37297(net.minecraft.client.font.TextRenderer$Drawer, float[], int, float, int, int, int, net.minecraft.text.Style, int);
+  private float method_27516(int, net.minecraft.text.Style);
+  static {};
+}
