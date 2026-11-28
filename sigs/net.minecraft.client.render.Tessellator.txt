@@ -1,0 +1,12 @@
+Compiled from "Tessellator.java"
+public class net.minecraft.client.render.Tessellator {
+  private static final int field_46841;
+  private final net.minecraft.client.util.BufferAllocator allocator;
+  private static net.minecraft.client.render.Tessellator INSTANCE;
+  public static void initialize();
+  public static net.minecraft.client.render.Tessellator getInstance();
+  public net.minecraft.client.render.Tessellator(int);
+  public net.minecraft.client.render.Tessellator();
+  public net.minecraft.client.render.BufferBuilder begin(net.minecraft.client.render.VertexFormat$DrawMode, net.minecraft.client.render.VertexFormat);
+  public void clear();
+}

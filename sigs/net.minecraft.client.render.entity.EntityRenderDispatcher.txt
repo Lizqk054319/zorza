@@ -1,0 +1,47 @@
+Compiled from "EntityRenderDispatcher.java"
+public class net.minecraft.client.render.entity.EntityRenderDispatcher implements net.minecraft.resource.SynchronousResourceReloader {
+  private static final net.minecraft.client.render.RenderLayer SHADOW_LAYER;
+  private static final float field_43377;
+  private static final float field_43378;
+  private java.util.Map<net.minecraft.entity.EntityType<?>, net.minecraft.client.render.entity.EntityRenderer<?>> renderers;
+  private java.util.Map<net.minecraft.client.util.SkinTextures$Model, net.minecraft.client.render.entity.EntityRenderer<? extends net.minecraft.entity.player.PlayerEntity>> modelRenderers;
+  public final net.minecraft.client.texture.TextureManager textureManager;
+  private net.minecraft.world.World world;
+  public net.minecraft.client.render.Camera camera;
+  private org.joml.Quaternionf rotation;
+  public net.minecraft.entity.Entity targetedEntity;
+  private final net.minecraft.client.render.item.ItemRenderer itemRenderer;
+  private final net.minecraft.client.render.block.BlockRenderManager blockRenderManager;
+  private final net.minecraft.client.render.item.HeldItemRenderer heldItemRenderer;
+  private final net.minecraft.client.font.TextRenderer textRenderer;
+  public final net.minecraft.client.option.GameOptions gameOptions;
+  private final net.minecraft.client.render.entity.model.EntityModelLoader modelLoader;
+  private boolean renderShadows;
+  private boolean renderHitboxes;
+  public <E extends net.minecraft.entity.Entity> int getLight(E, float);
+  public net.minecraft.client.render.entity.EntityRenderDispatcher(net.minecraft.client.MinecraftClient, net.minecraft.client.texture.TextureManager, net.minecraft.client.render.item.ItemRenderer, net.minecraft.client.render.block.BlockRenderManager, net.minecraft.client.font.TextRenderer, net.minecraft.client.option.GameOptions, net.minecraft.client.render.entity.model.EntityModelLoader);
+  public <T extends net.minecraft.entity.Entity> net.minecraft.client.render.entity.EntityRenderer<? super T> getRenderer(T);
+  public void configure(net.minecraft.world.World, net.minecraft.client.render.Camera, net.minecraft.entity.Entity);
+  public void setRotation(org.joml.Quaternionf);
+  public void setRenderShadows(boolean);
+  public void setRenderHitboxes(boolean);
+  public boolean shouldRenderHitboxes();
+  public <E extends net.minecraft.entity.Entity> boolean shouldRender(E, net.minecraft.client.render.Frustum, double, double, double);
+  public <E extends net.minecraft.entity.Entity> void render(E, double, double, double, float, float, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, int);
+  private static void renderServerSideHitbox(net.minecraft.client.util.math.MatrixStack, net.minecraft.entity.Entity, net.minecraft.client.render.VertexConsumerProvider);
+  private static net.minecraft.entity.Entity getIntegratedServerEntity(net.minecraft.entity.Entity);
+  private static void renderHitbox(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, net.minecraft.entity.Entity, float, float, float, float);
+  private static void drawVector(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumer, org.joml.Vector3f, net.minecraft.util.math.Vec3d, int);
+  private void renderFire(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.entity.Entity, org.joml.Quaternionf);
+  private static void drawFireVertex(net.minecraft.client.util.math.MatrixStack$Entry, net.minecraft.client.render.VertexConsumer, float, float, float, float, float);
+  private static void renderShadow(net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, net.minecraft.entity.Entity, float, float, net.minecraft.world.WorldView, float);
+  private static void renderShadowPart(net.minecraft.client.util.math.MatrixStack$Entry, net.minecraft.client.render.VertexConsumer, net.minecraft.world.chunk.Chunk, net.minecraft.world.WorldView, net.minecraft.util.math.BlockPos, double, double, double, float, float);
+  private static void drawShadowVertex(net.minecraft.client.util.math.MatrixStack$Entry, net.minecraft.client.render.VertexConsumer, int, float, float, float, float, float);
+  public void setWorld(net.minecraft.world.World);
+  public double getSquaredDistanceToCamera(net.minecraft.entity.Entity);
+  public double getSquaredDistanceToCamera(double, double, double);
+  public org.joml.Quaternionf getRotation();
+  public net.minecraft.client.render.item.HeldItemRenderer getHeldItemRenderer();
+  public void reload(net.minecraft.resource.ResourceManager);
+  static {};
+}
