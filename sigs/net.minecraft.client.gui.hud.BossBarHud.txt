@@ -1,0 +1,21 @@
+Compiled from "BossBarHud.java"
+public class net.minecraft.client.gui.hud.BossBarHud {
+  private static final int WIDTH;
+  private static final int HEIGHT;
+  private static final net.minecraft.util.Identifier[] BACKGROUND_TEXTURES;
+  private static final net.minecraft.util.Identifier[] PROGRESS_TEXTURES;
+  private static final net.minecraft.util.Identifier[] NOTCHED_BACKGROUND_TEXTURES;
+  private static final net.minecraft.util.Identifier[] NOTCHED_PROGRESS_TEXTURES;
+  private final net.minecraft.client.MinecraftClient client;
+  final java.util.Map<java.util.UUID, net.minecraft.client.gui.hud.ClientBossBar> bossBars;
+  public net.minecraft.client.gui.hud.BossBarHud(net.minecraft.client.MinecraftClient);
+  public void render(net.minecraft.client.gui.DrawContext);
+  private void renderBossBar(net.minecraft.client.gui.DrawContext, int, int, net.minecraft.entity.boss.BossBar);
+  private void renderBossBar(net.minecraft.client.gui.DrawContext, int, int, net.minecraft.entity.boss.BossBar, int, net.minecraft.util.Identifier[], net.minecraft.util.Identifier[]);
+  public void handlePacket(net.minecraft.network.packet.s2c.play.BossBarS2CPacket);
+  public void clear();
+  public boolean shouldPlayDragonMusic();
+  public boolean shouldDarkenSky();
+  public boolean shouldThickenFog();
+  static {};
+}

@@ -1,0 +1,399 @@
+Compiled from "Framebuffer.java"
+public abstract class net.minecraft.client.gl.Framebuffer {
+  private static int index;
+
+  public int textureWidth;
+
+  public int textureHeight;
+
+  public int viewportWidth;
+
+  public int viewportHeight;
+
+  protected final java.lang.String name;
+
+  public final boolean useDepthAttachment;
+
+  protected com.mojang.blaze3d.textures.GpuTexture colorAttachment;
+
+  protected com.mojang.blaze3d.textures.GpuTextureView colorAttachmentView;
+
+  protected com.mojang.blaze3d.textures.GpuTexture depthAttachment;
+
+  protected com.mojang.blaze3d.textures.GpuTextureView depthAttachmentView;
+
+  public com.mojang.blaze3d.textures.FilterMode filterMode;
+
+  public net.minecraft.client.gl.Framebuffer(java.lang.String, boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #51                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: ifnonnull     26
+       9: getstatic     #53                 // Field index:I
+      12: dup
+      13: iconst_1
+      14: iadd
+      15: putstatic     #53                 // Field index:I
+      18: invokedynamic #65,  0             // InvokeDynamic #0:makeConcatWithConstants:(I)Ljava/lang/String;
+      23: goto          27
+      26: aload_1
+      27: putfield      #69                 // Field name:Ljava/lang/String;
+      30: aload_0
+      31: iload_2
+      32: putfield      #71                 // Field useDepthAttachment:Z
+      35: return
+
+  public void resize(int, int);
+    Code:
+       0: invokestatic  #80                 // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThread:()V
+       3: aload_0
+       4: invokevirtual #83                 // Method delete:()V
+       7: aload_0
+       8: iload_1
+       9: iload_2
+      10: invokevirtual #86                 // Method initFbo:(II)V
+      13: return
+
+  public void delete();
+    Code:
+       0: invokestatic  #80                 // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThread:()V
+       3: aload_0
+       4: getfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+       7: ifnull        22
+      10: aload_0
+      11: getfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+      14: invokevirtual #93                 // Method com/mojang/blaze3d/textures/GpuTexture.close:()V
+      17: aload_0
+      18: aconst_null
+      19: putfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+      22: aload_0
+      23: getfield      #95                 // Field depthAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+      26: ifnull        41
+      29: aload_0
+      30: getfield      #95                 // Field depthAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+      33: invokevirtual #98                 // Method com/mojang/blaze3d/textures/GpuTextureView.close:()V
+      36: aload_0
+      37: aconst_null
+      38: putfield      #95                 // Field depthAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+      41: aload_0
+      42: getfield      #100                // Field colorAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+      45: ifnull        60
+      48: aload_0
+      49: getfield      #100                // Field colorAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+      52: invokevirtual #93                 // Method com/mojang/blaze3d/textures/GpuTexture.close:()V
+      55: aload_0
+      56: aconst_null
+      57: putfield      #100                // Field colorAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+      60: aload_0
+      61: getfield      #102                // Field colorAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+      64: ifnull        79
+      67: aload_0
+      68: getfield      #102                // Field colorAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+      71: invokevirtual #98                 // Method com/mojang/blaze3d/textures/GpuTextureView.close:()V
+      74: aload_0
+      75: aconst_null
+      76: putfield      #102                // Field colorAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+      79: return
+
+  public void copyDepthFrom(net.minecraft.client.gl.Framebuffer);
+    Code:
+       0: invokestatic  #80                 // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThread:()V
+       3: aload_0
+       4: getfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+       7: ifnonnull     20
+      10: new           #107                // class java/lang/IllegalStateException
+      13: dup
+      14: ldc           #109                // String Trying to copy depth texture to a RenderTarget without a depth texture
+      16: invokespecial #112                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      19: athrow
+      20: aload_1
+      21: getfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+      24: ifnonnull     37
+      27: new           #107                // class java/lang/IllegalStateException
+      30: dup
+      31: ldc           #114                // String Trying to copy depth texture from a RenderTarget without a depth texture
+      33: invokespecial #112                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      36: athrow
+      37: invokestatic  #118                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+      40: invokeinterface #124,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+      45: aload_1
+      46: getfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+      49: aload_0
+      50: getfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+      53: iconst_0
+      54: iconst_0
+      55: iconst_0
+      56: iconst_0
+      57: iconst_0
+      58: aload_0
+      59: getfield      #126                // Field textureWidth:I
+      62: aload_0
+      63: getfield      #128                // Field textureHeight:I
+      66: invokeinterface #134,  10         // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.copyTextureToTexture:(Lcom/mojang/blaze3d/textures/GpuTexture;Lcom/mojang/blaze3d/textures/GpuTexture;IIIIIII)V
+      71: return
+
+  public void initFbo(int, int);
+    Code:
+       0: invokestatic  #80                 // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThread:()V
+       3: invokestatic  #118                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+       6: astore_3
+       7: aload_3
+       8: invokeinterface #138,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.getMaxTextureSize:()I
+      13: istore        4
+      15: iload_1
+      16: ifle          35
+      19: iload_1
+      20: iload         4
+      22: if_icmpgt     35
+      25: iload_2
+      26: ifle          35
+      29: iload_2
+      30: iload         4
+      32: if_icmple     52
+      35: new           #140                // class java/lang/IllegalArgumentException
+      38: dup
+      39: iload_1
+      40: iload_2
+      41: iload         4
+      43: invokedynamic #145,  0            // InvokeDynamic #1:makeConcatWithConstants:(III)Ljava/lang/String;
+      48: invokespecial #146                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      51: athrow
+      52: aload_0
+      53: iload_1
+      54: putfield      #148                // Field viewportWidth:I
+      57: aload_0
+      58: iload_2
+      59: putfield      #150                // Field viewportHeight:I
+      62: aload_0
+      63: iload_1
+      64: putfield      #126                // Field textureWidth:I
+      67: aload_0
+      68: iload_2
+      69: putfield      #128                // Field textureHeight:I
+      72: aload_0
+      73: getfield      #71                 // Field useDepthAttachment:Z
+      76: ifeq          139
+      79: aload_0
+      80: aload_3
+      81: aload_0
+      82: invokedynamic #169,  0            // InvokeDynamic #2:get:(Lnet/minecraft/client/gl/Framebuffer;)Ljava/util/function/Supplier;
+      87: bipush        15
+      89: getstatic     #175                // Field com/mojang/blaze3d/textures/TextureFormat.DEPTH32:Lcom/mojang/blaze3d/textures/TextureFormat;
+      92: iload_1
+      93: iload_2
+      94: iconst_1
+      95: iconst_1
+      96: invokeinterface #179,  8          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createTexture:(Ljava/util/function/Supplier;ILcom/mojang/blaze3d/textures/TextureFormat;IIII)Lcom/mojang/blaze3d/textures/GpuTexture;
+     101: putfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+     104: aload_0
+     105: aload_3
+     106: aload_0
+     107: getfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+     110: invokeinterface #183,  2          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createTextureView:(Lcom/mojang/blaze3d/textures/GpuTexture;)Lcom/mojang/blaze3d/textures/GpuTextureView;
+     115: putfield      #95                 // Field depthAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+     118: aload_0
+     119: getfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+     122: getstatic     #188                // Field com/mojang/blaze3d/textures/FilterMode.NEAREST:Lcom/mojang/blaze3d/textures/FilterMode;
+     125: iconst_0
+     126: invokevirtual #192                // Method com/mojang/blaze3d/textures/GpuTexture.setTextureFilter:(Lcom/mojang/blaze3d/textures/FilterMode;Z)V
+     129: aload_0
+     130: getfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+     133: getstatic     #198                // Field com/mojang/blaze3d/textures/AddressMode.CLAMP_TO_EDGE:Lcom/mojang/blaze3d/textures/AddressMode;
+     136: invokevirtual #202                // Method com/mojang/blaze3d/textures/GpuTexture.setAddressMode:(Lcom/mojang/blaze3d/textures/AddressMode;)V
+     139: aload_0
+     140: aload_3
+     141: aload_0
+     142: invokedynamic #207,  0            // InvokeDynamic #3:get:(Lnet/minecraft/client/gl/Framebuffer;)Ljava/util/function/Supplier;
+     147: bipush        15
+     149: getstatic     #210                // Field com/mojang/blaze3d/textures/TextureFormat.RGBA8:Lcom/mojang/blaze3d/textures/TextureFormat;
+     152: iload_1
+     153: iload_2
+     154: iconst_1
+     155: iconst_1
+     156: invokeinterface #179,  8          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createTexture:(Ljava/util/function/Supplier;ILcom/mojang/blaze3d/textures/TextureFormat;IIII)Lcom/mojang/blaze3d/textures/GpuTexture;
+     161: putfield      #100                // Field colorAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+     164: aload_0
+     165: aload_3
+     166: aload_0
+     167: getfield      #100                // Field colorAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+     170: invokeinterface #183,  2          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createTextureView:(Lcom/mojang/blaze3d/textures/GpuTexture;)Lcom/mojang/blaze3d/textures/GpuTextureView;
+     175: putfield      #102                // Field colorAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+     178: aload_0
+     179: getfield      #100                // Field colorAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+     182: getstatic     #198                // Field com/mojang/blaze3d/textures/AddressMode.CLAMP_TO_EDGE:Lcom/mojang/blaze3d/textures/AddressMode;
+     185: invokevirtual #202                // Method com/mojang/blaze3d/textures/GpuTexture.setAddressMode:(Lcom/mojang/blaze3d/textures/AddressMode;)V
+     188: aload_0
+     189: getstatic     #188                // Field com/mojang/blaze3d/textures/FilterMode.NEAREST:Lcom/mojang/blaze3d/textures/FilterMode;
+     192: iconst_1
+     193: invokevirtual #213                // Method setFilter:(Lcom/mojang/blaze3d/textures/FilterMode;Z)V
+     196: return
+
+  public void setFilter(com.mojang.blaze3d.textures.FilterMode);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iconst_0
+       3: invokevirtual #213                // Method setFilter:(Lcom/mojang/blaze3d/textures/FilterMode;Z)V
+       6: return
+
+  private void setFilter(com.mojang.blaze3d.textures.FilterMode, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #100                // Field colorAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+       4: ifnonnull     17
+       7: new           #107                // class java/lang/IllegalStateException
+      10: dup
+      11: ldc           #221                // String Can\'t change filter mode, color texture doesn\'t exist yet
+      13: invokespecial #112                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: iload_2
+      18: ifne          29
+      21: aload_1
+      22: aload_0
+      23: getfield      #223                // Field filterMode:Lcom/mojang/blaze3d/textures/FilterMode;
+      26: if_acmpeq     43
+      29: aload_0
+      30: aload_1
+      31: putfield      #223                // Field filterMode:Lcom/mojang/blaze3d/textures/FilterMode;
+      34: aload_0
+      35: getfield      #100                // Field colorAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+      38: aload_1
+      39: iconst_0
+      40: invokevirtual #192                // Method com/mojang/blaze3d/textures/GpuTexture.setTextureFilter:(Lcom/mojang/blaze3d/textures/FilterMode;Z)V
+      43: return
+
+  public void blitToScreen();
+    Code:
+       0: aload_0
+       1: getfield      #100                // Field colorAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+       4: ifnonnull     17
+       7: new           #107                // class java/lang/IllegalStateException
+      10: dup
+      11: ldc           #226                // String Can\'t blit to screen, color texture doesn\'t exist yet
+      13: invokespecial #112                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      16: athrow
+      17: invokestatic  #118                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+      20: invokeinterface #124,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+      25: aload_0
+      26: getfield      #102                // Field colorAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+      29: invokeinterface #230,  2          // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.presentTexture:(Lcom/mojang/blaze3d/textures/GpuTextureView;)V
+      34: return
+
+  public void drawBlit(com.mojang.blaze3d.textures.GpuTextureView);
+    Code:
+       0: invokestatic  #80                 // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThread:()V
+       3: getstatic     #238                // Field com/mojang/blaze3d/vertex/VertexFormat$DrawMode.QUADS:Lcom/mojang/blaze3d/vertex/VertexFormat$DrawMode;
+       6: invokestatic  #242                // Method com/mojang/blaze3d/systems/RenderSystem.getSequentialBuffer:(Lcom/mojang/blaze3d/vertex/VertexFormat$DrawMode;)Lcom/mojang/blaze3d/systems/RenderSystem$ShapeIndexBuffer;
+       9: astore_2
+      10: aload_2
+      11: bipush        6
+      13: invokevirtual #246                // Method com/mojang/blaze3d/systems/RenderSystem$ShapeIndexBuffer.getIndexBuffer:(I)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      16: astore_3
+      17: invokestatic  #250                // Method com/mojang/blaze3d/systems/RenderSystem.getQuadVertexBuffer:()Lcom/mojang/blaze3d/buffers/GpuBuffer;
+      20: astore        4
+      22: invokestatic  #118                // Method com/mojang/blaze3d/systems/RenderSystem.getDevice:()Lcom/mojang/blaze3d/systems/GpuDevice;
+      25: invokeinterface #124,  1          // InterfaceMethod com/mojang/blaze3d/systems/GpuDevice.createCommandEncoder:()Lcom/mojang/blaze3d/systems/CommandEncoder;
+      30: invokedynamic #257,  0            // InvokeDynamic #4:get:()Ljava/util/function/Supplier;
+      35: aload_1
+      36: invokestatic  #263                // Method java/util/OptionalInt.empty:()Ljava/util/OptionalInt;
+      39: invokeinterface #267,  4          // InterfaceMethod com/mojang/blaze3d/systems/CommandEncoder.createRenderPass:(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;)Lcom/mojang/blaze3d/systems/RenderPass;
+      44: astore        5
+      46: aload         5
+      48: getstatic     #273                // Field net/minecraft/client/gl/RenderPipelines.ENTITY_OUTLINE_BLIT:Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+      51: invokeinterface #279,  2          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setPipeline:(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V
+      56: aload         5
+      58: invokestatic  #283                // Method com/mojang/blaze3d/systems/RenderSystem.bindDefaultUniforms:(Lcom/mojang/blaze3d/systems/RenderPass;)V
+      61: aload         5
+      63: iconst_0
+      64: aload         4
+      66: invokeinterface #287,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setVertexBuffer:(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V
+      71: aload         5
+      73: aload_3
+      74: aload_2
+      75: invokevirtual #291                // Method com/mojang/blaze3d/systems/RenderSystem$ShapeIndexBuffer.getIndexType:()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+      78: invokeinterface #295,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.setIndexBuffer:(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V
+      83: aload         5
+      85: ldc_w         #297                // String InSampler
+      88: aload_0
+      89: getfield      #102                // Field colorAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+      92: invokeinterface #301,  3          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.bindSampler:(Ljava/lang/String;Lcom/mojang/blaze3d/textures/GpuTextureView;)V
+      97: aload         5
+      99: iconst_0
+     100: iconst_0
+     101: bipush        6
+     103: iconst_1
+     104: invokeinterface #305,  5          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.drawIndexed:(IIII)V
+     109: aload         5
+     111: ifnull        153
+     114: aload         5
+     116: invokeinterface #306,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     121: goto          153
+     124: astore        6
+     126: aload         5
+     128: ifnull        150
+     131: aload         5
+     133: invokeinterface #306,  1          // InterfaceMethod com/mojang/blaze3d/systems/RenderPass.close:()V
+     138: goto          150
+     141: astore        7
+     143: aload         6
+     145: aload         7
+     147: invokevirtual #310                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     150: aload         6
+     152: athrow
+     153: return
+    Exception table:
+       from    to  target type
+          46   109   124   Class java/lang/Throwable
+         131   138   141   Class java/lang/Throwable
+
+  public com.mojang.blaze3d.textures.GpuTexture getColorAttachment();
+    Code:
+       0: aload_0
+       1: getfield      #100                // Field colorAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+       4: areturn
+
+  public com.mojang.blaze3d.textures.GpuTextureView getColorAttachmentView();
+    Code:
+       0: aload_0
+       1: getfield      #102                // Field colorAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+       4: areturn
+
+  public com.mojang.blaze3d.textures.GpuTexture getDepthAttachment();
+    Code:
+       0: aload_0
+       1: getfield      #88                 // Field depthAttachment:Lcom/mojang/blaze3d/textures/GpuTexture;
+       4: areturn
+
+  public com.mojang.blaze3d.textures.GpuTextureView getDepthAttachmentView();
+    Code:
+       0: aload_0
+       1: getfield      #95                 // Field depthAttachmentView:Lcom/mojang/blaze3d/textures/GpuTextureView;
+       4: areturn
+
+  private static java.lang.String method_71167();
+    Code:
+       0: ldc_w         #325                // String Blit render target
+       3: areturn
+
+  private java.lang.String method_67768();
+    Code:
+       0: aload_0
+       1: getfield      #69                 // Field name:Ljava/lang/String;
+       4: invokedynamic #330,  0            // InvokeDynamic #5:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+       9: areturn
+
+  private java.lang.String method_67767();
+    Code:
+       0: aload_0
+       1: getfield      #69                 // Field name:Ljava/lang/String;
+       4: invokedynamic #333,  0            // InvokeDynamic #6:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+       9: areturn
+
+  static {};
+    Code:
+       0: iconst_0
+       1: putstatic     #53                 // Field index:I
+       4: return
+}
