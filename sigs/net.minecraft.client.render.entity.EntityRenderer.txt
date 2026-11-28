@@ -1,0 +1,20 @@
+Compiled from "EntityRenderer.java"
+public abstract class net.minecraft.client.render.entity.EntityRenderer<T extends net.minecraft.entity.Entity> {
+  protected static final float field_32921;
+  protected final net.minecraft.client.render.entity.EntityRenderDispatcher dispatcher;
+  private final net.minecraft.client.font.TextRenderer textRenderer;
+  protected float shadowRadius;
+  protected float shadowOpacity;
+  protected net.minecraft.client.render.entity.EntityRenderer(net.minecraft.client.render.entity.EntityRendererFactory$Context);
+  public final int getLight(T, float);
+  protected int getSkyLight(T, net.minecraft.util.math.BlockPos);
+  protected int getBlockLight(T, net.minecraft.util.math.BlockPos);
+  public boolean shouldRender(T, net.minecraft.client.render.Frustum, double, double, double);
+  public net.minecraft.util.math.Vec3d getPositionOffset(T, float);
+  public void render(T, float, float, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, int);
+  protected boolean hasLabel(T);
+  public abstract net.minecraft.util.Identifier getTexture(T);
+  public net.minecraft.client.font.TextRenderer getTextRenderer();
+  protected void renderLabelIfPresent(T, net.minecraft.text.Text, net.minecraft.client.util.math.MatrixStack, net.minecraft.client.render.VertexConsumerProvider, int, float);
+  protected float getShadowRadius(T);
+}

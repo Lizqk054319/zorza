@@ -1,0 +1,8 @@
+Compiled from "HudRenderCallback.java"
+public interface net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback> EVENT;
+  public abstract void onHudRender(net.minecraft.class_332, float);
+  private static net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback lambda$static$1(net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback[]);
+  private static void lambda$static$0(net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback[], net.minecraft.class_332, float);
+  static {};
+}

@@ -1,0 +1,796 @@
+Compiled from "Framebuffer.java"
+public abstract class net.minecraft.client.gl.Framebuffer {
+  private static final int field_31901;
+
+  private static final int field_31902;
+
+  private static final int field_31903;
+
+  private static final int field_31904;
+
+  public int textureWidth;
+
+  public int textureHeight;
+
+  public int viewportWidth;
+
+  public int viewportHeight;
+
+  public final boolean useDepthAttachment;
+
+  public int fbo;
+
+  protected int colorAttachment;
+
+  protected int depthAttachment;
+
+  private final float[] clearColor;
+
+  public int texFilter;
+
+  public net.minecraft.client.gl.Framebuffer(boolean);
+    Code:
+       0: aload_0
+       1: invokespecial #51                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: invokedynamic #70,  0             // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+      10: invokestatic  #76                 // Method net/minecraft/util/Util.make:(Ljava/util/function/Supplier;)Ljava/lang/Object;
+      13: checkcast     #77                 // class "[F"
+      16: putfield      #79                 // Field clearColor:[F
+      19: aload_0
+      20: iload_1
+      21: putfield      #81                 // Field useDepthAttachment:Z
+      24: aload_0
+      25: iconst_m1
+      26: putfield      #83                 // Field fbo:I
+      29: aload_0
+      30: iconst_m1
+      31: putfield      #85                 // Field colorAttachment:I
+      34: aload_0
+      35: iconst_m1
+      36: putfield      #87                 // Field depthAttachment:I
+      39: return
+
+  public void resize(int, int, boolean);
+    Code:
+       0: invokestatic  #100                // Method com/mojang/blaze3d/systems/RenderSystem.isOnRenderThread:()Z
+       3: ifne          21
+       6: aload_0
+       7: iload_1
+       8: iload_2
+       9: iload_3
+      10: invokedynamic #109,  0            // InvokeDynamic #1:execute:(Lnet/minecraft/client/gl/Framebuffer;IIZ)Lcom/mojang/blaze3d/systems/RenderCall;
+      15: invokestatic  #113                // Method com/mojang/blaze3d/systems/RenderSystem.recordRenderCall:(Lcom/mojang/blaze3d/systems/RenderCall;)V
+      18: goto          28
+      21: aload_0
+      22: iload_1
+      23: iload_2
+      24: iload_3
+      25: invokevirtual #116                // Method resizeInternal:(IIZ)V
+      28: return
+
+  private void resizeInternal(int, int, boolean);
+    Code:
+       0: invokestatic  #119                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThreadOrInit:()V
+       3: invokestatic  #124                // Method com/mojang/blaze3d/platform/GlStateManager._enableDepthTest:()V
+       6: aload_0
+       7: getfield      #83                 // Field fbo:I
+      10: iflt          17
+      13: aload_0
+      14: invokevirtual #127                // Method delete:()V
+      17: aload_0
+      18: iload_1
+      19: iload_2
+      20: iload_3
+      21: invokevirtual #130                // Method initFbo:(IIZ)V
+      24: ldc           #131                // int 36160
+      26: iconst_0
+      27: invokestatic  #135                // Method com/mojang/blaze3d/platform/GlStateManager._glBindFramebuffer:(II)V
+      30: return
+
+  public void delete();
+    Code:
+       0: invokestatic  #119                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThreadOrInit:()V
+       3: aload_0
+       4: invokevirtual #138                // Method endRead:()V
+       7: aload_0
+       8: invokevirtual #141                // Method endWrite:()V
+      11: aload_0
+      12: getfield      #87                 // Field depthAttachment:I
+      15: iconst_m1
+      16: if_icmple     31
+      19: aload_0
+      20: getfield      #87                 // Field depthAttachment:I
+      23: invokestatic  #147                // Method com/mojang/blaze3d/platform/TextureUtil.releaseTextureId:(I)V
+      26: aload_0
+      27: iconst_m1
+      28: putfield      #87                 // Field depthAttachment:I
+      31: aload_0
+      32: getfield      #85                 // Field colorAttachment:I
+      35: iconst_m1
+      36: if_icmple     51
+      39: aload_0
+      40: getfield      #85                 // Field colorAttachment:I
+      43: invokestatic  #147                // Method com/mojang/blaze3d/platform/TextureUtil.releaseTextureId:(I)V
+      46: aload_0
+      47: iconst_m1
+      48: putfield      #85                 // Field colorAttachment:I
+      51: aload_0
+      52: getfield      #83                 // Field fbo:I
+      55: iconst_m1
+      56: if_icmple     77
+      59: ldc           #131                // int 36160
+      61: iconst_0
+      62: invokestatic  #135                // Method com/mojang/blaze3d/platform/GlStateManager._glBindFramebuffer:(II)V
+      65: aload_0
+      66: getfield      #83                 // Field fbo:I
+      69: invokestatic  #150                // Method com/mojang/blaze3d/platform/GlStateManager._glDeleteFramebuffers:(I)V
+      72: aload_0
+      73: iconst_m1
+      74: putfield      #83                 // Field fbo:I
+      77: return
+
+  public void copyDepthFrom(net.minecraft.client.gl.Framebuffer);
+    Code:
+       0: invokestatic  #119                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThreadOrInit:()V
+       3: ldc           #154                // int 36008
+       5: aload_1
+       6: getfield      #83                 // Field fbo:I
+       9: invokestatic  #135                // Method com/mojang/blaze3d/platform/GlStateManager._glBindFramebuffer:(II)V
+      12: ldc           #155                // int 36009
+      14: aload_0
+      15: getfield      #83                 // Field fbo:I
+      18: invokestatic  #135                // Method com/mojang/blaze3d/platform/GlStateManager._glBindFramebuffer:(II)V
+      21: iconst_0
+      22: iconst_0
+      23: aload_1
+      24: getfield      #157                // Field textureWidth:I
+      27: aload_1
+      28: getfield      #159                // Field textureHeight:I
+      31: iconst_0
+      32: iconst_0
+      33: aload_0
+      34: getfield      #157                // Field textureWidth:I
+      37: aload_0
+      38: getfield      #159                // Field textureHeight:I
+      41: sipush        256
+      44: sipush        9728
+      47: invokestatic  #163                // Method com/mojang/blaze3d/platform/GlStateManager._glBlitFrameBuffer:(IIIIIIIIII)V
+      50: ldc           #131                // int 36160
+      52: iconst_0
+      53: invokestatic  #135                // Method com/mojang/blaze3d/platform/GlStateManager._glBindFramebuffer:(II)V
+      56: return
+
+  public void initFbo(int, int, boolean);
+    Code:
+       0: invokestatic  #119                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThreadOrInit:()V
+       3: invokestatic  #167                // Method com/mojang/blaze3d/systems/RenderSystem.maxSupportedTextureSize:()I
+       6: istore        4
+       8: iload_1
+       9: ifle          28
+      12: iload_1
+      13: iload         4
+      15: if_icmpgt     28
+      18: iload_2
+      19: ifle          28
+      22: iload_2
+      23: iload         4
+      25: if_icmple     45
+      28: new           #169                // class java/lang/IllegalArgumentException
+      31: dup
+      32: iload_1
+      33: iload_2
+      34: iload         4
+      36: invokedynamic #181,  0            // InvokeDynamic #2:makeConcatWithConstants:(III)Ljava/lang/String;
+      41: invokespecial #184                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      44: athrow
+      45: aload_0
+      46: iload_1
+      47: putfield      #186                // Field viewportWidth:I
+      50: aload_0
+      51: iload_2
+      52: putfield      #188                // Field viewportHeight:I
+      55: aload_0
+      56: iload_1
+      57: putfield      #157                // Field textureWidth:I
+      60: aload_0
+      61: iload_2
+      62: putfield      #159                // Field textureHeight:I
+      65: aload_0
+      66: invokestatic  #191                // Method com/mojang/blaze3d/platform/GlStateManager.glGenFramebuffers:()I
+      69: putfield      #83                 // Field fbo:I
+      72: aload_0
+      73: invokestatic  #194                // Method com/mojang/blaze3d/platform/TextureUtil.generateTextureId:()I
+      76: putfield      #85                 // Field colorAttachment:I
+      79: aload_0
+      80: getfield      #81                 // Field useDepthAttachment:Z
+      83: ifeq          181
+      86: aload_0
+      87: invokestatic  #194                // Method com/mojang/blaze3d/platform/TextureUtil.generateTextureId:()I
+      90: putfield      #87                 // Field depthAttachment:I
+      93: aload_0
+      94: getfield      #87                 // Field depthAttachment:I
+      97: invokestatic  #197                // Method com/mojang/blaze3d/platform/GlStateManager._bindTexture:(I)V
+     100: sipush        3553
+     103: sipush        10241
+     106: sipush        9728
+     109: invokestatic  #201                // Method com/mojang/blaze3d/platform/GlStateManager._texParameter:(III)V
+     112: sipush        3553
+     115: sipush        10240
+     118: sipush        9728
+     121: invokestatic  #201                // Method com/mojang/blaze3d/platform/GlStateManager._texParameter:(III)V
+     124: sipush        3553
+     127: ldc           #202                // int 34892
+     129: iconst_0
+     130: invokestatic  #201                // Method com/mojang/blaze3d/platform/GlStateManager._texParameter:(III)V
+     133: sipush        3553
+     136: sipush        10242
+     139: ldc           #203                // int 33071
+     141: invokestatic  #201                // Method com/mojang/blaze3d/platform/GlStateManager._texParameter:(III)V
+     144: sipush        3553
+     147: sipush        10243
+     150: ldc           #203                // int 33071
+     152: invokestatic  #201                // Method com/mojang/blaze3d/platform/GlStateManager._texParameter:(III)V
+     155: sipush        3553
+     158: iconst_0
+     159: sipush        6402
+     162: aload_0
+     163: getfield      #157                // Field textureWidth:I
+     166: aload_0
+     167: getfield      #159                // Field textureHeight:I
+     170: iconst_0
+     171: sipush        6402
+     174: sipush        5126
+     177: aconst_null
+     178: invokestatic  #207                // Method com/mojang/blaze3d/platform/GlStateManager._texImage2D:(IIIIIIIILjava/nio/IntBuffer;)V
+     181: aload_0
+     182: sipush        9728
+     185: iconst_1
+     186: invokevirtual #211                // Method setTexFilter:(IZ)V
+     189: aload_0
+     190: getfield      #85                 // Field colorAttachment:I
+     193: invokestatic  #197                // Method com/mojang/blaze3d/platform/GlStateManager._bindTexture:(I)V
+     196: sipush        3553
+     199: sipush        10242
+     202: ldc           #203                // int 33071
+     204: invokestatic  #201                // Method com/mojang/blaze3d/platform/GlStateManager._texParameter:(III)V
+     207: sipush        3553
+     210: sipush        10243
+     213: ldc           #203                // int 33071
+     215: invokestatic  #201                // Method com/mojang/blaze3d/platform/GlStateManager._texParameter:(III)V
+     218: sipush        3553
+     221: iconst_0
+     222: ldc           #212                // int 32856
+     224: aload_0
+     225: getfield      #157                // Field textureWidth:I
+     228: aload_0
+     229: getfield      #159                // Field textureHeight:I
+     232: iconst_0
+     233: sipush        6408
+     236: sipush        5121
+     239: aconst_null
+     240: invokestatic  #207                // Method com/mojang/blaze3d/platform/GlStateManager._texImage2D:(IIIIIIIILjava/nio/IntBuffer;)V
+     243: ldc           #131                // int 36160
+     245: aload_0
+     246: getfield      #83                 // Field fbo:I
+     249: invokestatic  #135                // Method com/mojang/blaze3d/platform/GlStateManager._glBindFramebuffer:(II)V
+     252: ldc           #131                // int 36160
+     254: ldc           #213                // int 36064
+     256: sipush        3553
+     259: aload_0
+     260: getfield      #85                 // Field colorAttachment:I
+     263: iconst_0
+     264: invokestatic  #217                // Method com/mojang/blaze3d/platform/GlStateManager._glFramebufferTexture2D:(IIIII)V
+     267: aload_0
+     268: getfield      #81                 // Field useDepthAttachment:Z
+     271: ifeq          289
+     274: ldc           #131                // int 36160
+     276: ldc           #218                // int 36096
+     278: sipush        3553
+     281: aload_0
+     282: getfield      #87                 // Field depthAttachment:I
+     285: iconst_0
+     286: invokestatic  #217                // Method com/mojang/blaze3d/platform/GlStateManager._glFramebufferTexture2D:(IIIII)V
+     289: aload_0
+     290: invokevirtual #221                // Method checkFramebufferStatus:()V
+     293: aload_0
+     294: iload_3
+     295: invokevirtual #224                // Method clear:(Z)V
+     298: aload_0
+     299: invokevirtual #138                // Method endRead:()V
+     302: return
+
+  public void setTexFilter(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iconst_0
+       3: invokevirtual #211                // Method setTexFilter:(IZ)V
+       6: return
+
+  private void setTexFilter(int, boolean);
+    Code:
+       0: invokestatic  #119                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThreadOrInit:()V
+       3: iload_2
+       4: ifne          15
+       7: iload_1
+       8: aload_0
+       9: getfield      #228                // Field texFilter:I
+      12: if_icmpeq     51
+      15: aload_0
+      16: iload_1
+      17: putfield      #228                // Field texFilter:I
+      20: aload_0
+      21: getfield      #85                 // Field colorAttachment:I
+      24: invokestatic  #197                // Method com/mojang/blaze3d/platform/GlStateManager._bindTexture:(I)V
+      27: sipush        3553
+      30: sipush        10241
+      33: iload_1
+      34: invokestatic  #201                // Method com/mojang/blaze3d/platform/GlStateManager._texParameter:(III)V
+      37: sipush        3553
+      40: sipush        10240
+      43: iload_1
+      44: invokestatic  #201                // Method com/mojang/blaze3d/platform/GlStateManager._texParameter:(III)V
+      47: iconst_0
+      48: invokestatic  #197                // Method com/mojang/blaze3d/platform/GlStateManager._bindTexture:(I)V
+      51: return
+
+  public void checkFramebufferStatus();
+    Code:
+       0: invokestatic  #119                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThreadOrInit:()V
+       3: ldc           #131                // int 36160
+       5: invokestatic  #232                // Method com/mojang/blaze3d/platform/GlStateManager.glCheckFramebufferStatus:(I)I
+       8: istore_1
+       9: iload_1
+      10: ldc           #233                // int 36053
+      12: if_icmpne     16
+      15: return
+      16: iload_1
+      17: ldc           #234                // int 36054
+      19: if_icmpne     32
+      22: new           #236                // class java/lang/RuntimeException
+      25: dup
+      26: ldc           #238                // String GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT
+      28: invokespecial #239                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      31: athrow
+      32: iload_1
+      33: ldc           #240                // int 36055
+      35: if_icmpne     48
+      38: new           #236                // class java/lang/RuntimeException
+      41: dup
+      42: ldc           #242                // String GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT
+      44: invokespecial #239                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      47: athrow
+      48: iload_1
+      49: ldc           #243                // int 36059
+      51: if_icmpne     64
+      54: new           #236                // class java/lang/RuntimeException
+      57: dup
+      58: ldc           #245                // String GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER
+      60: invokespecial #239                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      63: athrow
+      64: iload_1
+      65: ldc           #246                // int 36060
+      67: if_icmpne     80
+      70: new           #236                // class java/lang/RuntimeException
+      73: dup
+      74: ldc           #248                // String GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER
+      76: invokespecial #239                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      79: athrow
+      80: iload_1
+      81: ldc           #249                // int 36061
+      83: if_icmpne     96
+      86: new           #236                // class java/lang/RuntimeException
+      89: dup
+      90: ldc           #251                // String GL_FRAMEBUFFER_UNSUPPORTED
+      92: invokespecial #239                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+      95: athrow
+      96: iload_1
+      97: sipush        1285
+     100: if_icmpne     113
+     103: new           #236                // class java/lang/RuntimeException
+     106: dup
+     107: ldc           #253                // String GL_OUT_OF_MEMORY
+     109: invokespecial #239                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+     112: athrow
+     113: new           #236                // class java/lang/RuntimeException
+     116: dup
+     117: iload_1
+     118: invokedynamic #258,  0            // InvokeDynamic #3:makeConcatWithConstants:(I)Ljava/lang/String;
+     123: invokespecial #239                // Method java/lang/RuntimeException."<init>":(Ljava/lang/String;)V
+     126: athrow
+
+  public void beginRead();
+    Code:
+       0: invokestatic  #262                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThread:()V
+       3: aload_0
+       4: getfield      #85                 // Field colorAttachment:I
+       7: invokestatic  #197                // Method com/mojang/blaze3d/platform/GlStateManager._bindTexture:(I)V
+      10: return
+
+  public void endRead();
+    Code:
+       0: invokestatic  #119                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThreadOrInit:()V
+       3: iconst_0
+       4: invokestatic  #197                // Method com/mojang/blaze3d/platform/GlStateManager._bindTexture:(I)V
+       7: return
+
+  public void beginWrite(boolean);
+    Code:
+       0: invokestatic  #100                // Method com/mojang/blaze3d/systems/RenderSystem.isOnRenderThread:()Z
+       3: ifne          19
+       6: aload_0
+       7: iload_1
+       8: invokedynamic #271,  0            // InvokeDynamic #4:execute:(Lnet/minecraft/client/gl/Framebuffer;Z)Lcom/mojang/blaze3d/systems/RenderCall;
+      13: invokestatic  #113                // Method com/mojang/blaze3d/systems/RenderSystem.recordRenderCall:(Lcom/mojang/blaze3d/systems/RenderCall;)V
+      16: goto          24
+      19: aload_0
+      20: iload_1
+      21: invokevirtual #274                // Method bind:(Z)V
+      24: return
+
+  private void bind(boolean);
+    Code:
+       0: invokestatic  #119                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThreadOrInit:()V
+       3: ldc           #131                // int 36160
+       5: aload_0
+       6: getfield      #83                 // Field fbo:I
+       9: invokestatic  #135                // Method com/mojang/blaze3d/platform/GlStateManager._glBindFramebuffer:(II)V
+      12: iload_1
+      13: ifeq          29
+      16: iconst_0
+      17: iconst_0
+      18: aload_0
+      19: getfield      #186                // Field viewportWidth:I
+      22: aload_0
+      23: getfield      #188                // Field viewportHeight:I
+      26: invokestatic  #279                // Method com/mojang/blaze3d/platform/GlStateManager._viewport:(IIII)V
+      29: return
+
+  public void endWrite();
+    Code:
+       0: invokestatic  #100                // Method com/mojang/blaze3d/systems/RenderSystem.isOnRenderThread:()Z
+       3: ifne          17
+       6: invokedynamic #286,  0            // InvokeDynamic #5:execute:()Lcom/mojang/blaze3d/systems/RenderCall;
+      11: invokestatic  #113                // Method com/mojang/blaze3d/systems/RenderSystem.recordRenderCall:(Lcom/mojang/blaze3d/systems/RenderCall;)V
+      14: goto          23
+      17: ldc           #131                // int 36160
+      19: iconst_0
+      20: invokestatic  #135                // Method com/mojang/blaze3d/platform/GlStateManager._glBindFramebuffer:(II)V
+      23: return
+
+  public void setClearColor(float, float, float, float);
+    Code:
+       0: aload_0
+       1: getfield      #79                 // Field clearColor:[F
+       4: iconst_0
+       5: fload_1
+       6: fastore
+       7: aload_0
+       8: getfield      #79                 // Field clearColor:[F
+      11: iconst_1
+      12: fload_2
+      13: fastore
+      14: aload_0
+      15: getfield      #79                 // Field clearColor:[F
+      18: iconst_2
+      19: fload_3
+      20: fastore
+      21: aload_0
+      22: getfield      #79                 // Field clearColor:[F
+      25: iconst_3
+      26: fload         4
+      28: fastore
+      29: return
+
+  public void draw(int, int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_2
+       3: iconst_1
+       4: invokevirtual #296                // Method draw:(IIZ)V
+       7: return
+
+  public void draw(int, int, boolean);
+    Code:
+       0: invokestatic  #300                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnGameThreadOrInit:()V
+       3: invokestatic  #303                // Method com/mojang/blaze3d/systems/RenderSystem.isInInitPhase:()Z
+       6: ifne          24
+       9: aload_0
+      10: iload_1
+      11: iload_2
+      12: iload_3
+      13: invokedynamic #308,  0            // InvokeDynamic #6:execute:(Lnet/minecraft/client/gl/Framebuffer;IIZ)Lcom/mojang/blaze3d/systems/RenderCall;
+      18: invokestatic  #113                // Method com/mojang/blaze3d/systems/RenderSystem.recordRenderCall:(Lcom/mojang/blaze3d/systems/RenderCall;)V
+      21: goto          31
+      24: aload_0
+      25: iload_1
+      26: iload_2
+      27: iload_3
+      28: invokevirtual #311                // Method drawInternal:(IIZ)V
+      31: return
+
+  private void drawInternal(int, int, boolean);
+    Code:
+       0: invokestatic  #262                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThread:()V
+       3: iconst_1
+       4: iconst_1
+       5: iconst_1
+       6: iconst_0
+       7: invokestatic  #315                // Method com/mojang/blaze3d/platform/GlStateManager._colorMask:(ZZZZ)V
+      10: invokestatic  #318                // Method com/mojang/blaze3d/platform/GlStateManager._disableDepthTest:()V
+      13: iconst_0
+      14: invokestatic  #321                // Method com/mojang/blaze3d/platform/GlStateManager._depthMask:(Z)V
+      17: iconst_0
+      18: iconst_0
+      19: iload_1
+      20: iload_2
+      21: invokestatic  #279                // Method com/mojang/blaze3d/platform/GlStateManager._viewport:(IIII)V
+      24: iload_3
+      25: ifeq          31
+      28: invokestatic  #324                // Method com/mojang/blaze3d/platform/GlStateManager._disableBlend:()V
+      31: invokestatic  #330                // Method net/minecraft/client/MinecraftClient.getInstance:()Lnet/minecraft/client/MinecraftClient;
+      34: astore        4
+      36: aload         4
+      38: getfield      #334                // Field net/minecraft/client/MinecraftClient.gameRenderer:Lnet/minecraft/client/render/GameRenderer;
+      41: getfield      #340                // Field net/minecraft/client/render/GameRenderer.blitScreenProgram:Lnet/minecraft/client/gl/ShaderProgram;
+      44: astore        5
+      46: aload         5
+      48: ldc_w         #342                // String DiffuseSampler
+      51: aload_0
+      52: getfield      #85                 // Field colorAttachment:I
+      55: invokestatic  #348                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      58: invokevirtual #354                // Method net/minecraft/client/gl/ShaderProgram.addSampler:(Ljava/lang/String;Ljava/lang/Object;)V
+      61: new           #356                // class org/joml/Matrix4f
+      64: dup
+      65: invokespecial #357                // Method org/joml/Matrix4f."<init>":()V
+      68: fconst_0
+      69: iload_1
+      70: i2f
+      71: iload_2
+      72: i2f
+      73: fconst_0
+      74: ldc_w         #358                // float 1000.0f
+      77: ldc_w         #359                // float 3000.0f
+      80: invokevirtual #363                // Method org/joml/Matrix4f.setOrtho:(FFFFFF)Lorg/joml/Matrix4f;
+      83: astore        6
+      85: aload         6
+      87: getstatic     #369                // Field com/mojang/blaze3d/systems/VertexSorter.BY_Z:Lcom/mojang/blaze3d/systems/VertexSorter;
+      90: invokestatic  #373                // Method com/mojang/blaze3d/systems/RenderSystem.setProjectionMatrix:(Lorg/joml/Matrix4f;Lcom/mojang/blaze3d/systems/VertexSorter;)V
+      93: aload         5
+      95: getfield      #377                // Field net/minecraft/client/gl/ShaderProgram.modelViewMat:Lnet/minecraft/client/gl/GlUniform;
+      98: ifnull        124
+     101: aload         5
+     103: getfield      #377                // Field net/minecraft/client/gl/ShaderProgram.modelViewMat:Lnet/minecraft/client/gl/GlUniform;
+     106: new           #356                // class org/joml/Matrix4f
+     109: dup
+     110: invokespecial #357                // Method org/joml/Matrix4f."<init>":()V
+     113: fconst_0
+     114: fconst_0
+     115: ldc_w         #378                // float -2000.0f
+     118: invokevirtual #382                // Method org/joml/Matrix4f.translation:(FFF)Lorg/joml/Matrix4f;
+     121: invokevirtual #388                // Method net/minecraft/client/gl/GlUniform.set:(Lorg/joml/Matrix4f;)V
+     124: aload         5
+     126: getfield      #391                // Field net/minecraft/client/gl/ShaderProgram.projectionMat:Lnet/minecraft/client/gl/GlUniform;
+     129: ifnull        142
+     132: aload         5
+     134: getfield      #391                // Field net/minecraft/client/gl/ShaderProgram.projectionMat:Lnet/minecraft/client/gl/GlUniform;
+     137: aload         6
+     139: invokevirtual #388                // Method net/minecraft/client/gl/GlUniform.set:(Lorg/joml/Matrix4f;)V
+     142: aload         5
+     144: invokevirtual #393                // Method net/minecraft/client/gl/ShaderProgram.bind:()V
+     147: iload_1
+     148: i2f
+     149: fstore        7
+     151: iload_2
+     152: i2f
+     153: fstore        8
+     155: aload_0
+     156: getfield      #186                // Field viewportWidth:I
+     159: i2f
+     160: aload_0
+     161: getfield      #157                // Field textureWidth:I
+     164: i2f
+     165: fdiv
+     166: fstore        9
+     168: aload_0
+     169: getfield      #188                // Field viewportHeight:I
+     172: i2f
+     173: aload_0
+     174: getfield      #159                // Field textureHeight:I
+     177: i2f
+     178: fdiv
+     179: fstore        10
+     181: invokestatic  #397                // Method com/mojang/blaze3d/systems/RenderSystem.renderThreadTesselator:()Lnet/minecraft/client/render/Tessellator;
+     184: astore        11
+     186: aload         11
+     188: invokevirtual #403                // Method net/minecraft/client/render/Tessellator.getBuffer:()Lnet/minecraft/client/render/BufferBuilder;
+     191: astore        12
+     193: aload         12
+     195: getstatic     #407                // Field net/minecraft/client/render/VertexFormat$DrawMode.QUADS:Lnet/minecraft/client/render/VertexFormat$DrawMode;
+     198: getstatic     #413                // Field net/minecraft/client/render/VertexFormats.POSITION_TEXTURE_COLOR:Lnet/minecraft/client/render/VertexFormat;
+     201: invokevirtual #417                // Method net/minecraft/client/render/BufferBuilder.begin:(Lnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat;)V
+     204: aload         12
+     206: dconst_0
+     207: fload         8
+     209: f2d
+     210: dconst_0
+     211: invokevirtual #421                // Method net/minecraft/client/render/BufferBuilder.vertex:(DDD)Lnet/minecraft/client/render/VertexConsumer;
+     214: fconst_0
+     215: fconst_0
+     216: invokeinterface #427,  3          // InterfaceMethod net/minecraft/client/render/VertexConsumer.texture:(FF)Lnet/minecraft/client/render/VertexConsumer;
+     221: sipush        255
+     224: sipush        255
+     227: sipush        255
+     230: sipush        255
+     233: invokeinterface #431,  5          // InterfaceMethod net/minecraft/client/render/VertexConsumer.color:(IIII)Lnet/minecraft/client/render/VertexConsumer;
+     238: invokeinterface #434,  1          // InterfaceMethod net/minecraft/client/render/VertexConsumer.next:()V
+     243: aload         12
+     245: fload         7
+     247: f2d
+     248: fload         8
+     250: f2d
+     251: dconst_0
+     252: invokevirtual #421                // Method net/minecraft/client/render/BufferBuilder.vertex:(DDD)Lnet/minecraft/client/render/VertexConsumer;
+     255: fload         9
+     257: fconst_0
+     258: invokeinterface #427,  3          // InterfaceMethod net/minecraft/client/render/VertexConsumer.texture:(FF)Lnet/minecraft/client/render/VertexConsumer;
+     263: sipush        255
+     266: sipush        255
+     269: sipush        255
+     272: sipush        255
+     275: invokeinterface #431,  5          // InterfaceMethod net/minecraft/client/render/VertexConsumer.color:(IIII)Lnet/minecraft/client/render/VertexConsumer;
+     280: invokeinterface #434,  1          // InterfaceMethod net/minecraft/client/render/VertexConsumer.next:()V
+     285: aload         12
+     287: fload         7
+     289: f2d
+     290: dconst_0
+     291: dconst_0
+     292: invokevirtual #421                // Method net/minecraft/client/render/BufferBuilder.vertex:(DDD)Lnet/minecraft/client/render/VertexConsumer;
+     295: fload         9
+     297: fload         10
+     299: invokeinterface #427,  3          // InterfaceMethod net/minecraft/client/render/VertexConsumer.texture:(FF)Lnet/minecraft/client/render/VertexConsumer;
+     304: sipush        255
+     307: sipush        255
+     310: sipush        255
+     313: sipush        255
+     316: invokeinterface #431,  5          // InterfaceMethod net/minecraft/client/render/VertexConsumer.color:(IIII)Lnet/minecraft/client/render/VertexConsumer;
+     321: invokeinterface #434,  1          // InterfaceMethod net/minecraft/client/render/VertexConsumer.next:()V
+     326: aload         12
+     328: dconst_0
+     329: dconst_0
+     330: dconst_0
+     331: invokevirtual #421                // Method net/minecraft/client/render/BufferBuilder.vertex:(DDD)Lnet/minecraft/client/render/VertexConsumer;
+     334: fconst_0
+     335: fload         10
+     337: invokeinterface #427,  3          // InterfaceMethod net/minecraft/client/render/VertexConsumer.texture:(FF)Lnet/minecraft/client/render/VertexConsumer;
+     342: sipush        255
+     345: sipush        255
+     348: sipush        255
+     351: sipush        255
+     354: invokeinterface #431,  5          // InterfaceMethod net/minecraft/client/render/VertexConsumer.color:(IIII)Lnet/minecraft/client/render/VertexConsumer;
+     359: invokeinterface #434,  1          // InterfaceMethod net/minecraft/client/render/VertexConsumer.next:()V
+     364: aload         12
+     366: invokevirtual #438                // Method net/minecraft/client/render/BufferBuilder.end:()Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;
+     369: invokestatic  #443                // Method net/minecraft/client/render/BufferRenderer.draw:(Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;)V
+     372: aload         5
+     374: invokevirtual #446                // Method net/minecraft/client/gl/ShaderProgram.unbind:()V
+     377: iconst_1
+     378: invokestatic  #321                // Method com/mojang/blaze3d/platform/GlStateManager._depthMask:(Z)V
+     381: iconst_1
+     382: iconst_1
+     383: iconst_1
+     384: iconst_1
+     385: invokestatic  #315                // Method com/mojang/blaze3d/platform/GlStateManager._colorMask:(ZZZZ)V
+     388: return
+
+  public void clear(boolean);
+    Code:
+       0: invokestatic  #119                // Method com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThreadOrInit:()V
+       3: aload_0
+       4: iconst_1
+       5: invokevirtual #459                // Method beginWrite:(Z)V
+       8: aload_0
+       9: getfield      #79                 // Field clearColor:[F
+      12: iconst_0
+      13: faload
+      14: aload_0
+      15: getfield      #79                 // Field clearColor:[F
+      18: iconst_1
+      19: faload
+      20: aload_0
+      21: getfield      #79                 // Field clearColor:[F
+      24: iconst_2
+      25: faload
+      26: aload_0
+      27: getfield      #79                 // Field clearColor:[F
+      30: iconst_3
+      31: faload
+      32: invokestatic  #462                // Method com/mojang/blaze3d/platform/GlStateManager._clearColor:(FFFF)V
+      35: sipush        16384
+      38: istore_2
+      39: aload_0
+      40: getfield      #81                 // Field useDepthAttachment:Z
+      43: ifeq          56
+      46: dconst_1
+      47: invokestatic  #466                // Method com/mojang/blaze3d/platform/GlStateManager._clearDepth:(D)V
+      50: iload_2
+      51: sipush        256
+      54: ior
+      55: istore_2
+      56: iload_2
+      57: iload_1
+      58: invokestatic  #469                // Method com/mojang/blaze3d/platform/GlStateManager._clear:(IZ)V
+      61: aload_0
+      62: invokevirtual #141                // Method endWrite:()V
+      65: return
+
+  public int getColorAttachment();
+    Code:
+       0: aload_0
+       1: getfield      #85                 // Field colorAttachment:I
+       4: ireturn
+
+  public int getDepthAttachment();
+    Code:
+       0: aload_0
+       1: getfield      #87                 // Field depthAttachment:I
+       4: ireturn
+
+  private void method_22599(int, int, boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_2
+       3: iload_3
+       4: invokevirtual #311                // Method drawInternal:(IIZ)V
+       7: return
+
+  private static void method_22598();
+    Code:
+       0: ldc           #131                // int 36160
+       2: iconst_0
+       3: invokestatic  #135                // Method com/mojang/blaze3d/platform/GlStateManager._glBindFramebuffer:(II)V
+       6: return
+
+  private void method_22597(boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: invokevirtual #274                // Method bind:(Z)V
+       5: return
+
+  private void method_22600(int, int, boolean);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: iload_2
+       3: iload_3
+       4: invokevirtual #116                // Method resizeInternal:(IIZ)V
+       7: return
+
+  private static float[] method_36809();
+    Code:
+       0: iconst_4
+       1: newarray       float
+       3: astore_0
+       4: aload_0
+       5: iconst_0
+       6: fconst_1
+       7: fastore
+       8: aload_0
+       9: iconst_1
+      10: fconst_1
+      11: fastore
+      12: aload_0
+      13: iconst_2
+      14: fconst_1
+      15: fastore
+      16: aload_0
+      17: iconst_3
+      18: fconst_0
+      19: fastore
+      20: aload_0
+      21: areturn
+}
