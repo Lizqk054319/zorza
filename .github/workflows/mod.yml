@@ -117,11 +117,25 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -u
           ls new || true
           [ -n "$(ls new 2>/dev/null)" ] || { echo "Żadna wersja nie przeszła testu"; exit 1; }
-          mkdir -p old && gh release download mod-latest -D old -p "zorza-client-*.jar" || true
-          for f in old/*.jar; do [ -e "$f" ] && [ ! -e "new/$(basename "$f")" ] && cp "$f" new/; done
+          # kopia zapasowa wszystkich działających plików na gałęzi mod-jars (wersje, które teraz nie przeszły, zostają stare)
+          git fetch -q origin mod-jars:mod-jars 2>/dev/null && git worktree add -q /tmp/jars mod-jars || { mkdir -p /tmp/jars && cd /tmp/jars && git init -q -b mod-jars && cd -; }
+          mkdir -p old && gh release download mod-latest -D old -p "zorza-client-*.jar" 2>/dev/null || true
+          for f in old/*.jar /tmp/jars/*.jar; do [ -e "$f" ] && [ ! -e "new/$(basename "$f")" ] && cp "$f" new/; done
+          cp new/*.jar /tmp/jars/
+          (cd /tmp/jars && git add -A && git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "jars ${GITHUB_SHA}" || true
+           git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:mod-jars)
           ls -la new
-          gh release delete mod-latest --yes --cleanup-tag || true
-          gh release create mod-latest new/*.jar --title "Zora Client mod (najnowszy)" \
-            --notes "Automatycznie zbudowany mod Zora Client – osobny plik na każdą wersję Minecrafta. Launcher pobiera go sam." --target "$GITHUB_SHA"
+          # wydania nie kasujemy (żeby nigdy nie zniknęło) – podmieniamy pliki; kilka prób, bo GitHub czasem odrzuca
+          for i in 1 2 3 4 5; do
+            if gh release view mod-latest >/dev/null 2>&1; then
+              gh release upload mod-latest new/*.jar --clobber && exit 0
+            else
+              gh release create mod-latest new/*.jar --title "Zora Client mod (najnowszy)" \
+                --notes "Automatycznie zbudowany mod Zora Client – osobny plik na każdą wersję Minecrafta. Launcher pobiera go sam." --target "$GITHUB_SHA" && exit 0
+            fi
+            echo "Próba $i nie wyszła – czekam"; sleep $((i * 20))
+          done
+          exit 1
