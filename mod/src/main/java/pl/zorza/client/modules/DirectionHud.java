@@ -6,7 +6,7 @@ import pl.zorza.client.module.TextHud;
 
 public class DirectionHud extends TextHud {
     public DirectionHud() {
-        super("direction", "Direction", "Which way you are facing.", Category.HUD, false, 0.45, 0.01);
+        super("direction", "Direction", "Which way you are facing.", Category.HUD, false, 0.55, 0.01);
     }
 
     public String icon() { return "m_direction"; }

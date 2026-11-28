@@ -15,7 +15,7 @@ public class ItemCounterHud extends HudModule {
             Items.END_CRYSTAL, Items.ARROW, Items.EXPERIENCE_BOTTLE};
 
     public ItemCounterHud() {
-        super("item_counter", "Item Counter", "Counts totems, gapples, pearls and more.", Category.HUD, false, 0.82, 0.92);
+        super("item_counter", "Item Counter", "Counts totems, gapples, pearls and more.", Category.HUD, false, 0.72, 0.86);
     }
 
     public String icon() { return "m_items"; }
