@@ -1,0 +1,41 @@
+Compiled from "ClientWorld.java"
+public class net.minecraft.client.world.ClientWorld$Properties implements net.minecraft.world.MutableWorldProperties {
+  private final boolean hardcore;
+  private final net.minecraft.world.GameRules gameRules;
+  private final boolean flatWorld;
+  private int spawnX;
+  private int spawnY;
+  private int spawnZ;
+  private float spawnAngle;
+  private long time;
+  private long timeOfDay;
+  private boolean raining;
+  private net.minecraft.world.Difficulty difficulty;
+  private boolean difficultyLocked;
+  public net.minecraft.client.world.ClientWorld$Properties(net.minecraft.world.Difficulty, boolean, boolean);
+  public int getSpawnX();
+  public int getSpawnY();
+  public int getSpawnZ();
+  public float getSpawnAngle();
+  public long getTime();
+  public long getTimeOfDay();
+  public void setSpawnX(int);
+  public void setSpawnY(int);
+  public void setSpawnZ(int);
+  public void setSpawnAngle(float);
+  public void setTime(long);
+  public void setTimeOfDay(long);
+  public void setSpawnPos(net.minecraft.util.math.BlockPos, float);
+  public boolean isThundering();
+  public boolean isRaining();
+  public void setRaining(boolean);
+  public boolean isHardcore();
+  public net.minecraft.world.GameRules getGameRules();
+  public net.minecraft.world.Difficulty getDifficulty();
+  public boolean isDifficultyLocked();
+  public void populateCrashReport(net.minecraft.util.crash.CrashReportSection, net.minecraft.world.HeightLimitView);
+  public void setDifficulty(net.minecraft.world.Difficulty);
+  public void setDifficultyLocked(boolean);
+  public double getSkyDarknessHeight(net.minecraft.world.HeightLimitView);
+  public float getHorizonShadingRatio();
+}

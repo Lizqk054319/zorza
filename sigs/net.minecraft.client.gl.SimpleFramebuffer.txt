@@ -1,0 +1,4 @@
+Compiled from "SimpleFramebuffer.java"
+public class net.minecraft.client.gl.SimpleFramebuffer extends net.minecraft.client.gl.Framebuffer {
+  public net.minecraft.client.gl.SimpleFramebuffer(int, int, boolean, boolean);
+}
