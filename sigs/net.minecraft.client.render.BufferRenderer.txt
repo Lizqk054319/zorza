@@ -1,0 +1,12 @@
+Compiled from "BufferRenderer.java"
+public class net.minecraft.client.render.BufferRenderer {
+  private static net.minecraft.client.gl.VertexBuffer currentVertexBuffer;
+  public net.minecraft.client.render.BufferRenderer();
+  public static void reset();
+  public static void resetCurrentVertexBuffer();
+  public static void drawWithGlobalProgram(net.minecraft.client.render.BuiltBuffer);
+  public static void draw(net.minecraft.client.render.BuiltBuffer);
+  private static net.minecraft.client.gl.VertexBuffer upload(net.minecraft.client.render.BuiltBuffer);
+  private static net.minecraft.client.gl.VertexBuffer bind(net.minecraft.client.render.VertexFormat);
+  private static void bind(net.minecraft.client.gl.VertexBuffer);
+}

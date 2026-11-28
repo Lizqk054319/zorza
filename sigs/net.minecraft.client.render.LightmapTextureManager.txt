@@ -1,0 +1,26 @@
+Compiled from "LightmapTextureManager.java"
+public class net.minecraft.client.render.LightmapTextureManager implements java.lang.AutoCloseable {
+  public static final int MAX_LIGHT_COORDINATE;
+  public static final int MAX_SKY_LIGHT_COORDINATE;
+  public static final int MAX_BLOCK_LIGHT_COORDINATE;
+  private static final int field_53098;
+  private final net.minecraft.client.gl.SimpleFramebuffer lightmapFramebuffer;
+  private boolean dirty;
+  private float flickerIntensity;
+  private final net.minecraft.client.render.GameRenderer renderer;
+  private final net.minecraft.client.MinecraftClient client;
+  public net.minecraft.client.render.LightmapTextureManager(net.minecraft.client.render.GameRenderer, net.minecraft.client.MinecraftClient);
+  public void close();
+  public void tick();
+  public void disable();
+  public void enable();
+  private float getDarknessFactor(float);
+  private float getDarkness(net.minecraft.entity.LivingEntity, float, float);
+  public void update(float);
+  public static float getBrightness(net.minecraft.world.dimension.DimensionType, int);
+  public static float getBrightness(float, int);
+  public static int pack(int, int);
+  public static int getBlockLightCoordinates(int);
+  public static int getSkyLightCoordinates(int);
+  public static int applyEmission(int, int);
+}

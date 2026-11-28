@@ -1,0 +1,36 @@
+Compiled from "Framebuffer.java"
+public abstract class net.minecraft.client.gl.Framebuffer {
+  private static final int field_31901;
+  private static final int field_31902;
+  private static final int field_31903;
+  private static final int field_31904;
+  public int textureWidth;
+  public int textureHeight;
+  public int viewportWidth;
+  public int viewportHeight;
+  public final boolean useDepthAttachment;
+  public int fbo;
+  protected int colorAttachment;
+  protected int depthAttachment;
+  private final float[] clearColor;
+  public int texFilter;
+  public net.minecraft.client.gl.Framebuffer(boolean);
+  public void resize(int, int);
+  public void delete();
+  public void copyDepthFrom(net.minecraft.client.gl.Framebuffer);
+  public void initFbo(int, int);
+  public void setTexFilter(int);
+  private void setTexFilter(int, boolean);
+  public void checkFramebufferStatus();
+  public void beginRead();
+  public void endRead();
+  public void beginWrite(boolean);
+  public void endWrite();
+  public void setClearColor(float, float, float, float);
+  public void draw(int, int);
+  public void drawInternal(int, int);
+  public void clear();
+  public int getColorAttachment();
+  public int getDepthAttachment();
+  private static float[] method_36809();
+}

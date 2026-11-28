@@ -1,0 +1,45 @@
+Compiled from "PlayerListHud.java"
+public class net.minecraft.client.gui.hud.PlayerListHud {
+  private static final net.minecraft.util.Identifier PING_UNKNOWN_ICON_TEXTURE;
+  private static final net.minecraft.util.Identifier PING_1_ICON_TEXTURE;
+  private static final net.minecraft.util.Identifier PING_2_ICON_TEXTURE;
+  private static final net.minecraft.util.Identifier PING_3_ICON_TEXTURE;
+  private static final net.minecraft.util.Identifier PING_4_ICON_TEXTURE;
+  private static final net.minecraft.util.Identifier PING_5_ICON_TEXTURE;
+  private static final net.minecraft.util.Identifier CONTAINER_HEART_BLINKING_TEXTURE;
+  private static final net.minecraft.util.Identifier CONTAINER_HEART_TEXTURE;
+  private static final net.minecraft.util.Identifier FULL_HEART_BLINKING_TEXTURE;
+  private static final net.minecraft.util.Identifier HALF_HEART_BLINKING_TEXTURE;
+  private static final net.minecraft.util.Identifier ABSORBING_FULL_HEART_BLINKING_TEXTURE;
+  private static final net.minecraft.util.Identifier FULL_HEART_TEXTURE;
+  private static final net.minecraft.util.Identifier ABSORBING_HALF_HEART_BLINKING_TEXTURE;
+  private static final net.minecraft.util.Identifier HALF_HEART_TEXTURE;
+  private static final java.util.Comparator<net.minecraft.client.network.PlayerListEntry> ENTRY_ORDERING;
+  public static final int MAX_ROWS;
+  private final net.minecraft.client.MinecraftClient client;
+  private final net.minecraft.client.gui.hud.InGameHud inGameHud;
+  private net.minecraft.text.Text footer;
+  private net.minecraft.text.Text header;
+  private boolean visible;
+  private final java.util.Map<java.util.UUID, net.minecraft.client.gui.hud.PlayerListHud$Heart> hearts;
+  public net.minecraft.client.gui.hud.PlayerListHud(net.minecraft.client.MinecraftClient, net.minecraft.client.gui.hud.InGameHud);
+  public net.minecraft.text.Text getPlayerName(net.minecraft.client.network.PlayerListEntry);
+  private net.minecraft.text.Text applyGameModeFormatting(net.minecraft.client.network.PlayerListEntry, net.minecraft.text.MutableText);
+  public void setVisible(boolean);
+  private java.util.List<net.minecraft.client.network.PlayerListEntry> collectPlayerEntries();
+  public void render(net.minecraft.client.gui.DrawContext, int, net.minecraft.scoreboard.Scoreboard, net.minecraft.scoreboard.ScoreboardObjective);
+  protected void renderLatencyIcon(net.minecraft.client.gui.DrawContext, int, int, int, net.minecraft.client.network.PlayerListEntry);
+  private void renderScoreboardObjective(net.minecraft.scoreboard.ScoreboardObjective, int, net.minecraft.client.gui.hud.PlayerListHud$ScoreDisplayEntry, int, int, java.util.UUID, net.minecraft.client.gui.DrawContext);
+  private void renderHearts(int, int, int, java.util.UUID, net.minecraft.client.gui.DrawContext, int);
+  public void setFooter(net.minecraft.text.Text);
+  public void setHeader(net.minecraft.text.Text);
+  public void clear();
+  private static net.minecraft.client.gui.hud.PlayerListHud$Heart method_45591(int, java.util.UUID);
+  private static boolean method_45593(java.util.Set, java.util.UUID);
+  private static java.util.UUID method_45594(net.minecraft.client.network.PlayerListEntry);
+  private static java.lang.String method_46511(net.minecraft.client.network.PlayerListEntry);
+  private static java.lang.String method_45595(net.minecraft.client.network.PlayerListEntry);
+  private static int method_45592(net.minecraft.client.network.PlayerListEntry);
+  private static int method_61982(net.minecraft.client.network.PlayerListEntry);
+  static {};
+}

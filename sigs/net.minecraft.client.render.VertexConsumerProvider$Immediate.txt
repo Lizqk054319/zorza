@@ -1,0 +1,13 @@
+Compiled from "VertexConsumerProvider.java"
+public class net.minecraft.client.render.VertexConsumerProvider$Immediate implements net.minecraft.client.render.VertexConsumerProvider {
+  protected final net.minecraft.client.util.BufferAllocator allocator;
+  protected final java.util.SequencedMap<net.minecraft.client.render.RenderLayer, net.minecraft.client.util.BufferAllocator> layerBuffers;
+  protected final java.util.Map<net.minecraft.client.render.RenderLayer, net.minecraft.client.render.BufferBuilder> pending;
+  protected net.minecraft.client.render.RenderLayer currentLayer;
+  protected net.minecraft.client.render.VertexConsumerProvider$Immediate(net.minecraft.client.util.BufferAllocator, java.util.SequencedMap<net.minecraft.client.render.RenderLayer, net.minecraft.client.util.BufferAllocator>);
+  public net.minecraft.client.render.VertexConsumer getBuffer(net.minecraft.client.render.RenderLayer);
+  public void drawCurrentLayer();
+  public void draw();
+  public void draw(net.minecraft.client.render.RenderLayer);
+  private void draw(net.minecraft.client.render.RenderLayer, net.minecraft.client.render.BufferBuilder);
+}
