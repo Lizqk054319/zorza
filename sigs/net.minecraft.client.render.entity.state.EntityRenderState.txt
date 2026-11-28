@@ -1,0 +1,23 @@
+Compiled from "EntityRenderState.java"
+public class net.minecraft.client.render.entity.state.EntityRenderState {
+  public net.minecraft.entity.EntityType<?> entityType;
+  public double x;
+  public double y;
+  public double z;
+  public float age;
+  public float width;
+  public float height;
+  public float standingEyeHeight;
+  public double squaredDistanceToCamera;
+  public boolean invisible;
+  public boolean sneaking;
+  public boolean onFire;
+  public net.minecraft.util.math.Vec3d positionOffset;
+  public net.minecraft.text.Text displayName;
+  public net.minecraft.util.math.Vec3d nameLabelPos;
+  public java.util.List<net.minecraft.client.render.entity.state.EntityRenderState$LeashData> leashDatas;
+  public net.minecraft.client.render.entity.state.EntityHitboxAndView hitbox;
+  public net.minecraft.client.render.entity.state.EntityDebugInfo debugInfo;
+  public net.minecraft.client.render.entity.state.EntityRenderState();
+  public void addCrashReportDetails(net.minecraft.util.crash.CrashReportSection);
+}

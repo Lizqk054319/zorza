@@ -1,0 +1,18 @@
+Compiled from "AbstractClientPlayerEntity.java"
+public abstract class net.minecraft.client.network.AbstractClientPlayerEntity extends net.minecraft.entity.player.PlayerEntity {
+  private net.minecraft.client.network.PlayerListEntry playerListEntry;
+  protected net.minecraft.util.math.Vec3d lastVelocity;
+  public float elytraPitch;
+  public float elytraYaw;
+  public float elytraRoll;
+  public final net.minecraft.client.world.ClientWorld clientWorld;
+  public float lastDistanceMoved;
+  public float distanceMoved;
+  public net.minecraft.client.network.AbstractClientPlayerEntity(net.minecraft.client.world.ClientWorld, com.mojang.authlib.GameProfile);
+  public net.minecraft.world.GameMode getGameMode();
+  protected net.minecraft.client.network.PlayerListEntry getPlayerListEntry();
+  public void tick();
+  public net.minecraft.util.math.Vec3d lerpVelocity(float);
+  public net.minecraft.client.util.SkinTextures getSkinTextures();
+  public float getFovMultiplier(boolean, float);
+}
