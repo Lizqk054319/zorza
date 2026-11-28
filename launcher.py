@@ -47,10 +47,14 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.9.5"
+WERSJA_CLIENTA = "0.9.6"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
+    ("0.9.6", [
+        "Gra startuje w dużym, zmaksymalizowanym oknie (nie pełny ekran)",
+        "W grze: banery i napisy serwerów na przyciskach, Motion Blur i Custom Hitboxes na nowszych wersjach",
+    ]),
     ("0.9.5", [
         "Bez menu Windows po kliknięciu prawym przyciskiem na pasek tytułu",
     ]),
