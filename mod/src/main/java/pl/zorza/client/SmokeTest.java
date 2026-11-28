@@ -48,7 +48,7 @@ public final class SmokeTest {
                 } else if (step == 3 && ticks > 30) {
                     shot(mc, "04-hud-editor");
                     mc.options.pauseOnLostFocus = false;
-                    net.minecraft.client.gui.screen.world.CreateWorldScreen.create(mc, new TitleScreen());
+                    openCreateWorld(mc);
                     next();
                 } else if (step == 4 && ticks > 60) {
                     // przycisk "Utwórz nowy świat"
@@ -98,6 +98,24 @@ public final class SmokeTest {
                 step = 99;
             }
         });
+    }
+
+    /** Ekran tworzenia świata – metoda różni się między wersjami, więc szukamy jej przez refleksję. */
+    private static void openCreateWorld(MinecraftClient mc) throws Exception {
+        for (var m : net.minecraft.client.gui.screen.world.CreateWorldScreen.class.getMethods()) {
+            if (!java.lang.reflect.Modifier.isStatic(m.getModifiers()) || m.getParameterCount() != 2
+                    || m.getParameterTypes()[0] != MinecraftClient.class) continue;
+            Class<?> t = m.getParameterTypes()[1];
+            if (t.isAssignableFrom(TitleScreen.class)) {
+                m.invoke(null, mc, new TitleScreen());
+                return;
+            }
+            if (t == Runnable.class) {
+                m.invoke(null, mc, (Runnable) () -> mc.setScreen(new TitleScreen()));
+                return;
+            }
+        }
+        throw new IllegalStateException("Brak metody otwierającej tworzenie świata");
     }
 
     private static void next() {

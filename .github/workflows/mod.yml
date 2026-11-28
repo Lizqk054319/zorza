@@ -61,7 +61,14 @@ jobs:
         working-directory: mod
         env:
           LIBGL_ALWAYS_SOFTWARE: "1"
-        run: xvfb-run -a -s "-screen 0 1920x1080x24" gradle runClientGameTest --no-daemon --stacktrace
+        run: |
+          # serwery GitHuba bywają wolne – przy "Timeout loading world" próbujemy jeszcze raz
+          for i in 1 2; do
+            xvfb-run -a -s "-screen 0 1920x1080x24" gradle runClientGameTest --no-daemon --stacktrace 2>&1 | tee /tmp/gt.log && exit 0
+            grep -q "Timeout loading world" /tmp/gt.log || exit 1
+            echo "Świat nie zdążył się wczytać – ponawiam"
+          done
+          exit 1
       - name: Test dymny (gra z modem)
         if: env.GT_FLAG != 'true'
         working-directory: mod
