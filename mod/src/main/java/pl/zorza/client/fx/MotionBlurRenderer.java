@@ -185,15 +185,22 @@ public final class MotionBlurRenderer {
 //$$     private static RenderPipeline pipeline() {
 //$$         if (pipeline == null) pipeline = RenderPipeline.builder()
 //$$                 .withLocation(Ids.of("zorza", "pipeline/motion_blur"))
+//#if MC >= 1.21.9
+//$$                 .withVertexShader("core/screenquad").withFragmentShader("core/blit_screen").withSampler("InSampler")
+//#else
 //$$                 .withVertexShader("core/blit_screen").withFragmentShader("core/blit_screen").withSampler("InSampler")
+//#endif
 //$$                 .withBlend(new BlendFunction(SourceFactor.CONSTANT_ALPHA, DestFactor.ONE_MINUS_CONSTANT_ALPHA))
 //$$                 .withDepthWrite(false).withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST).withColorWrite(true, false)
+//#if MC >= 1.21.9
+//$$                 .withVertexFormat(VertexFormats.EMPTY, VertexFormat.DrawMode.TRIANGLES).build();
+//#else
 //$$                 .withVertexFormat(VertexFormats.POSITION, VertexFormat.DrawMode.QUADS).build();
+//#endif
 //$$         return pipeline;
 //$$     }
 //$$
 //$$     private static void blend(Framebuffer src, Framebuffer dst, float a) {
-//$$         RenderSystem.ShapeIndexBuffer idx = RenderSystem.getSequentialBuffer(VertexFormat.DrawMode.QUADS);
 //$$         GL14.glBlendColor(0f, 0f, 0f, a);
 //#if MC >= 1.21.6
 //$$         try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "zorza motion blur", dst.getColorAttachmentView(), OptionalInt.empty())) {
@@ -201,6 +208,13 @@ public final class MotionBlurRenderer {
 //$$         try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(dst.getColorAttachment(), OptionalInt.empty())) {
 //#endif
 //$$             pass.setPipeline(pipeline());
+//#if MC >= 1.21.9
+//$$             // 1.21.9+: pełnoekranowy trójkąt bez bufora wierzchołków (jak Minecraft w drawBlit)
+//$$             RenderSystem.bindDefaultUniforms(pass);
+//$$             pass.bindSampler("InSampler", src.getColorAttachmentView());
+//$$             pass.draw(0, 3);
+//#else
+//$$             RenderSystem.ShapeIndexBuffer idx = RenderSystem.getSequentialBuffer(VertexFormat.DrawMode.QUADS);
 //$$             pass.setVertexBuffer(0, RenderSystem.getQuadVertexBuffer());
 //$$             pass.setIndexBuffer(idx.getIndexBuffer(6), idx.getIndexType());
 //#if MC >= 1.21.6
@@ -212,6 +226,7 @@ public final class MotionBlurRenderer {
 //$$             pass.drawIndexed(0, 0, 6, 1);
 //#else
 //$$             pass.drawIndexed(0, 6);
+//#endif
 //#endif
 //$$         }
 //$$         GL14.glBlendColor(0f, 0f, 0f, 0f);

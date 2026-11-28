@@ -34,7 +34,8 @@
     "HitboxStateMixin",
     "PressableWidgetNewMixin",
     "SliderWidgetNewMixin",
-    "ClickableWidgetNewInvoker"
+    "ClickableWidgetNewInvoker",
+    "HitboxCommandMixin"
   ],
   "injectors": {
     "defaultRequire": 1
