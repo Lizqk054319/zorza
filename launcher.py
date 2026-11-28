@@ -47,11 +47,11 @@ NAJSTARSZA_WERSJA = "1.20.1"       # starszych wersji launcher nie pokazuje
 PORT = 47615                       # NIE ZMIENIAJ – jest wpisany w Azure
 GITHUB_URL = "https://github.com/Lizqk054319/zorza"
 DISCORD_INVITE = "https://discord.gg/WxNAUBdmcg"
-WERSJA_CLIENTA = "0.9.6"
+WERSJA_CLIENTA = "0.9.7"
 
 # Co nowego – na ekranie startowym widać tylko tę i poprzednią aktualizację (najważniejsze rzeczy)
 NOWOSCI_WERSJE = [
-    ("0.9.6", [
+    ("0.9.7", [
         "Gra startuje w dużym, zmaksymalizowanym oknie (nie pełny ekran)",
         "W grze: banery i napisy serwerów na przyciskach, Motion Blur i Custom Hitboxes na nowszych wersjach",
     ]),
@@ -1542,15 +1542,26 @@ _mod_release = {"t": 0, "assets": {}}
 
 
 def zorza_mod_release():
-    """Najnowsze wydanie moda Zora Client na GitHubie: {nazwa pliku: (id, data, rozmiar)} – pamiętane 5 min."""
+    """Pliki moda Zora Client na GitHubie: {nazwa pliku: (id, data, rozmiar)} – pamiętane 5 min.
+    Najpierw wydanie "mod-latest", a gdy go nie ma – kopia zapasowa na gałęzi mod-jars."""
     if time.time() - _mod_release["t"] < 300 and _mod_release["assets"]:
         return _mod_release["assets"]
-    r = requests.get("https://api.github.com/repos/Lizqk054319/zorza/releases/tags/mod-latest",
-                     headers={**UA, "Accept": "application/vnd.github+json"}, timeout=15)
-    r.raise_for_status()
-    _mod_release["assets"] = {a["name"]: (a["id"], a["updated_at"], a["size"]) for a in r.json().get("assets", [])}
-    _mod_release["t"] = time.time()
-    return _mod_release["assets"]
+    hdr = {**UA, "Accept": "application/vnd.github+json"}
+    urls = {}
+    try:
+        r = requests.get("https://api.github.com/repos/Lizqk054319/zorza/releases/tags/mod-latest", headers=hdr, timeout=15)
+        r.raise_for_status()
+        assets = {a["name"]: (a["id"], a["updated_at"], a["size"]) for a in r.json().get("assets", [])}
+        urls = {n: ZORZA_MOD_URL.format(n[len("zorza-client-"):-4]) for n in assets}
+    except Exception as e:
+        r = requests.get("https://api.github.com/repos/Lizqk054319/zorza/contents?ref=mod-jars", headers=hdr, timeout=15)
+        if r.status_code != 200:
+            raise e
+        files = [f for f in r.json() if f.get("name", "").endswith(".jar")]
+        assets = {f["name"]: (f["sha"], f["sha"], f["size"]) for f in files}
+        urls = {f["name"]: f["download_url"] for f in files}
+    _mod_release.update(assets=assets, urls=urls, t=time.time())
+    return assets
 
 
 def ver_key(v):
@@ -1576,6 +1587,8 @@ def zorza_mod_versions(cached_only=False):
 def ensure_zorza_mod(p):
     """Mod Zora Client – przy każdym uruchomieniu sprawdza, czy na GitHubie jest nowsza wersja (dla każdego profilu)."""
     url = ZORZA_MOD_URL.format(p["version"]) if p["version"] in zorza_mod_versions() else None
+    if url:
+        url = _mod_release.get("urls", {}).get(f"zorza-client-{p['version']}.jar", url)
     d = profile_dir(p) / "mods"
     d.mkdir(parents=True, exist_ok=True)
     dest, off = d / "zorza-client.jar", d / "zorza-client.jar.disabled"
